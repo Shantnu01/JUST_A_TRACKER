@@ -2108,3 +2108,182 @@
   border: 2px solid #000000;
   box-shadow: 3px 3px 0 #000000;
 }
+
+
+
+/* ==========================================================================
+   AGENTIC PRE-FLIGHT DISPATCHER & CIRCADIAN SLOTTER
+   ========================================================================== */
+
+/* Header / Welcome Row Pre-Flight Button */
+.preflight-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #b45309;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 6px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.preflight-btn:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #b45309;
+  transform: translateY(-1px);
+}
+
+/* Pre-Flight Dispatch Modal */
+.preflight-modal-banner {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(234, 88, 12, 0.06));
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preflight-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.preflight-badge.strain {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.preflight-priority-box {
+  background: #fffbeb;
+  border: 1.5px dashed #f59e0b;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.preflight-priority-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #b45309;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.preflight-priority-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #78350f;
+}
+
+.preflight-timeline-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.preflight-timeline-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.82rem;
+}
+
+.preflight-timeline-row:last-child {
+  border-bottom: none;
+}
+
+.preflight-tier-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.preflight-launch-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  transition: all 0.2s;
+}
+
+.preflight-launch-btn:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  transform: translateY(-1px);
+}
+
+/* Theme overrides for Pre-Flight Dispatcher */
+[data-theme="acid-runway"] .preflight-btn {
+  background: transparent;
+  border: 1px solid #c6ff00;
+  color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .preflight-priority-box {
+  background: #111111;
+  border-color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .preflight-priority-title {
+  color: #ffffff;
+}
+
+[data-theme="acid-runway"] .preflight-launch-btn {
+  background: #c6ff00;
+  color: #000000;
+}
+
+[data-theme="neo-brutalist"] .preflight-btn {
+  background: #f7f4ec;
+  border: 2px solid #000000;
+  color: #000000;
+  box-shadow: 3px 3px 0 #000000;
+}
+
+[data-theme="neo-brutalist"] .preflight-priority-box {
+  background: #fdf6e2;
+  border: 2px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+}
+
+[data-theme="neo-brutalist"] .preflight-priority-title {
+  color: #000000;
+}
+
+[data-theme="neo-brutalist"] .preflight-launch-btn {
+  background: #f59e0b;
+  color: #000000;
+  border: 2px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+}

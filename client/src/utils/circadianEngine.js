@@ -270,3 +270,72 @@ export function detectScheduleDrift(schedule = [], completedItemIds = [], active
     ...healResult
   };
 }
+
+
+// Pre-Flight Dispatcher: Intelligent Circadian Slotter
+export function slotScheduleToCircadian(schedule = [], priorityTitle = '') {
+  if (!schedule || schedule.length === 0) {
+    return { alignedSchedule: schedule, scoreBefore: 100, scoreAfter: 100, summary: 'No schedule items to slot.' };
+  }
+
+  const scoreBefore = calculateCircadianScore(schedule);
+  const priorityLower = (priorityTitle || '').toLowerCase().trim();
+  const highTier = [];
+  const mediumTier = [];
+  const lowTier = [];
+  const recoveryTier = [];
+
+  schedule.forEach(item => {
+    const titleLower = (item.title || '').toLowerCase();
+    const isPriority = priorityLower && (titleLower.includes(priorityLower) || priorityLower.includes(titleLower));
+
+    if (isPriority) {
+      highTier.unshift(item);
+      return;
+    }
+
+    const { tier } = getCognitiveTier(item);
+    if (tier === 'high') highTier.push(item);
+    else if (tier === 'medium') mediumTier.push(item);
+    else if (tier === 'low') lowTier.push(item);
+    else recoveryTier.push(item);
+  });
+
+  const ordered = [];
+  if (highTier.length > 0) ordered.push(...highTier);
+  if (recoveryTier.length > 0) ordered.push(recoveryTier.shift());
+  if (lowTier.length > 0) ordered.push(lowTier.shift());
+  if (mediumTier.length > 0) ordered.push(...mediumTier);
+  if (recoveryTier.length > 0) ordered.push(...recoveryTier);
+  if (lowTier.length > 0) ordered.push(...lowTier);
+
+  let currentStart = toMinutes(schedule[0]?.start || '09:00');
+
+  const alignedSchedule = ordered.map((item) => {
+    const origStart = toMinutes(item.start);
+    const origEnd = toMinutes(item.end);
+    let duration = origEnd - origStart;
+    if (duration <= 0) duration = 60;
+
+    const newStart = toTimeStr(currentStart);
+    const newEnd = toTimeStr(currentStart + duration);
+    currentStart += duration;
+
+    return {
+      ...item,
+      start: newStart,
+      end: newEnd,
+      hours: Math.round((duration / 60) * 10) / 10
+    };
+  });
+
+  const scoreAfter = calculateCircadianScore(alignedSchedule);
+  const summary = `Aligned ${alignedSchedule.length} blocks to circadian windows. Alignment improved from ${scoreBefore}% to ${scoreAfter}%.`;
+
+  return {
+    alignedSchedule,
+    scoreBefore,
+    scoreAfter,
+    summary
+  };
+}

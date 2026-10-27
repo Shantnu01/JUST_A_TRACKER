@@ -60,7 +60,7 @@ import {
 } from 'lucide-react';
 import './styles.css';
 import { playFocusSound, stopFocusSound, setSoundVolume } from './utils/soundEngine';
-import { getCognitiveTier, calculateCircadianScore, calculateAutoShift, getCircadianEnergyLevel } from './utils/circadianEngine';
+import { calculateCircadianScore, getCircadianEnergyLevel, getCognitiveTier, calculateAutoShift, detectScheduleDrift, generateChiefOfStaffPlan, slotScheduleToCircadian } from './utils/circadianEngine';
 
 // Dynamic API endpoint: Uses relative /api for unified production & Vite proxy,
 // or uses VITE_API_URL if configured for separate frontend/backend deployments.
@@ -469,6 +469,50 @@ function App() {
   const [podError, setPodError] = useState('');
   const [podDropdownOpen, setPodDropdownOpen] = useState(false);
   
+  
+  // Pre-Flight Dispatcher Agent State
+  const [preflightModalOpen, setPreflightModalOpen] = useState(false);
+  const [preflightDismissed, setPreflightDismissed] = useState(false);
+
+  // Pre-Flight Morning First-Open Gate
+  useEffect(() => {
+    if (!isToday) return;
+    const todayStr = format(selectedDate, 'yyyy-MM-dd');
+    const launchedKey = `daymark-preflight-launched-${todayStr}`;
+    const hasLaunched = localStorage.getItem(launchedKey);
+    const hour = new Date().getHours();
+    if (!hasLaunched && hour >= 5 && hour < 13 && !preflightDismissed) {
+      setPreflightModalOpen(true);
+    }
+  }, [isToday, selectedDate, preflightDismissed]);
+
+  const handleLaunchDay = (applyAlignment = true) => {
+    const todayStr = format(selectedDate, 'yyyy-MM-dd');
+    localStorage.setItem(`daymark-preflight-launched-${todayStr}`, 'true');
+
+    if (applyAlignment && schedule && schedule.length > 0) {
+      const { alignedSchedule } = slotScheduleToCircadian(schedule, morningPriority);
+      setSchedule(alignedSchedule);
+      setEditingSchedule(alignedSchedule);
+      const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+      localStorage.setItem(storageKey, JSON.stringify(alignedSchedule));
+
+      if (token) {
+        fetch(`${API}/settings/schedule`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify(alignedSchedule)
+        }).catch(() => {});
+      }
+      setToast('🚀 Day Launched! Priority locked to Circadian Morning Peak.');
+    } else {
+      setToast('🚀 Day Launched! Timetable locked in.');
+    }
+
+    setPreflightModalOpen(false);
+    setTimeout(() => setToast(''), 3000);
+  };
+
   // Chief of Staff Agent States
   const [chiefOfStaffAlert, setChiefOfStaffAlert] = useState(null);
   const [chiefOfStaffModalOpen, setChiefOfStaffModalOpen] = useState(false);
