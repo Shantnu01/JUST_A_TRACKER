@@ -3992,14 +3992,14 @@
 }
 
 /* ==========================================================================
-   STAGE ROADMAPS & CHECKPOINT HUB VIEW (PREMIUM HIGH CONTRAST & LEGIBILITY)
+   STAGE ROADMAPS & CHECKPOINT HUB VIEW (HIGH CONTRAST, ZERO WHITE TEXT IN LIGHT MODE)
    ========================================================================== */
 
 .stage-roadmaps-hub {
   width: 100%;
   max-width: 1080px;
   margin: 0 auto;
-  padding-bottom: 60px;
+  padding-bottom: 70px;
 }
 
 /* Header */
@@ -4019,12 +4019,12 @@
 }
 
 .roadmap-hub-icon-wrap {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 12px;
-  background: #eef2ff;
-  border: 1px solid #c7d2fe;
-  color: #4f46e5;
+  background: #e0e7ff;
+  border: 1.5px solid #a5b4fc;
+  color: #312e81;
   display: grid;
   place-content: center;
   flex-shrink: 0;
@@ -4040,8 +4040,8 @@
 
 .roadmap-hub-subtitle {
   font-size: 0.86rem;
-  font-weight: 500;
-  color: #475569 !important;
+  font-weight: 600;
+  color: #334155 !important;
   margin: 3px 0 0;
   max-width: 650px;
   line-height: 1.45;
@@ -4057,9 +4057,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 14px;
+  padding: 8px 14px;
   border-radius: 8px;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -4067,24 +4067,24 @@
 }
 
 .roadmap-header-btn.primary {
-  background: #4f46e5;
-  color: #ffffff !important;
-  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+  background: #c7d2fe;
+  color: #1e1b4b !important;
+  border: 1.5px solid #818cf8;
 }
 
 .roadmap-header-btn.primary:hover {
-  background: #4338ca;
+  background: #a5b4fc;
+  color: #0f172a !important;
 }
 
 .roadmap-header-btn.secondary {
   background: #ffffff;
   color: #1e293b !important;
-  border: 1px solid #cbd5e1;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  border: 1.5px solid #cbd5e1;
 }
 
 .roadmap-header-btn.secondary:hover {
-  background: #f8fafc;
+  background: #f1f5f9;
   border-color: #94a3b8;
   color: #0f172a !important;
 }
@@ -4092,7 +4092,7 @@
 /* Subject Tabs Pill Row */
 .roadmap-subjects-tabs {
   margin-bottom: 22px;
-  border-bottom: 1.5px solid #e2e8f0;
+  border-bottom: 1.5px solid #cbd5e1;
   padding-bottom: 14px;
 }
 
@@ -4114,7 +4114,7 @@
   font-weight: 700;
   background: #ffffff;
   border: 1.5px solid #cbd5e1;
-  color: #334155 !important;
+  color: #1e293b !important;
   cursor: pointer;
   white-space: nowrap;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -4128,91 +4128,329 @@
 }
 
 .roadmap-subject-pill.active {
-  background: #4f46e5;
-  border-color: #4338ca;
-  color: #ffffff !important;
-  box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+  background: #c7d2fe !important;
+  border-color: #4f46e5 !important;
+  color: #1e1b4b !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
 }
 
 .roadmap-pill-percent {
   font-size: 0.72rem;
   font-weight: 800;
   padding: 2px 7px;
-  border-radius: 12px;
+  border-radius: 10px;
   background: #f1f5f9;
-  color: #475569 !important;
+  color: #1e293b !important;
 }
 
 .roadmap-subject-pill.active .roadmap-pill-percent {
-  background: rgba(255, 255, 255, 0.22);
-  color: #ffffff !important;
+  background: #a5b4fc;
+  color: #1e1b4b !important;
 }
 
 .roadmap-add-subject-btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   padding: 8px 14px;
   border-radius: 10px;
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 700;
   background: #ffffff;
-  border: 1.5px dashed #cbd5e1;
-  color: #475569 !important;
+  border: 1.5px dashed #94a3b8;
+  color: #1e293b !important;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
 }
 
 .roadmap-add-subject-btn:hover {
-  background: #eef2ff;
-  border-color: #6366f1;
-  color: #4f46e5 !important;
+  background: #e0e7ff;
+  border-color: #4f46e5;
+  color: #1e1b4b !important;
 }
 
-.roadmap-add-subject-form {
+/* Modal Overlay for Add Subject */
+.roadmap-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  padding: 16px;
 }
 
-.roadmap-add-subject-input {
+.roadmap-modal-card {
+  width: 100%;
+  max-width: 440px;
   background: #ffffff;
-  border: 1.5px solid #6366f1;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal-card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
   color: #0f172a !important;
-  padding: 7px 12px;
+  margin: 0 0 6px;
+}
+
+.modal-card-sub {
+  font-size: 0.82rem;
+  color: #334155 !important;
+  margin: 0 0 16px;
+  line-height: 1.45;
+}
+
+.modal-card-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #94a3b8;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #0f172a !important;
+  background: #f8fafc;
+  outline: none;
+  margin-bottom: 16px;
+}
+
+.modal-card-input:focus {
+  border-color: #4f46e5;
+  background: #ffffff;
+}
+
+.modal-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-card-btn {
+  padding: 8px 16px;
   border-radius: 8px;
   font-size: 0.82rem;
-  outline: none;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
 }
 
-.roadmap-add-subject-submit {
-  background: #4f46e5;
-  color: #ffffff !important;
-  border: none;
-  padding: 7px 12px;
+.modal-card-btn.primary {
+  background: #c7d2fe;
+  color: #1e1b4b !important;
+  border: 1.5px solid #818cf8;
+}
+
+.modal-card-btn.cancel {
+  background: transparent;
+  color: #475569 !important;
+}
+
+/* Blank Creator Card */
+.roadmap-blank-creator-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 24px;
+}
+
+.blank-creator-header {
+  margin-bottom: 20px;
+}
+
+.blank-creator-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: #fef3c7;
+  color: #92400e !important;
+  border: 1px solid #fde68a;
+  margin-bottom: 6px;
+}
+
+.blank-creator-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a !important;
+  margin: 0 0 6px;
+}
+
+.blank-creator-desc {
+  font-size: 0.86rem;
+  color: #334155 !important;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.blank-creator-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.creator-option-box {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #e0e7ff;
+  border: 1px solid #c7d2fe;
+  display: grid;
+  place-content: center;
+}
+
+.option-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a !important;
+  margin: 4px 0 0;
+}
+
+.option-desc {
+  font-size: 0.78rem;
+  color: #475569 !important;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.option-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
   border-radius: 8px;
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
+  border: 1.5px solid;
+  margin-top: auto;
 }
 
-.roadmap-add-subject-cancel {
-  background: transparent;
-  border: none;
-  color: #64748b !important;
-  font-size: 1.1rem;
+.option-action-btn.primary {
+  background: #c7d2fe;
+  color: #1e1b4b !important;
+  border-color: #818cf8;
+}
+
+.option-action-btn.primary:hover {
+  background: #a5b4fc;
+}
+
+.option-action-btn.secondary {
+  background: #ecfdf5;
+  color: #047857 !important;
+  border-color: #6ee7b7;
+}
+
+.option-action-btn.secondary:hover {
+  background: #d1fae5;
+}
+
+.creator-paste-section {
+  border-top: 1.5px solid #e2e8f0;
+  padding-top: 18px;
+}
+
+.paste-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a !important;
+  margin-bottom: 8px;
+}
+
+.creator-paste-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  padding: 12px;
+  border-radius: 8px;
+  resize: vertical;
+  outline: none;
+}
+
+.creator-paste-textarea:focus {
+  border-color: #4f46e5;
+  background: #ffffff;
+}
+
+.creator-paste-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.build-roadmap-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #bbf7d0;
+  color: #14532d !important;
+  border: 1.5px solid #4ade80;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
   cursor: pointer;
-  padding: 0 4px;
+}
+
+.build-roadmap-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.starter-fallback-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  color: #334155 !important;
+  border: 1.5px solid #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 /* Command Center Card */
 .roadmap-command-center {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   border-radius: 14px;
   padding: 18px 22px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
@@ -4222,15 +4460,14 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .command-subject-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 10px;
 }
 
 .command-subject-name {
@@ -4242,71 +4479,25 @@
 
 .command-progress-badge {
   font-size: 0.78rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: #ecfdf5;
-  color: #047857 !important;
-  border: 1px solid #a7f3d0;
-}
-
-.command-stage-selector-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.selector-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #334155 !important;
-}
-
-.stage-selector-pills {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.stage-select-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border-radius: 7px;
-  font-size: 0.74rem;
   font-weight: 800;
-  background: #f8fafc;
-  border: 1.5px solid #cbd5e1;
-  color: #334155 !important;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: #dcfce7;
+  color: #14532d !important;
+  border: 1px solid #86efac;
 }
 
-.stage-select-btn:hover {
-  background: #eef2ff;
-  border-color: #6366f1;
-  color: #4f46e5 !important;
-}
-
-.stage-select-btn.selected {
-  background: #4f46e5;
-  border-color: #4338ca;
-  color: #ffffff !important;
-  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
-}
-
-.active-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #ffffff;
+.timetable-pinned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: #fef3c7;
+  color: #92400e !important;
+  border: 1px solid #fde68a;
 }
 
 .command-center-actions {
@@ -4321,20 +4512,19 @@
   gap: 6px;
   padding: 6px 12px;
   border-radius: 7px;
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   font-weight: 700;
   background: #ffffff;
-  border: 1px solid #cbd5e1;
-  color: #334155 !important;
+  border: 1.5px solid #cbd5e1;
+  color: #1e293b !important;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   transition: all 0.15s ease;
 }
 
 .command-tool-btn:hover {
-  background: #f8fafc;
-  color: #0f172a !important;
+  background: #f1f5f9;
   border-color: #94a3b8;
+  color: #0f172a !important;
 }
 
 .roadmap-full-progress-track {
@@ -4343,13 +4533,474 @@
   background: #e2e8f0;
   border-radius: 5px;
   overflow: hidden;
+  margin-bottom: 16px;
 }
 
 .roadmap-full-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4f46e5, #10b981);
+  background: linear-gradient(90deg, #4f46e5, #059669);
   border-radius: 5px;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.3s ease;
+}
+
+/* Stage Selector Tabs (Navigation Bar) */
+.stage-tabs-navigation-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1.5px solid #f1f5f9;
+  padding-top: 14px;
+}
+
+.stage-nav-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #334155 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stage-tabs-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.single-stage-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155 !important;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.single-stage-tab-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a !important;
+}
+
+.single-stage-tab-btn.viewing {
+  background: #c7d2fe !important;
+  border-color: #4f46e5 !important;
+  color: #1e1b4b !important;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
+}
+
+.stage-tab-ratio {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #475569 !important;
+}
+
+.single-stage-tab-btn.viewing .stage-tab-ratio {
+  color: #1e1b4b !important;
+}
+
+.stage-tab-check {
+  color: #15803d !important;
+  font-weight: 900;
+}
+
+.stage-tab-pinned-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b45309;
+}
+
+.add-stage-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: #ffffff;
+  border: 1.5px dashed #94a3b8;
+  color: #334155 !important;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.add-stage-trigger-btn:hover {
+  background: #e0e7ff;
+  border-color: #4f46e5;
+  color: #1e1b4b !important;
+}
+
+.add-stage-inline-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.add-stage-input {
+  background: #ffffff;
+  border: 1.5px solid #4f46e5;
+  color: #0f172a !important;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  outline: none;
+}
+
+.add-stage-save-btn {
+  background: #c7d2fe;
+  color: #1e1b4b !important;
+  border: 1px solid #818cf8;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.add-stage-cancel-btn {
+  background: transparent;
+  border: none;
+  color: #475569 !important;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* SINGLE STAGE FOCUSED CARD (ONLY SHOWS THIS ONE STAGE!) */
+.single-stage-focused-card {
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.stage-focus-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stage-focus-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stage-focus-number-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #312e81 !important;
+  background: #e0e7ff;
+  padding: 2px 8px;
+  border-radius: 5px;
+  border: 1px solid #c7d2fe;
+  width: fit-content;
+}
+
+.stage-focus-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a !important;
+  margin: 0;
+}
+
+.stage-focus-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.stage-focus-counter {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #1e293b !important;
+  background: #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.pin-timetable-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fef3c7;
+  color: #92400e !important;
+  border: 1.5px solid #fde68a;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pin-timetable-btn:hover {
+  background: #fde68a;
+  color: #78350f !important;
+}
+
+.pinned-badge-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #dbeafe;
+  color: #1e40af !important;
+  border: 1.5px solid #bfdbfe;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.delete-stage-btn {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b !important;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+
+.delete-stage-btn:hover {
+  background: #fecaca;
+}
+
+/* Checkpoints List */
+.stage-focus-checkpoints-list {
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-checkpoints-prompt {
+  padding: 24px;
+  text-align: center;
+  color: #475569 !important;
+  font-weight: 600;
+  font-size: 0.86rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1.5px dashed #cbd5e1;
+}
+
+.single-checkpoint-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  transition: all 0.12s ease;
+}
+
+.single-checkpoint-row:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.single-checkpoint-row.completed {
+  background: #fbfbfb;
+  opacity: 0.75;
+}
+
+.checkpoint-toggle-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.single-checkpoint-box {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 19px;
+  height: 19px;
+  border: 2px solid #312e81;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  background: #ffffff;
+  transition: all 0.12s ease;
+}
+
+.single-checkpoint-box:hover {
+  border-color: #1e1b4b;
+}
+
+.single-checkpoint-box:checked {
+  background: #86efac;
+  border-color: #16a34a;
+}
+
+.single-checkpoint-box:checked::before {
+  content: "✓";
+  color: #14532d !important;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.checkpoint-label-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.checkpoint-headline {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0f172a !important;
+  line-height: 1.35;
+}
+
+.checkpoint-headline.strikethrough {
+  text-decoration: line-through;
+  color: #64748b !important;
+}
+
+.checkpoint-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.checkpoint-sub-pill {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  color: #1e293b !important;
+}
+
+.delete-checkpoint-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8 !important;
+  font-size: 1.25rem;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.delete-checkpoint-btn:hover {
+  color: #dc2626 !important;
+}
+
+/* Add Checkpoint Row */
+.stage-focus-add-checkpoint-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border-top: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.add-checkpoint-input {
+  flex: 1;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a !important;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  outline: none;
+}
+
+.add-checkpoint-input:focus {
+  border-color: #4f46e5;
+}
+
+.add-checkpoint-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #c7d2fe;
+  color: #1e1b4b !important;
+  border: 1.5px solid #818cf8;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.add-checkpoint-submit-btn:hover {
+  background: #a5b4fc;
+}
+
+/* Stage Footer Navigation (Prev / Next) */
+.stage-footer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  background: #ffffff;
+  border-top: 1.5px solid #e2e8f0;
+}
+
+.stage-nav-arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #1e293b !important;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.stage-nav-arrow-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.stage-nav-arrow-btn:not(:disabled):hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.stage-nav-counter {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #334155 !important;
 }
 
 /* Outline Editor Card */
@@ -4376,7 +5027,7 @@
 
 .editor-subtext {
   font-size: 0.8rem;
-  color: #475569 !important;
+  color: #334155 !important;
   margin: 3px 0 0;
 }
 
@@ -4386,29 +5037,26 @@
   padding: 1px 5px;
   border-radius: 4px;
   color: #0f172a !important;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .editor-ai-btn {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  background: #eef2ff;
-  border: 1px solid #c7d2fe;
-  color: #4f46e5 !important;
-  cursor: pointer;
-}
-
-.editor-ai-btn:hover {
+  padding: 6px 12px;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 800;
   background: #e0e7ff;
+  border: 1.5px solid #c7d2fe;
+  color: #312e81 !important;
+  cursor: pointer;
 }
 
 .roadmap-editor-textarea {
   width: 100%;
+  box-sizing: border-box;
   background: #f8fafc;
   border: 1.5px solid #cbd5e1;
   color: #0f172a !important;
@@ -4437,274 +5085,29 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: #10b981;
-  color: #ffffff !important;
-  border: none;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 7px 16px;
-  border-radius: 7px;
+  background: #bbf7d0;
+  color: #14532d !important;
+  border: 1.5px solid #4ade80;
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
-}
-
-.editor-save-btn:hover {
-  background: #059669;
 }
 
 .editor-cancel-btn {
   background: transparent;
-  color: #475569 !important;
-  border: 1px solid #cbd5e1;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 7px;
-  cursor: pointer;
-}
-
-/* Stages Grid & Cards */
-.roadmap-stages-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.roadmap-stage-card {
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease;
-}
-
-.roadmap-stage-card.is-active-stage {
-  border-color: #6366f1;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.12);
-}
-
-.roadmap-stage-card.is-done-stage {
-  border-color: #86efac;
-}
-
-.stage-card-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  background: #f8fafc;
-  border-bottom: 1.5px solid #e2e8f0;
-}
-
-.stage-banner-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.stage-number-tag {
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 3px 8px;
-  border-radius: 5px;
-  background: #e2e8f0;
   color: #334155 !important;
-}
-
-.roadmap-stage-card.is-active-stage .stage-number-tag {
-  background: #4f46e5;
-  color: #ffffff !important;
-}
-
-.roadmap-stage-card.is-done-stage .stage-number-tag {
-  background: #10b981;
-  color: #ffffff !important;
-}
-
-.stage-banner-title {
-  font-size: 0.96rem;
-  font-weight: 800;
-  color: #0f172a !important;
-  margin: 0;
-}
-
-.stage-banner-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.stage-completion-badge {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #475569 !important;
-  background: #e2e8f0;
-  padding: 3px 8px;
-  border-radius: 6px;
-}
-
-.set-active-stage-btn {
-  background: #ffffff;
-  border: 1.5px solid #c7d2fe;
-  color: #4338ca !important;
-  font-size: 0.74rem;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.set-active-stage-btn:hover {
-  background: #4f46e5;
-  color: #ffffff !important;
-  border-color: #4f46e5;
-}
-
-/* Checkpoint Rows */
-.stage-card-checkpoints {
-  padding: 14px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.roadmap-checkpoint-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: 9px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  cursor: pointer;
-  transition: all 0.12s ease;
-}
-
-.roadmap-checkpoint-row:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-}
-
-.roadmap-checkpoint-row.completed {
-  opacity: 0.65;
-  background: #fafafa;
-}
-
-.roadmap-custom-check {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 1.5px solid #4f46e5;
-  border-radius: 4px;
-  outline: none;
-  cursor: pointer;
-  display: grid;
-  place-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-  background: #ffffff;
-  transition: all 0.12s ease;
-}
-
-.roadmap-custom-check:checked {
-  background: #10b981;
-  border-color: #10b981;
-}
-
-.roadmap-custom-check:checked::before {
-  content: "";
-  width: 5px;
-  height: 9px;
-  border: solid #ffffff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-  margin-bottom: 2px;
-}
-
-.roadmap-checkpoint-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-  flex: 1;
-}
-
-.roadmap-cp-title {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #0f172a !important;
-  line-height: 1.35;
-}
-
-.roadmap-cp-title.strikethrough {
-  text-decoration: line-through;
-  color: #94a3b8 !important;
-}
-
-.roadmap-cp-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 3px;
-}
-
-.roadmap-detail-tag {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 5px;
-  background: #e2e8f0;
-  border: 1px solid #cbd5e1;
-  color: #334155 !important;
-}
-
-/* Quick Add in Stage Card */
-.stage-card-quick-add {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px 16px;
-  border-top: 1px solid #e2e8f0;
-  background: #fafafa;
-}
-
-.stage-quick-add-input {
-  flex: 1;
-  background: #ffffff;
   border: 1.5px solid #cbd5e1;
-  color: #0f172a !important;
-  padding: 7px 12px;
-  border-radius: 7px;
   font-size: 0.82rem;
-  outline: none;
-}
-
-.stage-quick-add-input:focus {
-  border-color: #4f46e5;
-}
-
-.stage-quick-add-btn {
-  background: #4f46e5;
-  color: #ffffff !important;
-  border: none;
-  padding: 7px 14px;
-  border-radius: 7px;
-  font-size: 0.78rem;
   font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.stage-quick-add-btn:hover {
-  background: #4338ca;
 }
 
 /* ==========================================================================
-   THEME ADAPTATIONS (NEO-BRUTALIST & DARK THEMES)
+   THEME ADAPTATIONS (DARK THEMES ONLY)
    ========================================================================== */
 
 [data-theme="neo-brutalist"] .timetable-checkpoint-capsule {
@@ -4713,180 +5116,81 @@
   box-shadow: 2px 2px 0 #000000 !important;
 }
 
-[data-theme="neo-brutalist"] .capsule-checkpoint-text {
+[data-theme="neo-brutalist"] .capsule-checkpoint-text,
+[data-theme="neo-brutalist"] .roadmap-hub-title,
+[data-theme="neo-brutalist"] .command-subject-name,
+[data-theme="neo-brutalist"] .stage-focus-title,
+[data-theme="neo-brutalist"] .checkpoint-headline {
   color: #000000 !important;
 }
 
-[data-theme="neo-brutalist"] .capsule-stage-pill {
-  background: #000000 !important;
-  color: #ffffff !important;
-  border: 1px solid #000000;
-}
-
-[data-theme="neo-brutalist"] .capsule-nav-btn {
-  background: #ffffff !important;
-  border: 1.5px solid #000000 !important;
-  color: #000000 !important;
-  box-shadow: 1px 1px 0 #000000;
-}
-
+[data-theme="neo-brutalist"] .single-stage-focused-card,
 [data-theme="neo-brutalist"] .roadmap-command-center,
-[data-theme="neo-brutalist"] .roadmap-stage-card,
-[data-theme="neo-brutalist"] .roadmap-outline-editor-card {
-  background: #ffffff !important;
-  border: 2px solid #000000 !important;
+[data-theme="neo-brutalist"] .creator-option-box {
+  border: 2.5px solid #000000 !important;
   box-shadow: 4px 4px 0 #000000 !important;
 }
 
-[data-theme="neo-brutalist"] .roadmap-subject-pill {
-  background: #ffffff !important;
-  border: 2px solid #000000 !important;
-  color: #000000 !important;
-  box-shadow: 2px 2px 0 #000000;
-}
-
-[data-theme="neo-brutalist"] .roadmap-subject-pill.active {
-  background: #fef08a !important;
-  color: #000000 !important;
-  border-color: #000000 !important;
-}
-
-[data-theme="neo-brutalist"] .roadmap-subject-pill.active .roadmap-pill-percent {
-  background: #000000 !important;
-  color: #ffffff !important;
-}
-
-[data-theme="neo-brutalist"] .stage-banner-title,
-[data-theme="neo-brutalist"] .roadmap-hub-title,
-[data-theme="neo-brutalist"] .command-subject-name,
-[data-theme="neo-brutalist"] .roadmap-cp-title {
-  color: #000000 !important;
-}
-
-[data-theme="neo-brutalist"] .roadmap-checkpoint-row {
+[data-theme="neo-brutalist"] .single-checkpoint-row {
   background: #fef9c3 !important;
-  border: 1.5px solid #000000 !important;
+  border: 2px solid #000000 !important;
 }
 
-/* Acid Runway (Dark / Neon) */
-[data-theme="acid-runway"] .timetable-checkpoint-capsule {
+[data-theme="acid-runway"] .single-stage-focused-card,
+[data-theme="acid-runway"] .roadmap-command-center,
+[data-theme="acid-runway"] .creator-option-box {
   background: #111111 !important;
   border-color: rgba(198, 255, 0, 0.4) !important;
 }
 
-[data-theme="acid-runway"] .capsule-checkpoint-text {
-  color: #ffffff !important;
+[data-theme="acid-runway"] .stage-focus-header,
+[data-theme="acid-runway"] .stage-focus-add-checkpoint-row,
+[data-theme="acid-runway"] .stage-footer-nav {
+  background: #161616 !important;
+  border-color: rgba(198, 255, 0, 0.25) !important;
 }
 
-[data-theme="acid-runway"] .capsule-stage-pill {
-  background: #c6ff00 !important;
-  color: #000000 !important;
+[data-theme="acid-runway"] .single-checkpoint-row {
+  background: #1a1a1a !important;
+  border-color: rgba(198, 255, 0, 0.25) !important;
 }
 
-[data-theme="acid-runway"] .capsule-nav-btn {
-  background: #1e1e1e !important;
-  border-color: #c6ff00 !important;
-  color: #c6ff00 !important;
-}
-
-[data-theme="acid-runway"] .stage-roadmaps-hub .roadmap-hub-title,
+[data-theme="acid-runway"] .roadmap-hub-title,
 [data-theme="acid-runway"] .command-subject-name,
-[data-theme="acid-runway"] .stage-banner-title,
-[data-theme="acid-runway"] .roadmap-cp-title {
+[data-theme="acid-runway"] .stage-focus-title,
+[data-theme="acid-runway"] .checkpoint-headline {
   color: #ffffff !important;
 }
 
 [data-theme="acid-runway"] .roadmap-hub-subtitle,
-[data-theme="acid-runway"] .selector-label,
-[data-theme="acid-runway"] .stage-completion-badge {
+[data-theme="acid-runway"] .stage-nav-label {
   color: #a3e635 !important;
 }
 
-[data-theme="acid-runway"] .roadmap-command-center,
-[data-theme="acid-runway"] .roadmap-stage-card,
-[data-theme="acid-runway"] .roadmap-outline-editor-card {
-  background: #111111 !important;
-  border-color: rgba(198, 255, 0, 0.3) !important;
-}
-
-[data-theme="acid-runway"] .stage-card-banner,
-[data-theme="acid-runway"] .stage-card-quick-add {
-  background: #161616 !important;
-  border-color: rgba(198, 255, 0, 0.2) !important;
-}
-
-[data-theme="acid-runway"] .roadmap-checkpoint-row {
-  background: #1a1a1a !important;
-  border-color: rgba(198, 255, 0, 0.2) !important;
-}
-
-[data-theme="acid-runway"] .roadmap-subject-pill {
-  background: #111111 !important;
-  border-color: rgba(198, 255, 0, 0.3) !important;
-  color: #ffffff !important;
-}
-
-[data-theme="acid-runway"] .roadmap-subject-pill.active {
-  background: #c6ff00 !important;
-  color: #000000 !important;
-}
-
-/* Spider-Verse (Dark Comic Theme) */
-[data-theme="spider-verse"] .timetable-checkpoint-capsule {
+[data-theme="spider-verse"] .single-stage-focused-card,
+[data-theme="spider-verse"] .roadmap-command-center,
+[data-theme="spider-verse"] .creator-option-box {
   background: #141126 !important;
   border-color: #e11d48 !important;
 }
 
-[data-theme="spider-verse"] .capsule-checkpoint-text {
-  color: #ffffff !important;
-}
-
-[data-theme="spider-verse"] .capsule-stage-pill {
-  background: #00f0ff !important;
-  color: #000000 !important;
-}
-
-[data-theme="spider-verse"] .stage-roadmaps-hub .roadmap-hub-title,
-[data-theme="spider-verse"] .command-subject-name,
-[data-theme="spider-verse"] .stage-banner-title,
-[data-theme="spider-verse"] .roadmap-cp-title {
-  color: #ffffff !important;
-}
-
-[data-theme="spider-verse"] .roadmap-hub-subtitle,
-[data-theme="spider-verse"] .selector-label,
-[data-theme="spider-verse"] .stage-completion-badge {
-  color: #94a3b8 !important;
-}
-
-[data-theme="spider-verse"] .roadmap-command-center,
-[data-theme="spider-verse"] .roadmap-stage-card,
-[data-theme="spider-verse"] .roadmap-outline-editor-card {
-  background: #17132e !important;
-  border-color: rgba(225, 29, 72, 0.4) !important;
-}
-
-[data-theme="spider-verse"] .stage-card-banner,
-[data-theme="spider-verse"] .stage-card-quick-add {
-  background: #120e24 !important;
+[data-theme="spider-verse"] .stage-focus-header,
+[data-theme="spider-verse"] .stage-focus-add-checkpoint-row,
+[data-theme="spider-verse"] .stage-footer-nav {
+  background: #1a1533 !important;
   border-color: rgba(225, 29, 72, 0.3) !important;
 }
 
-[data-theme="spider-verse"] .roadmap-checkpoint-row {
+[data-theme="spider-verse"] .single-checkpoint-row {
   background: #1c1738 !important;
   border-color: rgba(0, 240, 255, 0.25) !important;
 }
 
-[data-theme="spider-verse"] .roadmap-subject-pill {
-  background: #17132e !important;
-  border-color: rgba(225, 29, 72, 0.4) !important;
+[data-theme="spider-verse"] .roadmap-hub-title,
+[data-theme="spider-verse"] .command-subject-name,
+[data-theme="spider-verse"] .stage-focus-title,
+[data-theme="spider-verse"] .checkpoint-headline {
   color: #ffffff !important;
-}
-
-[data-theme="spider-verse"] .roadmap-subject-pill.active {
-  background: #e11d48 !important;
-  color: #ffffff !important;
-  border-color: #00f0ff !important;
 }
 
 /* Mobile Responsiveness */
@@ -4909,12 +5213,15 @@
   .command-center-actions {
     width: 100%;
   }
-  .command-tool-btn {
-    flex: 1;
-    justify-content: center;
+  .stage-focus-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .stage-banner-right {
-    flex-wrap: wrap;
-    justify-content: flex-end;
+  .stage-focus-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .blank-creator-options-grid {
+    grid-template-columns: 1fr;
   }
 }

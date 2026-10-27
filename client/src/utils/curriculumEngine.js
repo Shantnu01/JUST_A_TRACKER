@@ -96,6 +96,76 @@ export const DEFAULT_DSA_CURRICULUM_RAW = `DSA Mastery
         └── Edge case resilience`;
 
 // Clean 3-stage starter curriculum for System Design & Projects
+export const DEFAULT_PROJECT_DEV_CURRICULUM_RAW = `Project Development & Shipping
+│
+├── STAGE 1 — ARCHITECTURE & CORE API
+│   ├── 1.1 Data Model & Database Schemas
+│   │   ├── Relational tables & indexes
+│   │   └── Migration scripts & seeding
+│   ├── 1.2 REST Endpoints & Error Middleware
+│   │   ├── Request validation & payload guards
+│   │   └── Structured JSON responses
+│   └── 1.3 State Management & Client Foundations
+│       ├── Component hierarchy & styling
+│       └── Local persistence & offline fallback
+│
+├── STAGE 2 — INTEGRATION & HARDENING
+│   ├── 2.1 Authentication & Route Security
+│   │   ├── JWT tokens & bcrypt passwords
+│   │   └── Rate limiting & CORS policies
+│   ├── 2.2 Background Tasks & Timers
+│   │   ├── Scheduled tasks & worker queues
+│   │   └── Push notifications & alerts
+│   └── 2.3 Error Boundaries & Edge Cases
+│       ├── Graceful UI fallback states
+│       └── Network reconnection recovery
+│
+└── STAGE 3 — CLOUD DEPLOYMENT & OBSERVABILITY 🚀
+    ├── 3.1 Production Build & Code Splitting
+    │   ├── Asset compression & bundle size
+    │   └── Service worker & PWA manifest
+    ├── 3.2 Cloud Infrastructure (Render / Supabase)
+    │   ├── SSL enforcement & secret variables
+    │   └── Database connection pooling
+    └── 3.3 Health Monitoring & Uptime Pingers
+        ├── Status check endpoints
+        └── Error logging & diagnostics`;
+
+export const DEFAULT_REVISION_CURRICULUM_RAW = `Daily Revision & Active Recall
+│
+├── STAGE 1 — DAILY RECALL & SYNTHESIS
+│   ├── 1.1 First Principles Summary
+│   │   ├── Write core technical insights from memory
+│   │   └── Re-derive formulas or key algorithms
+│   ├── 1.2 Codebase & Bug Debrief
+│   │   ├── Review today's git commits & changes
+│   │   └── Document edge cases & fixes
+│   └── 1.3 Learning Journal Log
+│       ├── Tag patterns for spaced repetition
+│       └── Note open questions to clarify
+│
+├── STAGE 2 — SPACED REPETITION & TESTING
+│   ├── 2.1 Rapid Recall Quizzing
+│   │   ├── Core syntax & standard library methods
+│   │   └── Complexity bounds & trade-offs
+│   ├── 2.2 Cross-Domain Connection Mapping
+│   │   ├── Linking algorithms to real-world architectures
+│   │   └── Identifying weak conceptual links
+│   └── 2.3 Feynman Technique Walkthrough
+│       ├── Explain complex concepts aloud
+│       └── Whiteboard architecture without notes
+│
+└── STAGE 3 — LONG-TERM BENCHMARKING 🚀
+    ├── 3.1 Milestone Knowledge Audits
+    │   ├── Comprehensive checklist review
+    │   └── Identifying production-ready topics
+    ├── 3.2 Industry Code Comparison
+    │   ├── Compare with open source implementations
+    │   └── Refactor for maintainability & clean code
+    └── 3.3 Next Cycle Strategic Priming
+        ├── Lock in non-negotiable goals for tomorrow
+        └── Align priorities with circadian peak`;
+
 export const DEFAULT_SYSTEM_DESIGN_CURRICULUM_RAW = `System Design & Architecture
 │
 ├── STAGE 1 — CORE ARCHITECTURE & APIS
@@ -139,8 +209,14 @@ export function getStarterCurriculumRaw(subjectName = '') {
   if (clean.includes('dsa') || clean.includes('leetcode') || clean.includes('algo') || clean.includes('data structure')) {
     return DEFAULT_DSA_CURRICULUM_RAW;
   }
-  if (clean.includes('system design') || clean.includes('architecture') || clean.includes('backend') || clean.includes('project')) {
+  if (clean.includes('system design') || clean.includes('architecture')) {
     return DEFAULT_SYSTEM_DESIGN_CURRICULUM_RAW;
+  }
+  if (clean.includes('project')) {
+    return DEFAULT_PROJECT_DEV_CURRICULUM_RAW;
+  }
+  if (clean.includes('revision') || clean.includes('review') || clean.includes('recall')) {
+    return DEFAULT_REVISION_CURRICULUM_RAW;
   }
   return `${subjectName || 'Subject'} Roadmap
 │
@@ -463,5 +539,36 @@ export function addCheckpointToStage(curriculum, stageId, checkpointTitle) {
     return { ...st, checkpoints: [...(st.checkpoints || []), newCp] };
   });
 
+  return { ...curriculum, stages: updatedStages };
+}
+
+// Add a brand new stage to curriculum
+export function addStageToCurriculum(curriculum, stageTitle) {
+  if (!curriculum) return curriculum;
+  const stages = curriculum.stages || [];
+  const nextStageNum = stages.length + 1;
+  const newStage = {
+    id: `stage-${Date.now()}-${nextStageNum}`,
+    title: stageTitle || `STAGE ${nextStageNum} — NEW MILESTONE`,
+    checkpoints: []
+  };
+  return { ...curriculum, stages: [...stages, newStage] };
+}
+
+// Delete an entire stage from curriculum
+export function deleteStageFromCurriculum(curriculum, stageId) {
+  if (!curriculum || !curriculum.stages) return curriculum;
+  const filtered = curriculum.stages.filter(s => s.id !== stageId);
+  return { ...curriculum, stages: filtered };
+}
+
+// Delete a single checkpoint from a stage
+export function deleteCheckpointFromStage(curriculum, stageId, checkpointId) {
+  if (!curriculum || !curriculum.stages) return curriculum;
+  const updatedStages = curriculum.stages.map(st => {
+    if (st.id !== stageId) return st;
+    const cps = (st.checkpoints || []).filter(c => c.id !== checkpointId);
+    return { ...st, checkpoints: cps };
+  });
   return { ...curriculum, stages: updatedStages };
 }
