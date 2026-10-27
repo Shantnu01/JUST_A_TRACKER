@@ -2287,3 +2287,202 @@
   border: 2px solid #000000;
   box-shadow: 4px 4px 0 #000000;
 }
+
+
+
+/* ==========================================================================
+   AGENTIC FRICTION & CONTEXT-SWITCH INTERCEPTOR
+   ========================================================================== */
+
+.interceptor-banner {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(245, 158, 11, 0.08));
+  border: 1.5px solid rgba(239, 68, 68, 0.35);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.interceptor-badge {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #b91c1c;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.interceptor-pathways {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.interceptor-tile {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.interceptor-tile:hover {
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+}
+
+.interceptor-tile.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.interceptor-tile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+.interceptor-tile-title {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+
+.interceptor-tile-desc {
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+/* 2-Minute Box Breathing Visual Engine */
+.breathing-box {
+  background: #0f172a;
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  color: #f8fafc;
+  margin: 16px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.breathing-circle-outer {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  margin: 0 auto 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.breathing-circle-pulse {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.6), rgba(59, 130, 246, 0.2));
+  border: 2px solid #818cf8;
+  box-shadow: 0 0 24px rgba(99, 102, 241, 0.5);
+  animation: boxBreathingCycle 16s infinite ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+@keyframes boxBreathingCycle {
+  0% { transform: scale(0.7); }    /* Inhale start */
+  25% { transform: scale(1.15); }  /* Inhale peak */
+  50% { transform: scale(1.15); }  /* Hold */
+  75% { transform: scale(0.7); }   /* Exhale bottom */
+  100% { transform: scale(0.7); }  /* Hold */
+}
+
+.breathing-timer {
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-family: monospace;
+  color: #ffffff;
+}
+
+.breathing-phase {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+/* Unblock Monospace Textarea */
+.unblock-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #0f172a;
+  resize: vertical;
+}
+
+.unblock-textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Theme overrides for Interceptor */
+[data-theme="acid-runway"] .interceptor-banner {
+  background: #000000;
+  border-color: #ef4444;
+}
+
+[data-theme="acid-runway"] .interceptor-tile {
+  background: #111111;
+  border-color: #333333;
+  color: #ffffff;
+}
+
+[data-theme="acid-runway"] .interceptor-tile-title {
+  color: #ffffff;
+}
+
+[data-theme="neo-brutalist"] .interceptor-banner {
+  background: #fee2e2;
+  border: 2.5px solid #000000;
+  box-shadow: 4px 4px 0 #000000;
+}
+
+[data-theme="neo-brutalist"] .interceptor-tile {
+  background: #f7f4ec;
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0 #000000;
+}
+
+[data-theme="neo-brutalist"] .interceptor-tile:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 #000000;
+}

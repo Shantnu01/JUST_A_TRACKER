@@ -470,6 +470,85 @@ function App() {
   const [podDropdownOpen, setPodDropdownOpen] = useState(false);
   
   
+  
+  // Friction & Context-Switch Interceptor Agent State
+  const [interceptorModalOpen, setInterceptorModalOpen] = useState(false);
+  const [interceptTask, setInterceptTask] = useState(null);
+  const [interceptorTab, setInterceptorTab] = useState('triage'); // 'triage' | 'unblock' | 'reset' | 'early_proof'
+  const [unblockSteps, setUnblockSteps] = useState('');
+  const [resetSecondsLeft, setResetSecondsLeft] = useState(120);
+  const [resetActive, setResetActive] = useState(false);
+  const [earlyProofText, setEarlyProofText] = useState('');
+
+  // 2-Minute Breathing Box Countdown Effect
+  useEffect(() => {
+    let timer = null;
+    if (resetActive && resetSecondsLeft > 0) {
+      timer = setInterval(() => {
+        setResetSecondsLeft(s => s - 1);
+      }, 1000);
+    } else if (resetActive && resetSecondsLeft <= 0) {
+      setResetActive(false);
+      stopFocusSound();
+      playChime();
+      setInterceptorModalOpen(false);
+      setRunning(true);
+      setToast('🧘 Mind reset complete. Back in the zone!');
+      setTimeout(() => setToast(''), 3000);
+    }
+    return () => clearInterval(timer);
+  }, [resetActive, resetSecondsLeft]);
+
+  const startBreathingReset = () => {
+    setInterceptorTab('reset');
+    setResetSecondsLeft(120);
+    setResetActive(true);
+    playFocusSound('binaural', 0.45);
+  };
+
+  const stopBreathingEarly = () => {
+    setResetActive(false);
+    stopFocusSound();
+    setInterceptorModalOpen(false);
+    setRunning(true);
+    setToast('Resuming focus session!');
+    setTimeout(() => setToast(''), 2000);
+  };
+
+  const handleUnblockSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (unblockSteps.trim()) {
+      const currentNote = day.note || '';
+      const updatedNote = `${currentNote}\n\n[Unblock Micro-Steps for ${interceptTask?.title}]:\n${unblockSteps.trim()}`;
+      patchDay({ note: updatedNote });
+    }
+    setInterceptorModalOpen(false);
+    setRunning(true);
+    setToast('🚀 Blocker broken down. 15-minute micro-sprint engaged!');
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  const handleEarlyProofSubmit = (e) => {
+    if (e) e.preventDefault();
+    setInterceptorModalOpen(false);
+    finishSession(true);
+    if (earlyProofText.trim()) {
+      const storageKey = `daymark-artifacts-${format(selectedDate, 'yyyy-MM-dd')}`;
+      const current = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      current.push({
+        taskId: interceptTask?.id,
+        taskTitle: interceptTask?.title,
+        notes: `[Early Finish Proof]: ${earlyProofText.trim()}`,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem(storageKey, JSON.stringify(current));
+      setVerifiedArtifacts(prev => ({
+        ...prev,
+        [interceptTask?.id]: { notes: earlyProofText.trim() }
+      }));
+    }
+  };
+
   // Pre-Flight Dispatcher Agent State
   const [preflightModalOpen, setPreflightModalOpen] = useState(false);
   const [preflightDismissed, setPreflightDismissed] = useState(false);
@@ -1602,7 +1681,28 @@ function App() {
     setTimeout(() => setToast(''), 2200);
   };
 
-  const finishSession = () => {
+  const finishSession = (force = false) => {
+    if (!force && activeId && isToday) {
+      const taskObj = schedule.find(s => s.id === activeId);
+      if (taskObj) {
+        const scheduledMins = Math.round((taskObj.hours || 1) * 60);
+        const elapsedMins = Math.round(seconds / 60);
+        if (scheduledMins >= 25 && elapsedMins < Math.round(scheduledMins * 0.5)) {
+          setInterceptTask({
+            ...taskObj,
+            scheduledMins,
+            elapsedMins,
+            percent: Math.max(1, Math.round((elapsedMins / scheduledMins) * 100))
+          });
+          setInterceptorTab('triage');
+          setUnblockSteps('');
+          setEarlyProofText('');
+          setInterceptorModalOpen(true);
+          return;
+        }
+      }
+    }
+
     if (activeId && isToday) {
       const mins = Math.max(1, Math.round(seconds / 60));
       const previous = day.completedMinutes?.[activeId] || 0;
