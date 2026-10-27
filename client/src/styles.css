@@ -487,3 +487,351 @@
   .smart-commit-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
   .mock-interview-bar{flex-direction:column;align-items:stretch}
 }
+
+
+/* ==========================================================================
+   INDUSTRIAL HIGH-PERFORMANCE WORKSPACE EXTENSIONS
+   1. Circadian Rhythm & Cognitive Matching
+   2. Elastic Auto-Shift Schedule
+   3. Proof of Work & Micro-Artifact Verification
+   4. Native Web Audio Focus Engine
+   5. Athletic Deload & Burnout Guard
+   6. Evening Closeout & Morning Non-Negotiable Priority
+   ========================================================================== */
+
+/* 1. Circadian Energy Rhythm Strip */
+.circadian-strip {
+  background: #fbfcf9;
+  border: 1px solid #e5eae3;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+.circadian-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.circadian-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #2b573e;
+  background: #e7f0e5;
+  padding: 4px 9px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.circadian-note {
+  font-size: 11px;
+  color: #5c685f;
+}
+.circadian-curve-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 24px;
+  width: 140px;
+}
+.circadian-bar-slice {
+  flex: 1;
+  background: #d8e4d5;
+  border-radius: 2px;
+  min-height: 4px;
+}
+.circadian-bar-slice.current {
+  background: #315b45;
+  box-shadow: 0 0 6px rgba(49, 91, 69, 0.5);
+}
+
+/* 2. Elastic Schedule Auto-Shift */
+.elastic-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f2f7f0;
+  border: 1px solid #d4dfd2;
+  color: #315b45;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.elastic-btn:hover {
+  background: #e5eee2;
+  border-color: #b8cbb4;
+}
+
+/* 3. Micro-Artifact Proof of Work */
+.artifact-verified-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f0f7ee;
+  border: 1px solid #d0dfcc;
+  color: #275237;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-top: 5px;
+}
+.artifact-verified-pill a {
+  color: #2563eb;
+  text-decoration: underline;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.artifact-verified-pill a:hover {
+  color: #1d4ed8;
+}
+
+/* 4. Native Web Audio Soundscape Panel */
+.soundscape-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f7faf5;
+  border: 1px solid #e1e8dd;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-top: 10px;
+  font-size: 11px;
+}
+.soundscape-label {
+  font-weight: 700;
+  color: #455749;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.sound-selector {
+  display: flex;
+  gap: 4px;
+}
+.sound-btn {
+  background: #fff;
+  border: 1px solid #d2dad0;
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #556658;
+  cursor: pointer;
+}
+.sound-btn.active {
+  background: #315b45;
+  color: #fff;
+  border-color: #315b45;
+}
+.volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.volume-wrap input[type="range"] {
+  width: 65px;
+  accent-color: #315b45;
+}
+
+/* 5. Athletic Deload & Burnout Early-Warning System */
+.burnout-warning-card {
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+.burnout-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #854d0e;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.burnout-desc {
+  font-size: 11px;
+  color: #713f12;
+  margin-top: 2px;
+}
+.deload-trigger-btn {
+  background: #ca8a04;
+  color: #fff;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.deload-trigger-btn:hover {
+  background: #a16207;
+}
+.deload-active-banner {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #1e40af;
+}
+
+/* 6. Evening Closeout & Morning Non-Negotiable Priority */
+.morning-priority-card {
+  background: linear-gradient(135deg, #f4f8f3 0%, #e9f2e7 100%);
+  border: 1.5px solid #c2dbbe;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.priority-tag {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  font-weight: 800;
+  color: #315b45;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.priority-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1c2b22;
+  letter-spacing: -0.3px;
+}
+.priority-action-btn {
+  background: #315b45;
+  color: #fff;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.priority-action-btn:hover {
+  background: #254736;
+}
+
+.evening-closeout-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fdf6ec;
+  border: 1px solid #f6deb9;
+  color: #925313;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.evening-closeout-pill:hover {
+  background: #fcefdc;
+}
+
+/* General Modal Extensions */
+.industrial-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 30, 22, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+.industrial-modal-box {
+  background: #fffefa;
+  border: 1px solid #d7ded3;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  box-sizing: border-box;
+  animation: popIn .18s ease-out;
+}
+.modal-field {
+  margin-bottom: 14px;
+}
+.modal-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #455448;
+  margin-bottom: 6px;
+}
+.modal-field input,
+.modal-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d2dad0;
+  background: #fff;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 12px;
+  color: #213025;
+}
+.modal-field input:focus,
+.modal-field textarea:focus {
+  border-color: #315b45;
+  outline: none;
+}
+.modal-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+.modal-btn-primary {
+  background: #315b45;
+  color: #fff;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.modal-btn-primary:hover {
+  background: #254736;
+}
+.modal-btn-secondary {
+  background: #f2f5f0;
+  color: #556658;
+  border: 1px solid #d2dad0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}

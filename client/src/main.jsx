@@ -50,10 +50,17 @@ import {
   Users,
   Utensils,
   Volume2,
+  Headphones,
+  FileText,
+  Link2,
+  ShieldCheck,
+  SlidersHorizontal,
   X,
   Zap
 } from 'lucide-react';
 import './styles.css';
+import { playFocusSound, stopFocusSound, setSoundVolume } from './utils/soundEngine';
+import { getCognitiveTier, calculateCircadianScore, calculateAutoShift, getCircadianEnergyLevel } from './utils/circadianEngine';
 
 // Dynamic API endpoint: Uses relative /api for unified production & Vite proxy,
 // or uses VITE_API_URL if configured for separate frontend/backend deployments.
@@ -558,6 +565,51 @@ function App() {
   const isPast = key < todayKey;
   const isFuture = key > todayKey;
 
+  // 1. Circadian Energy & Cognitive Matching
+  const circadianScore = useMemo(() => calculateCircadianScore(schedule), [schedule]);
+
+  // 2. Elastic Schedule Auto-Shift State
+  const [elasticModalOpen, setElasticModalOpen] = useState(false);
+  const [elasticShiftMins, setElasticShiftMins] = useState(30);
+  const [elasticFromNow, setElasticFromNow] = useState(true);
+  const [elasticCompressBreaks, setElasticCompressBreaks] = useState(false);
+
+  // 3. Micro-Artifact & Proof of Work State
+  const [artifactModalOpen, setArtifactModalOpen] = useState(false);
+  const [closingTask, setClosingTask] = useState(null);
+  const [artifactNotes, setArtifactNotes] = useState('');
+  const [artifactUrl, setArtifactUrl] = useState('');
+
+  // 4. Native Web Audio Focus Soundscape State
+  const [focusSoundType, setFocusSoundType] = useState('off');
+  const [focusSoundVolume, setFocusSoundVolume] = useState(0.35);
+
+  // 5. Athletic Deload & Burnout Early-Warning State
+  const [isDeloadDay, setIsDeloadDay] = useState(() => localStorage.getItem(`daymark-deload-${todayKey}`) === 'true');
+  const rollingVolumeHours = useMemo(() => {
+    let totalMins = 0;
+    const now = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const k = dateKey(d);
+      const dStore = store[k];
+      if (dStore && dStore.completedMinutes) {
+        Object.values(dStore.completedMinutes).forEach(m => {
+          totalMins += (Number(m) || 0);
+        });
+      }
+    }
+    return Math.round((totalMins / 60) * 10) / 10;
+  }, [store]);
+
+  // 6. Evening Closeout & Morning Non-Negotiable Priority State
+  const [closeoutModalOpen, setCloseoutModalOpen] = useState(false);
+  const [closeoutWins, setCloseoutWins] = useState('');
+  const [closeoutFriction, setCloseoutFriction] = useState('');
+  const [closeoutPriority, setCloseoutPriority] = useState('');
+  const [morningPriority, setMorningPriority] = useState(() => localStorage.getItem('daymark-tomorrow-priority') || '');
+
   const day = store[key] || blankDay();
   const activeGroup = groups.find(g => g.id === activeGroupId) || null;
 
@@ -572,6 +624,19 @@ function App() {
   // Sync editingSchedule whenever schedule updates
   useEffect(() => {
     setEditingSchedule(schedule);
+  }, [schedule]);
+
+  // Web Audio focus soundscape sync with active timer
+  useEffect(() => {
+    if (running && focusSoundType !== 'off') {
+      playFocusSound(focusSoundType, focusSoundVolume);
+    } else {
+      stopFocusSound();
+    }
+  }, [running, focusSoundType]);
+
+  useEffect(() => {
+    setSoundVolume(focusSoundVolume);
   }, [schedule]);
 
   // Load user groups when token is present
@@ -1427,12 +1492,107 @@ function App() {
       const previous = day.completedMinutes?.[activeId] || 0;
       patchDay({ completedMinutes: { ...(day.completedMinutes || {}), [activeId]: previous + mins } });
       playChime();
+
+      // Trigger Micro-Artifact Proof of Work prompt
+      const taskObj = schedule.find(s => s.id === activeId);
+      if (taskObj) {
+        setClosingTask({ ...taskObj, loggedMins: mins });
+        setArtifactNotes('');
+        setArtifactUrl('');
+        setArtifactModalOpen(true);
+      }
     }
     setRunning(false);
     setActiveId(null);
     setSeconds(0);
     setToast('Session logged');
     setTimeout(() => setToast(''), 2200);
+  };
+
+  // 1. Elastic Schedule Auto-Shift Action
+  const applyElasticShift = (fromNow = false) => {
+    const updated = calculateAutoShift(schedule, {
+      shiftMinutes: elasticShiftMins,
+      fromNow,
+      compressBreaks: elasticCompressBreaks
+    });
+    setSchedule(updated);
+    setEditingSchedule(updated);
+    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    setElasticModalOpen(false);
+    setToast(fromNow ? 'Schedule auto-shifted from current time!' : `Schedule shifted forward by ${elasticShiftMins} minutes!`);
+    setTimeout(() => setToast(''), 2500);
+
+    if (token) {
+      fetch(`${API}/settings/schedule`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(updated)
+      }).catch(() => {});
+    }
+  };
+
+  // 2. Micro-Artifact Proof of Work Submit
+  const handleArtifactSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (!closingTask) {
+      setArtifactModalOpen(false);
+      return;
+    }
+    const cleanNotes = artifactNotes.trim() || 'Focus milestone verified';
+    const cleanUrl = artifactUrl.trim() || null;
+    const newArtifact = {
+      notes: cleanNotes,
+      url: cleanUrl,
+      timestamp: new Date().toISOString(),
+      durationMins: closingTask.loggedMins || 0
+    };
+    patchDay({
+      artifacts: {
+        ...(day.artifacts || {}),
+        [closingTask.id]: newArtifact
+      }
+    });
+    setArtifactModalOpen(false);
+    setToast('Verified proof of work logged!');
+    setTimeout(() => setToast(''), 2200);
+  };
+
+  // 3. Athletic Deload Day Handlers
+  const activateDeloadDay = () => {
+    localStorage.setItem(`daymark-deload-${todayKey}`, 'true');
+    setIsDeloadDay(true);
+    setToast('Athletic Deload Activated: Cognitive targets scaled by 50% to prevent burnout.');
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  const deactivateDeloadDay = () => {
+    localStorage.removeItem(`daymark-deload-${todayKey}`);
+    setIsDeloadDay(false);
+    setToast('Deload day deactivated. Full volume resumed.');
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  // 4. Evening Closeout & Morning Non-Negotiable Submit
+  const handleSaveCloseout = (e) => {
+    if (e) e.preventDefault();
+    const target = closeoutPriority.trim();
+    if (target) {
+      localStorage.setItem('daymark-tomorrow-priority', target);
+      setMorningPriority(target);
+    }
+    patchDay({
+      closeout: {
+        wins: closeoutWins.trim(),
+        friction: closeoutFriction.trim(),
+        priority: target,
+        timestamp: new Date().toISOString()
+      }
+    });
+    setCloseoutModalOpen(false);
+    setToast("Evening shutdown complete. Tomorrow's priority locked!");
+    setTimeout(() => setToast(''), 2500);
   };
 
   const saveAlarms = (nextAlarms) => {
@@ -2010,6 +2170,12 @@ function App() {
                     </>
                   )}
                 </h2>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '10px' }}>
+                  <button className="evening-closeout-pill" onClick={() => setCloseoutModalOpen(true)} title="Complete your 3-minute evening shutdown ritual">
+                    <Moon size={13} />
+                    <span>Evening Closeout</span>
+                  </button>
+                </div>
                 <p className="subhead">
                   {isToday
                     ? 'Show up, focus on the next block, and let the progress add up.'
@@ -2034,6 +2200,71 @@ function App() {
                 </div>
               </div>
             </section>
+
+            {/* Morning Non-Negotiable Priority Banner */}
+            {isToday && morningPriority && (
+              <div className="morning-priority-card">
+                <div>
+                  <div className="priority-tag">
+                    <Target size={12} />
+                    <span>Locked Morning Non-Negotiable</span>
+                  </div>
+                  <div className="priority-title">{morningPriority}</div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <button 
+                    className="priority-action-btn"
+                    onClick={() => {
+                      const firstFocus = schedule.find(s => s.kind !== 'break');
+                      if (firstFocus) startSession(firstFocus.id);
+                    }}
+                  >
+                    Execute Priority
+                  </button>
+                  <button 
+                    className="icon-button small" 
+                    onClick={() => {
+                      localStorage.removeItem('daymark-tomorrow-priority');
+                      setMorningPriority('');
+                    }}
+                    title="Dismiss priority"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Athletic Deload & Burnout Early-Warning */}
+            {isToday && rollingVolumeHours >= 42 && !isDeloadDay && (
+              <div className="burnout-warning-card">
+                <div>
+                  <div className="burnout-title">
+                    <Zap size={14} />
+                    <span>High Sustained Cognitive Volume ({rollingVolumeHours}h logged in 7 days)</span>
+                  </div>
+                  <div className="burnout-desc">
+                    Your central nervous system has operated at high intensity for 5+ days. Consider activating an athletic Deload Day to consolidate learning without losing your streak.
+                  </div>
+                </div>
+                <button className="deload-trigger-btn" onClick={activateDeloadDay}>
+                  Activate Deload Day
+                </button>
+              </div>
+            )}
+            {isDeloadDay && (
+              <div className="deload-active-banner">
+                <span>
+                  <strong>Athletic Deload Day Active:</strong> Target capacity scaled by 50% for recovery & synthesis. Completing this day fully protects and extends your streak!
+                </span>
+                <button 
+                  onClick={deactivateDeloadDay}
+                  style={{ background: 'transparent', border: 'none', color: '#1e40af', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline', fontSize: '11px' }}
+                >
+                  Resume Full Volume
+                </button>
+              </div>
+            )}
 
             <section className="metrics-grid">
               <Metric
@@ -2067,6 +2298,16 @@ function App() {
                     <h3>{isToday ? "Today's schedule" : `Schedule for ${prettyDate(selectedDate)}`}</h3>
                   </div>
                   <div className="date-controls">
+                    {isToday && (
+                      <button 
+                        className="elastic-btn" 
+                        onClick={() => setElasticModalOpen(true)}
+                        title="Auto-shift schedule if running late"
+                      >
+                        <SlidersHorizontal size={13} />
+                        <span>Elastic Shift</span>
+                      </button>
+                    )}
                     <button className="icon-button small" onClick={() => shiftDate(-1)} title="Previous day">
                       <ChevronLeft size={16} />
                     </button>
@@ -2080,6 +2321,35 @@ function App() {
                     <button className="icon-button small" onClick={() => shiftDate(1)} title="Next day">
                       <ChevronRight size={16} />
                     </button>
+                  </div>
+                </div>
+
+                {/* Circadian Energy Rhythm Strip */}
+                <div className="circadian-strip">
+                  <div className="circadian-info">
+                    <span className="circadian-badge">
+                      <Activity size={12} />
+                      <span>{circadianScore}% Biological Alignment</span>
+                    </span>
+                    <span className="circadian-note">
+                      {circadianScore >= 85
+                        ? 'Optimal: Heavy cognitive work aligns with natural alertness peaks.'
+                        : 'Advisory: High cognitive demand during afternoon circadian trough.'}
+                    </span>
+                  </div>
+                  <div className="circadian-curve-bar" title="Circadian energy wave across the day">
+                    {[0.4, 0.6, 0.85, 0.95, 0.9, 0.7, 0.5, 0.55, 0.8, 0.85, 0.7, 0.45].map((val, idx) => {
+                      const currentHour = new Date().getHours();
+                      const sliceHour = 6 + idx * 1.5;
+                      const isCurrentSlice = currentHour >= sliceHour && currentHour < sliceHour + 1.5;
+                      return (
+                        <div
+                          key={idx}
+                          className={`circadian-bar-slice ${isCurrentSlice ? 'current' : ''}`}
+                          style={{ height: `${Math.round(val * 24)}px` }}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -2144,6 +2414,58 @@ function App() {
                 </div>
 
                 <div className="session-footer">
+                  {/* Native Web Audio Soundscape Panel */}
+                  {isToday && (
+                    <div className="soundscape-strip">
+                      <span className="soundscape-label">
+                        <Headphones size={13} /> Soundscape:
+                      </span>
+                      <div className="sound-selector">
+                        <button 
+                          className={`sound-btn ${focusSoundType === 'off' ? 'active' : ''}`}
+                          onClick={() => setFocusSoundType('off')}
+                        >
+                          Off
+                        </button>
+                        <button 
+                          className={`sound-btn ${focusSoundType === 'brown' ? 'active' : ''}`}
+                          onClick={() => setFocusSoundType('brown')}
+                          title="Brownian Noise: Deep low-frequency rumble for logic & coding"
+                        >
+                          Brown
+                        </button>
+                        <button 
+                          className={`sound-btn ${focusSoundType === 'binaural' ? 'active' : ''}`}
+                          onClick={() => setFocusSoundType('binaural')}
+                          title="40Hz Gamma Beat: Binaural frequency synthesis for peak concentration"
+                        >
+                          40Hz Gamma
+                        </button>
+                        <button 
+                          className={`sound-btn ${focusSoundType === 'pink' ? 'active' : ''}`}
+                          onClick={() => setFocusSoundType('pink')}
+                          title="Pink Noise: Calming natural acoustic mask"
+                        >
+                          Pink
+                        </button>
+                      </div>
+                      {focusSoundType !== 'off' && (
+                        <div className="volume-wrap">
+                          <Volume2 size={12} color="#556658" />
+                          <input 
+                            type="range" 
+                            min="0.05" 
+                            max="0.8" 
+                            step="0.05" 
+                            value={focusSoundVolume}
+                            onChange={(e) => setFocusSoundVolume(parseFloat(e.target.value))}
+                            title={`Volume: ${Math.round(focusSoundVolume * 100)}%`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <div className="session-clock">
                     <Clock3 size={17} />
                     <span>
