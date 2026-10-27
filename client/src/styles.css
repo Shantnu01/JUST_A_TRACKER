@@ -2486,3 +2486,285 @@
   transform: translate(-2px, -2px);
   box-shadow: 5px 5px 0 #000000;
 }
+
+
+
+/* ==========================================================================
+   AUTONOMOUS CURRICULUM & STAGE-BY-STAGE ROADMAP SYSTEM
+   ========================================================================== */
+
+/* Schedule Item Curriculum Pill */
+.curriculum-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #4f46e5;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+
+.curriculum-pill:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.curriculum-pill.unassigned {
+  background: rgba(148, 163, 184, 0.1);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: #64748b;
+  border-style: dashed;
+}
+
+/* Curriculum Modal & Tree View */
+.curriculum-header-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.curriculum-progress-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: conic-gradient(#4f46e5 var(--p, 0%), #e2e8f0 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.curriculum-progress-inner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.curriculum-stat-text {
+  flex: 1;
+}
+
+.curriculum-stage-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4f46e5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.curriculum-stage-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 2px 0;
+}
+
+.curriculum-count-subtitle {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.curriculum-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.curriculum-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.curriculum-btn-secondary:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* Stage List Accordion */
+.curriculum-stages-container {
+  max-height: 420px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+
+.curriculum-stage-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.curriculum-stage-card.active-stage {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1.5px rgba(99, 102, 241, 0.4);
+}
+
+.curriculum-stage-head {
+  padding: 10px 14px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1e293b;
+}
+
+.curriculum-stage-card.active-stage .curriculum-stage-head {
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.curriculum-checkpoint-list {
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.curriculum-checkpoint-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.curriculum-checkpoint-item:last-child {
+  border-bottom: none;
+}
+
+.curriculum-checkbox {
+  margin-top: 3px;
+  cursor: pointer;
+  accent-color: #4f46e5;
+  width: 15px;
+  height: 15px;
+}
+
+.curriculum-checkpoint-content {
+  flex: 1;
+}
+
+.curriculum-checkpoint-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.35;
+}
+
+.curriculum-checkpoint-title.done {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.curriculum-details-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.curriculum-detail-tag {
+  font-size: 0.7rem;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Active Focus Session Checklist Widget */
+.session-curriculum-widget {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 14px;
+  text-align: left;
+}
+
+.session-curriculum-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #a5b4fc;
+  letter-spacing: 0.05em;
+}
+
+.session-checkpoint-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 0.8rem;
+  color: #e2e8f0;
+}
+
+/* Theme overrides for Curriculum */
+[data-theme="acid-runway"] .curriculum-pill {
+  background: transparent;
+  border-color: #c6ff00;
+  color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .curriculum-stage-card.active-stage {
+  border-color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .curriculum-stage-card.active-stage .curriculum-stage-head {
+  background: #111111;
+  color: #c6ff00;
+}
+
+[data-theme="neo-brutalist"] .curriculum-pill {
+  background: #f7f4ec;
+  border: 1.5px solid #000000;
+  color: #000000;
+  box-shadow: 2px 2px 0 #000000;
+}
+
+[data-theme="neo-brutalist"] .curriculum-stage-card {
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0 #000000;
+}

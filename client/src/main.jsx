@@ -1,8 +1,18 @@
+import {
+  parseCurriculumText,
+  loadSubjectCurriculum,
+  saveSubjectCurriculum,
+  calculateCurriculumProgress,
+  toggleCurriculumCheckpoint,
+  CHATGPT_ROADMAP_PROMPT_TEMPLATE
+} from './utils/curriculumEngine';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   AlarmClock,
   Activity,
+  Milestone,
+  Layers,
   ArrowUpRight,
   Award,
   Bell,
@@ -491,6 +501,14 @@ function App() {
   // Theme State
   const [theme, setTheme] = useState(() => localStorage.getItem('daymark-theme') || 'default');
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+  // 7. Subject Curriculum & Stage Roadmap State
+  const [curriculumModalOpen, setCurriculumModalOpen] = useState(false);
+  const [curriculumSubject, setCurriculumSubject] = useState('NLP');
+  const [activeCurriculum, setActiveCurriculum] = useState(null);
+  const [curriculumEditMode, setCurriculumEditMode] = useState(false);
+  const [curriculumRawText, setCurriculumRawText] = useState('');
+  const [curriculumStageOpen, setCurriculumStageOpen] = useState({});
+
 
   // 1:00 AM Recap State
   const [recapModalOpen, setRecapModalOpen] = useState(false);
@@ -1641,6 +1659,46 @@ function App() {
   };
 
   
+  
+  // --- Curriculum & Stage Roadmap Handlers ---
+  const openSubjectCurriculum = (title) => {
+    const cleanTitle = (title || 'General').trim();
+    setCurriculumSubject(cleanTitle);
+    const curr = loadSubjectCurriculum(cleanTitle);
+    setActiveCurriculum(curr);
+    setCurriculumEditMode(!curr);
+    setCurriculumRawText('');
+    setCurriculumModalOpen(true);
+  };
+
+  const handleToggleCheckpoint = (stageId, checkpointId) => {
+    if (!activeCurriculum) return;
+    const updated = toggleCurriculumCheckpoint(activeCurriculum, stageId, checkpointId);
+    setActiveCurriculum(updated);
+    saveSubjectCurriculum(curriculumSubject, updated);
+    playChime(true);
+    setToast('✓ Stage checkpoint updated!');
+    setTimeout(() => setToast(''), 2000);
+  };
+
+  const handleImportCurriculum = () => {
+    if (!curriculumRawText.trim()) return;
+    const parsed = parseCurriculumText(curriculumRawText);
+    parsed.subject = curriculumSubject;
+    setActiveCurriculum(parsed);
+    saveSubjectCurriculum(curriculumSubject, parsed);
+    setCurriculumEditMode(false);
+    setToast(`🗺️ Roadmap loaded for ${curriculumSubject} (${parsed.stages.length} stages)!`);
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  const handleCopyChatGPTTemplate = () => {
+    const prompt = CHATGPT_ROADMAP_PROMPT_TEMPLATE.replace(/\[SUBJECT NAME[^\]]*\]/g, curriculumSubject || 'Subject');
+    navigator.clipboard.writeText(prompt);
+    setToast('📋 ChatGPT Roadmap prompt copied to clipboard!');
+    setTimeout(() => setToast(''), 2500);
+  };
+
   // --- AGENTIC EFFECTS & HANDLERS (Placed after all core state and functions) ---
 
   // Theme attribute effect
@@ -2743,6 +2801,29 @@ function App() {
                             <span className="duration-pill">{item.hours || computeDurationHours(item.start, item.end)}h</span>
                           </div>
                           <p>{item.subtitle}</p>
+                          {/* Subject Stage Roadmap Pill */}
+                          {item.kind === 'focus' && (
+                            <button
+                              className="curriculum-pill"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openSubjectCurriculum(item.title);
+                              }}
+                              title={`View stage-by-stage learning plan for ${item.title}`}
+                            >
+                              <Milestone size={11} />
+                              <span>
+                                {(() => {
+                                  const curr = loadSubjectCurriculum(item.title);
+                                  if (curr) {
+                                    const prog = calculateCurriculumProgress(curr);
+                                    return `${prog.activeStage ? prog.activeStage.title.split('—')[0].trim() : 'Roadmap'} (${prog.percent}%)`;
+                                  }
+                                  return '+ Stage Plan';
+                                })()}
+                              </span>
+                            </button>
+                          )}
                           {logged > 0 && (
                             <span className="logged-label">
                               {Math.floor(logged / 60)}h {logged % 60}m logged
