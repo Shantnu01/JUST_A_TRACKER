@@ -29,7 +29,7 @@ import {
   LogOut,
   Medal,
   Menu,
-  Moon,
+  Moon, Palette,
   Pause,
   Play,
   Plus,
@@ -468,6 +468,15 @@ function App() {
   const [joinInviteCode, setJoinInviteCode] = useState('');
   const [podError, setPodError] = useState('');
   const [podDropdownOpen, setPodDropdownOpen] = useState(false);
+  // Theme State: 'default' | 'neo-brutalist' | 'zen-paper' | 'ghibli-meadow' | 'acid-runway' | 'spider-verse'
+  const [theme, setTheme] = useState(() => localStorage.getItem('daymark-theme') || 'default');
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('daymark-theme', theme);
+  }, [theme]);
+
 
   // 1:00 AM Recap State
   const [recapModalOpen, setRecapModalOpen] = useState(false);
@@ -1948,7 +1957,7 @@ function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-theme={theme}>
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">
@@ -2020,7 +2029,31 @@ function App() {
         </div>
       </aside>
 
-      <main className="main-content">
+            <main className="main-content" style={{ position: 'relative' }}>
+        {theme === 'spider-verse' && (
+          <div className="spidey-swing-anchor" title="THWIP! Miles Morales on duty!">
+            <div className="spidey-web-line" />
+            <svg className="spidey-figure-body" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="50" y1="0" x2="50" y2="20" stroke="#00f0ff" strokeWidth="3" strokeDasharray="4 2" />
+              <path d="M50 20 L50 35 L42 42" stroke="#e11d48" strokeWidth="7" strokeLinecap="round" />
+              <path d="M50 20 L58 35 L62 42" stroke="#e11d48" strokeWidth="7" strokeLinecap="round" />
+              <path d="M38 40 Q50 35 62 40 L58 70 Q50 75 42 70 Z" fill="#1e1b4b" stroke="#0f172a" strokeWidth="2" />
+              <path d="M43 40 Q50 36 57 40 L55 65 Q50 68 45 65 Z" fill="#e11d48" />
+              <path d="M48 50 L52 50 L50 54 Z" fill="#000" />
+              <path d="M48 50 L42 46 M52 50 L58 46 M48 53 L40 56 M52 53 L60 56 M49 54 L44 62 M51 54 L56 62" stroke="#000" strokeWidth="1.5" />
+              <ellipse cx="50" cy="85" rx="16" ry="19" fill="#e11d48" stroke="#be123c" strokeWidth="2" />
+              <line x1="50" y1="66" x2="50" y2="104" stroke="#881337" strokeWidth="1.2" />
+              <line x1="34" y1="85" x2="66" y2="85" stroke="#881337" strokeWidth="1.2" />
+              <ellipse cx="50" cy="85" rx="9" ry="11" stroke="#881337" strokeWidth="1" fill="none" />
+              <path d="M40 82 Q46 80 48 87 Q45 92 39 88 Z" fill="#ffffff" stroke="#000" strokeWidth="2.5" />
+              <path d="M60 82 Q54 80 52 87 Q55 92 61 88 Z" fill="#ffffff" stroke="#000" strokeWidth="2.5" />
+              <path d="M40 68 L24 55 L16 68" stroke="#1e1b4b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M16 68 L10 65" stroke="#e11d48" strokeWidth="8" strokeLinecap="round" />
+              <path d="M60 68 L76 55 L84 68" stroke="#1e1b4b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M84 68 L90 65" stroke="#e11d48" strokeWidth="8" strokeLinecap="round" />
+            </svg>
+          </div>
+        )}
         <header className="topbar">
           <div>
             <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
@@ -2128,6 +2161,122 @@ function App() {
             <button className="icon-button" title="Export progress as CSV" onClick={exportCsv}>
               <Download size={17} />
             </button>
+            
+            {/* Visual Theme Selector */}
+            <div style={{ position: 'relative' }}>
+              <button
+                className="theme-switcher-btn"
+                onClick={() => setThemeDropdownOpen(v => !v)}
+                title="Change theme aesthetic"
+              >
+                <Palette size={13} />
+                <span>
+                  {theme === 'neo-brutalist'
+                    ? 'Neo-Brutalist'
+                    : theme === 'zen-paper'
+                    ? 'Zen Paper'
+                    : theme === 'ghibli-meadow'
+                    ? 'Ghibli Meadow'
+                    : theme === 'acid-runway'
+                    ? 'Acid Runway'
+                    : theme === 'spider-verse'
+                    ? 'Spider-Verse'
+                    : 'Daymark Classic'}
+                </span>
+                <ChevronDown size={11} />
+              </button>
+
+              {themeDropdownOpen && (
+                <>
+                  <div
+                    className="theme-dropdown-backdrop"
+                    onClick={() => setThemeDropdownOpen(false)}
+                  />
+                  <div className="theme-dropdown-menu">
+                    <div className="theme-dropdown-heading">AESTHETIC THEME</div>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'default' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('default');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot classic" />
+                      <div className="theme-item-text">
+                        <strong>Daymark Classic</strong>
+                        <small>Forest green & warm cream (Original)</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'neo-brutalist' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('neo-brutalist');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot brut" />
+                      <div className="theme-item-text">
+                        <strong>Neo-Brutalist</strong>
+                        <small>Architectural bone, crisp 2px ink & Klein blue</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'zen-paper' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('zen-paper');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot zen" />
+                      <div className="theme-item-text">
+                        <strong>Zen Paper</strong>
+                        <small>Tokyo washi, editorial serif & vermillion seal</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'ghibli-meadow' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('ghibli-meadow');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot ghibli" />
+                      <div className="theme-item-text">
+                        <strong>Ghibli Meadow</strong>
+                        <small>Watercolor sky, Totoro moss & storybook cursive</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'acid-runway' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('acid-runway');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot acid" />
+                      <div className="theme-item-text">
+                        <strong>Acid Runway</strong>
+                        <small>High-fashion pitch black & volt acid lime</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'spider-verse' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('spider-verse');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot spidey" />
+                      <div className="theme-item-text">
+                        <strong>Spider-Verse</strong>
+                        <small>Miles Morales comic pop-art & action figure</small>
+                      </div>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
             <div className="date-chip">
               <span className={`status-dot ${isToday ? '' : 'inactive'}`} />
               {prettyDate(selectedDate)}
