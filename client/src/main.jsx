@@ -468,9 +468,7 @@ function App() {
   const [joinInviteCode, setJoinInviteCode] = useState('');
   const [podError, setPodError] = useState('');
   const [podDropdownOpen, setPodDropdownOpen] = useState(false);
-  
-  
-  
+
   // Friction & Context-Switch Interceptor Agent State
   const [interceptorModalOpen, setInterceptorModalOpen] = useState(false);
   const [interceptTask, setInterceptTask] = useState(null);
@@ -480,189 +478,18 @@ function App() {
   const [resetActive, setResetActive] = useState(false);
   const [earlyProofText, setEarlyProofText] = useState('');
 
-  // 2-Minute Breathing Box Countdown Effect
-  useEffect(() => {
-    let timer = null;
-    if (resetActive && resetSecondsLeft > 0) {
-      timer = setInterval(() => {
-        setResetSecondsLeft(s => s - 1);
-      }, 1000);
-    } else if (resetActive && resetSecondsLeft <= 0) {
-      setResetActive(false);
-      stopFocusSound();
-      playChime();
-      setInterceptorModalOpen(false);
-      setRunning(true);
-      setToast('🧘 Mind reset complete. Back in the zone!');
-      setTimeout(() => setToast(''), 3000);
-    }
-    return () => clearInterval(timer);
-  }, [resetActive, resetSecondsLeft]);
-
-  const startBreathingReset = () => {
-    setInterceptorTab('reset');
-    setResetSecondsLeft(120);
-    setResetActive(true);
-    playFocusSound('binaural', 0.45);
-  };
-
-  const stopBreathingEarly = () => {
-    setResetActive(false);
-    stopFocusSound();
-    setInterceptorModalOpen(false);
-    setRunning(true);
-    setToast('Resuming focus session!');
-    setTimeout(() => setToast(''), 2000);
-  };
-
-  const handleUnblockSubmit = (e) => {
-    if (e) e.preventDefault();
-    if (unblockSteps.trim()) {
-      const currentNote = day.note || '';
-      const updatedNote = `${currentNote}\n\n[Unblock Micro-Steps for ${interceptTask?.title}]:\n${unblockSteps.trim()}`;
-      patchDay({ note: updatedNote });
-    }
-    setInterceptorModalOpen(false);
-    setRunning(true);
-    setToast('🚀 Blocker broken down. 15-minute micro-sprint engaged!');
-    setTimeout(() => setToast(''), 3000);
-  };
-
-  const handleEarlyProofSubmit = (e) => {
-    if (e) e.preventDefault();
-    setInterceptorModalOpen(false);
-    finishSession(true);
-    if (earlyProofText.trim()) {
-      const storageKey = `daymark-artifacts-${format(selectedDate, 'yyyy-MM-dd')}`;
-      const current = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      current.push({
-        taskId: interceptTask?.id,
-        taskTitle: interceptTask?.title,
-        notes: `[Early Finish Proof]: ${earlyProofText.trim()}`,
-        timestamp: new Date().toISOString()
-      });
-      localStorage.setItem(storageKey, JSON.stringify(current));
-      setVerifiedArtifacts(prev => ({
-        ...prev,
-        [interceptTask?.id]: { notes: earlyProofText.trim() }
-      }));
-    }
-  };
-
   // Pre-Flight Dispatcher Agent State
   const [preflightModalOpen, setPreflightModalOpen] = useState(false);
   const [preflightDismissed, setPreflightDismissed] = useState(false);
-
-  // Pre-Flight Morning First-Open Gate
-  useEffect(() => {
-    if (!isToday) return;
-    const todayStr = format(selectedDate, 'yyyy-MM-dd');
-    const launchedKey = `daymark-preflight-launched-${todayStr}`;
-    const hasLaunched = localStorage.getItem(launchedKey);
-    const hour = new Date().getHours();
-    if (!hasLaunched && hour >= 5 && hour < 13 && !preflightDismissed) {
-      setPreflightModalOpen(true);
-    }
-  }, [isToday, selectedDate, preflightDismissed]);
-
-  const handleLaunchDay = (applyAlignment = true) => {
-    const todayStr = format(selectedDate, 'yyyy-MM-dd');
-    localStorage.setItem(`daymark-preflight-launched-${todayStr}`, 'true');
-
-    if (applyAlignment && schedule && schedule.length > 0) {
-      const { alignedSchedule } = slotScheduleToCircadian(schedule, morningPriority);
-      setSchedule(alignedSchedule);
-      setEditingSchedule(alignedSchedule);
-      const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
-      localStorage.setItem(storageKey, JSON.stringify(alignedSchedule));
-
-      if (token) {
-        fetch(`${API}/settings/schedule`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify(alignedSchedule)
-        }).catch(() => {});
-      }
-      setToast('🚀 Day Launched! Priority locked to Circadian Morning Peak.');
-    } else {
-      setToast('🚀 Day Launched! Timetable locked in.');
-    }
-
-    setPreflightModalOpen(false);
-    setTimeout(() => setToast(''), 3000);
-  };
 
   // Chief of Staff Agent States
   const [chiefOfStaffAlert, setChiefOfStaffAlert] = useState(null);
   const [chiefOfStaffModalOpen, setChiefOfStaffModalOpen] = useState(false);
   const [chiefDismissUntil, setChiefDismissUntil] = useState(0);
 
-  // Chief of Staff Proactive Slip Detector (Tick every 30 seconds)
-  useEffect(() => {
-    if (!isToday || !schedule || schedule.length === 0) return;
-
-    const runDriftCheck = () => {
-      if (Date.now() < chiefDismissUntil) return;
-      const completedIds = (routine || []).filter(r => r.completed).map(r => r.id);
-      const report = detectScheduleDrift(schedule, completedIds, activeTask?.id);
-      if (report && report.hasDrift) {
-        setChiefOfStaffAlert(report);
-      } else {
-        setChiefOfStaffAlert(null);
-      }
-    };
-
-    runDriftCheck();
-    const interval = setInterval(runDriftCheck, 30000);
-    return () => clearInterval(interval);
-  }, [isToday, schedule, routine, activeTask, chiefDismissUntil]);
-
-  // Chief of Staff Action Handlers
-  const applyChiefOfStaffHeal = (planToApply = null) => {
-    const plan = planToApply || chiefOfStaffAlert;
-    if (!plan || !plan.proposedSchedule) return;
-
-    const updated = plan.proposedSchedule;
-    setSchedule(updated);
-    setEditingSchedule(updated);
-    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
-    localStorage.setItem(storageKey, JSON.stringify(updated));
-
-    setChiefOfStaffAlert(null);
-    setChiefOfStaffModalOpen(false);
-    setToast(`✨ Chief of Staff healed schedule! Saved ${plan.savingsMinutes || 0}m.`);
-    setTimeout(() => setToast(''), 3000);
-
-    if (token) {
-      fetch(`${API}/settings/schedule`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(updated)
-      }).catch(() => {});
-    }
-  };
-
-  const runManualChiefAudit = () => {
-    const completedIds = (routine || []).filter(r => r.completed).map(r => r.id);
-    const plan = generateChiefOfStaffPlan(schedule, completedIds);
-    setChiefOfStaffAlert({
-      hasDrift: true,
-      driftMinutes: 0,
-      slippingItem: null,
-      ...plan
-    });
-    setChiefOfStaffModalOpen(true);
-  };
-
-  // Theme State: 'default' | 'neo-brutalist' | 'zen-paper' | 'ghibli-meadow' | 'acid-runway' | 'spider-verse'
+  // Theme State
   const [theme, setTheme] = useState(() => localStorage.getItem('daymark-theme') || 'default');
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('daymark-theme', theme);
-  }, [theme]);
-
 
   // 1:00 AM Recap State
   const [recapModalOpen, setRecapModalOpen] = useState(false);
@@ -1810,6 +1637,181 @@ function App() {
     setToast("Evening shutdown complete. Tomorrow's priority locked!");
     setTimeout(() => setToast(''), 2500);
   };
+
+  
+  // --- AGENTIC EFFECTS & HANDLERS (Placed after all core state and functions) ---
+
+  // Theme attribute effect
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('daymark-theme', theme);
+  }, [theme]);
+
+  // 2-Minute Breathing Box Countdown Effect
+  useEffect(() => {
+    let timer = null;
+    if (resetActive && resetSecondsLeft > 0) {
+      timer = setInterval(() => {
+        setResetSecondsLeft(s => s - 1);
+      }, 1000);
+    } else if (resetActive && resetSecondsLeft <= 0) {
+      setResetActive(false);
+      stopFocusSound();
+      playChime();
+      setInterceptorModalOpen(false);
+      setRunning(true);
+      setToast('🧘 Mind reset complete. Back in the zone!');
+      setTimeout(() => setToast(''), 3000);
+    }
+    return () => clearInterval(timer);
+  }, [resetActive, resetSecondsLeft]);
+
+  const startBreathingReset = () => {
+    setInterceptorTab('reset');
+    setResetSecondsLeft(120);
+    setResetActive(true);
+    playFocusSound('binaural', 0.45);
+  };
+
+  const stopBreathingEarly = () => {
+    setResetActive(false);
+    stopFocusSound();
+    setInterceptorModalOpen(false);
+    setRunning(true);
+    setToast('Resuming focus session!');
+    setTimeout(() => setToast(''), 2000);
+  };
+
+  const handleUnblockSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (unblockSteps.trim()) {
+      const currentNote = day.note || '';
+      const updatedNote = `${currentNote}\n\n[Unblock Micro-Steps for ${interceptTask?.title}]:\n${unblockSteps.trim()}`;
+      patchDay({ note: updatedNote });
+    }
+    setInterceptorModalOpen(false);
+    setRunning(true);
+    setToast('🚀 Blocker broken down. 15-minute micro-sprint engaged!');
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  const handleEarlyProofSubmit = (e) => {
+    if (e) e.preventDefault();
+    setInterceptorModalOpen(false);
+    finishSession(true);
+    if (earlyProofText.trim()) {
+      const storageKey = `daymark-artifacts-${format(selectedDate, 'yyyy-MM-dd')}`;
+      const current = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      current.push({
+        taskId: interceptTask?.id,
+        taskTitle: interceptTask?.title,
+        notes: `[Early Finish Proof]: ${earlyProofText.trim()}`,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem(storageKey, JSON.stringify(current));
+      setVerifiedArtifacts(prev => ({
+        ...prev,
+        [interceptTask?.id]: { notes: earlyProofText.trim() }
+      }));
+    }
+  };
+
+  // Pre-Flight Morning First-Open Gate
+  useEffect(() => {
+    if (!isToday) return;
+    const todayStr = format(selectedDate, 'yyyy-MM-dd');
+    const launchedKey = `daymark-preflight-launched-${todayStr}`;
+    const hasLaunched = localStorage.getItem(launchedKey);
+    const hour = new Date().getHours();
+    if (!hasLaunched && hour >= 5 && hour < 13 && !preflightDismissed) {
+      setPreflightModalOpen(true);
+    }
+  }, [isToday, selectedDate, preflightDismissed]);
+
+  const handleLaunchDay = (applyAlignment = true) => {
+    const todayStr = format(selectedDate, 'yyyy-MM-dd');
+    localStorage.setItem(`daymark-preflight-launched-${todayStr}`, 'true');
+
+    if (applyAlignment && schedule && schedule.length > 0) {
+      const { alignedSchedule } = slotScheduleToCircadian(schedule, morningPriority);
+      setSchedule(alignedSchedule);
+      setEditingSchedule(alignedSchedule);
+      const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+      localStorage.setItem(storageKey, JSON.stringify(alignedSchedule));
+
+      if (token) {
+        fetch(`${API}/settings/schedule`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify(alignedSchedule)
+        }).catch(() => {});
+      }
+      setToast('🚀 Day Launched! Priority locked to Circadian Morning Peak.');
+    } else {
+      setToast('🚀 Day Launched! Timetable locked in.');
+    }
+
+    setPreflightModalOpen(false);
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  // Chief of Staff Proactive Slip Detector (Tick every 30 seconds)
+  useEffect(() => {
+    if (!isToday || !schedule || schedule.length === 0) return;
+
+    const runDriftCheck = () => {
+      if (Date.now() < chiefDismissUntil) return;
+      const completedIds = (routine || []).filter(r => r.completed).map(r => r.id);
+      const report = detectScheduleDrift(schedule, completedIds, activeTask?.id);
+      if (report && report.hasDrift) {
+        setChiefOfStaffAlert(report);
+      } else {
+        setChiefOfStaffAlert(null);
+      }
+    };
+
+    runDriftCheck();
+    const interval = setInterval(runDriftCheck, 30000);
+    return () => clearInterval(interval);
+  }, [isToday, schedule, routine, activeTask, chiefDismissUntil]);
+
+  // Chief of Staff Action Handlers
+  const applyChiefOfStaffHeal = (planToApply = null) => {
+    const plan = planToApply || chiefOfStaffAlert;
+    if (!plan || !plan.proposedSchedule) return;
+
+    const updated = plan.proposedSchedule;
+    setSchedule(updated);
+    setEditingSchedule(updated);
+    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+
+    setChiefOfStaffAlert(null);
+    setChiefOfStaffModalOpen(false);
+    setToast(`✨ Chief of Staff healed schedule! Saved ${plan.savingsMinutes || 0}m.`);
+    setTimeout(() => setToast(''), 3000);
+
+    if (token) {
+      fetch(`${API}/settings/schedule`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(updated)
+      }).catch(() => {});
+    }
+  };
+
+  const runManualChiefAudit = () => {
+    const completedIds = (routine || []).filter(r => r.completed).map(r => r.id);
+    const plan = generateChiefOfStaffPlan(schedule, completedIds);
+    setChiefOfStaffAlert({
+      hasDrift: true,
+      driftMinutes: 0,
+      slippingItem: null,
+      ...plan
+    });
+    setChiefOfStaffModalOpen(true);
+  };
+
 
   const saveAlarms = (nextAlarms) => {
     const capped = nextAlarms.slice(0, 5);
