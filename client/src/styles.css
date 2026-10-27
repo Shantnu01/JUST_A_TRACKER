@@ -3007,3 +3007,748 @@
     margin-top: 10px !important;
   }
 }
+
+/* ==========================================================================
+   IN-ROUTINE STAGE TRACKER (MODERN, UNCLUTTERED, DIRECT CHECKPOINT TICKING)
+   ========================================================================== */
+
+.routine-stage-box {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  position: relative;
+  text-align: left;
+}
+
+.routine-stage-box:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.routine-stage-box.is-expanded {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+/* Uninitialized Starter Box */
+.routine-stage-box.uninitialized {
+  padding: 8px 12px;
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.stage-uninit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+.stage-uninit-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stage-uninit-left .stage-icon {
+  color: #818cf8;
+}
+
+.stage-uninit-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stage-init-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.stage-init-btn.primary {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.stage-init-btn.primary:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+.stage-init-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main, #e2e8f0);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.stage-init-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Compact Head Row */
+.stage-compact-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.stage-head-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.stage-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgba(99, 102, 241, 0.16);
+  color: #818cf8;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.stage-name-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main, #f1f5f9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stage-head-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stage-progress-track {
+  width: 60px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stage-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #10b981);
+  border-radius: 4px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stage-percent-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted, #94a3b8);
+  min-width: 28px;
+  text-align: right;
+}
+
+.stage-expand-chevron {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.stage-compact-head:hover .stage-expand-chevron {
+  color: var(--text-main, #f8fafc);
+}
+
+/* Hero Checkpoint (Direct Action in Routine) */
+.stage-hero-checkpoint {
+  margin-top: 8px;
+}
+
+.stage-checkpoint-row.hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.stage-checkpoint-row.hero:hover {
+  background: rgba(99, 102, 241, 0.14);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.stage-custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid #818cf8;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: all 0.15s ease;
+}
+
+.stage-custom-checkbox:hover {
+  border-color: #a5b4fc;
+  box-shadow: 0 0 6px rgba(129, 140, 248, 0.4);
+}
+
+.stage-custom-checkbox:checked {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+.stage-custom-checkbox:checked::before {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+.stage-checkpoint-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.hero-target-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.checkpoint-text-hero {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main, #f8fafc);
+  line-height: 1.35;
+}
+
+.checkpoint-details-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.detail-pill-tag {
+  font-size: 0.68rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted, #94a3b8);
+}
+
+/* All Complete Banner */
+.stage-all-complete-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 7px 10px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 7px;
+  font-size: 0.78rem;
+  color: #34d399;
+  font-weight: 600;
+}
+
+.stage-reset-btn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  border-radius: 5px;
+  padding: 3px 7px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Expanded Drawer */
+.stage-expanded-drawer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stage-drawer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+.drawer-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drawer-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-main, #e2e8f0);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.drawer-action-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+/* Accordion Stage Blocks */
+.stage-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.stage-card-block {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.stage-card-block.active-block {
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.stage-card-block.done-block {
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.stage-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.stage-card-header:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.stage-card-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.stage-status-bullet {
+  font-size: 0.72rem;
+  color: var(--text-muted, #64748b);
+  width: 14px;
+}
+
+.stage-status-bullet.active {
+  color: #818cf8;
+}
+
+.stage-status-bullet.done {
+  color: #10b981;
+}
+
+.stage-block-title {
+  font-size: 0.78rem;
+  color: var(--text-main, #f1f5f9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stage-card-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+.stage-counter-pill {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* Checkpoints inside stage */
+.stage-checkpoints-group {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.stage-checkpoint-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.stage-checkpoint-item:hover {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.stage-checkpoint-item.completed {
+  opacity: 0.65;
+}
+
+.stage-checkpoint-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.checkpoint-name {
+  font-size: 0.78rem;
+  color: var(--text-main, #e2e8f0);
+  line-height: 1.3;
+}
+
+.checkpoint-name.done-text {
+  text-decoration: line-through;
+  color: var(--text-muted, #94a3b8);
+}
+
+/* Quick Add Checkpoint Form */
+.stage-quick-add-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.stage-add-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text-main, #f8fafc);
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  outline: none;
+}
+
+.stage-add-input:focus {
+  border-color: #818cf8;
+}
+
+.stage-add-save-btn {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stage-add-cancel-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.stage-add-trigger-btn {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+  width: 100%;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.stage-add-trigger-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: var(--text-main, #f8fafc);
+}
+
+/* Inline Outline Editor */
+.stage-inline-editor {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.editor-top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.editor-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
+}
+
+.editor-sub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #a5b4fc;
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.editor-hint {
+  font-size: 0.68rem;
+  color: var(--text-muted, #94a3b8);
+  margin-bottom: 6px;
+}
+
+.editor-hint code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #cbd5e1;
+}
+
+.stage-outline-textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  padding: 8px;
+  border-radius: 6px;
+  resize: vertical;
+  outline: none;
+}
+
+.stage-outline-textarea:focus {
+  border-color: #818cf8;
+}
+
+.editor-bottom-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.stage-btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.stage-btn-template {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main, #e2e8f0);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.72rem;
+  padding: 5px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.stage-btn-cancel {
+  background: transparent;
+  color: var(--text-muted, #94a3b8);
+  border: none;
+  font-size: 0.72rem;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   THEME ADAPTATIONS FOR IN-ROUTINE STAGE TRACKER
+   ========================================================================== */
+
+[data-theme="neo-brutalist"] .routine-stage-box {
+  background: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0 #000000;
+}
+
+[data-theme="neo-brutalist"] .stage-badge-pill {
+  background: #fef08a;
+  color: #000000;
+  border: 1px solid #000000;
+}
+
+[data-theme="neo-brutalist"] .stage-checkpoint-row.hero {
+  background: #fef9c3;
+  border: 1.5px solid #000000;
+}
+
+[data-theme="neo-brutalist"] .stage-custom-checkbox {
+  border: 2px solid #000000;
+  border-radius: 0;
+}
+
+[data-theme="neo-brutalist"] .stage-custom-checkbox:checked {
+  background: #000000;
+  border-color: #000000;
+}
+
+[data-theme="acid-runway"] .routine-stage-box {
+  border-color: rgba(198, 255, 0, 0.3);
+}
+
+[data-theme="acid-runway"] .stage-badge-pill {
+  background: rgba(198, 255, 0, 0.15);
+  color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .stage-checkpoint-row.hero {
+  background: rgba(198, 255, 0, 0.08);
+  border-color: rgba(198, 255, 0, 0.3);
+}
+
+[data-theme="acid-runway"] .stage-custom-checkbox {
+  border-color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .stage-custom-checkbox:checked {
+  background: #c6ff00;
+  border-color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .stage-custom-checkbox:checked::before {
+  border-color: #000000;
+}
+
+/* Mobile Responsiveness for In-Routine Stage Tracker */
+@media (max-width: 640px) {
+  .routine-stage-box {
+    padding: 8px 10px;
+    margin-top: 8px;
+  }
+
+  .stage-compact-head {
+    gap: 6px;
+  }
+
+  .stage-progress-track {
+    width: 45px;
+  }
+
+  .stage-name-text {
+    font-size: 0.75rem;
+  }
+
+  .stage-checkpoint-row.hero {
+    padding: 7px 8px;
+    gap: 8px;
+  }
+
+  .checkpoint-text-hero {
+    font-size: 0.78rem;
+  }
+
+  .stage-custom-checkbox {
+    width: 19px;
+    height: 19px;
+  }
+
+  .stage-accordion-list {
+    max-height: 280px;
+  }
+}

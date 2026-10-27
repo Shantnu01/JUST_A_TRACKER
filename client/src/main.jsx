@@ -6,6 +6,7 @@ import {
   toggleCurriculumCheckpoint,
   CHATGPT_ROADMAP_PROMPT_TEMPLATE
 } from './utils/curriculumEngine';
+import RoutineStageTracker from './components/RoutineStageTracker';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -2812,28 +2813,15 @@ function App() {
                             <span className="duration-pill">{item.hours || computeDurationHours(item.start, item.end)}h</span>
                           </div>
                           <p>{item.subtitle}</p>
-                          {/* Subject Stage Roadmap Pill */}
+                          {/* In-Routine Stage Tracker & Checkpoint Ticking (Seamless, Non-Clustered) */}
                           {item.kind === 'focus' && (
-                            <button
-                              className="curriculum-pill"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                openSubjectCurriculum(item.title);
-                              }}
-                              title={`View stage-by-stage learning plan for ${item.title}`}
-                            >
-                              <Milestone size={11} />
-                              <span>
-                                {(() => {
-                                  const curr = loadSubjectCurriculum(item.title);
-                                  if (curr) {
-                                    const prog = calculateCurriculumProgress(curr);
-                                    return `${prog.activeStage ? prog.activeStage.title.split('—')[0].trim() : 'Roadmap'} (${prog.percent}%)`;
-                                  }
-                                  return '+ Stage Plan';
-                                })()}
-                              </span>
-                            </button>
+                            <RoutineStageTracker
+                              subject={item.title}
+                              item={item}
+                              onPlayChime={playChime}
+                              setToast={setToast}
+                              isReadOnly={!isToday}
+                            />
                           )}
                           {logged > 0 && (
                             <span className="logged-label">
