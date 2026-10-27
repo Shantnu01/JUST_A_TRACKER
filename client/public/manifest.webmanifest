@@ -1,0 +1,17 @@
+{
+  "name": "Daymark — Daily Routine & Focus Tracker",
+  "short_name": "Daymark",
+  "description": "A calm, focused daily routine and habit tracker.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f5f0",
+  "theme_color": "#315b45",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
