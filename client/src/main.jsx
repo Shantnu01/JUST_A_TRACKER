@@ -2443,10 +2443,14 @@ function App() {
           <div className="top-actions">
             {/* Active Study Pod Selector Pill */}
             {user && (
-              <div style={{ position: 'relative' }}>
+              <div className="pod-selector-wrapper" style={{ position: 'relative' }}>
                 <button
+                  type="button"
                   className="pod-pill"
-                  onClick={() => setPodDropdownOpen(v => !v)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPodDropdownOpen(v => !v);
+                  }}
                   title="Switch or manage study pods"
                 >
                   <Users size={14} color="#315b45" />
@@ -2459,9 +2463,12 @@ function App() {
                   <>
                     <div
                       className="pod-dropdown-backdrop"
-                      onClick={() => setPodDropdownOpen(false)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPodDropdownOpen(false);
+                      }}
                     />
-                    <div className="pod-dropdown-menu">
+                    <div className="pod-dropdown-menu" onClick={(e) => e.stopPropagation()}>
                       <div className="pod-dropdown-heading">
                         YOUR STUDY PODS (MAX 5)
                       </div>
@@ -2530,10 +2537,14 @@ function App() {
             </button>
             
             {/* Visual Theme Selector */}
-            <div style={{ position: 'relative' }}>
+            <div className="theme-switcher-wrapper" style={{ position: 'relative' }}>
               <button
+                type="button"
                 className="theme-switcher-btn"
-                onClick={() => setThemeDropdownOpen(v => !v)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setThemeDropdownOpen(v => !v);
+                }}
                 title="Change theme aesthetic"
               >
                 <Palette size={13} />
@@ -2557,9 +2568,12 @@ function App() {
                 <>
                   <div
                     className="theme-dropdown-backdrop"
-                    onClick={() => setThemeDropdownOpen(false)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setThemeDropdownOpen(false);
+                    }}
                   />
-                  <div className="theme-dropdown-menu">
+                  <div className="theme-dropdown-menu" onClick={(e) => e.stopPropagation()}>
                     <div className="theme-dropdown-heading">AESTHETIC THEME</div>
                     <button
                       className={`theme-dropdown-item ${theme === 'default' ? 'active' : ''}`}

@@ -79,13 +79,118 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   /* Topbar: Title & Smooth Horizontal Tool Strip */
   .topbar{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding-bottom:14px}
   .topbar h1{font-size:20px;line-height:1.25;margin:2px 0 0}
-  .top-actions{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;gap:6px!important;width:100%!important;padding-bottom:4px!important}
-  .top-actions::-webkit-scrollbar{display:none!important}
-  .sync-chip,.date-chip,.pod-pill,.theme-switcher-btn{padding:6px 10px;font-size:11px;flex-shrink:0!important;white-space:nowrap!important}
-  .top-actions .icon-button{flex-shrink:0!important;width:34px!important;height:34px!important}
-  .pod-pill{max-width:140px}
-  .pod-pill span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .pod-dropdown-menu{left:0!important;right:auto!important;max-width:calc(100vw - 24px)!important}
+  /* Top actions: Fluid wrapping with visible overflow so dropdowns never get clipped */
+  .top-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+  .sync-chip, .date-chip, .pod-pill, .theme-switcher-btn {
+    padding: 7px 11px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    height: 36px !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+  .top-actions .icon-button {
+    width: 36px !important;
+    height: 36px !important;
+    flex-shrink: 0 !important;
+  }
+  .pod-selector-wrapper, .theme-switcher-wrapper {
+    position: relative !important;
+    z-index: 2200 !important;
+  }
+  .pod-pill {
+    max-width: 145px !important;
+  }
+  .pod-pill span {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* Rolling Dropdown Backdrops */
+  .theme-dropdown-backdrop, .pod-dropdown-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.45) !important;
+    backdrop-filter: blur(2px) !important;
+    -webkit-backdrop-filter: blur(2px) !important;
+    z-index: 2250 !important;
+  }
+
+  /* Rolling Dropdown Menus on Phone */
+  .theme-dropdown-menu {
+    position: fixed !important;
+    top: 72px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: 360px !important;
+    margin: 0 0 0 auto !important;
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3) !important;
+    padding: 10px !important;
+    z-index: 2300 !important;
+    max-height: 75vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    transform-origin: top right !important;
+    animation: rollDownTheme 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .pod-dropdown-menu {
+    position: fixed !important;
+    top: 72px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: 360px !important;
+    margin: 0 auto 0 0 !important;
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3) !important;
+    padding: 10px !important;
+    z-index: 2300 !important;
+    max-height: 75vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    transform-origin: top left !important;
+    animation: rollDownTheme 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .theme-dropdown-item {
+    padding: 11px 12px !important;
+    min-height: 44px !important;
+    border-radius: 10px !important;
+  }
+  .theme-item-text strong {
+    font-size: 13px !important;
+  }
+  .theme-item-text small {
+    font-size: 10px !important;
+  }
+
+  @keyframes rollDownTheme {
+    0% {
+      opacity: 0;
+      transform: translateY(-16px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
   .pod-header-title{font-size:18px}
   .pod-header-actions{width:100%;justify-content:flex-start}
   .pod-header-actions button{flex:1;min-width:90px;justify-content:center;padding:7px 8px;font-size:11px}
