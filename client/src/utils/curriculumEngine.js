@@ -362,40 +362,70 @@ export function calculateCurriculumProgress(curriculum) {
 
   let total = 0;
   let completed = 0;
-  let activeStageIndex = -1;
-  let nextCheckpoints = [];
+  let firstIncompleteStageIdx = -1;
+  const stageIncompleteMap = {};
 
   curriculum.stages.forEach((stage, idx) => {
-    let stageHasIncomplete = false;
+    stageIncompleteMap[stage.id] = [];
     (stage.checkpoints || []).forEach(cp => {
       total++;
       if (cp.completed) {
         completed++;
       } else {
-        stageHasIncomplete = true;
-        if (nextCheckpoints.length < 4) {
-          nextCheckpoints.push({ ...cp, stageId: stage.id, stageTitle: stage.title });
+        stageIncompleteMap[stage.id].push({ ...cp, stageId: stage.id, stageTitle: stage.title });
+        if (firstIncompleteStageIdx === -1) {
+          firstIncompleteStageIdx = idx;
         }
       }
     });
-
-    if (stageHasIncomplete && activeStageIndex === -1) {
-      activeStageIndex = idx;
-    }
   });
 
+  // Check if user manually set an active stage
+  let activeStageIndex = -1;
+  if (curriculum.manualActiveStageId) {
+    const manualIdx = curriculum.stages.findIndex(st => st.id === curriculum.manualActiveStageId);
+    if (manualIdx !== -1) {
+      activeStageIndex = manualIdx;
+    }
+  }
+
+  if (activeStageIndex === -1) {
+    activeStageIndex = firstIncompleteStageIdx === -1 ? curriculum.stages.length - 1 : firstIncompleteStageIdx;
+  }
+
+  // Collect next target checkpoints starting from the active stage
+  let nextCheckpoints = [];
+  const activeStage = curriculum.stages[activeStageIndex];
+  if (activeStage && stageIncompleteMap[activeStage.id]) {
+    nextCheckpoints.push(...stageIncompleteMap[activeStage.id]);
+  }
+
+  // If active stage is all done, gather from other stages
+  if (nextCheckpoints.length === 0) {
+    curriculum.stages.forEach(st => {
+      if (nextCheckpoints.length < 5 && stageIncompleteMap[st.id]) {
+        nextCheckpoints.push(...stageIncompleteMap[st.id]);
+      }
+    });
+  }
+
   const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
-  const finalStageIndex = activeStageIndex === -1 ? curriculum.stages.length - 1 : activeStageIndex;
 
   return {
     totalCheckpoints: total,
     completedCheckpoints: completed,
     percent,
-    activeStageIndex: finalStageIndex,
-    activeStage: curriculum.stages[finalStageIndex] || null,
-    nextCheckpoints,
+    activeStageIndex,
+    activeStage: curriculum.stages[activeStageIndex] || null,
+    nextCheckpoints: nextCheckpoints.slice(0, 4),
     isFinished: completed === total && total > 0
   };
+}
+
+// Set manual active stage for a subject curriculum
+export function setActiveStageForCurriculum(curriculum, stageId) {
+  if (!curriculum || !curriculum.stages) return curriculum;
+  return { ...curriculum, manualActiveStageId: stageId };
 }
 
 // Toggle a checkpoint completed status

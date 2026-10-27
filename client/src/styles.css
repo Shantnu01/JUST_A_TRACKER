@@ -3843,3 +3843,841 @@
   border-color: #c6ff00;
   color: #c6ff00;
 }
+
+/* ==========================================================================
+   TIMETABLE SINGLE-ROW CURRENT CHECKPOINT CAPSULE (CLEAN, ZERO CLUTTER)
+   ========================================================================== */
+
+.timetable-checkpoint-capsule {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 7px;
+  background: rgba(99, 102, 241, 0.07);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  transition: all 0.15s ease;
+}
+
+.timetable-checkpoint-capsule:hover {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.timetable-checkpoint-capsule.unassigned {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  border-style: dashed;
+}
+
+.timetable-checkpoint-capsule.completed {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.capsule-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.capsule-icon {
+  color: #818cf8;
+  flex-shrink: 0;
+}
+
+.capsule-stage-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: #4f46e5;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.capsule-checkpoint-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  flex: 1;
+  cursor: pointer;
+}
+
+.capsule-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #818cf8;
+  border-radius: 3.5px;
+  outline: none;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.04);
+  transition: all 0.12s ease;
+}
+
+.capsule-checkbox:hover {
+  border-color: #a5b4fc;
+}
+
+.capsule-checkbox:checked {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+.capsule-checkbox:checked::before {
+  content: "";
+  width: 4px;
+  height: 7px;
+  border: solid #ffffff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+.capsule-checkpoint-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-main, #f1f5f9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.capsule-label-dim {
+  font-size: 0.74rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+.capsule-stage-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #34d399;
+}
+
+.capsule-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted, #cbd5e1);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.capsule-nav-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   STAGE ROADMAPS & CHECKPOINT HUB VIEW (DEDICATED PREMIUM WORKSPACE TAB)
+   ========================================================================== */
+
+.stage-roadmaps-hub {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+/* Header */
+.roadmap-hub-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.roadmap-hub-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.roadmap-hub-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+}
+
+.roadmap-hub-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
+  margin: 0;
+}
+
+.roadmap-hub-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted, #94a3b8);
+  margin: 2px 0 0;
+  max-width: 600px;
+}
+
+.roadmap-hub-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.roadmap-header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.roadmap-header-btn.primary {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.roadmap-header-btn.primary:hover {
+  background: #4338ca;
+}
+
+.roadmap-header-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main, #e2e8f0);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.roadmap-header-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Subject Tabs Pill Row */
+.roadmap-subjects-tabs {
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+}
+
+.roadmap-tabs-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.roadmap-subject-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.roadmap-subject-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main, #f8fafc);
+}
+
+.roadmap-subject-pill.active {
+  background: rgba(99, 102, 241, 0.18);
+  border-color: #6366f1;
+  color: #ffffff;
+}
+
+.roadmap-pill-percent {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #a5b4fc;
+}
+
+.roadmap-add-subject-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.roadmap-add-subject-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main, #f8fafc);
+}
+
+.roadmap-add-subject-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.roadmap-add-subject-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #6366f1;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.roadmap-add-subject-submit {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.roadmap-add-subject-cancel {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Command Center */
+.roadmap-command-center {
+  background: var(--surface-card, rgba(255, 255, 255, 0.035));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.command-center-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.command-subject-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.command-subject-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
+  margin: 0;
+}
+
+.command-progress-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.command-stage-selector-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.selector-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+.stage-selector-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stage-select-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.stage-select-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.stage-select-btn.selected {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #6366f1;
+  color: #ffffff;
+}
+
+.active-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.command-center-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.command-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-main, #e2e8f0);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.command-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.roadmap-full-progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.roadmap-full-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #10b981);
+  border-radius: 4px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Outline Editor Card */
+.roadmap-outline-editor-card {
+  background: var(--surface-card, rgba(0, 0, 0, 0.25));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.editor-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.editor-subtext {
+  font-size: 0.75rem;
+  color: var(--text-muted, #94a3b8);
+  margin: 3px 0 0;
+}
+
+.editor-subtext code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #cbd5e1;
+}
+
+.editor-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+  cursor: pointer;
+}
+
+.roadmap-editor-textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  padding: 12px;
+  border-radius: 8px;
+  resize: vertical;
+  outline: none;
+}
+
+.roadmap-editor-textarea:focus {
+  border-color: #818cf8;
+}
+
+.editor-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.editor-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.editor-cancel-btn {
+  background: transparent;
+  color: var(--text-muted, #94a3b8);
+  border: none;
+  font-size: 0.78rem;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+/* Stages Grid */
+.roadmap-stages-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.roadmap-stage-card {
+  background: var(--surface-card, rgba(255, 255, 255, 0.035));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.roadmap-stage-card.is-active-stage {
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.08);
+}
+
+.roadmap-stage-card.is-done-stage {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.stage-card-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stage-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stage-number-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted, #94a3b8);
+}
+
+.roadmap-stage-card.is-active-stage .stage-number-tag {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.roadmap-stage-card.is-done-stage .stage-number-tag {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.stage-banner-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main, #f8fafc);
+  margin: 0;
+}
+
+.stage-banner-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stage-completion-badge {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+}
+
+.set-active-stage-btn {
+  background: transparent;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #818cf8;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.set-active-stage-btn:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #6366f1;
+  color: #ffffff;
+}
+
+/* Checkpoint Rows */
+.stage-card-checkpoints {
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.roadmap-checkpoint-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.roadmap-checkpoint-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+.roadmap-checkpoint-row.completed {
+  opacity: 0.6;
+}
+
+.roadmap-custom-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid #818cf8;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: all 0.12s ease;
+}
+
+.roadmap-custom-check:checked {
+  background: #10b981;
+  border-color: #10b981;
+}
+
+.roadmap-custom-check:checked::before {
+  content: "";
+  width: 5px;
+  height: 9px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+.roadmap-checkpoint-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.roadmap-cp-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-main, #f1f5f9);
+}
+
+.roadmap-cp-title.strikethrough {
+  text-decoration: line-through;
+  color: var(--text-muted, #94a3b8);
+}
+
+.roadmap-cp-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.roadmap-detail-tag {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted, #94a3b8);
+}
+
+/* Quick Add in Stage Card */
+.stage-card-quick-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.stage-quick-add-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  color: var(--text-main, #f8fafc);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  outline: none;
+}
+
+.stage-quick-add-input:focus {
+  border-color: #818cf8;
+  border-style: solid;
+}
+
+.stage-quick-add-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-main, #f1f5f9);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stage-quick-add-btn:hover {
+  background: #4f46e5;
+  color: #ffffff;
+  border-color: #4f46e5;
+}
+
+/* Theme overrides for Roadmaps View */
+[data-theme="neo-brutalist"] .timetable-checkpoint-capsule {
+  background: #fef08a;
+  border: 1.5px solid #000000;
+  box-shadow: 2px 2px 0 #000000;
+  color: #000000;
+}
+
+[data-theme="neo-brutalist"] .capsule-checkpoint-text {
+  color: #000000;
+}
+
+[data-theme="neo-brutalist"] .capsule-stage-pill {
+  background: #000000;
+  color: #ffffff;
+}
+
+[data-theme="neo-brutalist"] .roadmap-stage-card {
+  background: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0 #000000;
+}
+
+[data-theme="acid-runway"] .timetable-checkpoint-capsule {
+  border-color: rgba(198, 255, 0, 0.35);
+  background: rgba(198, 255, 0, 0.06);
+}
+
+[data-theme="acid-runway"] .capsule-stage-pill {
+  background: #c6ff00;
+  color: #000000;
+}
+
+[data-theme="acid-runway"] .roadmap-subject-pill.active {
+  background: #c6ff00;
+  color: #000000;
+  border-color: #c6ff00;
+}

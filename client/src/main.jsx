@@ -6,7 +6,8 @@ import {
   toggleCurriculumCheckpoint,
   CHATGPT_ROADMAP_PROMPT_TEMPLATE
 } from './utils/curriculumEngine';
-import RoutineStageTracker from './components/RoutineStageTracker';
+import TimetableCurrentCheckpoint from './components/TimetableCurrentCheckpoint';
+import StageRoadmapsView from './components/StageRoadmapsView';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -553,7 +554,8 @@ function App() {
   const [activeAlarmModal, setActiveAlarmModal] = useState(null);
   const [lastTriggeredMinute, setLastTriggeredMinute] = useState('');
   const [toast, setToast] = useState('');
-  const [view, setView] = useState('Today'); // 'Today' | 'Weekly report' | 'Study pods' | 'Routine settings'
+  const [view, setView] = useState('Today');
+  const [selectedRoadmapSubject, setSelectedRoadmapSubject] = useState(''); // 'Today' | 'Weekly report' | 'Study pods' | 'Routine settings'
   const [notes, setNotes] = useState('');
   const [dbStatus, setDbStatus] = useState('checking'); // 'connected' | 'local' | 'checking'
   const [pushSubscribed, setPushSubscribed] = useState(() => {
@@ -2329,6 +2331,7 @@ function App() {
         <nav>
           {[
             ['Today', Sun],
+            ['Stage Roadmaps', Milestone],
             ['Weekly report', TrendingUp],
             ['Study pods', Users],
             ['Coding', Code2],
@@ -2342,6 +2345,9 @@ function App() {
               <Icon size={17} />
               <span>{label}</span>
               {label === 'Today' && <span className="nav-indicator" />}
+              {label === 'Stage Roadmaps' && (
+                <span className="nav-indicator" style={{ background: '#818cf8' }} />
+              )}
               {label === 'Study pods' && groups.length > 0 && (
                 <span className="nav-indicator" style={{ background: '#3b82f6' }} />
               )}
@@ -2422,6 +2428,8 @@ function App() {
                   : isPast
                   ? 'Archived Performance Record'
                   : 'Upcoming Routine Plan'
+                : view === 'Stage Roadmaps'
+                ? 'Stage Roadmaps & Checkpoint Hub'
                 : view === 'Weekly report'
                 ? 'Your progress, at a glance'
                 : view === 'Study pods'
@@ -2912,14 +2920,18 @@ function App() {
                             <span className="duration-pill">{item.hours || computeDurationHours(item.start, item.end)}h</span>
                           </div>
                           <p>{item.subtitle}</p>
-                          {/* In-Routine Stage Tracker & Checkpoint Ticking (Seamless, Non-Clustered) */}
+                          {/* Timetable Single-Row Current Checkpoint (Clean, Zero Clutter) */}
                           {item.kind === 'focus' && (
-                            <RoutineStageTracker
+                            <TimetableCurrentCheckpoint
                               subject={item.title}
                               item={item}
                               onPlayChime={playChime}
                               setToast={setToast}
                               isReadOnly={!isToday}
+                              onOpenRoadmap={(subj) => {
+                                setSelectedRoadmapSubject(subj);
+                                setView('Stage Roadmaps');
+                              }}
                             />
                           )}
                           {logged > 0 && (
@@ -3233,6 +3245,17 @@ function App() {
               </div>
             </div>
           </>
+        )}
+
+        {view === 'Stage Roadmaps' && (
+          <StageRoadmapsView
+            routine={schedule}
+            selectedSubject={selectedRoadmapSubject}
+            onSelectSubject={setSelectedRoadmapSubject}
+            onPlayChime={playChime}
+            setToast={setToast}
+            onJumpToToday={() => setView('Today')}
+          />
         )}
 
         {view === 'Weekly report' && (
