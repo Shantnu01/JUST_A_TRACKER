@@ -6,7 +6,7 @@ let currentSource = null;
 let gainNode = null;
 let activeSoundType = 'off';
 
-function getAudioContext() {
+export function getAudioContext() {
   if (!audioCtx) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (AudioContextClass) {
@@ -14,9 +14,20 @@ function getAudioContext() {
     }
   }
   if (audioCtx && audioCtx.state === 'suspended') {
-    audioCtx.resume();
+    audioCtx.resume().catch(() => {});
   }
   return audioCtx;
+}
+
+// Global user-gesture unlock listener for mobile browsers
+if (typeof window !== 'undefined') {
+  const unlockAudio = () => {
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+  };
+  window.addEventListener('click', unlockAudio, { passive: true });
+  window.addEventListener('touchstart', unlockAudio, { passive: true });
 }
 
 // Generate 5 seconds of looping Brownian (Brown) Noise
@@ -64,6 +75,9 @@ export function stopFocusSound() {
       } else if (currentSource.oscLeft && currentSource.oscRight) {
         currentSource.oscLeft.stop();
         currentSource.oscRight.stop();
+      } else if (currentSource.carrier) {
+        currentSource.carrier.stop();
+        if (currentSource.modulator) currentSource.modulator.stop();
       }
     } catch {}
     currentSource = null;
@@ -73,20 +87,35 @@ export function stopFocusSound() {
 
 export function setSoundVolume(volume) {
   if (gainNode && audioCtx) {
-    const v = Math.max(0, Math.min(1, volume));
-    gainNode.gain.setValueAtTime(v, audioCtx.currentTime);
+    const v = Math.max(0.01, Math.min(1, volume || 0.4));
+    try {
+      gainNode.gain.setValueAtTime(v, audioCtx.currentTime);
+    } catch {
+      gainNode.gain.value = v;
+    }
   }
 }
 
-export function playFocusSound(type, volume = 0.35) {
+export async function playFocusSound(type, volume = 0.4) {
   stopFocusSound();
   if (type === 'off') return;
 
   const ctx = getAudioContext();
   if (!ctx) return;
 
+  if (ctx.state === 'suspended') {
+    try {
+      await ctx.resume();
+    } catch {}
+  }
+
   gainNode = ctx.createGain();
-  setSoundVolume(volume);
+  const safeVol = Math.max(0.01, Math.min(1, volume || 0.4));
+  try {
+    gainNode.gain.setValueAtTime(safeVol, ctx.currentTime);
+  } catch {
+    gainNode.gain.value = safeVol;
+  }
   gainNode.connect(ctx.destination);
 
   if (type === 'brown') {
@@ -108,25 +137,27 @@ export function playFocusSound(type, volume = 0.35) {
     currentSource = source;
     activeSoundType = 'pink';
   } else if (type === 'binaural') {
-    // 40 Hz Gamma Focus: 200 Hz carrier left, 240 Hz carrier right
-    const merger = ctx.createChannelMerger(2);
+    // 40 Hz Gamma Focus: Works on both stereo headphones & mobile phone speakers
+    // Uses 200 Hz carrier frequency with a 40 Hz amplitude modulation so phone speakers reproduce the 40Hz beat clearly!
+    const carrier = ctx.createOscillator();
+    carrier.type = 'sine';
+    carrier.frequency.setValueAtTime(216, ctx.currentTime); // 216 Hz soothing warm tone
 
-    const oscLeft = ctx.createOscillator();
-    oscLeft.type = 'sine';
-    oscLeft.frequency.setValueAtTime(200, ctx.currentTime);
-    oscLeft.connect(merger, 0, 0);
+    const modGain = ctx.createGain();
+    modGain.gain.setValueAtTime(0.5, ctx.currentTime);
 
-    const oscRight = ctx.createOscillator();
-    oscRight.type = 'sine';
-    oscRight.frequency.setValueAtTime(240, ctx.currentTime);
-    oscRight.connect(merger, 0, 1);
+    const modulator = ctx.createOscillator();
+    modulator.type = 'sine';
+    modulator.frequency.setValueAtTime(40, ctx.currentTime); // 40 Hz Gamma rhythm
+    modulator.connect(modGain.gain);
 
-    merger.connect(gainNode);
+    carrier.connect(modGain);
+    modGain.connect(gainNode);
 
-    oscLeft.start();
-    oscRight.start();
+    carrier.start(0);
+    modulator.start(0);
 
-    currentSource = { oscLeft, oscRight };
+    currentSource = { carrier, modulator };
     activeSoundType = 'binaural';
   }
 }

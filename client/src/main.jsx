@@ -1661,6 +1661,20 @@ function App() {
   
   
   // --- Curriculum & Stage Roadmap Handlers ---
+  
+  // Enhanced Direct Soundscape Handler (Instant Web Audio unlock on mobile & desktop)
+  const handleSelectSound = (type) => {
+    setFocusSoundType(type);
+    if (type === 'off') {
+      stopFocusSound();
+      setToast('Soundscape off');
+    } else {
+      playFocusSound(type, focusSoundVolume);
+      setToast(`🎧 ${type === 'binaural' ? '40Hz Gamma Beat' : type === 'brown' ? 'Deep Brown Noise' : 'Pink Noise'} active`);
+    }
+    setTimeout(() => setToast(''), 2200);
+  };
+
   const openSubjectCurriculum = (title) => {
     const cleanTitle = (title || 'General').trim();
     setCurriculumSubject(cleanTitle);
@@ -2874,27 +2888,27 @@ function App() {
                       <div className="sound-selector">
                         <button 
                           className={`sound-btn ${focusSoundType === 'off' ? 'active' : ''}`}
-                          onClick={() => setFocusSoundType('off')}
+                          onClick={() => handleSelectSound('off')}
                         >
                           Off
                         </button>
                         <button 
                           className={`sound-btn ${focusSoundType === 'brown' ? 'active' : ''}`}
-                          onClick={() => setFocusSoundType('brown')}
+                          onClick={() => handleSelectSound('brown')}
                           title="Brownian Noise: Deep low-frequency rumble for logic & coding"
                         >
                           Brown
                         </button>
                         <button 
                           className={`sound-btn ${focusSoundType === 'binaural' ? 'active' : ''}`}
-                          onClick={() => setFocusSoundType('binaural')}
+                          onClick={() => handleSelectSound('binaural')}
                           title="40Hz Gamma Beat: Binaural frequency synthesis for peak concentration"
                         >
                           40Hz Gamma
                         </button>
                         <button 
                           className={`sound-btn ${focusSoundType === 'pink' ? 'active' : ''}`}
-                          onClick={() => setFocusSoundType('pink')}
+                          onClick={() => handleSelectSound('pink')}
                           title="Pink Noise: Calming natural acoustic mask"
                         >
                           Pink
@@ -2909,7 +2923,7 @@ function App() {
                             max="0.8" 
                             step="0.05" 
                             value={focusSoundVolume}
-                            onChange={(e) => setFocusSoundVolume(parseFloat(e.target.value))}
+                            onChange={(e) => { const v = parseFloat(e.target.value); setFocusSoundVolume(v); setSoundVolume(v); }}
                             title={`Volume: ${Math.round(focusSoundVolume * 100)}%`}
                           />
                         </div>
