@@ -1079,6 +1079,8 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   width: 270px;
+  max-height: 80vh;
+  overflow-y: auto;
   padding: 8px;
   z-index: 1101;
   animation: popIn 0.15s ease-out;
@@ -1141,6 +1143,22 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 .theme-preview-dot.spidey {
   background: linear-gradient(135deg, #ff0055 50%, #00f0ff 50%);
   border: 1px solid #ffe600;
+}
+.theme-preview-dot.sakura {
+  background: linear-gradient(135deg, #ff2d78 50%, #07000f 50%);
+  border: 1px solid #ff2d78;
+}
+.theme-preview-dot.lofi {
+  background: linear-gradient(135deg, #f59e0b 50%, #12111a 50%);
+  border: 1px solid #f59e0b;
+}
+.theme-preview-dot.sunlit {
+  background: linear-gradient(135deg, #e59400 50%, #ffffff 50%);
+  border: 1px solid #e59400;
+}
+.theme-preview-dot.parchment {
+  background: linear-gradient(135deg, #b45309 50%, #faf7f0 50%);
+  border: 1px solid #b45309;
 }
 
 .theme-item-text strong {
@@ -6375,4 +6393,1870 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 
 .delete-subject-btn:hover {
   background: #fee2e2;
+}
+
+
+/* ==========================================================================
+   THEME ANIMATIONS: CYBER SAKURA & TOKYO LOFI
+   ========================================================================== */
+
+/* 1. Cyber Sakura Petals Drift Field */
+.sakura-drift-field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99;
+  overflow: hidden;
+}
+
+.sakura-petal {
+  position: absolute;
+  fill: #ffb7c5;
+  transform-origin: center center;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+@keyframes petalDrift1 {
+  0% { transform: translate3d(105vw, -40px, 0) rotate(15deg); opacity: 0; }
+  10% { opacity: 0.45; }
+  90% { opacity: 0.45; }
+  100% { transform: translate3d(-10vw, 105vh, 0) rotate(220deg); opacity: 0; }
+}
+
+@keyframes petalDrift2 {
+  0% { transform: translate3d(90vw, -50px, 0) rotate(-20deg); opacity: 0; }
+  12% { opacity: 0.35; }
+  88% { opacity: 0.35; }
+  100% { transform: translate3d(-15vw, 100vh, 0) rotate(180deg); opacity: 0; }
+}
+
+@keyframes petalDrift3 {
+  0% { transform: translate3d(80vw, -40px, 0) rotate(45deg); opacity: 0; }
+  15% { opacity: 0.5; }
+  85% { opacity: 0.5; }
+  100% { transform: translate3d(-20vw, 110vh, 0) rotate(-160deg); opacity: 0; }
+}
+
+@keyframes petalDrift4 {
+  0% { transform: translate3d(115vw, 20vh, 0) rotate(-35deg); opacity: 0; }
+  10% { opacity: 0.4; }
+  90% { opacity: 0.4; }
+  100% { transform: translate3d(-5vw, 115vh, 0) rotate(140deg); opacity: 0; }
+}
+
+@keyframes petalDrift5 {
+  0% { transform: translate3d(70vw, -40px, 0) rotate(10deg); opacity: 0; }
+  14% { opacity: 0.35; }
+  86% { opacity: 0.35; }
+  100% { transform: translate3d(-25vw, 105vh, 0) rotate(-190deg); opacity: 0; }
+}
+
+.petal-1 {
+  width: 18px;
+  height: 24px;
+  animation: petalDrift1 28s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  animation-delay: 0s;
+}
+
+.petal-2 {
+  width: 22px;
+  height: 30px;
+  animation: petalDrift2 34s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  animation-delay: 6s;
+}
+
+.petal-3 {
+  width: 14px;
+  height: 19px;
+  animation: petalDrift3 24s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  animation-delay: 13s;
+}
+
+.petal-4 {
+  width: 20px;
+  height: 27px;
+  animation: petalDrift4 31s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  animation-delay: 19s;
+}
+
+.petal-5 {
+  width: 15px;
+  height: 21px;
+  animation: petalDrift5 26s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  animation-delay: 24s;
+}
+
+/* 2. Tokyo Lofi Single Sweep Scanline */
+.single-scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(245, 158, 11, 0.4) 25%, rgba(244, 114, 182, 0.5) 50%, rgba(245, 158, 11, 0.4) 75%, transparent 100%);
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 90;
+  animation: sweepLine 9s linear infinite;
+}
+
+@keyframes sweepLine {
+  0% { transform: translateY(-10px); }
+  100% { transform: translateY(105vh); }
+}
+
+
+/* ==========================================================================
+   THEME 6: CYBER SAKURA (Y2K / High-Fashion Cyberpunk / Hot Pink & Dark Violet)
+   ========================================================================== */
+
+[data-theme="cyber-sakura"] {
+  background-color: #07000f !important;
+  color: #f0f4ff !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  --ink: #f0f4ff;
+  --muted: #a78bfa;
+  --line: rgba(255, 45, 120, 0.22);
+  --green: #ff2d78;
+  --paper: #0f0020;
+}
+
+[data-theme="cyber-sakura"] .sidebar {
+  background: #0a0014 !important;
+  border-right: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .brand {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+  color: #f0f4ff !important;
+}
+
+[data-theme="cyber-sakura"] .brand-mark {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 12px rgba(255, 45, 120, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .nav-item {
+  color: #a78bfa !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .nav-item:hover {
+  background: rgba(255, 45, 120, 0.08) !important;
+  color: #f0f4ff !important;
+}
+
+[data-theme="cyber-sakura"] .nav-item.selected {
+  background: rgba(255, 45, 120, 0.15) !important;
+  color: #ff2d78 !important;
+  font-weight: 800 !important;
+  border-left: 3px solid #ff2d78 !important;
+}
+
+[data-theme="cyber-sakura"] .nav-indicator {
+  background: #ff2d78 !important;
+}
+
+@media(max-width:640px){
+  [data-theme="cyber-sakura"] .sidebar {
+    background: #0a0014 !important;
+    border-top: 1px solid rgba(255, 45, 120, 0.25) !important;
+  }
+}
+
+/* Eyebrow & Headers */
+[data-theme="cyber-sakura"] .eyebrow,
+[data-theme="cyber-sakura"] .side-label {
+  color: #ff2d78 !important;
+  letter-spacing: 2px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .topbar h1,
+[data-theme="cyber-sakura"] .welcome-row h2,
+[data-theme="cyber-sakura"] .panel-heading h3 {
+  color: #f0f4ff !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .muted,
+[data-theme="cyber-sakura"] .subhead {
+  color: #a78bfa !important;
+}
+
+/* Chips, Buttons & Badges */
+[data-theme="cyber-sakura"] .sync-chip,
+[data-theme="cyber-sakura"] .date-chip,
+[data-theme="cyber-sakura"] .pod-pill,
+[data-theme="cyber-sakura"] .theme-switcher-btn,
+[data-theme="cyber-sakura"] .icon-button,
+[data-theme="cyber-sakura"] .today-button {
+  background: #14002b !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+  color: #f0f4ff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .theme-switcher-btn:hover,
+[data-theme="cyber-sakura"] .icon-button:hover,
+[data-theme="cyber-sakura"] .today-button:hover {
+  background: #20003b !important;
+  border-color: #ff2d78 !important;
+  color: #ff2d78 !important;
+}
+
+[data-theme="cyber-sakura"] .status-dot.synced {
+  background: #2dd4bf !important;
+  box-shadow: 0 0 8px #2dd4bf !important;
+}
+
+/* Panels & Cards */
+[data-theme="cyber-sakura"] .panel,
+[data-theme="cyber-sakura"] .metric-card,
+[data-theme="cyber-sakura"] .streak-card,
+[data-theme="cyber-sakura"] .note-panel,
+[data-theme="cyber-sakura"] .report-main,
+[data-theme="cyber-sakura"] .settings-panel,
+[data-theme="cyber-sakura"] .coding-top-banner,
+[data-theme="cyber-sakura"] .dsa-potd-card,
+[data-theme="cyber-sakura"] .coding-metric-panel,
+[data-theme="cyber-sakura"] .coding-sheet-panel,
+[data-theme="cyber-sakura"] .coding-contests-panel,
+[data-theme="cyber-sakura"] .coding-suggestions-panel {
+  background: #0f0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 45, 120, 0.05) !important;
+}
+
+[data-theme="cyber-sakura"] .metric-copy strong {
+  color: #f0f4ff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .metric-copy span,
+[data-theme="cyber-sakura"] .metric-copy small {
+  color: #a78bfa !important;
+}
+
+/* Streak & Donut Ring */
+[data-theme="cyber-sakura"] .streak-card {
+  background: #15002b !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+[data-theme="cyber-sakura"] .streak-icon {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="cyber-sakura"] .ring {
+  background: conic-gradient(#ff2d78 var(--progress), #2d004d 0) !important;
+}
+
+[data-theme="cyber-sakura"] .ring:before {
+  background: #15002b !important;
+}
+
+/* Action & Finish Buttons */
+[data-theme="cyber-sakura"] .finish-button {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="cyber-sakura"] .finish-button:hover {
+  background: #ff4d8d !important;
+  box-shadow: 0 0 14px rgba(255, 45, 120, 0.5) !important;
+}
+
+[data-theme="cyber-sakura"] .action-button {
+  border: 1px solid rgba(255, 45, 120, 0.35) !important;
+  background: #190033 !important;
+  color: #f0f4ff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .action-button.running {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+  border-color: #ff2d78 !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 14px rgba(255, 45, 120, 0.4) !important;
+}
+
+/* Progress Track */
+[data-theme="cyber-sakura"] .progress-track {
+  background: #1e0038 !important;
+}
+
+[data-theme="cyber-sakura"] .progress-track > div {
+  background: linear-gradient(90deg, #ff2d78, #c084fc) !important;
+}
+
+/* Habits Panel */
+[data-theme="cyber-sakura"] .habits-panel {
+  background: #0f0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+}
+
+[data-theme="cyber-sakura"] .count-badge {
+  background: #1f003a !important;
+  color: #ff2d78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+[data-theme="cyber-sakura"] .habit-row {
+  color: #f0f4ff !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="cyber-sakura"] .habit-row:hover {
+  background: #190033 !important;
+}
+
+[data-theme="cyber-sakura"] .habit-row.checked {
+  color: #a78bfa !important;
+}
+
+[data-theme="cyber-sakura"] .check-box {
+  background: #140026 !important;
+  border: 1.5px solid rgba(255, 45, 120, 0.4) !important;
+  border-radius: 5px !important;
+}
+
+[data-theme="cyber-sakura"] .habit-row.checked .check-box {
+  background: #ff2d78 !important;
+  border-color: #ff2d78 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(255, 45, 120, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .habit-logged-pill {
+  background: #1f003a !important;
+  color: #ff2d78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+}
+
+/* Schedule Items & Timetable */
+[data-theme="cyber-sakura"] .schedule-item {
+  background: #120026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="cyber-sakura"] .schedule-item:hover {
+  border-color: rgba(255, 45, 120, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .schedule-item.active-session {
+  background: #1a0038 !important;
+  border: 1.5px solid #ff2d78 !important;
+  box-shadow: 0 0 18px rgba(255, 45, 120, 0.25) !important;
+}
+
+[data-theme="cyber-sakura"] .time-col strong {
+  color: #f0f4ff !important;
+}
+
+[data-theme="cyber-sakura"] .time-col span {
+  color: #a78bfa !important;
+}
+
+[data-theme="cyber-sakura"] .event-icon {
+  background: #20003b !important;
+  color: #ff2d78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+[data-theme="cyber-sakura"] .event-title-row h4 {
+  color: #f0f4ff !important;
+}
+
+[data-theme="cyber-sakura"] .duration-pill {
+  background: #20003b !important;
+  color: #c084fc !important;
+  border: 1px solid rgba(192, 132, 252, 0.3) !important;
+}
+
+[data-theme="cyber-sakura"] .event-body p {
+  color: #a78bfa !important;
+}
+
+[data-theme="cyber-sakura"] .logged-label {
+  color: #ff2d78 !important;
+}
+
+/* Timetable Checkpoint Capsule */
+[data-theme="cyber-sakura"] .timetable-checkpoint-capsule {
+  background: #16002e !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+[data-theme="cyber-sakura"] .capsule-icon {
+  color: #ff2d78 !important;
+}
+
+[data-theme="cyber-sakura"] .capsule-stage-pill {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .capsule-checkpoint-text {
+  color: #f0f4ff !important;
+}
+
+[data-theme="cyber-sakura"] .capsule-checkbox {
+  background: #0f0020 !important;
+  border: 1.5px solid #ff2d78 !important;
+}
+
+[data-theme="cyber-sakura"] .capsule-checkbox:checked {
+  background: #ff2d78 !important;
+  border-color: #ff2d78 !important;
+}
+
+[data-theme="cyber-sakura"] .capsule-nav-btn {
+  background: #20003b !important;
+  color: #ff2d78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+/* Chief of Staff & Elastic Buttons */
+[data-theme="cyber-sakura"] .chief-audit-btn,
+[data-theme="cyber-sakura"] .elastic-btn {
+  background: #140028 !important;
+  border: 1px solid rgba(255, 45, 120, 0.35) !important;
+  color: #f0f4ff !important;
+}
+
+[data-theme="cyber-sakura"] .chief-audit-btn:hover,
+[data-theme="cyber-sakura"] .elastic-btn:hover {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+  border-color: #ff2d78 !important;
+  box-shadow: 0 0 14px rgba(255, 45, 120, 0.4) !important;
+}
+
+/* Stage Roadmaps (STRICT: HIGH CONTRAST) */
+[data-theme="cyber-sakura"] .roadmap-hub-header {
+  background: #120026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-hub-icon-wrap {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-hub-title,
+[data-theme="cyber-sakura"] .command-subject-name,
+[data-theme="cyber-sakura"] .stage-focus-title,
+[data-theme="cyber-sakura"] .checkpoint-headline {
+  color: #f0f4ff !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-hub-subtitle {
+  color: #c084fc !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-header-btn.secondary {
+  background: #190033 !important;
+  color: #f0f4ff !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-header-btn.secondary:hover {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-header-btn.primary {
+  background: #ff2d78 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-subject-pill {
+  background: #14002b !important;
+  border: 1.5px solid rgba(255, 45, 120, 0.25) !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-subject-pill:hover {
+  background: #1f003a !important;
+  border-color: #ff2d78 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-subject-pill.active {
+  background: #ff2d78 !important;
+  border-color: #ff2d78 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(255, 45, 120, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-pill-percent {
+  background: #20003b !important;
+  color: #ff2d78 !important;
+}
+
+[data-theme="cyber-sakura"] .single-stage-focused-card,
+[data-theme="cyber-sakura"] .roadmap-command-center,
+[data-theme="cyber-sakura"] .creator-option-box {
+  background: #0f0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+}
+
+[data-theme="cyber-sakura"] .stage-focus-header,
+[data-theme="cyber-sakura"] .stage-focus-add-checkpoint-row,
+[data-theme="cyber-sakura"] .stage-footer-nav {
+  background: #140028 !important;
+  border-color: rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .single-checkpoint-row {
+  background: #16002e !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+  color: #f0f4ff !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-format-guide-box {
+  background: #140028 !important;
+  border: 1.5px solid rgba(255, 45, 120, 0.25) !important;
+}
+
+[data-theme="cyber-sakura"] .format-guide-head {
+  color: #ff2d78 !important;
+}
+
+[data-theme="cyber-sakura"] .format-guide-code {
+  background: #0a0014 !important;
+  color: #f0f4ff !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+
+/* ==========================================================================
+   THEME 7: TOKYO LOFI (Midnight Japanese Slate / Warm Amber Station Board)
+   ========================================================================== */
+
+[data-theme="tokyo-lofi"] {
+  background-color: #12111a !important;
+  color: #faf8ff !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  --ink: #faf8ff;
+  --muted: #9b8ea8;
+  --line: rgba(245, 158, 11, 0.18);
+  --green: #f59e0b;
+  --paper: #1c1928;
+}
+
+[data-theme="tokyo-lofi"] .sidebar {
+  background: #100f17 !important;
+  border-right: 1px solid rgba(245, 158, 11, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .brand {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .brand-mark {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border-radius: 8px !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item {
+  color: #9b8ea8 !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item:hover {
+  background: rgba(245, 158, 11, 0.08) !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item.selected {
+  background: rgba(245, 158, 11, 0.14) !important;
+  color: #f59e0b !important;
+  font-weight: 800 !important;
+  border-left: 3px solid #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-indicator {
+  background: #f59e0b !important;
+}
+
+@media(max-width:640px){
+  [data-theme="tokyo-lofi"] .sidebar {
+    background: #100f17 !important;
+    border-top: 1px solid rgba(245, 158, 11, 0.2) !important;
+  }
+}
+
+/* Eyebrow & Headers */
+[data-theme="tokyo-lofi"] .eyebrow,
+[data-theme="tokyo-lofi"] .side-label {
+  color: #f59e0b !important;
+  letter-spacing: 2px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .topbar h1,
+[data-theme="tokyo-lofi"] .welcome-row h2,
+[data-theme="tokyo-lofi"] .panel-heading h3 {
+  color: #faf8ff !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .muted,
+[data-theme="tokyo-lofi"] .subhead {
+  color: #9b8ea8 !important;
+}
+
+/* Chips, Buttons & Badges */
+[data-theme="tokyo-lofi"] .sync-chip,
+[data-theme="tokyo-lofi"] .date-chip,
+[data-theme="tokyo-lofi"] .pod-pill,
+[data-theme="tokyo-lofi"] .theme-switcher-btn,
+[data-theme="tokyo-lofi"] .icon-button,
+[data-theme="tokyo-lofi"] .today-button {
+  background: #242033 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  color: #faf8ff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .theme-switcher-btn:hover,
+[data-theme="tokyo-lofi"] .icon-button:hover,
+[data-theme="tokyo-lofi"] .today-button:hover {
+  background: #2f2a42 !important;
+  border-color: #f59e0b !important;
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .status-dot.synced {
+  background: #4ecdc4 !important;
+  box-shadow: 0 0 8px #4ecdc4 !important;
+}
+
+/* Panels & Cards */
+[data-theme="tokyo-lofi"] .panel,
+[data-theme="tokyo-lofi"] .metric-card,
+[data-theme="tokyo-lofi"] .streak-card,
+[data-theme="tokyo-lofi"] .note-panel,
+[data-theme="tokyo-lofi"] .report-main,
+[data-theme="tokyo-lofi"] .settings-panel,
+[data-theme="tokyo-lofi"] .coding-top-banner,
+[data-theme="tokyo-lofi"] .dsa-potd-card,
+[data-theme="tokyo-lofi"] .coding-metric-panel,
+[data-theme="tokyo-lofi"] .coding-sheet-panel,
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel {
+  background: #1c1928 !important;
+  border: 1px solid rgba(245, 158, 11, 0.16) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.04) !important;
+}
+
+[data-theme="tokyo-lofi"] .metric-copy strong {
+  color: #faf8ff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .metric-copy span,
+[data-theme="tokyo-lofi"] .metric-copy small {
+  color: #9b8ea8 !important;
+}
+
+/* Streak & Donut Ring */
+[data-theme="tokyo-lofi"] .streak-card {
+  background: #221d30 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .streak-icon {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="tokyo-lofi"] .ring {
+  background: conic-gradient(#f59e0b var(--progress), #2d2640 0) !important;
+}
+
+[data-theme="tokyo-lofi"] .ring:before {
+  background: #221d30 !important;
+}
+
+/* Action & Finish Buttons */
+[data-theme="tokyo-lofi"] .finish-button {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border: none !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="tokyo-lofi"] .finish-button:hover {
+  background: #fbbf24 !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .action-button {
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  background: #262136 !important;
+  color: #faf8ff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .action-button.running {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border-color: #f59e0b !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35) !important;
+}
+
+/* Progress Track */
+[data-theme="tokyo-lofi"] .progress-track {
+  background: #282238 !important;
+}
+
+[data-theme="tokyo-lofi"] .progress-track > div {
+  background: linear-gradient(90deg, #f59e0b, #f472b6) !important;
+}
+
+/* Habits Panel */
+[data-theme="tokyo-lofi"] .habits-panel {
+  background: #1c1928 !important;
+  border: 1px solid rgba(245, 158, 11, 0.16) !important;
+}
+
+[data-theme="tokyo-lofi"] .count-badge {
+  background: #282238 !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row {
+  color: #faf8ff !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row:hover {
+  background: #252036 !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked {
+  color: #9b8ea8 !important;
+}
+
+[data-theme="tokyo-lofi"] .check-box {
+  background: #1e192c !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked .check-box {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: #12111a !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-logged-pill {
+  background: #282238 !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Schedule Items & Timetable */
+[data-theme="tokyo-lofi"] .schedule-item {
+  background: #1f1a2c !important;
+  border: 1px solid rgba(245, 158, 11, 0.15) !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item:hover {
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item.active-session {
+  background: #272138 !important;
+  border: 1.5px solid #f59e0b !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .time-col strong {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .time-col span {
+  color: #9b8ea8 !important;
+}
+
+[data-theme="tokyo-lofi"] .event-icon {
+  background: #2a233b !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .event-title-row h4 {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .duration-pill {
+  background: #282138 !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .event-body p {
+  color: #9b8ea8 !important;
+}
+
+[data-theme="tokyo-lofi"] .logged-label {
+  color: #f59e0b !important;
+}
+
+/* Timetable Checkpoint Capsule */
+[data-theme="tokyo-lofi"] .timetable-checkpoint-capsule {
+  background: #231d33 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-icon {
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-stage-pill {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-checkpoint-text {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-checkbox {
+  background: #181424 !important;
+  border: 1.5px solid #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-checkbox:checked {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-nav-btn {
+  background: #2a233b !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Chief of Staff & Elastic Buttons */
+[data-theme="tokyo-lofi"] .chief-audit-btn,
+[data-theme="tokyo-lofi"] .elastic-btn {
+  background: #242033 !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-audit-btn:hover,
+[data-theme="tokyo-lofi"] .elastic-btn:hover {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35) !important;
+}
+
+/* Stage Roadmaps (STRICT: HIGH CONTRAST) */
+[data-theme="tokyo-lofi"] .roadmap-hub-header {
+  background: #1a1726 !important;
+  border: 1px solid rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-icon-wrap {
+  background: #f59e0b !important;
+  color: #12111a !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-title,
+[data-theme="tokyo-lofi"] .command-subject-name,
+[data-theme="tokyo-lofi"] .stage-focus-title,
+[data-theme="tokyo-lofi"] .checkpoint-headline {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-subtitle {
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-header-btn.secondary {
+  background: #252036 !important;
+  color: #faf8ff !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-header-btn.secondary:hover {
+  background: #f59e0b !important;
+  color: #12111a !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-header-btn.primary {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill {
+  background: #221d30 !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.2) !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill:hover {
+  background: #2a233b !important;
+  border-color: #f59e0b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: #12111a !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-pill-percent {
+  background: #2c253d !important;
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"] .roadmap-command-center,
+[data-theme="tokyo-lofi"] .creator-option-box {
+  background: #1c1928 !important;
+  border: 1px solid rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-header,
+[data-theme="tokyo-lofi"] .stage-focus-add-checkpoint-row,
+[data-theme="tokyo-lofi"] .stage-footer-nav {
+  background: #221d30 !important;
+  border-color: rgba(245, 158, 11, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-row {
+  background: #252036 !important;
+  border: 1px solid rgba(245, 158, 11, 0.18) !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-format-guide-box {
+  background: #221d30 !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.22) !important;
+}
+
+[data-theme="tokyo-lofi"] .format-guide-head {
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .format-guide-code {
+  background: #141120 !important;
+  color: #faf8ff !important;
+  border: 1px solid rgba(245, 158, 11, 0.18) !important;
+}
+
+
+/* ==========================================================================
+   THEME 8: SUNLIT STUDIO (Light / Airy Studio / Saffron Accent / Ultra-Clean)
+   ========================================================================== */
+
+[data-theme="sunlit-studio"] {
+  background-color: #fefef9 !important;
+  color: #1a1a1a !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif !important;
+  --ink: #1a1a1a;
+  --muted: #525252;
+  --line: #ebebeb;
+  --green: #e59400;
+  --paper: #ffffff;
+}
+
+[data-theme="sunlit-studio"] .sidebar {
+  background: #fafaf5 !important;
+  border-right: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .brand {
+  font-weight: 700 !important;
+  letter-spacing: -0.3px !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .brand-mark {
+  background: #e59400 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="sunlit-studio"] .nav-item {
+  color: #525252 !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="sunlit-studio"] .nav-item:hover {
+  background: rgba(229, 148, 0, 0.06) !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .nav-item.selected {
+  background: rgba(229, 148, 0, 0.09) !important;
+  color: #c47d00 !important;
+  font-weight: 700 !important;
+  border-left: 3px solid #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .nav-indicator {
+  background: #e59400 !important;
+}
+
+@media(max-width:640px){
+  [data-theme="sunlit-studio"] .sidebar {
+    background: #fafaf5 !important;
+    border-top: 1px solid #ebebeb !important;
+  }
+}
+
+/* Eyebrow & Headers (STRICT: DARK TEXT) */
+[data-theme="sunlit-studio"] .eyebrow,
+[data-theme="sunlit-studio"] .side-label {
+  color: #c47d00 !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .topbar h1,
+[data-theme="sunlit-studio"] .welcome-row h2,
+[data-theme="sunlit-studio"] .panel-heading h3 {
+  color: #1a1a1a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .muted,
+[data-theme="sunlit-studio"] .subhead {
+  color: #737373 !important;
+}
+
+/* Chips, Buttons & Badges */
+[data-theme="sunlit-studio"] .sync-chip,
+[data-theme="sunlit-studio"] .date-chip,
+[data-theme="sunlit-studio"] .pod-pill,
+[data-theme="sunlit-studio"] .theme-switcher-btn,
+[data-theme="sunlit-studio"] .icon-button,
+[data-theme="sunlit-studio"] .today-button {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-theme="sunlit-studio"] .theme-switcher-btn:hover,
+[data-theme="sunlit-studio"] .icon-button:hover,
+[data-theme="sunlit-studio"] .today-button:hover {
+  background: #fafaf5 !important;
+  border-color: #e59400 !important;
+  color: #c47d00 !important;
+}
+
+[data-theme="sunlit-studio"] .status-dot.synced {
+  background: #16a34a !important;
+}
+
+/* Panels & Cards */
+[data-theme="sunlit-studio"] .panel,
+[data-theme="sunlit-studio"] .metric-card,
+[data-theme="sunlit-studio"] .streak-card,
+[data-theme="sunlit-studio"] .note-panel,
+[data-theme="sunlit-studio"] .report-main,
+[data-theme="sunlit-studio"] .settings-panel,
+[data-theme="sunlit-studio"] .coding-top-banner,
+[data-theme="sunlit-studio"] .dsa-potd-card,
+[data-theme="sunlit-studio"] .coding-metric-panel,
+[data-theme="sunlit-studio"] .coding-sheet-panel,
+[data-theme="sunlit-studio"] .coding-contests-panel,
+[data-theme="sunlit-studio"] .coding-suggestions-panel {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="sunlit-studio"] .metric-copy strong {
+  color: #1a1a1a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .metric-copy span,
+[data-theme="sunlit-studio"] .metric-copy small {
+  color: #737373 !important;
+}
+
+/* Streak & Donut Ring */
+[data-theme="sunlit-studio"] .streak-card {
+  background: #fffbf2 !important;
+  border: 1px solid #fde68a !important;
+}
+
+[data-theme="sunlit-studio"] .streak-icon {
+  background: #fef3c7 !important;
+  color: #d97706 !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="sunlit-studio"] .ring {
+  background: conic-gradient(#e59400 var(--progress), #fef3c7 0) !important;
+}
+
+[data-theme="sunlit-studio"] .ring:before {
+  background: #fffbf2 !important;
+}
+
+/* Action & Finish Buttons */
+[data-theme="sunlit-studio"] .finish-button {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .finish-button:hover {
+  background: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .action-button {
+  border: 1px solid #d4d4d4 !important;
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="sunlit-studio"] .action-button.running {
+  background: rgba(229, 148, 0, 0.1) !important;
+  color: #c47d00 !important;
+  border-color: #e59400 !important;
+  font-weight: 700 !important;
+}
+
+/* Progress Track */
+[data-theme="sunlit-studio"] .progress-track {
+  background: #f5f5f5 !important;
+}
+
+[data-theme="sunlit-studio"] .progress-track > div {
+  background: #e59400 !important;
+}
+
+/* Habits Panel */
+[data-theme="sunlit-studio"] .habits-panel {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .count-badge {
+  background: #fafaf5 !important;
+  color: #c47d00 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .habit-row {
+  color: #1a1a1a !important;
+  border-top: 1px solid #f5f5f5 !important;
+}
+
+[data-theme="sunlit-studio"] .habit-row:hover {
+  background: #fafaf5 !important;
+}
+
+[data-theme="sunlit-studio"] .habit-row.checked {
+  color: #737373 !important;
+}
+
+[data-theme="sunlit-studio"] .check-box {
+  background: #ffffff !important;
+  border: 1.5px solid #d4d4d4 !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="sunlit-studio"] .habit-row.checked .check-box {
+  background: #e59400 !important;
+  border-color: #e59400 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="sunlit-studio"] .habit-logged-pill {
+  background: #fafaf5 !important;
+  color: #c47d00 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+/* Schedule Items & Timetable */
+[data-theme="sunlit-studio"] .schedule-item {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="sunlit-studio"] .schedule-item:hover {
+  border-color: #d4d4d4 !important;
+}
+
+[data-theme="sunlit-studio"] .schedule-item.active-session {
+  background: rgba(229, 148, 0, 0.04) !important;
+  border: 1.5px solid #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .time-col strong {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .time-col span {
+  color: #737373 !important;
+}
+
+[data-theme="sunlit-studio"] .event-icon {
+  background: #fafaf5 !important;
+  color: #e59400 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .event-title-row h4 {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .duration-pill {
+  background: #fafaf5 !important;
+  color: #525252 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .event-body p {
+  color: #737373 !important;
+}
+
+[data-theme="sunlit-studio"] .logged-label {
+  color: #c47d00 !important;
+}
+
+/* Timetable Checkpoint Capsule */
+[data-theme="sunlit-studio"] .timetable-checkpoint-capsule {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-icon {
+  color: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-stage-pill {
+  background: #e59400 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-checkpoint-text {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-checkbox {
+  background: #ffffff !important;
+  border: 1.5px solid #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-checkbox:checked {
+  background: #e59400 !important;
+  border-color: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-nav-btn {
+  background: #fafaf5 !important;
+  color: #c47d00 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+/* Chief of Staff & Elastic Buttons */
+[data-theme="sunlit-studio"] .chief-audit-btn,
+[data-theme="sunlit-studio"] .elastic-btn {
+  background: #ffffff !important;
+  border: 1px solid #d4d4d4 !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .chief-audit-btn:hover,
+[data-theme="sunlit-studio"] .elastic-btn:hover {
+  background: #fafaf5 !important;
+  border-color: #e59400 !important;
+  color: #c47d00 !important;
+}
+
+/* Stage Roadmaps (STRICT: DARK TEXT, HIGH CONTRAST) */
+[data-theme="sunlit-studio"] .roadmap-hub-header {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-hub-icon-wrap {
+  background: #e59400 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-hub-title,
+[data-theme="sunlit-studio"] .command-subject-name,
+[data-theme="sunlit-studio"] .stage-focus-title,
+[data-theme="sunlit-studio"] .checkpoint-headline {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-hub-subtitle {
+  color: #525252 !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-header-btn.secondary {
+  background: #fafaf5 !important;
+  color: #1a1a1a !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-header-btn.secondary:hover {
+  background: #f5f5f0 !important;
+  border-color: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-header-btn.primary {
+  background: #e59400 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-subject-pill {
+  background: #fafaf5 !important;
+  border: 1.5px solid #ebebeb !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-subject-pill:hover {
+  background: #f5f5f0 !important;
+  border-color: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-subject-pill.active {
+  background: #e59400 !important;
+  border-color: #e59400 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-pill-percent {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .single-stage-focused-card,
+[data-theme="sunlit-studio"] .roadmap-command-center,
+[data-theme="sunlit-studio"] .creator-option-box {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .stage-focus-header,
+[data-theme="sunlit-studio"] .stage-focus-add-checkpoint-row,
+[data-theme="sunlit-studio"] .stage-footer-nav {
+  background: #fafaf5 !important;
+  border-color: #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .single-checkpoint-row {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-format-guide-box {
+  background: #fafaf5 !important;
+  border: 1.5px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .format-guide-head {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .format-guide-code {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+  border: 1px solid #ebebeb !important;
+}
+
+
+/* ==========================================================================
+   THEME 9: WARM PARCHMENT (Editorial Light / Georgia Serif / Amber Ink)
+   ========================================================================== */
+
+[data-theme="warm-parchment"] {
+  background-color: #faf7f0 !important;
+  color: #1a1612 !important;
+  font-family: 'Newsreader', Georgia, serif !important;
+  --ink: #1a1612;
+  --muted: #5c4f3d;
+  --line: #e8e0d0;
+  --green: #b45309;
+  --paper: #ffffff;
+}
+
+[data-theme="warm-parchment"] .sidebar {
+  background: #f0eae0 !important;
+  border-right: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .brand {
+  font-family: Georgia, serif !important;
+  font-weight: 600 !important;
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .brand-mark {
+  background: #b45309 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .nav-item {
+  color: #5c4f3d !important;
+  font-family: -apple-system, sans-serif !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="warm-parchment"] .nav-item:hover {
+  background: rgba(180, 83, 9, 0.06) !important;
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .nav-item.selected {
+  background: rgba(180, 83, 9, 0.09) !important;
+  color: #92400e !important;
+  font-weight: 700 !important;
+  border-left: 2px solid #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .nav-indicator {
+  background: #b45309 !important;
+}
+
+@media(max-width:640px){
+  [data-theme="warm-parchment"] .sidebar {
+    background: #f0eae0 !important;
+    border-top: 1px solid #e8e0d0 !important;
+  }
+}
+
+/* Eyebrow & Headers (STRICT: DARK INK, NO WHITE TEXT) */
+[data-theme="warm-parchment"] .eyebrow,
+[data-theme="warm-parchment"] .side-label {
+  color: #b45309 !important;
+  font-family: -apple-system, sans-serif !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .topbar h1,
+[data-theme="warm-parchment"] .welcome-row h2,
+[data-theme="warm-parchment"] .panel-heading h3 {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="warm-parchment"] .muted,
+[data-theme="warm-parchment"] .subhead {
+  color: #796e62 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+/* Chips, Buttons & Badges */
+[data-theme="warm-parchment"] .sync-chip,
+[data-theme="warm-parchment"] .date-chip,
+[data-theme="warm-parchment"] .pod-pill,
+[data-theme="warm-parchment"] .theme-switcher-btn,
+[data-theme="warm-parchment"] .icon-button,
+[data-theme="warm-parchment"] .today-button {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .theme-switcher-btn:hover,
+[data-theme="warm-parchment"] .icon-button:hover,
+[data-theme="warm-parchment"] .today-button:hover {
+  background: #f5f0e8 !important;
+  border-color: #b45309 !important;
+  color: #92400e !important;
+}
+
+[data-theme="warm-parchment"] .status-dot.synced {
+  background: #166534 !important;
+}
+
+/* Panels & Cards */
+[data-theme="warm-parchment"] .panel,
+[data-theme="warm-parchment"] .metric-card,
+[data-theme="warm-parchment"] .streak-card,
+[data-theme="warm-parchment"] .note-panel,
+[data-theme="warm-parchment"] .report-main,
+[data-theme="warm-parchment"] .settings-panel,
+[data-theme="warm-parchment"] .coding-top-banner,
+[data-theme="warm-parchment"] .dsa-potd-card,
+[data-theme="warm-parchment"] .coding-metric-panel,
+[data-theme="warm-parchment"] .coding-sheet-panel,
+[data-theme="warm-parchment"] .coding-contests-panel,
+[data-theme="warm-parchment"] .coding-suggestions-panel {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="warm-parchment"] .metric-copy strong {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="warm-parchment"] .metric-copy span,
+[data-theme="warm-parchment"] .metric-copy small {
+  color: #796e62 !important;
+}
+
+/* Streak & Donut Ring */
+[data-theme="warm-parchment"] .streak-card {
+  background: #faf4e8 !important;
+  border: 1px solid #e5d7be !important;
+}
+
+[data-theme="warm-parchment"] .streak-icon {
+  background: #f0e2cc !important;
+  color: #b45309 !important;
+  border-radius: 8px !important;
+}
+
+[data-theme="warm-parchment"] .ring {
+  background: conic-gradient(#b45309 var(--progress), #edd9c2 0) !important;
+}
+
+[data-theme="warm-parchment"] .ring:before {
+  background: #faf4e8 !important;
+}
+
+/* Action & Finish Buttons */
+[data-theme="warm-parchment"] .finish-button {
+  background: #1a1612 !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-family: -apple-system, sans-serif !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .finish-button:hover {
+  background: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .action-button {
+  border: 1px solid #c8b89a !important;
+  background: #ffffff !important;
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="warm-parchment"] .action-button.running {
+  background: rgba(180, 83, 9, 0.08) !important;
+  color: #92400e !important;
+  border-color: #b45309 !important;
+  font-weight: 700 !important;
+}
+
+/* Progress Track */
+[data-theme="warm-parchment"] .progress-track {
+  background: #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .progress-track > div {
+  background: #b45309 !important;
+}
+
+/* Habits Panel */
+[data-theme="warm-parchment"] .habits-panel {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .count-badge {
+  background: #f5f0e8 !important;
+  color: #b45309 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .habit-row {
+  color: #1a1612 !important;
+  border-top: 1px solid #f0eae0 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .habit-row:hover {
+  background: #f8f4ed !important;
+}
+
+[data-theme="warm-parchment"] .habit-row.checked {
+  color: #8c7e6e !important;
+}
+
+[data-theme="warm-parchment"] .check-box {
+  background: #ffffff !important;
+  border: 1.5px solid #c8b89a !important;
+  border-radius: 3px !important;
+}
+
+[data-theme="warm-parchment"] .habit-row.checked .check-box {
+  background: #b45309 !important;
+  border-color: #b45309 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="warm-parchment"] .habit-logged-pill {
+  background: #f5f0e8 !important;
+  color: #b45309 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+/* Schedule Items & Timetable */
+[data-theme="warm-parchment"] .schedule-item {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+  border-radius: 8px !important;
+}
+
+[data-theme="warm-parchment"] .schedule-item:hover {
+  border-color: #c8b89a !important;
+}
+
+[data-theme="warm-parchment"] .schedule-item.active-session {
+  background: rgba(180, 83, 9, 0.04) !important;
+  border: 1.5px solid #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .time-col strong {
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .time-col span {
+  color: #796e62 !important;
+}
+
+[data-theme="warm-parchment"] .event-icon {
+  background: #f5f0e8 !important;
+  color: #b45309 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .event-title-row h4 {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+}
+
+[data-theme="warm-parchment"] .duration-pill {
+  background: #f5f0e8 !important;
+  color: #5c4f3d !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .event-body p {
+  color: #796e62 !important;
+}
+
+[data-theme="warm-parchment"] .logged-label {
+  color: #92400e !important;
+}
+
+/* Timetable Checkpoint Capsule */
+[data-theme="warm-parchment"] .timetable-checkpoint-capsule {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-icon {
+  color: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-stage-pill {
+  background: #b45309 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-checkpoint-text {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+}
+
+[data-theme="warm-parchment"] .capsule-checkbox {
+  background: #ffffff !important;
+  border: 1.5px solid #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-checkbox:checked {
+  background: #b45309 !important;
+  border-color: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-nav-btn {
+  background: #f5f0e8 !important;
+  color: #92400e !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+/* Chief of Staff & Elastic Buttons */
+[data-theme="warm-parchment"] .chief-audit-btn,
+[data-theme="warm-parchment"] .elastic-btn {
+  background: #ffffff !important;
+  border: 1px solid #c8b89a !important;
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .chief-audit-btn:hover,
+[data-theme="warm-parchment"] .elastic-btn:hover {
+  background: #f5f0e8 !important;
+  border-color: #b45309 !important;
+  color: #92400e !important;
+}
+
+/* Stage Roadmaps (STRICT: DARK INK, NO WHITE TEXT) */
+[data-theme="warm-parchment"] .roadmap-hub-header {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-hub-icon-wrap {
+  background: #b45309 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-hub-title,
+[data-theme="warm-parchment"] .command-subject-name,
+[data-theme="warm-parchment"] .stage-focus-title,
+[data-theme="warm-parchment"] .checkpoint-headline {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-hub-subtitle {
+  color: #5c4f3d !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-header-btn.secondary {
+  background: #f5f0e8 !important;
+  color: #1a1612 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-header-btn.secondary:hover {
+  background: #eee8dc !important;
+  border-color: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-header-btn.primary {
+  background: #b45309 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-subject-pill {
+  background: #f0eae0 !important;
+  border: 1.5px solid #e8e0d0 !important;
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-subject-pill:hover {
+  background: #eee8dc !important;
+  border-color: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-subject-pill.active {
+  background: #b45309 !important;
+  border-color: #b45309 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-pill-percent {
+  background: #ffffff !important;
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .single-stage-focused-card,
+[data-theme="warm-parchment"] .roadmap-command-center,
+[data-theme="warm-parchment"] .creator-option-box {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .stage-focus-header,
+[data-theme="warm-parchment"] .stage-focus-add-checkpoint-row,
+[data-theme="warm-parchment"] .stage-footer-nav {
+  background: #f5f0e8 !important;
+  border-color: #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .single-checkpoint-row {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-format-guide-box {
+  background: #f5f0e8 !important;
+  border: 1.5px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .format-guide-head {
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .format-guide-code {
+  background: #ffffff !important;
+  color: #1a1612 !important;
+  border: 1px solid #e8e0d0 !important;
 }

@@ -2419,6 +2419,28 @@ function App() {
             </svg>
           </div>
         )}
+        {theme === 'cyber-sakura' && (
+          <div className="sakura-drift-field" aria-hidden="true">
+            <svg className="sakura-petal petal-1" viewBox="-15 -22 30 44">
+              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+            </svg>
+            <svg className="sakura-petal petal-2" viewBox="-15 -22 30 44">
+              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+            </svg>
+            <svg className="sakura-petal petal-3" viewBox="-15 -22 30 44">
+              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+            </svg>
+            <svg className="sakura-petal petal-4" viewBox="-15 -22 30 44">
+              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+            </svg>
+            <svg className="sakura-petal petal-5" viewBox="-15 -22 30 44">
+              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+            </svg>
+          </div>
+        )}
+        {theme === 'tokyo-lofi' && (
+          <div className="single-scanline" aria-hidden="true" />
+        )}
         <header className="topbar">
           <div>
             <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
@@ -2559,6 +2581,14 @@ function App() {
                     ? 'Acid Runway'
                     : theme === 'spider-verse'
                     ? 'Spider-Verse'
+                    : theme === 'cyber-sakura'
+                    ? 'Cyber Sakura'
+                    : theme === 'tokyo-lofi'
+                    ? 'Tokyo Lofi'
+                    : theme === 'sunlit-studio'
+                    ? 'Sunlit Studio'
+                    : theme === 'warm-parchment'
+                    ? 'Warm Parchment'
                     : 'Daymark Classic'}
                 </span>
                 <ChevronDown size={11} />
@@ -2651,6 +2681,58 @@ function App() {
                       <div className="theme-item-text">
                         <strong>Spider-Verse</strong>
                         <small>Miles Morales comic pop-art & action figure</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'cyber-sakura' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('cyber-sakura');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot sakura" />
+                      <div className="theme-item-text">
+                        <strong>Cyber Sakura</strong>
+                        <small>Y2K cyberpunk, hot pink & floating sakura petals</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'tokyo-lofi' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('tokyo-lofi');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot lofi" />
+                      <div className="theme-item-text">
+                        <strong>Tokyo Lofi</strong>
+                        <small>Midnight slate, warm amber station board & jazz calm</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'sunlit-studio' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('sunlit-studio');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot sunlit" />
+                      <div className="theme-item-text">
+                        <strong>Sunlit Studio</strong>
+                        <small>Airy creative studio, warm saffron & ultra-clean layout</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'warm-parchment' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('warm-parchment');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot parchment" />
+                      <div className="theme-item-text">
+                        <strong>Warm Parchment</strong>
+                        <small>Luxury Moleskine, Georgia serif & amber ink aesthetic</small>
                       </div>
                     </button>
                   </div>
