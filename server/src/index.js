@@ -142,6 +142,29 @@ async function ensureTable() {
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )`);
 
+    // 10. Pod Code Snippets & Peer Reviews
+    await pool.query(`CREATE TABLE IF NOT EXISTS pod_code_snippets (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      group_id UUID REFERENCES study_groups(id) ON DELETE CASCADE,
+      user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+      title TEXT NOT NULL,
+      problem_url TEXT DEFAULT '',
+      language TEXT NOT NULL DEFAULT 'javascript',
+      code TEXT NOT NULL,
+      notes TEXT DEFAULT '',
+      likes INT DEFAULT 0,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )`);
+
+    await pool.query(`CREATE TABLE IF NOT EXISTS pod_snippet_replies (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      snippet_id UUID REFERENCES pod_code_snippets(id) ON DELETE CASCADE,
+      user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+      comment TEXT NOT NULL,
+      suggested_code TEXT DEFAULT '',
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )`);
+
     dbInitialized = true;
     console.log('[Database] Connected and schema verified.');
   } catch (error) {
@@ -1046,6 +1069,377 @@ app.get('/api/coding/contests', (_req, res) => {
   ];
 
   return res.json({ contests, timestamp: now.toISOString() });
+});
+
+// ================= CODEFORCES RATING & BATTLE ARENA =================
+function getCfRankColor(rankStr = '') {
+  const r = (rankStr || '').toLowerCase();
+  if (r.includes('legendary') || r.includes('grandmaster')) return '#dc2626';
+  if (r.includes('master')) return '#f59e0b';
+  if (r.includes('candidate')) return '#9333ea';
+  if (r.includes('expert')) return '#2563eb';
+  if (r.includes('specialist')) return '#06b6d4';
+  if (r.includes('pupil')) return '#16a34a';
+  return '#64748b';
+}
+
+app.get('/api/coding/codeforces/:handle', async (req, res) => {
+  const handle = req.params.handle.trim();
+  if (!handle) return res.status(400).json({ error: 'Handle required' });
+
+  const cacheKey = `cf:${handle.toLowerCase()}`;
+  const cached = getCached(cacheKey);
+  if (cached) return res.json(cached);
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+    const apiRes = await fetch(`https://codeforces.com/api/user.info?handles=${encodeURIComponent(handle)}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (!apiRes.ok) {
+      return res.status(404).json({ error: `Codeforces user "${handle}" not found.` });
+    }
+
+    const data = await apiRes.json();
+    if (data.status !== 'OK' || !data.result || data.result.length === 0) {
+      return res.status(404).json({ error: `Codeforces handle "${handle}" not found.` });
+    }
+
+    const u = data.result[0];
+    const payload = {
+      handle: u.handle,
+      rating: u.rating || 0,
+      maxRating: u.maxRating || 0,
+      rank: u.rank ? u.rank.charAt(0).toUpperCase() + u.rank.slice(1) : 'Unrated',
+      maxRank: u.maxRank ? u.maxRank.charAt(0).toUpperCase() + u.maxRank.slice(1) : 'Unrated',
+      avatar: u.titlePhoto || u.avatar || `https://userpic.codeforces.org/no-avatar.jpg`,
+      contribution: u.contribution || 0,
+      organization: u.organization || '',
+      rankColor: getCfRankColor(u.rank),
+      profileUrl: `https://codeforces.com/profile/${u.handle}`
+    };
+
+    setCached(cacheKey, payload);
+    return res.json(payload);
+  } catch (err) {
+    console.error('Codeforces fetch error:', err.message);
+    return res.status(502).json({ error: 'Unable to reach Codeforces API at this time.' });
+  }
+});
+
+// Pod CF Battle Arena: Fetches CF ratings for all members in the pod
+app.get('/api/groups/:id/cf-arena', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
+  try {
+    await ensureTable();
+    const membersRes = await pool.query(
+      `SELECT u.id, u.username, u.avatar_color, cp.codeforces_username
+       FROM group_members gm
+       JOIN users u ON u.id = gm.user_id
+       LEFT JOIN user_coding_profiles cp ON cp.user_id = u.id
+       WHERE gm.group_id = $1`,
+      [groupId]
+    );
+
+    const arenaList = [];
+    for (const m of membersRes.rows) {
+      const cfHandle = (m.codeforces_username || '').trim();
+      let cfData = null;
+      if (cfHandle) {
+        const cacheKey = `cf:${cfHandle.toLowerCase()}`;
+        cfData = getCached(cacheKey);
+        if (!cfData) {
+          try {
+            const apiRes = await fetch(`https://codeforces.com/api/user.info?handles=${encodeURIComponent(cfHandle)}`);
+            if (apiRes.ok) {
+              const d = await apiRes.json();
+              if (d.status === 'OK' && d.result?.[0]) {
+                const u = d.result[0];
+                cfData = {
+                  handle: u.handle,
+                  rating: u.rating || 0,
+                  maxRating: u.maxRating || 0,
+                  rank: u.rank ? u.rank.charAt(0).toUpperCase() + u.rank.slice(1) : 'Unrated',
+                  avatar: u.titlePhoto || u.avatar,
+                  rankColor: getCfRankColor(u.rank)
+                };
+                setCached(cacheKey, cfData);
+              }
+            }
+          } catch {}
+        }
+      }
+
+      arenaList.push({
+        id: m.id,
+        username: m.username,
+        avatar_color: m.avatar_color,
+        cfHandle: cfHandle || null,
+        rating: cfData?.rating || 0,
+        maxRating: cfData?.maxRating || 0,
+        rank: cfData?.rank || (cfHandle ? 'Unrated' : 'Not linked'),
+        rankColor: cfData?.rankColor || '#64748b',
+        avatar: cfData?.avatar || null
+      });
+    }
+
+    // Sort descending by CF rating
+    arenaList.sort((a, b) => b.rating - a.rating);
+    return res.json(arenaList);
+  } catch (err) {
+    console.error('CF Arena error:', err.message);
+    return res.status(500).json({ error: 'Failed to fetch pod CF arena.' });
+  }
+});
+
+// ================= SMART GITHUB COMMIT VERIFICATION (PROJECT HABIT) =================
+async function evaluateProjectCommitVerification(userId, userSchedule, userDayDate) {
+  let plannedMinutes = 120;
+  if (Array.isArray(userSchedule)) {
+    const projBlock = userSchedule.find(s => s.id === 'project' || (s.title && s.title.toLowerCase().includes('project')));
+    if (projBlock) {
+      if (projBlock.hours) {
+        plannedMinutes = Math.round(Number(projBlock.hours) * 60) || 120;
+      } else if (projBlock.start && projBlock.end) {
+        const [sh, sm] = projBlock.start.split(':').map(Number);
+        const [eh, em] = projBlock.end.split(':').map(Number);
+        let diff = (eh * 60 + em) - (sh * 60 + sm);
+        if (diff < 0) diff += 24 * 60;
+        plannedMinutes = diff || 120;
+      }
+    }
+  }
+
+  const thresholdMinutes = Math.ceil(plannedMinutes * 0.75);
+  let loggedMinutes = 0;
+  let currentChecks = {};
+  let currentNotes = '';
+  let currentAlarms = {};
+  let completedMins = {};
+
+  if (pool && userId) {
+    const dayRes = await pool.query(
+      `SELECT checks, completed_minutes, notes, alarms FROM user_routine_days WHERE user_id = $1 AND day_date = $2`,
+      [userId, userDayDate]
+    );
+    if (dayRes.rows.length > 0) {
+      const row = dayRes.rows[0];
+      currentChecks = row.checks || {};
+      currentNotes = row.notes || '';
+      currentAlarms = row.alarms || {};
+      completedMins = row.completed_minutes || {};
+      loggedMinutes = Number(completedMins['project'] || 0);
+      if (loggedMinutes === 0 && Array.isArray(userSchedule)) {
+        const pBlock = userSchedule.find(s => s.title && s.title.toLowerCase().includes('project'));
+        if (pBlock && completedMins[pBlock.id]) {
+          loggedMinutes = Number(completedMins[pBlock.id]);
+        }
+      }
+    }
+  }
+
+  const percent = plannedMinutes > 0 ? Math.round((loggedMinutes / plannedMinutes) * 100) : 0;
+  const isEligible = loggedMinutes >= thresholdMinutes;
+
+  if (isEligible && pool && userId) {
+    currentChecks['project'] = true;
+    const { points } = calculateGrindPoints(completedMins, currentChecks, currentNotes);
+    await pool.query(
+      `INSERT INTO user_routine_days (user_id, day_date, checks, notes, completed_minutes, alarms, points, updated_at)
+       VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6::jsonb, $7, NOW())
+       ON CONFLICT (user_id, day_date) DO UPDATE SET
+         checks = EXCLUDED.checks,
+         points = EXCLUDED.points,
+         updated_at = NOW()`,
+      [userId, userDayDate, JSON.stringify(currentChecks), currentNotes, JSON.stringify(completedMins), JSON.stringify(currentAlarms), points]
+    );
+  }
+
+  return {
+    verified: isEligible,
+    habitMarked: isEligible,
+    loggedMinutes,
+    plannedMinutes,
+    thresholdMinutes,
+    percent,
+    message: isEligible
+      ? `Commit verified! Project focus logged is ${loggedMinutes}m / ${plannedMinutes}m (${percent}% >= 75%). Project habit automatically marked Done!`
+      : `Commit detected on GitHub, but Project timer is currently at ${loggedMinutes}m / ${plannedMinutes}m (${percent}%). At least 75% (${thresholdMinutes}m) required to auto-complete this habit.`
+  };
+}
+
+// Interactive & Background Commit Verifier
+app.post('/api/coding/github/verify-commit', optionalAuth, async (req, res) => {
+  const { dateKey: reqDate, schedule: clientSchedule, loggedMinutes: clientLogged } = req.body || {};
+  const todayStr = reqDate || new Date().toISOString().split('T')[0];
+
+  if (!req.user) {
+    // Guest Mode evaluation
+    const plannedMinutes = 120;
+    const thresholdMinutes = 90;
+    const logged = Number(clientLogged || 0);
+    const percent = Math.round((logged / plannedMinutes) * 100);
+    const isEligible = logged >= thresholdMinutes;
+    return res.json({
+      verified: isEligible,
+      habitMarked: isEligible,
+      loggedMinutes: logged,
+      plannedMinutes,
+      thresholdMinutes,
+      percent,
+      message: isEligible
+        ? `Commit verified! Project focus logged is ${logged}m / ${plannedMinutes}m (${percent}% >= 75%). Project habit marked Done!`
+        : `Commit detected, but Project timer is currently at ${logged}m / ${plannedMinutes}m (${percent}%). At least 75% (${thresholdMinutes}m) required to auto-complete this habit.`
+    });
+  }
+
+  try {
+    let userSchedule = clientSchedule;
+    if (!userSchedule && pool) {
+      const schedRes = await pool.query(`SELECT value FROM routine_settings WHERE key = $1`, [`schedule:${req.user.id}`]);
+      if (schedRes.rows.length > 0) userSchedule = schedRes.rows[0].value;
+    }
+    const result = await evaluateProjectCommitVerification(req.user.id, userSchedule, todayStr);
+    return res.json(result);
+  } catch (err) {
+    console.error('Verify commit error:', err.message);
+    return res.status(500).json({ error: 'Commit verification failed.' });
+  }
+});
+
+// Incoming GitHub Webhook endpoint (triggered on git push)
+app.post('/api/webhooks/github/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const event = req.headers['x-github-event'];
+  if (event !== 'push') {
+    return res.json({ ignored: true, message: 'Event ignored (only push events trigger habit verification)' });
+  }
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  try {
+    let userSchedule = null;
+    if (pool) {
+      const schedRes = await pool.query(`SELECT value FROM routine_settings WHERE key = $1`, [`schedule:${userId}`]);
+      if (schedRes.rows.length > 0) userSchedule = schedRes.rows[0].value;
+    }
+    const result = await evaluateProjectCommitVerification(userId, userSchedule, todayStr);
+    console.log(`[GitHub Webhook] Push verified for user ${userId}:`, result.message);
+    return res.json(result);
+  } catch (err) {
+    console.error('[GitHub Webhook Error]:', err.message);
+    return res.status(500).json({ error: 'Webhook processing error' });
+  }
+});
+
+// ================= POD CODE SNIPPETS & PEER REVIEWS =================
+app.get('/api/groups/:id/snippets', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `SELECT s.*, u.username as author_username, u.avatar_color as author_avatar_color,
+              COALESCE((SELECT COUNT(*) FROM pod_snippet_replies r WHERE r.snippet_id = s.id), 0) as reply_count
+       FROM pod_code_snippets s
+       JOIN users u ON u.id = s.user_id
+       WHERE s.group_id = $1
+       ORDER BY s.created_at DESC LIMIT 20`,
+      [groupId]
+    );
+
+    // Fetch replies for each snippet
+    const snippetsWithReplies = await Promise.all(
+      result.rows.map(async (snippet) => {
+        const repliesRes = await pool.query(
+          `SELECT r.*, u.username, u.avatar_color
+           FROM pod_snippet_replies r
+           JOIN users u ON u.id = r.user_id
+           WHERE r.snippet_id = $1
+           ORDER BY r.created_at ASC`,
+          [snippet.id]
+        );
+        return { ...snippet, replies: repliesRes.rows };
+      })
+    );
+
+    return res.json(snippetsWithReplies);
+  } catch (err) {
+    console.error('Fetch snippets error:', err.message);
+    return res.status(500).json({ error: 'Failed to fetch code snippets.' });
+  }
+});
+
+app.post('/api/groups/:id/snippets', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
+  const { title, problem_url = '', language = 'javascript', code, notes = '' } = req.body || {};
+  if (!title || !code) {
+    return res.status(400).json({ error: 'Title and code are required.' });
+  }
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `INSERT INTO pod_code_snippets (group_id, user_id, title, problem_url, language, code, notes)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING *`,
+      [groupId, req.user.id, title.trim(), problem_url.trim(), language, code, notes.trim()]
+    );
+    const created = result.rows[0];
+    created.author_username = req.user.username;
+    created.author_avatar_color = req.user.avatar_color || '#315b45';
+    created.reply_count = 0;
+    created.replies = [];
+    return res.json(created);
+  } catch (err) {
+    console.error('Create snippet error:', err.message);
+    return res.status(500).json({ error: 'Failed to share code snippet.' });
+  }
+});
+
+app.post('/api/snippets/:id/replies', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const snippetId = req.params.id;
+  const { comment, suggested_code = '' } = req.body || {};
+  if (!comment || !comment.trim()) {
+    return res.status(400).json({ error: 'Comment is required.' });
+  }
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `INSERT INTO pod_snippet_replies (snippet_id, user_id, comment, suggested_code)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [snippetId, req.user.id, comment.trim(), suggested_code.trim()]
+    );
+    const row = result.rows[0];
+    row.username = req.user.username;
+    row.avatar_color = req.user.avatar_color || '#315b45';
+    return res.json(row);
+  } catch (err) {
+    console.error('Post snippet reply error:', err.message);
+    return res.status(500).json({ error: 'Failed to post reply.' });
+  }
+});
+
+app.post('/api/snippets/:id/like', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const snippetId = req.params.id;
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `UPDATE pod_code_snippets SET likes = likes + 1 WHERE id = $1 RETURNING likes`,
+      [snippetId]
+    );
+    return res.json({ likes: result.rows[0]?.likes || 0 });
+  } catch (err) {
+    console.error('Like snippet error:', err.message);
+    return res.status(500).json({ error: 'Failed to like snippet.' });
+  }
 });
 
 // Serve frontend build in production / single-service deployment

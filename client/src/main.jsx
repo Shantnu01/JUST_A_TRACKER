@@ -145,44 +145,44 @@ const dailyQuotes = [
   { quote: "The quieter you become, the more you are able to hear.", author: "Rumi" }
 ];
 
-// Curated Top Patterns & Interview DSA Sheet (Blind 75 & NeetCode standard)
+// Curated Top Patterns & Interview DSA Sheet (Blind 75 & NeetCode standard with Company tags)
 const dsaCuratedList = [
   // Arrays & Hashing
-  { id: 'two-sum', title: 'Two Sum', category: 'Arrays & Hashing', difficulty: 'Easy', url: 'https://leetcode.com/problems/two-sum/' },
-  { id: 'valid-anagram', title: 'Valid Anagram', category: 'Arrays & Hashing', difficulty: 'Easy', url: 'https://leetcode.com/problems/valid-anagram/' },
-  { id: 'group-anagrams', title: 'Group Anagrams', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/group-anagrams/' },
-  { id: 'top-k-frequent', title: 'Top K Frequent Elements', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/top-k-frequent-elements/' },
-  { id: 'product-of-array', title: 'Product of Array Except Self', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/product-of-array-except-self/' },
+  { id: 'two-sum', title: 'Two Sum', category: 'Arrays & Hashing', difficulty: 'Easy', url: 'https://leetcode.com/problems/two-sum/', companies: ['Google', 'Amazon', 'Meta', 'Apple'] },
+  { id: 'valid-anagram', title: 'Valid Anagram', category: 'Arrays & Hashing', difficulty: 'Easy', url: 'https://leetcode.com/problems/valid-anagram/', companies: ['Google', 'Apple'] },
+  { id: 'group-anagrams', title: 'Group Anagrams', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/group-anagrams/', companies: ['Amazon', 'Meta'] },
+  { id: 'top-k-frequent', title: 'Top K Frequent Elements', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/top-k-frequent-elements/', companies: ['Amazon', 'Meta'] },
+  { id: 'product-of-array', title: 'Product of Array Except Self', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/product-of-array-except-self/', companies: ['Meta', 'Amazon', 'Apple'] },
 
   // Two Pointers & Sliding Window
-  { id: 'valid-palindrome', title: 'Valid Palindrome', category: 'Two Pointers & Sliding Window', difficulty: 'Easy', url: 'https://leetcode.com/problems/valid-palindrome/' },
-  { id: 'three-sum', title: '3Sum', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/3sum/' },
-  { id: 'container-water', title: 'Container With Most Water', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/container-with-most-water/' },
-  { id: 'best-time-stock', title: 'Best Time to Buy and Sell Stock', category: 'Two Pointers & Sliding Window', difficulty: 'Easy', url: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/' },
-  { id: 'longest-substring', title: 'Longest Substring Without Repeating Characters', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/' },
+  { id: 'valid-palindrome', title: 'Valid Palindrome', category: 'Two Pointers & Sliding Window', difficulty: 'Easy', url: 'https://leetcode.com/problems/valid-palindrome/', companies: ['Meta', 'Microsoft'] },
+  { id: 'three-sum', title: '3Sum', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/3sum/', companies: ['Google', 'Meta', 'Amazon'] },
+  { id: 'container-water', title: 'Container With Most Water', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/container-with-most-water/', companies: ['Google', 'Amazon', 'Apple'] },
+  { id: 'best-time-stock', title: 'Best Time to Buy and Sell Stock', category: 'Two Pointers & Sliding Window', difficulty: 'Easy', url: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/', companies: ['Amazon', 'Microsoft', 'Google'] },
+  { id: 'longest-substring', title: 'Longest Substring Without Repeating Characters', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/', companies: ['Google', 'Amazon', 'Meta'] },
 
   // Binary Search
-  { id: 'binary-search', title: 'Binary Search', category: 'Binary Search', difficulty: 'Easy', url: 'https://leetcode.com/problems/binary-search/' },
-  { id: 'search-rotated-array', title: 'Search in Rotated Sorted Array', category: 'Binary Search', difficulty: 'Medium', url: 'https://leetcode.com/problems/search-in-rotated-sorted-array/' },
-  { id: 'find-min-rotated', title: 'Find Minimum in Rotated Sorted Array', category: 'Binary Search', difficulty: 'Medium', url: 'https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/' },
+  { id: 'binary-search', title: 'Binary Search', category: 'Binary Search', difficulty: 'Easy', url: 'https://leetcode.com/problems/binary-search/', companies: ['Microsoft', 'Apple'] },
+  { id: 'search-rotated-array', title: 'Search in Rotated Sorted Array', category: 'Binary Search', difficulty: 'Medium', url: 'https://leetcode.com/problems/search-in-rotated-sorted-array/', companies: ['Google', 'Microsoft', 'Amazon'] },
+  { id: 'find-min-rotated', title: 'Find Minimum in Rotated Sorted Array', category: 'Binary Search', difficulty: 'Medium', url: 'https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/', companies: ['Microsoft', 'Amazon'] },
 
   // Linked List
-  { id: 'reverse-linked-list', title: 'Reverse Linked List', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/reverse-linked-list/' },
-  { id: 'merge-two-sorted-lists', title: 'Merge Two Sorted Lists', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/merge-two-sorted-lists/' },
-  { id: 'linked-list-cycle', title: 'Linked List Cycle', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/linked-list-cycle/' },
+  { id: 'reverse-linked-list', title: 'Reverse Linked List', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/reverse-linked-list/', companies: ['Microsoft', 'Google', 'Amazon', 'Apple'] },
+  { id: 'merge-two-sorted-lists', title: 'Merge Two Sorted Lists', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/merge-two-sorted-lists/', companies: ['Microsoft', 'Amazon', 'Google'] },
+  { id: 'linked-list-cycle', title: 'Linked List Cycle', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/linked-list-cycle/', companies: ['Microsoft', 'Amazon'] },
 
   // Trees & BST
-  { id: 'invert-binary-tree', title: 'Invert Binary Tree', category: 'Trees & BST', difficulty: 'Easy', url: 'https://leetcode.com/problems/invert-binary-tree/' },
-  { id: 'max-depth-tree', title: 'Maximum Depth of Binary Tree', category: 'Trees & BST', difficulty: 'Easy', url: 'https://leetcode.com/problems/maximum-depth-of-binary-tree/' },
-  { id: 'lca-bst', title: 'Lowest Common Ancestor of a BST', category: 'Trees & BST', difficulty: 'Medium', url: 'https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/' },
-  { id: 'level-order-traversal', title: 'Binary Tree Level Order Traversal', category: 'Trees & BST', difficulty: 'Medium', url: 'https://leetcode.com/problems/binary-tree-level-order-traversal/' },
+  { id: 'invert-binary-tree', title: 'Invert Binary Tree', category: 'Trees & BST', difficulty: 'Easy', url: 'https://leetcode.com/problems/invert-binary-tree/', companies: ['Google', 'Apple'] },
+  { id: 'max-depth-tree', title: 'Maximum Depth of Binary Tree', category: 'Trees & BST', difficulty: 'Easy', url: 'https://leetcode.com/problems/maximum-depth-of-binary-tree/', companies: ['Google', 'Microsoft'] },
+  { id: 'lca-bst', title: 'Lowest Common Ancestor of a BST', category: 'Trees & BST', difficulty: 'Medium', url: 'https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/', companies: ['Meta', 'Amazon'] },
+  { id: 'level-order-traversal', title: 'Binary Tree Level Order Traversal', category: 'Trees & BST', difficulty: 'Medium', url: 'https://leetcode.com/problems/binary-tree-level-order-traversal/', companies: ['Microsoft', 'Meta', 'Amazon'] },
 
   // Dynamic Programming & Graphs
-  { id: 'climbing-stairs', title: 'Climbing Stairs', category: 'Dynamic Programming & Graphs', difficulty: 'Easy', url: 'https://leetcode.com/problems/climbing-stairs/' },
-  { id: 'coin-change', title: 'Coin Change', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/coin-change/' },
-  { id: 'house-robber', title: 'House Robber', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/house-robber/' },
-  { id: 'number-of-islands', title: 'Number of Islands', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/number-of-islands/' },
-  { id: 'course-schedule', title: 'Course Schedule', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/course-schedule/' }
+  { id: 'climbing-stairs', title: 'Climbing Stairs', category: 'Dynamic Programming & Graphs', difficulty: 'Easy', url: 'https://leetcode.com/problems/climbing-stairs/', companies: ['Google', 'Microsoft'] },
+  { id: 'coin-change', title: 'Coin Change', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/coin-change/', companies: ['Amazon', 'Microsoft'] },
+  { id: 'house-robber', title: 'House Robber', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/house-robber/', companies: ['Google', 'Microsoft', 'Amazon'] },
+  { id: 'number-of-islands', title: 'Number of Islands', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/number-of-islands/', companies: ['Amazon', 'Google', 'Meta'] },
+  { id: 'course-schedule', title: 'Course Schedule', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/course-schedule/', companies: ['Google', 'Amazon'] }
 ];
 
 // Curated Ideas & Recommendations to make Daymark the ultimate Coder Hub
@@ -344,6 +344,37 @@ function App() {
   const [codingSubTab, setCodingSubTab] = useState('overview'); // 'overview' | 'sheet' | 'contests' | 'suggestions'
   const [contestsList, setContestsList] = useState([]);
 
+  // Codeforces State
+  const [inputCfUser, setInputCfUser] = useState('');
+  const [codeforcesData, setCodeforcesData] = useState(null);
+  const [codeforcesLoading, setCodeforcesLoading] = useState(false);
+  const [codeforcesError, setCodeforcesError] = useState('');
+  const [cfArenaList, setCfArenaList] = useState([]);
+  const [cfArenaLoading, setCfArenaLoading] = useState(false);
+
+  // Company DSA Filter & 45-Min Mock Interview Mode
+  const [selectedCompany, setSelectedCompany] = useState('All'); // 'All' | 'Google' | 'Meta' | 'Amazon' | 'Microsoft' | 'Apple'
+  const [mockTimerActive, setMockTimerActive] = useState(false);
+  const [mockSecondsLeft, setMockSecondsLeft] = useState(2700); // 45 minutes
+  const [mockProblemTitle, setMockProblemTitle] = useState('');
+
+  // Pod Snippets & Peer Code Review State
+  const [podSnippets, setPodSnippets] = useState([]);
+  const [snippetsLoading, setSnippetsLoading] = useState(false);
+  const [snippetModalOpen, setSnippetModalOpen] = useState(false);
+  const [newSnippetTitle, setNewSnippetTitle] = useState('');
+  const [newSnippetCode, setNewSnippetCode] = useState('');
+  const [newSnippetLang, setNewSnippetLang] = useState('javascript');
+  const [newSnippetNotes, setNewSnippetNotes] = useState('');
+  const [newSnippetProblemUrl, setNewSnippetProblemUrl] = useState('');
+
+  // Smart GitHub Commit Project Verification Result
+  const [commitVerificationResult, setCommitVerificationResult] = useState(null);
+  const [verifyingCommit, setVerifyingCommit] = useState(false);
+
+  // Incoming Nudge Alert Popup
+  const [nudgePopup, setNudgePopup] = useState({ open: false, from_username: '', group_name: '', from_user_id: '' });
+
   // Problem of the day based on day of year
   const potd = useMemo(() => {
     const now = new Date();
@@ -452,7 +483,7 @@ function App() {
     return () => clearInterval(interval);
   }, [running, activeId, token, schedule]);
 
-  // Unread nudges poller (checks every 15s)
+  // Unread nudges poller (checks every 15s) with OS Push Notification & High-Visibility Alert Modal
   useEffect(() => {
     if (!token) return;
     const checkNudges = async () => {
@@ -465,6 +496,27 @@ function App() {
           if (Array.isArray(nudges) && nudges.length > 0) {
             const first = nudges[0];
             playChime(true);
+            setTimeout(() => playChime(true), 400);
+
+            // 1. Native Browser OS Notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+              try {
+                new Notification(`👋 ${first.from_username} nudged you!`, {
+                  body: `Time to lock in and study in pod "${first.group_name}"!`,
+                  icon: '/favicon.svg'
+                });
+              } catch {}
+            }
+
+            // 2. High-Visibility Pop-up Modal Alert
+            setNudgePopup({
+              open: true,
+              from_username: first.from_username,
+              group_name: first.group_name,
+              from_user_id: first.from_user_id
+            });
+
+            // 3. Screen Toast
             setToast(`👋 ${first.from_username} nudged you in "${first.group_name}": Time to lock in!`);
             setTimeout(() => setToast(''), 5000);
           }
@@ -617,14 +669,203 @@ function App() {
     if (codingProfile.github_username) {
       refreshGithub(codingProfile.github_username);
     }
-  }, [codingProfile.leetcode_username, codingProfile.github_username]);
+    if (codingProfile.codeforces_username) {
+      refreshCodeforces(codingProfile.codeforces_username);
+    }
+  }, [codingProfile.leetcode_username, codingProfile.github_username, codingProfile.codeforces_username]);
+
+  const refreshCodeforces = async (handle) => {
+    const target = (handle !== undefined ? handle : codingProfile.codeforces_username || '').trim();
+    if (!target) {
+      setCodeforcesData(null);
+      return;
+    }
+    setCodeforcesLoading(true);
+    setCodeforcesError('');
+    try {
+      const res = await fetch(`${API}/coding/codeforces/${encodeURIComponent(target)}`);
+      const data = await res.json();
+      if (res.ok) {
+        setCodeforcesData(data);
+      } else {
+        setCodeforcesError(data.error || 'Failed to fetch Codeforces data');
+      }
+    } catch {
+      setCodeforcesError('Network error connecting to Codeforces');
+    } finally {
+      setCodeforcesLoading(false);
+    }
+  };
+
+  const fetchCfArena = async () => {
+    if (!activeGroupId || !token) return;
+    setCfArenaLoading(true);
+    try {
+      const res = await fetch(`${API}/groups/${activeGroupId}/cf-arena`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCfArenaList(data);
+      }
+    } catch {}
+    finally {
+      setCfArenaLoading(false);
+    }
+  };
+
+  // Fetch CF Arena and Pod Snippets whenever active group changes or Coding/Pods view opens
+  useEffect(() => {
+    if (activeGroupId && token) {
+      fetchCfArena();
+      fetchPodSnippets();
+    }
+  }, [activeGroupId, token, view]);
+
+  // Project Focus metrics for 75% commit auto-check
+  const projectBlock = schedule.find(s => s.id === 'project' || (s.title && s.title.toLowerCase().includes('project')));
+  const projectPlannedMins = projectBlock ? (Number(projectBlock.hours || 2) * 60) : 120;
+  const projectLoggedMins = day.completedMinutes?.['project'] || (projectBlock ? day.completedMinutes?.[projectBlock.id] || 0 : 0);
+  const projectThresholdMins = Math.ceil(projectPlannedMins * 0.75);
+  const projectPercent = Math.min(100, Math.round((projectLoggedMins / projectPlannedMins) * 100));
+  const isProjectEligible = projectLoggedMins >= projectThresholdMins;
+
+  // Smart GitHub Commit Verifier (Only for Project habit)
+  const verifyGithubCommitForProject = async () => {
+    setVerifyingCommit(true);
+    setToast('Checking GitHub commit & verifying project timer…');
+    try {
+      const res = await fetch(`${API}/coding/github/verify-commit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          dateKey: key,
+          schedule,
+          loggedMinutes: projectLoggedMins
+        })
+      });
+      const data = await res.json();
+      setCommitVerificationResult(data);
+      if (data.habitMarked) {
+        patchDay({ checks: { ...(day.checks || {}), project: true } });
+        playChime(true);
+        setToast(`🎉 Commit Verified! Project timer reached ${data.loggedMinutes}m / ${data.plannedMinutes}m (${data.percent}% >= 75%). Project habit automatically marked Done!`);
+      } else {
+        setToast(`⚠️ Commit check: Project timer is at ${data.loggedMinutes}m / ${data.plannedMinutes}m (${data.percent}%). Need 75% (${data.thresholdMinutes}m) to auto-mark Done.`);
+      }
+      setTimeout(() => setToast(''), 4500);
+    } catch {
+      setToast('Failed to connect to commit verification service');
+    } finally {
+      setVerifyingCommit(false);
+    }
+  };
+
+  // 45-Min Mock Technical Interview Countdown Loop
+  useEffect(() => {
+    if (!mockTimerActive) return;
+    const interval = setInterval(() => {
+      setMockSecondsLeft(prev => {
+        if (prev <= 1) {
+          playChime(true);
+          setMockTimerActive(false);
+          setToast('⏰ Mock interview 45-minute time is up! Great practice session.');
+          return 0;
+        }
+        if (prev === 300) {
+          playChime();
+          setToast('⏱️ 5 minutes remaining in your technical mock interview!');
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [mockTimerActive]);
+
+  const startMockInterview = (problemTitle) => {
+    setMockProblemTitle(problemTitle);
+    setMockSecondsLeft(2700);
+    setMockTimerActive(true);
+    playChime();
+    setToast(`⏱️ 45-minute mock interview started for "${problemTitle}"!`);
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  // Pod Snippets Handlers
+  const fetchPodSnippets = async () => {
+    if (!activeGroupId || !token) return;
+    setSnippetsLoading(true);
+    try {
+      const res = await fetch(`${API}/groups/${activeGroupId}/snippets`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPodSnippets(data);
+      }
+    } catch {}
+    finally {
+      setSnippetsLoading(false);
+    }
+  };
+
+  const handlePostSnippet = async (e) => {
+    e.preventDefault();
+    if (!newSnippetTitle.trim() || !newSnippetCode.trim() || !activeGroupId || !token) return;
+    try {
+      const res = await fetch(`${API}/groups/${activeGroupId}/snippets`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: newSnippetTitle.trim(),
+          language: newSnippetLang,
+          code: newSnippetCode,
+          notes: newSnippetNotes.trim(),
+          problem_url: newSnippetProblemUrl.trim()
+        })
+      });
+      if (res.ok) {
+        const created = await res.json();
+        setPodSnippets(prev => [created, ...prev]);
+        setSnippetModalOpen(false);
+        setNewSnippetTitle('');
+        setNewSnippetCode('');
+        setNewSnippetNotes('');
+        setNewSnippetProblemUrl('');
+        playChime(true);
+        setToast('Code snippet shared with your study pod!');
+        setTimeout(() => setToast(''), 2500);
+      }
+    } catch {}
+  };
+
+  const handleLikeSnippet = async (snippetId) => {
+    if (!token) return;
+    try {
+      const res = await fetch(`${API}/snippets/${snippetId}/like`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPodSnippets(prev => prev.map(s => s.id === snippetId ? { ...s, likes: data.likes } : s));
+      }
+    } catch {}
+  };
 
   const handleSaveCodingHandles = async (e) => {
     e?.preventDefault?.();
     const updated = {
       ...codingProfile,
       leetcode_username: inputLcUser.trim(),
-      github_username: inputGhUser.trim()
+      github_username: inputGhUser.trim(),
+      codeforces_username: inputCfUser.trim()
     };
     setCodingProfile(updated);
     localStorage.setItem('daymark-coding-profile', JSON.stringify(updated));
@@ -645,6 +886,7 @@ function App() {
 
     refreshLeetcode(updated.leetcode_username);
     refreshGithub(updated.github_username);
+    refreshCodeforces(updated.codeforces_username);
     setToast('Coding handles saved & synced!');
     setTimeout(() => setToast(''), 2500);
   };
@@ -1936,34 +2178,39 @@ function App() {
                   onClick={() => {
                     setInputLcUser(codingProfile.leetcode_username || '');
                     setInputGhUser(codingProfile.github_username || '');
+                    setInputCfUser(codingProfile.codeforces_username || '');
                     setCodingModalOpen(true);
                   }}
                 >
-                  <Terminal size={15} /> {codingProfile.leetcode_username || codingProfile.github_username ? 'Edit Handles' : 'Connect LeetCode / GitHub'}
+                  <Terminal size={15} /> {codingProfile.leetcode_username || codingProfile.github_username || codingProfile.codeforces_username ? 'Edit Handles' : 'Connect Coding Handles'}
                 </button>
-                {(codingProfile.leetcode_username || codingProfile.github_username) && (
+                {(codingProfile.leetcode_username || codingProfile.github_username || codingProfile.codeforces_username) && (
                   <button
                     className="reset-schedule-btn"
                     onClick={() => {
                       refreshLeetcode();
                       refreshGithub();
-                      setToast('Refreshing stats…');
+                      refreshCodeforces();
+                      fetchCfArena();
+                      setToast('Refreshing coding stats…');
                       setTimeout(() => setToast(''), 1500);
                     }}
                     title="Refresh live stats"
                   >
-                    <RefreshCw size={14} className={leetcodeLoading || githubLoading ? 'spin-anim' : ''} /> Refresh
+                    <RefreshCw size={14} className={leetcodeLoading || githubLoading || codeforcesLoading ? 'spin-anim' : ''} /> Refresh
                   </button>
                 )}
               </div>
             </div>
 
-            {/* Sub-Tabs: Overview, Top Patterns Sheet, Contests, Suggestions */}
+            {/* Sub-Tabs: Overview, Top Patterns Sheet, Snippets, CF Arena, Contests, Suggestions */}
             <div className="coding-subtabs">
               {[
-                ['overview', 'Stats & POTD', Flame],
-                ['sheet', 'Interview Patterns (Blind 75)', CheckCircle2],
-                ['contests', 'Contest Calendar', Trophy],
+                ['overview', 'Stats & Sync', Flame],
+                ['sheet', 'Company Interview Sheet', CheckCircle2],
+                ['snippets', 'Pod Code Reviews', Share2],
+                ['arena', 'CF Battle Arena', Trophy],
+                ['contests', 'Contest Calendar', Calendar],
                 ['suggestions', 'Coder Hub Ideas', Sparkles]
               ].map(([id, label, Icon]) => (
                 <button
@@ -1976,21 +2223,124 @@ function App() {
                   {id === 'sheet' && codingProfile.solved_dsa_ids?.length > 0 && (
                     <span className="count-pill">{codingProfile.solved_dsa_ids.length}</span>
                   )}
+                  {id === 'snippets' && podSnippets.length > 0 && (
+                    <span className="count-pill">{podSnippets.length}</span>
+                  )}
                 </button>
               ))}
             </div>
 
-            {/* SUBTAB 1: OVERVIEW */}
+            {/* SUBTAB 1: OVERVIEW & SMART COMMIT SYNC */}
             {codingSubTab === 'overview' && (
               <div className="coding-overview-grid">
-                {/* 1. Daily DSA Problem of the Day */}
-                <div className="panel dsa-potd-card">
+                {/* 1. Smart GitHub Commit Auto-Check for Project Habit */}
+                <div className="panel smart-commit-panel" style={{ gridColumn: '1 / -1' }}>
+                  <div className="smart-commit-header">
+                    <div>
+                      <span className="potd-chip" style={{ background: '#e0f2fe', borderColor: '#bae6fd', color: '#0369a1' }}>
+                        <GitBranch size={13} color="#0284c7" /> PROJECT HABIT AUTO-SYNC
+                      </span>
+                      <h4 style={{ margin: '6px 0 3px', font: '700 17px Manrope' }}>
+                        Smart GitHub Commit → "Project" Habit Verification
+                      </h4>
+                      <p className="muted" style={{ fontSize: '12px', margin: 0 }}>
+                        Whenever you push code, Daymark verifies that your present focus timer has reached at least <strong>75%</strong> of your scheduled Project time before marking it Done.
+                      </p>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <button
+                        className="save-schedule-btn"
+                        style={{ padding: '7px 12px', fontSize: '11px' }}
+                        onClick={verifyGithubCommitForProject}
+                        disabled={verifyingCommit}
+                      >
+                        <RefreshCw size={13} className={verifyingCommit ? 'spin-anim' : ''} /> Verify Commits Now
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Progress Gauge */}
+                  <div className="smart-commit-metrics">
+                    <div className="commit-stat-box">
+                      <small>Assigned Project Time</small>
+                      <strong>{projectPlannedMins} mins ({Math.round(projectPlannedMins / 60)}h)</strong>
+                    </div>
+                    <div className="commit-stat-box">
+                      <small>75% Verification Goal</small>
+                      <strong>{projectThresholdMins} mins</strong>
+                    </div>
+                    <div className="commit-stat-box">
+                      <small>Today's Logged Time</small>
+                      <strong style={{ color: isProjectEligible ? '#2e7d32' : '#c2410c' }}>
+                        {projectLoggedMins} mins ({projectPercent}%)
+                      </strong>
+                    </div>
+                    <div className="commit-stat-box">
+                      <small>Verification Status</small>
+                      <strong style={{ fontSize: '12px', color: isProjectEligible ? '#2e7d32' : '#b45309' }}>
+                        {isProjectEligible ? '✅ Threshold Met' : `⏳ Need ${projectThresholdMins - projectLoggedMins}m more`}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="lc-track" style={{ height: '8px', margin: '12px 0 6px' }}>
+                    <div
+                      className="fill"
+                      style={{
+                        width: `${projectPercent}%`,
+                        background: isProjectEligible ? '#16a34a' : '#f59e0b'
+                      }}
+                    />
+                  </div>
+
+                  {commitVerificationResult && (
+                    <div
+                      className={`verification-msg-box ${commitVerificationResult.habitMarked ? 'success' : 'warn'}`}
+                    >
+                      <CheckCircle2 size={15} />
+                      <span>{commitVerificationResult.message}</span>
+                    </div>
+                  )}
+
+                  {/* Webhook copy banner */}
+                  <div className="webhook-box">
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <small style={{ fontWeight: '700', color: '#4b5563', display: 'block' }}>
+                        Zero-Click Push Automation Webhook URL:
+                      </small>
+                      <code style={{ fontSize: '11px', wordBreak: 'break-all' }}>
+                        {typeof window !== 'undefined' ? `${window.location.origin}/api/webhooks/github/${user ? user.id : 'guest'}` : ''}
+                      </code>
+                    </div>
+                    <button
+                      className="reset-schedule-btn"
+                      style={{ padding: '4px 8px', fontSize: '10px' }}
+                      onClick={() => {
+                        const url = `${window.location.origin}/api/webhooks/github/${user ? user.id : 'guest'}`;
+                        navigator.clipboard.writeText(url);
+                        setToast('GitHub Webhook URL copied to clipboard!');
+                        setTimeout(() => setToast(''), 2500);
+                      }}
+                    >
+                      <Copy size={12} /> Copy URL
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Daily DSA Problem of the Day */}
+                <div className="panel dsa-potd-card" style={{ gridColumn: '1 / -1' }}>
                   <div className="potd-badge-row">
                     <span className="potd-chip">
                       <Flame size={13} color="#f59e0b" /> PROBLEM OF THE DAY
                     </span>
                     <span className={`diff-badge ${potd.difficulty.toLowerCase()}`}>{potd.difficulty}</span>
                     <span className="topic-pill">{potd.category}</span>
+                    {potd.companies && (
+                      <span className="topic-pill" style={{ background: '#fef3c7', color: '#92400e' }}>
+                        Asked by {potd.companies.slice(0, 3).join(', ')}
+                      </span>
+                    )}
                   </div>
                   <div className="potd-body">
                     <h4>{potd.title}</h4>
@@ -2008,6 +2358,12 @@ function App() {
                       <ExternalLink size={14} /> Solve on LeetCode
                     </a>
                     <button
+                      className="potd-solve-btn"
+                      onClick={() => startMockInterview(potd.title)}
+                    >
+                      <Clock3 size={14} /> Start 45m Mock
+                    </button>
+                    <button
                       className={`potd-check-btn ${codingProfile.solved_dsa_ids?.includes(potd.id) ? 'done' : ''}`}
                       onClick={() => toggleDsaSolved(potd.id, true)}
                     >
@@ -2017,7 +2373,7 @@ function App() {
                   </div>
                 </div>
 
-                {/* 2. LeetCode Performance Card */}
+                {/* 3. LeetCode Performance Card */}
                 <div className="panel coding-metric-panel">
                   <div className="coding-panel-header">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -2045,6 +2401,7 @@ function App() {
                         onClick={() => {
                           setInputLcUser('');
                           setInputGhUser(codingProfile.github_username || '');
+                          setInputCfUser(codingProfile.codeforces_username || '');
                           setCodingModalOpen(true);
                         }}
                       >
@@ -2076,6 +2433,7 @@ function App() {
                         onClick={() => {
                           setInputLcUser('');
                           setInputGhUser(codingProfile.github_username || '');
+                          setInputCfUser(codingProfile.codeforces_username || '');
                           setCodingModalOpen(true);
                         }}
                       >
@@ -2151,7 +2509,7 @@ function App() {
                   )}
                 </div>
 
-                {/* 3. GitHub Activity & Heatmap Card */}
+                {/* 4. GitHub Activity & Heatmap Card */}
                 <div className="panel coding-metric-panel">
                   <div className="coding-panel-header">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -2179,6 +2537,7 @@ function App() {
                         onClick={() => {
                           setInputLcUser(codingProfile.leetcode_username || '');
                           setInputGhUser('');
+                          setInputCfUser(codingProfile.codeforces_username || '');
                           setCodingModalOpen(true);
                         }}
                       >
@@ -2203,6 +2562,7 @@ function App() {
                         onClick={() => {
                           setInputLcUser(codingProfile.leetcode_username || '');
                           setInputGhUser('');
+                          setInputCfUser(codingProfile.codeforces_username || '');
                           setCodingModalOpen(true);
                         }}
                       >
@@ -2280,18 +2640,114 @@ function App() {
                     </div>
                   )}
                 </div>
+
+                {/* 5. Codeforces Card */}
+                <div className="panel coding-metric-panel">
+                  <div className="coding-panel-header">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="platform-icon cf" style={{ background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe' }}>CF</span>
+                      <div>
+                        <strong>Codeforces Rating</strong>
+                        <small>
+                          {codingProfile.codeforces_username ? `@${codingProfile.codeforces_username}` : 'No handle connected'}
+                        </small>
+                      </div>
+                    </div>
+                    {codingProfile.codeforces_username ? (
+                      <a
+                        href={codeforcesData?.profileUrl || `https://codeforces.com/profile/${codingProfile.codeforces_username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="external-link-btn"
+                        title="View Codeforces profile"
+                      >
+                        <ExternalLink size={14} />
+                      </a>
+                    ) : (
+                      <button
+                        className="quick-link-btn"
+                        onClick={() => {
+                          setInputLcUser(codingProfile.leetcode_username || '');
+                          setInputGhUser(codingProfile.github_username || '');
+                          setInputCfUser('');
+                          setCodingModalOpen(true);
+                        }}
+                      >
+                        + Connect
+                      </button>
+                    )}
+                  </div>
+
+                  {codeforcesLoading && (
+                    <div className="loading-state">
+                      <RefreshCw size={18} className="spin-anim" />
+                      <span>Fetching Codeforces rating…</span>
+                    </div>
+                  )}
+
+                  {!codingProfile.codeforces_username && (
+                    <div className="empty-prompt">
+                      <Trophy size={32} color="#8a948c" />
+                      <p>Connect your Codeforces handle to track contest rating, division, and compete in pod battle arenas.</p>
+                      <button
+                        className="save-schedule-btn"
+                        onClick={() => {
+                          setInputLcUser(codingProfile.leetcode_username || '');
+                          setInputGhUser(codingProfile.github_username || '');
+                          setInputCfUser('');
+                          setCodingModalOpen(true);
+                        }}
+                      >
+                        Connect Codeforces
+                      </button>
+                    </div>
+                  )}
+
+                  {codeforcesData && !codeforcesLoading && (
+                    <div className="lc-stats-body">
+                      <div className="lc-total-row">
+                        <div className="lc-total-num">
+                          <strong style={{ color: codeforcesData.rankColor }}>{codeforcesData.rating}</strong>
+                          <small>/ Max {codeforcesData.maxRating}</small>
+                        </div>
+                        <div className="lc-badges">
+                          <span
+                            className="lc-rank-badge"
+                            style={{ background: '#f1f5f9', color: codeforcesData.rankColor, fontWeight: '800' }}
+                          >
+                            {codeforcesData.rank}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '6px' }}>
+                        <img
+                          src={codeforcesData.avatar}
+                          alt={codeforcesData.handle}
+                          style={{ width: '42px', height: '42px', borderRadius: '8px', border: `2px solid ${codeforcesData.rankColor}` }}
+                        />
+                        <div style={{ fontSize: '11px', color: '#64748b' }}>
+                          <span style={{ display: 'block', fontWeight: '700', color: '#1e293b' }}>
+                            Organization: {codeforcesData.organization || 'Independent'}
+                          </span>
+                          <span>Contribution: {codeforcesData.contribution > 0 ? `+${codeforcesData.contribution}` : codeforcesData.contribution}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
-            {/* SUBTAB 2: INTERVIEW PATTERNS / BLIND 75 SHEET */}
+            {/* SUBTAB 2: COMPANY-SPECIFIC INTERVIEW PATTERNS & 45-MIN MOCK */}
             {codingSubTab === 'sheet' && (
               <div className="panel coding-sheet-panel">
                 <div className="sheet-header">
                   <div>
-                    <span className="eyebrow">ESSENTIAL INTERVIEW PATTERNS</span>
-                    <h3>Curated Blind 75 / Top Patterns Checklist</h3>
+                    <span className="eyebrow">HIGH-YIELD INTERVIEW PATTERNS</span>
+                    <h3>Company-Targeted DSA Sheets & Patterns</h3>
                     <p className="muted">
-                      Master the highest-yield DSA patterns tested in top tech engineering interviews.
+                      Filter problems frequently asked by top tech giants and practice with timed 45-minute mock sessions.
                     </p>
                   </div>
                   <div className="sheet-progress-box">
@@ -2313,9 +2769,48 @@ function App() {
                   </div>
                 </div>
 
+                {/* Company Filter Tabs */}
+                <div className="company-filter-bar">
+                  <span className="company-label">Filter by Company:</span>
+                  {['All', 'Google', 'Meta', 'Amazon', 'Microsoft', 'Apple'].map(comp => (
+                    <button
+                      key={comp}
+                      className={`company-chip ${selectedCompany === comp ? 'active' : ''}`}
+                      onClick={() => setSelectedCompany(comp)}
+                    >
+                      {comp === 'Google' && '🇬 '}
+                      {comp === 'Meta' && '🇲 '}
+                      {comp === 'Amazon' && '🇦 '}
+                      {comp === 'Microsoft' && 'Ⓜ️ '}
+                      {comp === 'Apple' && '🍎 '}
+                      {comp === 'All' ? 'All Companies' : comp}
+                    </button>
+                  ))}
+                </div>
+
+                {/* 45-Minute Mock Interview Active Bar */}
+                {mockTimerActive && (
+                  <div className="mock-interview-bar">
+                    <div className="mock-timer-clock">
+                      <Clock3 size={18} color="#b91c1c" className="spin-anim" />
+                      <span>
+                        45-MIN MOCK INTERVIEW: <strong>{String(Math.floor(mockSecondsLeft / 60)).padStart(2, '0')}:{String(mockSecondsLeft % 60).padStart(2, '0')}</strong>
+                      </span>
+                    </div>
+                    <span className="mock-problem-name">{mockProblemTitle}</span>
+                    <button className="reset-schedule-btn" style={{ padding: '4px 10px', fontSize: '11px' }} onClick={() => setMockTimerActive(false)}>
+                      End Mock
+                    </button>
+                  </div>
+                )}
+
                 {/* Categorized Problems */}
                 {['Arrays & Hashing', 'Two Pointers & Sliding Window', 'Binary Search', 'Linked List', 'Trees & BST', 'Dynamic Programming & Graphs'].map(cat => {
-                  const items = dsaCuratedList.filter(p => p.category === cat);
+                  let items = dsaCuratedList.filter(p => p.category === cat);
+                  if (selectedCompany !== 'All') {
+                    items = items.filter(p => p.companies?.includes(selectedCompany));
+                  }
+                  if (items.length === 0) return null;
                   const solvedCount = items.filter(p => codingProfile.solved_dsa_ids?.includes(p.id)).length;
                   return (
                     <div className="pattern-group" key={cat}>
@@ -2335,8 +2830,25 @@ function App() {
                               >
                                 {isSolved && <Check size={13} color="#fff" />}
                               </button>
-                              <span className="pattern-title">{p.title}</span>
-                              <span className={`diff-pill ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                  <span className="pattern-title">{p.title}</span>
+                                  <span className={`diff-pill ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
+                                  {p.companies && (
+                                    <span className="company-tag-pill">
+                                      {p.companies.join(' · ')}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <button
+                                className="icon-button small"
+                                style={{ width: '28px', height: '28px' }}
+                                onClick={() => startMockInterview(p.title)}
+                                title="Start 45m timed mock session on this problem"
+                              >
+                                <Clock3 size={13} />
+                              </button>
                               <a
                                 href={p.url}
                                 target="_blank"
@@ -2356,7 +2868,183 @@ function App() {
               </div>
             )}
 
-            {/* SUBTAB 3: UPCOMING CONTESTS */}
+            {/* SUBTAB 3: POD PEER CODE REVIEWS & SNIPPET DISCUSSIONS */}
+            {codingSubTab === 'snippets' && (
+              <div className="panel coding-sheet-panel">
+                <div className="sheet-header">
+                  <div>
+                    <span className="eyebrow">PEER CODE REVIEW</span>
+                    <h3>Pod Code Snippets & Optimization Discussions</h3>
+                    <p className="muted">
+                      Share tricky edge-cases, discuss time complexities, and get feedback from your 5-member study squad.
+                    </p>
+                  </div>
+                  {user && activeGroup && (
+                    <button
+                      className="save-schedule-btn"
+                      onClick={() => setSnippetModalOpen(true)}
+                    >
+                      <Share2 size={14} /> Share Code Snippet
+                    </button>
+                  )}
+                </div>
+
+                {!user || !activeGroup ? (
+                  <div className="empty-prompt">
+                    <Share2 size={32} color="#8a948c" />
+                    <p>Join or select a Study Pod to exchange code snippets and conduct peer reviews with your members.</p>
+                  </div>
+                ) : snippetsLoading ? (
+                  <div className="loading-state">
+                    <RefreshCw size={18} className="spin-anim" />
+                    <span>Loading pod snippet discussions…</span>
+                  </div>
+                ) : podSnippets.length === 0 ? (
+                  <div className="empty-prompt">
+                    <Code2 size={32} color="#8a948c" />
+                    <p>No code snippets shared yet in "{activeGroup.name}". Be the first to share a solution or ask for review!</p>
+                    <button
+                      className="save-schedule-btn"
+                      onClick={() => setSnippetModalOpen(true)}
+                    >
+                      Share First Snippet
+                    </button>
+                  </div>
+                ) : (
+                  <div className="snippets-feed-grid">
+                    {podSnippets.map(snippet => (
+                      <div className="snippet-card" key={snippet.id}>
+                        <div className="snippet-header">
+                          <div className="member-avatar" style={{ background: snippet.author_avatar_color, width: '28px', height: '28px', fontSize: '11px' }}>
+                            {snippet.author_username?.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <strong>{snippet.title}</strong>
+                            <small>By {snippet.author_username} · {snippet.language?.toUpperCase()}</small>
+                          </div>
+                          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            {snippet.problem_url && (
+                              <a
+                                href={snippet.problem_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="external-link-btn"
+                                title="Open problem link"
+                              >
+                                <ExternalLink size={13} />
+                              </a>
+                            )}
+                            <button
+                              className="like-btn"
+                              onClick={() => handleLikeSnippet(snippet.id)}
+                              title="Like snippet"
+                            >
+                              👍 {snippet.likes || 0}
+                            </button>
+                          </div>
+                        </div>
+
+                        {snippet.notes && (
+                          <div className="snippet-notes-box">
+                            <strong>Question / Review Notes:</strong> {snippet.notes}
+                          </div>
+                        )}
+
+                        <pre className="snippet-code-box">
+                          <code>{snippet.code}</code>
+                        </pre>
+
+                        {/* Reply Thread */}
+                        {snippet.replies && snippet.replies.length > 0 && (
+                          <div className="snippet-replies-list">
+                            <strong style={{ fontSize: '11px', color: '#64748b' }}>Peer Reviews ({snippet.replies.length}):</strong>
+                            {snippet.replies.map(rep => (
+                              <div className="snippet-reply-item" key={rep.id}>
+                                <strong>{rep.username}:</strong> {rep.comment}
+                                {rep.suggested_code && (
+                                  <pre className="snippet-code-box mini">
+                                    <code>{rep.suggested_code}</code>
+                                  </pre>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* SUBTAB 4: CODEFORCES POD BATTLE ARENA */}
+            {codingSubTab === 'arena' && (
+              <div className="panel coding-sheet-panel">
+                <div className="sheet-header">
+                  <div>
+                    <span className="eyebrow">CP BATTLE ARENA</span>
+                    <h3>Pod Codeforces Standings & Rating Leaderboard</h3>
+                    <p className="muted">
+                      Real-time competitive programming ratings of your study pod members. Compete in rounds to claim the pod CP Crown!
+                    </p>
+                  </div>
+                  {activeGroup && (
+                    <button className="reset-schedule-btn" onClick={fetchCfArena}>
+                      <RefreshCw size={13} className={cfArenaLoading ? 'spin-anim' : ''} /> Refresh Arena
+                    </button>
+                  )}
+                </div>
+
+                {!user || !activeGroup ? (
+                  <div className="empty-prompt">
+                    <Trophy size={32} color="#8a948c" />
+                    <p>Join or select a Study Pod to compete in the Codeforces Battle Arena.</p>
+                  </div>
+                ) : cfArenaLoading ? (
+                  <div className="loading-state">
+                    <RefreshCw size={18} className="spin-anim" />
+                    <span>Loading Codeforces battle arena…</span>
+                  </div>
+                ) : (
+                  <div className="leaderboard-table">
+                    {cfArenaList.map((m, idx) => (
+                      <div className={`leaderboard-row ${idx === 0 && m.rating > 0 ? 'rank-1' : ''}`} key={m.id}>
+                        <div className="rank-badge">
+                          {idx === 0 && m.rating > 0 ? <Crown size={15} color="#fff" /> : `#${idx + 1}`}
+                        </div>
+                        <div className="member-avatar" style={{ background: m.avatar_color, width: '34px', height: '34px', fontSize: '13px' }}>
+                          {m.username.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="leaderboard-user-info">
+                          <strong>
+                            {m.username} {m.id === user.id && <span style={{ color: '#527c5f', fontSize: '11px' }}>(You)</span>}
+                            {idx === 0 && m.rating > 0 && (
+                              <span style={{ fontSize: '10px', color: '#b45309', fontWeight: '800' }}>👑 CP CHAMPION</span>
+                            )}
+                          </strong>
+                          <small>
+                            Handle: {m.cfHandle ? `@${m.cfHandle}` : 'No CF handle linked'}
+                          </small>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <span
+                            className="lc-rank-badge"
+                            style={{ background: '#f8fafc', color: m.rankColor, fontWeight: '800' }}
+                          >
+                            {m.rank}
+                          </span>
+                          <strong style={{ display: 'block', fontSize: '15px', color: m.rankColor, marginTop: '2px' }}>
+                            {m.rating > 0 ? `${m.rating} Rating` : 'Unrated'}
+                          </strong>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* SUBTAB 5: UPCOMING CONTESTS */}
             {codingSubTab === 'contests' && (
               <div className="panel coding-contests-panel">
                 <div className="panel-heading">
@@ -2393,7 +3081,7 @@ function App() {
               </div>
             )}
 
-            {/* SUBTAB 4: CODER HUB SUGGESTIONS & IDEAS */}
+            {/* SUBTAB 6: CODER HUB SUGGESTIONS & IDEAS */}
             {codingSubTab === 'suggestions' && (
               <div className="panel coding-suggestions-panel">
                 <div className="panel-heading">
@@ -2401,7 +3089,7 @@ function App() {
                     <span className="eyebrow">ROADMAP & ENHANCEMENTS</span>
                     <h3>Ideas to Make Daymark the Ultimate Coder Hub</h3>
                     <p className="muted">
-                      Here are high-impact features specifically designed for developers and competitive programmers.
+                      High-impact developer workflows requested by coders.
                     </p>
                   </div>
                   <span className="count-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -2802,10 +3490,151 @@ function App() {
                 />
               </div>
 
+              <div className="form-group">
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Trophy size={13} color="#2563eb" />
+                  <span>Codeforces Handle (Optional)</span>
+                  <small style={{ color: '#889189', textTransform: 'none' }}>(e.g. tourist or your handle)</small>
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={inputCfUser}
+                  onChange={e => setInputCfUser(e.target.value)}
+                  placeholder="Codeforces handle"
+                />
+              </div>
+
               <button type="submit" className="form-submit-btn">
                 Save Handles & Fetch Stats
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Share Code Snippet Modal */}
+      {snippetModalOpen && (
+        <div className="modal-overlay" onClick={() => setSnippetModalOpen(false)}>
+          <div className="modal-card" style={{ maxWidth: '580px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Share Code Snippet in Pod</h3>
+              <button className="modal-close" onClick={() => setSnippetModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+            <p className="muted" style={{ fontSize: '12px', margin: '-8px 0 16px' }}>
+              Share your solution, ask for peer review, or discuss optimization with your pod members.
+            </p>
+            <form onSubmit={handlePostSnippet}>
+              <div className="form-group">
+                <label>Problem Title / Description</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newSnippetTitle}
+                  onChange={e => setNewSnippetTitle(e.target.value)}
+                  placeholder="e.g. 3Sum O(N^2) Solution with Two Pointers"
+                  required
+                />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div className="form-group">
+                  <label>Language</label>
+                  <select
+                    className="form-input"
+                    value={newSnippetLang}
+                    onChange={e => setNewSnippetLang(e.target.value)}
+                  >
+                    <option value="javascript">JavaScript / TypeScript</option>
+                    <option value="python">Python 3</option>
+                    <option value="cpp">C++ (STL)</option>
+                    <option value="java">Java</option>
+                    <option value="go">Go</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Problem URL (Optional)</label>
+                  <input
+                    type="url"
+                    className="form-input"
+                    value={newSnippetProblemUrl}
+                    onChange={e => setNewSnippetProblemUrl(e.target.value)}
+                    placeholder="https://leetcode.com/problems/..."
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Code Snippet</label>
+                <textarea
+                  className="form-input"
+                  style={{ fontFamily: 'monospace', fontSize: '12px', minHeight: '140px', resize: 'vertical' }}
+                  value={newSnippetCode}
+                  onChange={e => setNewSnippetCode(e.target.value)}
+                  placeholder="Paste your solution or the code you want reviewed..."
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Review Question / Notes (Optional)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newSnippetNotes}
+                  onChange={e => setNewSnippetNotes(e.target.value)}
+                  placeholder="e.g. How can I avoid the duplicate triplets without extra set?"
+                />
+              </div>
+              <button type="submit" className="form-submit-btn">
+                Post Snippet to Pod
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* High-Visibility Real-Time Nudge Alert Modal */}
+      {nudgePopup.open && (
+        <div className="modal-overlay" onClick={() => setNudgePopup(prev => ({ ...prev, open: false }))}>
+          <div className="modal-card nudge-popup-card" onClick={e => e.stopPropagation()}>
+            <div className="nudge-popup-icon">👋</div>
+            <h3 style={{ margin: '8px 0 4px', fontSize: '20px' }}>{nudgePopup.from_username} nudged you!</h3>
+            <p className="muted" style={{ fontSize: '13px', lineHeight: '1.5', margin: '0 0 20px' }}>
+              Your squad member sent an urgent nudge in <strong>"{nudgePopup.group_name}"</strong>.
+              It's time to jump back into your session and get focused!
+            </p>
+            <div style={{ display: 'grid', gap: '8px' }}>
+              <button
+                className="form-submit-btn"
+                onClick={() => {
+                  setNudgePopup(prev => ({ ...prev, open: false }));
+                  setView('Today');
+                  const currentOrFirst = current?.id || schedule[0]?.id;
+                  if (currentOrFirst && isToday) {
+                    startSession(currentOrFirst);
+                  }
+                  setToast('🚀 Locked in! Focus timer started.');
+                }}
+              >
+                <Play size={14} /> Lock In Now (Start Focus)
+              </button>
+              <button
+                className="reset-schedule-btn"
+                style={{ width: '100%', justifyContent: 'center', padding: '10px' }}
+                onClick={() => {
+                  handleNudge(nudgePopup.from_user_id, nudgePopup.from_username);
+                  setNudgePopup(prev => ({ ...prev, open: false }));
+                }}
+              >
+                👋 Nudge Back
+              </button>
+              <button
+                style={{ background: 'transparent', border: 0, color: '#889289', fontSize: '12px', padding: '6px', cursor: 'pointer' }}
+                onClick={() => setNudgePopup(prev => ({ ...prev, open: false }))}
+              >
+                Dismiss
+              </button>
+            </div>
           </div>
         </div>
       )}

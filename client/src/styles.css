@@ -328,6 +328,51 @@
 .suggestion-card h4{margin:0;font:700 14px Manrope;color:#203124}
 .suggestion-card p{margin:0;font-size:11px;color:#606f63;line-height:1.6}
 
+/* Smart GitHub Commit & Verification */
+.smart-commit-panel{background:linear-gradient(135deg,#f8fbf6,#f0f7ec);border:1px solid #d4e3ce;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.smart-commit-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.smart-commit-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:8px}
+.commit-stat-box{background:#fff;border:1px solid #e1e8dc;border-radius:9px;padding:10px 12px}
+.commit-stat-box small{display:block;font-size:10px;color:#707c72;margin-bottom:2px}
+.commit-stat-box strong{display:block;font-size:14px;color:#203124}
+.verification-msg-box{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.4}
+.verification-msg-box.success{background:#eaf7eb;border:1px solid #cce8ce;color:#1e6a2b}
+.verification-msg-box.warn{background:#fff8ee;border:1px solid #fed7aa;color:#9a3412}
+.webhook-box{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f3f6ee;border:1px dashed #ced8c6;padding:10px 14px;border-radius:8px;margin-top:6px;flex-wrap:wrap}
+.webhook-box code{background:#e7ece0;padding:3px 6px;border-radius:4px;font-family:monospace;color:#2e4433}
+
+/* Company DSA Filter & 45-Min Mock Interview */
+.company-filter-bar{display:flex;align-items:center;gap:8px;overflow-x:auto;padding-bottom:6px;margin:12px 0 16px;scrollbar-width:none}
+.company-filter-bar::-webkit-scrollbar{display:none}
+.company-label{font-size:11px;font-weight:700;color:#6b766e;white-space:nowrap}
+.company-chip{background:#fff;border:1px solid #dce2d7;color:#505e52;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;transition:all .15s}
+.company-chip:hover{background:#f3f7ef;border-color:#b8c7b4}
+.company-chip.active{background:#233f2e;border-color:#233f2e;color:#fff}
+.company-tag-pill{font-size:9px;background:#f1f4ec;color:#586a5a;padding:2px 6px;border-radius:4px;font-weight:600}
+.mock-interview-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fef2f2;border:1px solid #fecaca;padding:12px 16px;border-radius:10px;margin-bottom:16px;flex-wrap:wrap}
+.mock-timer-clock{display:flex;align-items:center;gap:8px;font-size:13px;color:#991b1b;font-weight:700}
+.mock-timer-clock strong{font-size:16px;font-family:monospace}
+.mock-problem-name{font-size:12px;color:#7f1d1d;font-weight:600}
+
+/* Pod Peer Code Review & Snippet Feed */
+.snippets-feed-grid{display:grid;gap:16px;margin-top:14px}
+.snippet-card{background:#fff;border:1px solid #e1e7dc;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.snippet-header{display:flex;align-items:center;gap:10px}
+.snippet-header strong{display:block;font-size:13px;color:#213125}
+.snippet-header small{font-size:11px;color:#7a867c}
+.like-btn{background:#f5f8f2;border:1px solid #dce5d8;border-radius:6px;padding:4px 9px;font-size:11px;font-weight:700;color:#2f4e38;transition:all .15s}
+.like-btn:hover{background:#e7efe4;border-color:#b5c9b0}
+.snippet-notes-box{background:#f9faf6;border-left:3px solid #6d9374;padding:8px 12px;font-size:11px;color:#465348;border-radius:4px}
+.snippet-code-box{background:#1e293b;color:#f8fafc;padding:12px 14px;border-radius:8px;font-size:11px;line-height:1.5;overflow-x:auto;margin:0}
+.snippet-code-box.mini{background:#0f172a;margin-top:6px;padding:8px}
+.snippet-replies-list{display:grid;gap:6px;border-top:1px solid #edf1ea;padding-top:10px}
+.snippet-reply-item{background:#f8faf6;padding:8px 10px;border-radius:6px;font-size:11px;color:#334136}
+
+/* Incoming Nudge Alert Modal */
+.nudge-popup-card{text-align:center;max-width:380px;padding:28px 22px;border:2px solid #537c5f}
+.nudge-popup-icon{font-size:44px;margin-bottom:8px;animation:wave 1s infinite alternate}
+@keyframes wave{0%{transform:rotate(0deg)}100%{transform:rotate(24deg)}}
+
 .spin-anim{animation:spin 1s linear infinite}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
@@ -343,4 +388,6 @@
   .coding-sheet-panel,.coding-contests-panel,.coding-suggestions-panel{padding:16px 14px}
   .sheet-progress-box{min-width:100%}
   .contests-grid,.suggestions-grid{grid-template-columns:1fr}
+  .smart-commit-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .mock-interview-bar{flex-direction:column;align-items:stretch}
 }
