@@ -2420,26 +2420,32 @@ function App() {
           </div>
         )}
         {theme === 'cyber-sakura' && (
-          <div className="sakura-drift-field" aria-hidden="true">
-            <svg className="sakura-petal petal-1" viewBox="-15 -22 30 44">
-              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-            </svg>
-            <svg className="sakura-petal petal-2" viewBox="-15 -22 30 44">
-              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-            </svg>
-            <svg className="sakura-petal petal-3" viewBox="-15 -22 30 44">
-              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-            </svg>
-            <svg className="sakura-petal petal-4" viewBox="-15 -22 30 44">
-              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-            </svg>
-            <svg className="sakura-petal petal-5" viewBox="-15 -22 30 44">
-              <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-            </svg>
-          </div>
+          <>
+            <div className="ambient-glow-disc" aria-hidden="true" />
+            <div className="sakura-drift-field" aria-hidden="true">
+              <svg className="sakura-petal petal-1" viewBox="-15 -22 30 44">
+                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+              </svg>
+              <svg className="sakura-petal petal-2" viewBox="-15 -22 30 44">
+                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+              </svg>
+              <svg className="sakura-petal petal-3" viewBox="-15 -22 30 44">
+                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+              </svg>
+              <svg className="sakura-petal petal-4" viewBox="-15 -22 30 44">
+                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+              </svg>
+              <svg className="sakura-petal petal-5" viewBox="-15 -22 30 44">
+                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
+              </svg>
+            </div>
+          </>
         )}
         {theme === 'tokyo-lofi' && (
-          <div className="single-scanline" aria-hidden="true" />
+          <>
+            <div className="film-grain" aria-hidden="true" />
+            <div className="single-scanline" aria-hidden="true" />
+          </>
         )}
         <header className="topbar">
           <div>

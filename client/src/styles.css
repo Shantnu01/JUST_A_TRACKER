@@ -8260,3 +8260,755 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   color: #1a1612 !important;
   border: 1px solid #e8e0d0 !important;
 }
+
+
+/* ==========================================================================
+   SPIDER-VERSE OVERHAUL: ELIMINATE ALL WHITE BOXES & FIX HABITS PANEL
+   ========================================================================== */
+
+/* 1. Habits Panel & Rows in Spider-Verse (Comic Book Multi-Verse Style) */
+[data-theme="spider-verse"] .habits-panel {
+  background: #140e2b !important;
+  border: 2.5px solid #ffe600 !important;
+  border-radius: 8px !important;
+  box-shadow: 5px 5px 0 #ff0055 !important;
+}
+
+[data-theme="spider-verse"] .habits-panel .panel-heading h3 {
+  font-family: 'Bangers', cursive !important;
+  letter-spacing: 2px !important;
+  color: #ffe600 !important;
+  text-shadow: 2px 2px 0 #ff0055 !important;
+}
+
+[data-theme="spider-verse"] .habits-panel .count-badge {
+  background: #ff0055 !important;
+  color: #ffe600 !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 2px 2px 0 #00f0ff !important;
+  font-family: 'Bangers', cursive !important;
+  font-size: 14px !important;
+  letter-spacing: 1px !important;
+  padding: 4px 10px !important;
+}
+
+[data-theme="spider-verse"] .habit-row {
+  background: #1a1336 !important;
+  border: 2px solid #00f0ff !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  box-shadow: 2px 2px 0 #ff0055 !important;
+  margin-bottom: 8px !important;
+  font-weight: 700 !important;
+  padding: 10px 14px !important;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease !important;
+}
+
+[data-theme="spider-verse"] .habit-row:hover {
+  background: #251b4d !important;
+  border-color: #ffe600 !important;
+  color: #ffe600 !important;
+  transform: translate(-1px, -1px) !important;
+  box-shadow: 3px 3px 0 #ff0055 !important;
+}
+
+[data-theme="spider-verse"] .habit-row.checked {
+  background: #140e2b !important;
+  color: #c7d2fe !important;
+  border-color: rgba(0, 240, 255, 0.45) !important;
+  box-shadow: 1px 1px 0 #ff0055 !important;
+}
+
+[data-theme="spider-verse"] .habit-row.locked-goal {
+  background: #100b24 !important;
+  border-color: rgba(255, 0, 85, 0.4) !important;
+  color: #818cf8 !important;
+}
+
+[data-theme="spider-verse"] .check-box {
+  background: #0c0919 !important;
+  border: 2px solid #00f0ff !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="spider-verse"] .habit-row.checked .check-box {
+  background: #22c55e !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+  box-shadow: 2px 2px 0 #ffe600 !important;
+}
+
+[data-theme="spider-verse"] .habit-logged-pill {
+  background: #221a44 !important;
+  color: #00f0ff !important;
+  border: 1.5px solid #00f0ff !important;
+  border-radius: 6px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="spider-verse"] .alarm-panel,
+[data-theme="spider-verse"] .note-panel {
+  background: #140e2b !important;
+  border: 2.5px solid #ffe600 !important;
+  box-shadow: 5px 5px 0 #ff0055 !important;
+}
+
+/* 2. ALL Inputs, Textareas, Selects & Creator Boxes in Spider-Verse (NO MORE WHITE BOXES!) */
+[data-theme="spider-verse"] input[type="text"],
+[data-theme="spider-verse"] input[type="number"],
+[data-theme="spider-verse"] input[type="search"],
+[data-theme="spider-verse"] input[type="date"],
+[data-theme="spider-verse"] input[type="time"],
+[data-theme="spider-verse"] textarea,
+[data-theme="spider-verse"] select,
+[data-theme="spider-verse"] .creator-paste-area,
+[data-theme="spider-verse"] .stage-add-input,
+[data-theme="spider-verse"] .editor-textarea,
+[data-theme="spider-verse"] .blank-input,
+[data-theme="spider-verse"] .roadmap-format-guide-box,
+[data-theme="spider-verse"] .format-guide-code,
+[data-theme="spider-verse"] .note-panel textarea {
+  background: #181233 !important;
+  color: #ffffff !important;
+  border: 2px solid #00f0ff !important;
+  border-radius: 6px !important;
+  box-shadow: 2px 2px 0 #ff0055 !important;
+  font-size: 13px !important;
+}
+
+[data-theme="spider-verse"] input:focus,
+[data-theme="spider-verse"] textarea:focus,
+[data-theme="spider-verse"] select:focus,
+[data-theme="spider-verse"] .creator-paste-area:focus,
+[data-theme="spider-verse"] .stage-add-input:focus,
+[data-theme="spider-verse"] .editor-textarea:focus {
+  border-color: #ffe600 !important;
+  box-shadow: 3px 3px 0 #00f0ff !important;
+  outline: none !important;
+  color: #ffffff !important;
+}
+
+[data-theme="spider-verse"] input::placeholder,
+[data-theme="spider-verse"] textarea::placeholder {
+  color: #a5b4fc !important;
+  opacity: 0.8 !important;
+}
+
+/* 3. Spider-Verse Schedule Cards */
+[data-theme="spider-verse"] .schedule-item {
+  background: #140e2b !important;
+  border: 2px solid #00f0ff !important;
+  box-shadow: 3px 3px 0 #ff0055 !important;
+  border-radius: 8px !important;
+  margin-bottom: 10px !important;
+}
+
+[data-theme="spider-verse"] .schedule-item:hover {
+  border-color: #ffe600 !important;
+  transform: translate(-1px, -1px);
+}
+
+[data-theme="spider-verse"] .schedule-item.active-session {
+  background: #1c1538 !important;
+  border: 2.5px solid #ffe600 !important;
+  box-shadow: 4px 4px 0 #00f0ff !important;
+}
+
+[data-theme="spider-verse"] .time-col strong {
+  color: #ffe600 !important;
+  font-family: 'Bangers', cursive !important;
+  font-size: 16px !important;
+  letter-spacing: 1px !important;
+}
+
+[data-theme="spider-verse"] .time-col span {
+  color: #a5b4fc !important;
+}
+
+[data-theme="spider-verse"] .event-icon {
+  background: #ff0055 !important;
+  color: #ffe600 !important;
+  border: 1.5px solid #000 !important;
+}
+
+[data-theme="spider-verse"] .event-title-row h4 {
+  color: #ffffff !important;
+}
+
+[data-theme="spider-verse"] .duration-pill {
+  background: #241a45 !important;
+  color: #00f0ff !important;
+  border: 1.5px solid #00f0ff !important;
+  font-family: 'Bangers', cursive !important;
+  font-size: 13px !important;
+  letter-spacing: 0.5px !important;
+}
+
+[data-theme="spider-verse"] .timetable-checkpoint-capsule {
+  background: #181233 !important;
+  border: 2px solid #ff0055 !important;
+  box-shadow: 2px 2px 0 #ffe600 !important;
+}
+
+[data-theme="spider-verse"] .capsule-stage-pill {
+  background: #ff0055 !important;
+  color: #ffe600 !important;
+  border: 1px solid #000 !important;
+}
+
+[data-theme="spider-verse"] .capsule-checkpoint-text {
+  color: #ffffff !important;
+}
+
+
+/* ==========================================================================
+   CYBER SAKURA PREMIUM OVERHAUL: DITO SAME AS EXAMPLE (theme5_cyber_sakura.html)
+   ========================================================================== */
+
+/* 1. Base Atmosphere, 48px Grid & Ambient Disc */
+[data-theme="cyber-sakura"] {
+  background-color: #07000F !important;
+  background-image: 
+    linear-gradient(to right, rgba(255, 45, 120, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 45, 120, 0.04) 1px, transparent 1px) !important;
+  background-size: 48px 48px !important;
+  color: #D4C6E8 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+/* Ambient glow disc rotating behind content */
+.ambient-glow-disc {
+  position: fixed;
+  top: -80px;
+  right: -80px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 45, 120, 0.045) 0%, rgba(192, 132, 252, 0.02) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  animation: slowAmbientSpin 45s linear infinite;
+}
+
+@keyframes slowAmbientSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 2. Hero Display Header Gradient Text */
+[data-theme="cyber-sakura"] .welcome-row h2 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: clamp(28px, 3.8vw, 42px) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.1 !important;
+  color: transparent !important;
+  background: linear-gradient(135deg, #FF2D78 0%, #C084FC 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+[data-theme="cyber-sakura"] .welcome-row h2 span {
+  color: #C084FC !important;
+  -webkit-text-fill-color: #C084FC !important;
+}
+
+/* 3. Sidebar with Glitch Monogram */
+[data-theme="cyber-sakura"] .sidebar {
+  background: #0A0014 !important;
+  border-right: 1px solid rgba(255, 45, 120, 0.15) !important;
+}
+
+[data-theme="cyber-sakura"] .brand-mark {
+  background: #FF2D78 !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 16px rgba(255, 45, 120, 0.5) !important;
+  animation: skMonogramGlitch 10s infinite !important;
+}
+
+@keyframes skMonogramGlitch {
+  0%, 98%, 100% {
+    transform: translate(0, 0);
+    filter: none;
+    opacity: 1;
+  }
+  98.6% {
+    transform: translate(-1px, 1px) skewX(-2deg);
+    filter: drop-shadow(1px 0 #FF2D78);
+    opacity: 0.92;
+  }
+  99.2% {
+    transform: translate(1px, -0.5px) skewX(2deg);
+    filter: drop-shadow(-1px 0 #2DD4BF);
+    opacity: 0.95;
+  }
+}
+
+[data-theme="cyber-sakura"] .nav-item {
+  color: #9D84BA !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  border-radius: 8px !important;
+  border-left: 3px solid transparent !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="cyber-sakura"] .nav-item:hover {
+  background: rgba(255, 45, 120, 0.08) !important;
+  color: #F0F4FF !important;
+  transform: translateX(2px) !important;
+}
+
+[data-theme="cyber-sakura"] .nav-item.selected {
+  background: rgba(255, 45, 120, 0.12) !important;
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+  border-left: 3px solid #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .nav-indicator {
+  background: #FF2D78 !important;
+  box-shadow: 0 0 8px #FF2D78 !important;
+}
+
+/* 4. Panels & Cards in Cyber Sakura */
+[data-theme="cyber-sakura"] .panel,
+[data-theme="cyber-sakura"] .metric-card,
+[data-theme="cyber-sakura"] .streak-card,
+[data-theme="cyber-sakura"] .habits-panel,
+[data-theme="cyber-sakura"] .note-panel,
+[data-theme="cyber-sakura"] .report-main,
+[data-theme="cyber-sakura"] .settings-panel,
+[data-theme="cyber-sakura"] .coding-top-banner,
+[data-theme="cyber-sakura"] .dsa-potd-card,
+[data-theme="cyber-sakura"] .coding-metric-panel,
+[data-theme="cyber-sakura"] .coding-sheet-panel,
+[data-theme="cyber-sakura"] .coding-contests-panel,
+[data-theme="cyber-sakura"] .coding-suggestions-panel {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.15) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7) !important;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+[data-theme="cyber-sakura"] .panel:hover,
+[data-theme="cyber-sakura"] .metric-card:hover {
+  border-color: rgba(255, 45, 120, 0.40) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 32px -10px rgba(255, 45, 120, 0.12) !important;
+}
+
+/* 5. Timetable / Schedule Items: Protocol Design */
+[data-theme="cyber-sakura"] .schedule-item {
+  background: #0d001a !important;
+  border: 1px solid rgba(255, 45, 120, 0.12) !important;
+  border-left: 3px solid #2D1F40 !important;
+  border-radius: 10px !important;
+  padding: 14px 16px !important;
+  margin-bottom: 10px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="cyber-sakura"] .schedule-item:hover {
+  border-color: rgba(255, 45, 120, 0.35) !important;
+  background: #140026 !important;
+  transform: translateX(2px) !important;
+}
+
+[data-theme="cyber-sakura"] .schedule-item.active-session {
+  background: rgba(255, 45, 120, 0.08) !important;
+  border: 1px solid rgba(255, 45, 120, 0.45) !important;
+  border-left: 3px solid #FF2D78 !important;
+  box-shadow: 0 0 24px rgba(255, 45, 120, 0.2) !important;
+  position: relative !important;
+}
+
+[data-theme="cyber-sakura"] .time-col strong {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 15px !important;
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .time-col span {
+  color: #9D84BA !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+}
+
+[data-theme="cyber-sakura"] .duration-pill {
+  background: rgba(192, 132, 252, 0.15) !important;
+  color: #C084FC !important;
+  border: 1px solid rgba(192, 132, 252, 0.3) !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="cyber-sakura"] .event-title-row h4 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .event-icon {
+  background: rgba(255, 45, 120, 0.12) !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+/* 6. Habits / Daily Commitments: Sonar Ping & Checkboxes */
+[data-theme="cyber-sakura"] .habits-panel {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.15) !important;
+}
+
+[data-theme="cyber-sakura"] .habit-row {
+  background: #120024 !important;
+  border: 1px solid rgba(255, 45, 120, 0.12) !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  margin-bottom: 8px !important;
+  color: #F0F4FF !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="cyber-sakura"] .habit-row:hover {
+  background: #190033 !important;
+  border-color: rgba(255, 45, 120, 0.35) !important;
+}
+
+[data-theme="cyber-sakura"] .habit-row.checked {
+  background: rgba(255, 45, 120, 0.04) !important;
+  color: #9D84BA !important;
+  border-color: rgba(255, 45, 120, 0.1) !important;
+}
+
+[data-theme="cyber-sakura"] .check-box {
+  width: 20px !important;
+  height: 20px !important;
+  background: #0A0014 !important;
+  border: 1.5px solid rgba(255, 45, 120, 0.35) !important;
+  border-radius: 4px !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="cyber-sakura"] .habit-row.checked .check-box {
+  background: #FF2D78 !important;
+  border-color: #FF2D78 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 14px rgba(255, 45, 120, 0.6) !important;
+  animation: sonarPing 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes sonarPing {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 120, 0.9); }
+  35% { transform: scale(0.82); }
+  70% { transform: scale(1.06); box-shadow: 0 0 0 12px rgba(255, 45, 120, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 120, 0); }
+}
+
+[data-theme="cyber-sakura"] .habit-logged-pill {
+  background: rgba(192, 132, 252, 0.15) !important;
+  color: #C084FC !important;
+  border: 1px solid rgba(192, 132, 252, 0.25) !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+/* 7. Donut Ring in Cyber Sakura (Hot Pink to Teal) */
+[data-theme="cyber-sakura"] .ring {
+  background: conic-gradient(#FF2D78 var(--progress), #2DD4BF 0) !important;
+}
+
+[data-theme="cyber-sakura"] .ring:before {
+  background: #0F0020 !important;
+}
+
+/* 8. Input Boxes & Textareas in Cyber Sakura */
+[data-theme="cyber-sakura"] input[type="text"],
+[data-theme="cyber-sakura"] input[type="number"],
+[data-theme="cyber-sakura"] input[type="search"],
+[data-theme="cyber-sakura"] textarea,
+[data-theme="cyber-sakura"] select,
+[data-theme="cyber-sakura"] .creator-paste-area,
+[data-theme="cyber-sakura"] .stage-add-input,
+[data-theme="cyber-sakura"] .editor-textarea {
+  background: #120026 !important;
+  color: #F0F4FF !important;
+  border: 1.5px solid rgba(255, 45, 120, 0.3) !important;
+  border-radius: 8px !important;
+}
+
+[data-theme="cyber-sakura"] input:focus,
+[data-theme="cyber-sakura"] textarea:focus,
+[data-theme="cyber-sakura"] select:focus {
+  border-color: #FF2D78 !important;
+  box-shadow: 0 0 12px rgba(255, 45, 120, 0.35) !important;
+  outline: none !important;
+}
+
+
+/* ==========================================================================
+   TOKYO LOFI PREMIUM OVERHAUL: DITO SAME AS EXAMPLE (theme3_tokyo_lofi.html)
+   ========================================================================== */
+
+/* 1. Base Atmosphere, Film Grain & Dark Warm Slate */
+[data-theme="tokyo-lofi"] {
+  background-color: #12111A !important;
+  color: #D4CEEB !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Film Grain Noise Overlay */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 80;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* 2. Welcome Greeting with Blinking Typewriter Cursor */
+[data-theme="tokyo-lofi"] .welcome-row h2 {
+  color: #FAF8FF !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.02em !important;
+  position: relative !important;
+}
+
+[data-theme="tokyo-lofi"] .welcome-row h2 span::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  background-color: #F59E0B;
+  margin-left: 6px;
+  vertical-align: -0.05em;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+[data-theme="tokyo-lofi"] .eyebrow,
+[data-theme="tokyo-lofi"] .side-label {
+  color: #F59E0B !important;
+  letter-spacing: 3px !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+}
+
+/* 3. Sidebar */
+[data-theme="tokyo-lofi"] .sidebar {
+  background: #100F17 !important;
+  border-right: 1px solid rgba(255, 140, 0, 0.12) !important;
+}
+
+[data-theme="tokyo-lofi"] .brand-mark {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  border-radius: 8px !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item {
+  color: #9B8EA8 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  border-radius: 6px !important;
+  border-left: 3px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item:hover {
+  background: rgba(245, 158, 11, 0.07) !important;
+  color: #FAF8FF !important;
+  transform: translateX(2px) !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item.selected {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #F59E0B !important;
+  font-weight: 700 !important;
+  border-left: 3px solid #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-indicator {
+  background: #F472B6 !important;
+  box-shadow: 0 0 6px #F472B6 !important;
+}
+
+/* 4. Panels & Cards with Subtle Gradient Surfaces */
+[data-theme="tokyo-lofi"] .panel,
+[data-theme="tokyo-lofi"] .metric-card,
+[data-theme="tokyo-lofi"] .streak-card,
+[data-theme="tokyo-lofi"] .habits-panel,
+[data-theme="tokyo-lofi"] .note-panel,
+[data-theme="tokyo-lofi"] .report-main,
+[data-theme="tokyo-lofi"] .settings-panel,
+[data-theme="tokyo-lofi"] .coding-top-banner,
+[data-theme="tokyo-lofi"] .dsa-potd-card,
+[data-theme="tokyo-lofi"] .coding-metric-panel,
+[data-theme="tokyo-lofi"] .coding-sheet-panel,
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel {
+  background: linear-gradient(180deg, #1C1928 0%, #191625 100%) !important;
+  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+  position: relative !important;
+  transition: border-color 0.25s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .panel:hover,
+[data-theme="tokyo-lofi"] .metric-card:hover {
+  border-color: rgba(245, 158, 11, 0.28) !important;
+}
+
+/* 5. Schedule Items: Shinkansen Station Departure Board */
+[data-theme="tokyo-lofi"] .schedule-item {
+  background: #171422 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-left: 3px solid rgba(255, 140, 0, 0.15) !important;
+  border-radius: 8px !important;
+  padding: 14px 16px !important;
+  margin-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item:hover {
+  background: #1e1a2c !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  transform: translateX(2px) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item.active-session {
+  background: rgba(245, 158, 11, 0.07) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
+  border-left: 3px solid #F59E0B !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.14) !important;
+}
+
+[data-theme="tokyo-lofi"] .time-col strong {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace !important;
+  font-size: 16px !important;
+  color: #F59E0B !important; /* HERO AMBER TIME NUMERALS */
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .time-col span {
+  color: #9B8EA8 !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+}
+
+[data-theme="tokyo-lofi"] .duration-pill {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+}
+
+[data-theme="tokyo-lofi"] .event-title-row h4 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .event-icon {
+  background: rgba(245, 158, 11, 0.1) !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+/* 6. Habits: Washi Paper Checklist Aesthetic */
+[data-theme="tokyo-lofi"] .habits-panel {
+  background: linear-gradient(180deg, #1C1928 0%, #191625 100%) !important;
+  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row {
+  background: #191626 !important;
+  border: 1px solid rgba(255, 140, 0, 0.08) !important;
+  border-radius: 6px !important;
+  padding: 12px 14px !important;
+  margin-bottom: 6px !important;
+  color: #D4CEEB !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row:hover {
+  background: #221D33 !important;
+  border-color: rgba(255, 140, 0, 0.22) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked {
+  background: rgba(245, 158, 11, 0.03) !important;
+  color: #6B6484 !important;
+}
+
+[data-theme="tokyo-lofi"] .check-box {
+  width: 18px !important;
+  height: 18px !important;
+  background: #12111A !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.25) !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked .check-box {
+  background: linear-gradient(135deg, #F59E0B, #F472B6) !important;
+  border-color: #F59E0B !important;
+  color: #12111A !important;
+  box-shadow: 0 0 10px rgba(244, 114, 182, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-logged-pill {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+/* 7. Donut Ring in Tokyo Lofi */
+[data-theme="tokyo-lofi"] .ring {
+  background: conic-gradient(#F59E0B var(--progress), #241E30 0) !important;
+}
+
+[data-theme="tokyo-lofi"] .ring:before {
+  background: #191625 !important;
+}
+
+/* 8. Input Boxes & Textareas in Tokyo Lofi */
+[data-theme="tokyo-lofi"] input[type="text"],
+[data-theme="tokyo-lofi"] input[type="number"],
+[data-theme="tokyo-lofi"] input[type="search"],
+[data-theme="tokyo-lofi"] textarea,
+[data-theme="tokyo-lofi"] select,
+[data-theme="tokyo-lofi"] .creator-paste-area,
+[data-theme="tokyo-lofi"] .stage-add-input,
+[data-theme="tokyo-lofi"] .editor-textarea {
+  background: #1A1626 !important;
+  color: #FAF8FF !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.25) !important;
+  border-radius: 6px !important;
+}
+
+[data-theme="tokyo-lofi"] input:focus,
+[data-theme="tokyo-lofi"] textarea:focus,
+[data-theme="tokyo-lofi"] select:focus {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3) !important;
+  outline: none !important;
+}
