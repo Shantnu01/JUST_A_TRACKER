@@ -379,8 +379,8 @@ export function getCurriculumKey(subjectName = '') {
   return `daymark-curriculum-${clean || 'general'}`;
 }
 
-// Load curriculum from localStorage (with intelligent clean starter if requested or matching known subject)
-export function loadSubjectCurriculum(subjectName = '', autoSeed = false) {
+// Load curriculum from localStorage (strictly returns user-saved roadmap, null if not created yet)
+export function loadSubjectCurriculum(subjectName = '') {
   if (!subjectName) return null;
   const key = getCurriculumKey(subjectName);
   try {
@@ -392,25 +392,16 @@ export function loadSubjectCurriculum(subjectName = '', autoSeed = false) {
       }
     }
   } catch {}
-
-  // Auto-seed for common subjects or when autoSeed flag is true
-  const lower = subjectName.toLowerCase();
-  const shouldAutoSeed = autoSeed || 
-    lower.includes('nlp') || 
-    lower.includes('dsa') || 
-    lower.includes('system design');
-
-  if (shouldAutoSeed) {
-    const raw = getStarterCurriculumRaw(subjectName);
-    const parsed = parseCurriculumText(raw);
-    parsed.subject = subjectName;
-    try {
-      localStorage.setItem(key, JSON.stringify(parsed));
-    } catch {}
-    return parsed;
-  }
-
   return null;
+}
+
+// Delete curriculum from localStorage
+export function deleteSubjectCurriculum(subjectName = '') {
+  if (!subjectName) return;
+  const key = getCurriculumKey(subjectName);
+  try {
+    localStorage.removeItem(key);
+  } catch {}
 }
 
 // Save curriculum to localStorage

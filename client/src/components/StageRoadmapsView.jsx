@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Milestone,
   CheckCircle2,
@@ -15,11 +15,13 @@ import {
   FileText,
   Trash2,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  HelpCircle
 } from 'lucide-react';
 import {
   loadSubjectCurriculum,
   saveSubjectCurriculum,
+  deleteSubjectCurriculum,
   calculateCurriculumProgress,
   toggleCurriculumCheckpoint,
   addCheckpointToStage,
@@ -27,7 +29,6 @@ import {
   deleteStageFromCurriculum,
   deleteCheckpointFromStage,
   setActiveStageForCurriculum,
-  getStarterCurriculumRaw,
   parseCurriculumText,
   formatCurriculumToText,
   CHATGPT_ROADMAP_PROMPT_TEMPLATE
@@ -41,56 +42,51 @@ export default function StageRoadmapsView({
   setToast,
   onJumpToToday
 }) {
-  // Extract routine focus subjects and ensure all routine subjects have default roadmaps
-  const routineSubjects = React.useMemo(() => {
+  // 1. Discover subjects strictly from routine focus items (no dummy/arbitrary subjects)
+  const routineSubjects = useMemo(() => {
     const list = [];
     (routine || []).forEach(item => {
       if (item.kind === 'focus' && item.title && !list.includes(item.title)) {
         list.push(item.title);
       }
     });
-    // Standard routine defaults
-    if (!list.includes('NLP Foundations')) list.unshift('NLP Foundations');
-    if (!list.includes('DSA practice') && !list.includes('DSA Practice')) list.push('DSA practice');
-    if (!list.includes('Project development')) list.push('Project development');
-    if (!list.includes('System design reading')) list.push('System design reading');
-    if (!list.includes('Daily revision')) list.push('Daily revision');
     return list;
   }, [routine]);
 
-  // Track all known subjects (routine + custom)
-  const [allSubjects, setAllSubjects] = useState(() => {
+  // 2. Custom subjects saved by the user
+  const [customSubjects, setCustomSubjects] = useState(() => {
     try {
-      const savedCustom = JSON.parse(localStorage.getItem('daymark-custom-roadmap-subjects') || '[]');
-      const combined = [...routineSubjects];
-      savedCustom.forEach(s => {
-        if (!combined.includes(s)) combined.push(s);
-      });
-      return combined;
+      return JSON.parse(localStorage.getItem('daymark-custom-roadmap-subjects') || '[]');
     } catch {
-      return routineSubjects;
+      return [];
     }
   });
 
+  // All available roadmap subjects: strictly routine subjects + user-created custom subjects
+  const allSubjects = useMemo(() => {
+    const combined = [...routineSubjects];
+    customSubjects.forEach(s => {
+      if (!combined.includes(s)) combined.push(s);
+    });
+    return combined;
+  }, [routineSubjects, customSubjects]);
+
   const [activeSubject, setActiveSubject] = useState(() => {
-    return selectedSubject || routineSubjects[0] || 'NLP Foundations';
+    return selectedSubject || allSubjects[0] || (routine[0]?.title || 'Study Session');
   });
 
-  // Curriculum state
-  const isRoutineSubj = routineSubjects.includes(activeSubject);
-  const [curriculum, setCurriculum] = useState(() => {
-    return loadSubjectCurriculum(activeSubject, isRoutineSubj);
-  });
+  // Load subject curriculum (strictly user-created, null if uninitialized)
+  const [curriculum, setCurriculum] = useState(() => loadSubjectCurriculum(activeSubject));
 
-  // Active Stage Index for stage-by-stage viewing (Only shows ONE stage at a time!)
+  // Active Stage Index for stage-by-stage focused viewing (Shows only 1 stage at a time)
   const [activeStageIdx, setActiveStageIdx] = useState(0);
 
-  // New Subject Creation State
+  // New Subject Modal
   const [showAddSubjectModal, setShowAddSubjectModal] = useState(false);
   const [newSubjectTitle, setNewSubjectTitle] = useState('');
 
-  // Creation / Import Form State for Blank Roadmaps
-  const [importText, setImportText] = useState('');
+  // Generation / Text Input State
+  const [inputText, setImportText] = useState('');
   const [isEditingOutline, setIsEditingOutline] = useState(false);
   const [rawText, setRawText] = useState('');
   const [newCheckpointText, setNewCheckpointText] = useState('');
@@ -106,10 +102,9 @@ export default function StageRoadmapsView({
     }
   }, [selectedSubject]);
 
-  // Load subject curriculum and reset stage index
+  // Load subject curriculum on activeSubject change
   useEffect(() => {
-    const isDef = routineSubjects.includes(activeSubject);
-    const loaded = loadSubjectCurriculum(activeSubject, isDef);
+    const loaded = loadSubjectCurriculum(activeSubject);
     setCurriculum(loaded);
     setIsEditingOutline(false);
     setImportText('');
@@ -125,47 +120,71 @@ export default function StageRoadmapsView({
 
   const progress = calculateCurriculumProgress(curriculum);
 
-  // Switch Subject
+  // Switch Active Subject
   const handleSelectSubject = (subj) => {
     setActiveSubject(subj);
     if (onSelectSubject) onSelectSubject(subj);
   };
 
-  // Add Brand New Custom Subject (Initializes BLANK without dummy data!)
+  // Create New Subject (Starts completely uninitialized!)
   const handleCreateNewSubject = (e) => {
     if (e) e.preventDefault();
     const cleanName = newSubjectTitle.trim();
     if (!cleanName) return;
 
-    if (!allSubjects.includes(cleanName)) {
-      const updatedList = [...allSubjects, cleanName];
-      setAllSubjects(updatedList);
+    if (!customSubjects.includes(cleanName)) {
+      const nextCustom = [...customSubjects, cleanName];
+      setCustomSubjects(nextCustom);
       try {
-        const customOnly = updatedList.filter(s => !routineSubjects.includes(s));
-        localStorage.setItem('daymark-custom-roadmap-subjects', JSON.stringify(customOnly));
+        localStorage.setItem('daymark-custom-roadmap-subjects', JSON.stringify(nextCustom));
       } catch {}
     }
 
-    // Blank curriculum for new custom subject
-    const blankCurriculum = {
-      subject: cleanName,
-      title: `${cleanName} Roadmap`,
-      stages: []
-    };
-    setCurriculum(blankCurriculum);
-    saveSubjectCurriculum(cleanName, blankCurriculum);
+    setCurriculum(null);
+    deleteSubjectCurriculum(cleanName);
     setActiveSubject(cleanName);
     setNewSubjectTitle('');
     setShowAddSubjectModal(false);
     setActiveStageIdx(0);
 
     if (setToast) {
-      setToast(`Created roadmap for "${cleanName}". Upload a file or paste your outline!`);
+      setToast(`Created roadmap for "${cleanName}". Paste your stage outline to generate checkpoints!`);
       setTimeout(() => setToast(''), 3000);
     }
   };
 
-  // File Upload Handler (.txt or .md)
+  // Delete Current Roadmap
+  const handleDeleteRoadmap = () => {
+    const isCustom = customSubjects.includes(activeSubject);
+    const confirmMsg = isCustom
+      ? `Delete roadmap and remove "${activeSubject}" from subjects?`
+      : `Delete roadmap and reset stages for "${activeSubject}"?`;
+
+    if (!window.confirm(confirmMsg)) return;
+
+    // Remove from storage
+    deleteSubjectCurriculum(activeSubject);
+    setCurriculum(null);
+
+    // If custom, also remove from custom list
+    if (isCustom) {
+      const updatedCustom = customSubjects.filter(s => s !== activeSubject);
+      setCustomSubjects(updatedCustom);
+      try {
+        localStorage.setItem('daymark-custom-roadmap-subjects', JSON.stringify(updatedCustom));
+      } catch {}
+      // Switch to routine subject
+      const fallback = routineSubjects[0] || 'Study Session';
+      setActiveSubject(fallback);
+    }
+
+    if (setToast) {
+      setToast(`✓ Roadmap deleted for ${activeSubject}`);
+      setTimeout(() => setToast(''), 2500);
+    }
+  };
+
+  // File Upload (.txt or .md)
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -180,7 +199,7 @@ export default function StageRoadmapsView({
         saveSubjectCurriculum(activeSubject, parsed);
         setActiveStageIdx(0);
         if (setToast) {
-          setToast(`✓ Successfully imported roadmap from ${file.name} (${parsed.stages.length} stages)!`);
+          setToast(`✓ Generated ${parsed.stages.length} stages from ${file.name}!`);
           setTimeout(() => setToast(''), 3000);
         }
       }
@@ -189,22 +208,26 @@ export default function StageRoadmapsView({
     e.target.value = '';
   };
 
-  // Build Roadmap from Pasted Text
-  const handleBuildFromPastedText = () => {
-    if (!importText.trim()) return;
-    const parsed = parseCurriculumText(importText);
+  // Generate Roadmap from Pasted Text Outline
+  const handleGenerateRoadmap = () => {
+    if (!inputText.trim()) return;
+    const parsed = parseCurriculumText(inputText);
+    if (!parsed.stages || parsed.stages.length === 0) {
+      if (setToast) setToast('⚠️ Could not find any STAGE headers in text. Use the format shown below.');
+      return;
+    }
     parsed.subject = activeSubject;
     setCurriculum(parsed);
     saveSubjectCurriculum(activeSubject, parsed);
     setImportText('');
     setActiveStageIdx(0);
     if (setToast) {
-      setToast(`✓ Roadmap loaded for ${activeSubject} with ${parsed.stages.length} stages!`);
+      setToast(`🚀 Generated ${parsed.stages.length} stages with checkpoints for ${activeSubject}!`);
       setTimeout(() => setToast(''), 3000);
     }
   };
 
-  // Set Active Stage for Daily Timetable
+  // Set Active Stage for Timetable
   const handleSetTimetableActiveStage = (stageId, stageTitle) => {
     if (!curriculum) return;
     const updated = setActiveStageForCurriculum(curriculum, stageId);
@@ -217,7 +240,7 @@ export default function StageRoadmapsView({
     }
   };
 
-  // Toggle Checkpoint
+  // Toggle Checkpoint Complete/Incomplete
   const handleToggleCheckpoint = (stageId, checkpointId, checkpointTitle) => {
     if (!curriculum) return;
     const updated = toggleCurriculumCheckpoint(curriculum, stageId, checkpointId);
@@ -230,7 +253,7 @@ export default function StageRoadmapsView({
     }
   };
 
-  // Add Checkpoint to CURRENT Active Stage
+  // Add Checkpoint to CURRENT Stage
   const handleAddCheckpoint = (stageId) => {
     if (!newCheckpointText.trim() || !curriculum) return;
     const updated = addCheckpointToStage(curriculum, stageId, newCheckpointText.trim());
@@ -270,7 +293,7 @@ export default function StageRoadmapsView({
     }
   };
 
-  // Delete Current Stage
+  // Delete Stage
   const handleDeleteCurrentStage = (stageId) => {
     if (!curriculum || !window.confirm('Delete this stage and all its checkpoints?')) return;
     const updated = deleteStageFromCurriculum(curriculum, stageId);
@@ -288,7 +311,7 @@ export default function StageRoadmapsView({
     if (curriculum && curriculum.stages && curriculum.stages.length > 0) {
       setRawText(formatCurriculumToText(curriculum));
     } else {
-      setRawText(getStarterCurriculumRaw(activeSubject));
+      setRawText('');
     }
     setIsEditingOutline(true);
   };
@@ -317,7 +340,7 @@ export default function StageRoadmapsView({
     }
   };
 
-  const hasStages = curriculum && curriculum.stages && curriculum.stages.length > 0;
+  const hasStages = Boolean(curriculum && curriculum.stages && curriculum.stages.length > 0);
   const currentStage = hasStages ? (curriculum.stages[activeStageIdx] || curriculum.stages[0]) : null;
 
   return (
@@ -331,7 +354,7 @@ export default function StageRoadmapsView({
           <div>
             <h2 className="roadmap-hub-title">Stage Roadmaps & Checkpoint Hub</h2>
             <p className="roadmap-hub-subtitle">
-              Structured stage-by-stage mastery. Set your active stage here, and your daily timetable will display only your current checkpoint.
+              Manage your stage plans for each subject. Provide your stages in the format below to generate interactive checkpoints.
             </p>
           </div>
         </div>
@@ -358,13 +381,14 @@ export default function StageRoadmapsView({
         </div>
       </div>
 
-      {/* 2. Subject Tabs Pill Row */}
+      {/* 2. Subject Tabs Pill Row (Routine subjects + custom subjects) */}
       <div className="roadmap-subjects-tabs">
         <div className="roadmap-tabs-scroll">
           {allSubjects.map(subj => {
             const isChosen = subj === activeSubject;
             const subCurr = loadSubjectCurriculum(subj);
             const subProg = calculateCurriculumProgress(subCurr);
+            const isConfigured = Boolean(subCurr && subCurr.stages && subCurr.stages.length > 0);
             return (
               <button
                 key={subj}
@@ -373,8 +397,10 @@ export default function StageRoadmapsView({
                 onClick={() => handleSelectSubject(subj)}
               >
                 <span>{subj}</span>
-                {subCurr && subProg.totalCheckpoints > 0 && (
+                {isConfigured ? (
                   <span className="roadmap-pill-percent">{subProg.percent}%</span>
+                ) : (
+                  <span className="roadmap-pill-empty">Set Stages</span>
                 )}
               </button>
             );
@@ -384,28 +410,28 @@ export default function StageRoadmapsView({
             type="button"
             className="roadmap-add-subject-btn"
             onClick={() => setShowAddSubjectModal(true)}
-            title="Create a new custom subject roadmap"
+            title="Add a new custom subject roadmap"
           >
             <Plus size={14} />
-            <span>New Subject</span>
+            <span>+ Add Subject</span>
           </button>
         </div>
       </div>
 
-      {/* Modal: Create New Subject (Starts Blank!) */}
+      {/* Modal: Create New Subject */}
       {showAddSubjectModal && (
         <div className="roadmap-modal-overlay" onClick={() => setShowAddSubjectModal(false)}>
           <div className="roadmap-modal-card" onClick={e => e.stopPropagation()}>
-            <h3 className="modal-card-title">Create New Subject Roadmap</h3>
+            <h3 className="modal-card-title">Add New Subject Roadmap</h3>
             <p className="modal-card-sub">
-              Enter the subject name. It will start blank so you can upload your file or paste your custom roadmap.
+              Enter the subject name. You can then paste your stages in the format or upload a roadmap file.
             </p>
             <form onSubmit={handleCreateNewSubject}>
               <input
                 type="text"
                 value={newSubjectTitle}
                 onChange={e => setNewSubjectTitle(e.target.value)}
-                placeholder="e.g. Operating Systems / Cloud Architecture"
+                placeholder="e.g. Operating Systems / Computer Networks"
                 autoFocus
                 className="modal-card-input"
               />
@@ -426,25 +452,64 @@ export default function StageRoadmapsView({
         </div>
       )}
 
-      {/* 3. If Subject Has NO Stages Yet (Clean Blank Creation Canvas) */}
+      {/* 3. If Subject Has NO Stages Yet: Format Guide & Generation Screen */}
       {!hasStages && (
         <div className="roadmap-blank-creator-card">
           <div className="blank-creator-header">
-            <div className="blank-creator-badge">CUSTOM SUBJECT</div>
-            <h3 className="blank-creator-title">Set Up Roadmap for {activeSubject}</h3>
+            <div className="blank-creator-badge">UNCONFIGURED ROADMAP</div>
+            <h3 className="blank-creator-title">Generate Stage Roadmap for {activeSubject}</h3>
             <p className="blank-creator-desc">
-              No dummy templates added. Upload your roadmap text file, paste an outline, or generate one using AI.
+              Provide your stages in the simple format below, upload a text file, or generate it with AI.
             </p>
           </div>
 
+          {/* Format Explanation Box */}
+          <div className="roadmap-format-guide-box">
+            <div className="format-guide-head">
+              <HelpCircle size={15} color="#312e81" />
+              <strong>Expected Stage Format:</strong>
+            </div>
+            <pre className="format-guide-code">
+{`STAGE 1 — [STAGE NAME IN CAPS]
+  1.1 [Checkpoint / Topic Title]
+      [Optional detail or bullet]
+  1.2 [Checkpoint Title]
+STAGE 2 — [STAGE NAME]
+  2.1 [Checkpoint Title]
+STAGE 3 — [STAGE NAME]
+  3.1 [Checkpoint Title]`}
+            </pre>
+          </div>
+
           <div className="blank-creator-options-grid">
-            {/* Option 1: File Upload */}
+            {/* Option 1: AI Prompt Generator */}
+            <div className="creator-option-box">
+              <div className="option-icon-box">
+                <Sparkles size={22} color="#047857" />
+              </div>
+              <h4 className="option-title">1. Generate with ChatGPT / Claude</h4>
+              <p className="option-desc">
+                Copies our prompt customized for "{activeSubject}" to generate the exact format.
+              </p>
+              <button
+                type="button"
+                className="option-action-btn secondary"
+                onClick={handleCopyChatGPT}
+              >
+                <Copy size={13} />
+                <span>Copy ChatGPT Prompt</span>
+              </button>
+            </div>
+
+            {/* Option 2: Upload File */}
             <div className="creator-option-box">
               <div className="option-icon-box">
                 <Upload size={22} color="#312e81" />
               </div>
-              <h4 className="option-title">Upload Roadmap File</h4>
-              <p className="option-desc">Select any .txt or .md file with your stages and topics.</p>
+              <h4 className="option-title">2. Or Upload File (.txt / .md)</h4>
+              <p className="option-desc">
+                Select any text or markdown file containing your stage outline.
+              </p>
               <input
                 type="file"
                 ref={fileInputRef}
@@ -458,71 +523,51 @@ export default function StageRoadmapsView({
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload size={13} />
-                <span>Select .txt / .md File</span>
-              </button>
-            </div>
-
-            {/* Option 2: AI Prompt Generator */}
-            <div className="creator-option-box">
-              <div className="option-icon-box">
-                <Sparkles size={22} color="#047857" />
-              </div>
-              <h4 className="option-title">Generate with ChatGPT / Claude</h4>
-              <p className="option-desc">Copy our prompt formatted specifically for {activeSubject}.</p>
-              <button
-                type="button"
-                className="option-action-btn secondary"
-                onClick={handleCopyChatGPT}
-              >
-                <Copy size={13} />
-                <span>Copy AI Prompt</span>
+                <span>Upload Roadmap File</span>
               </button>
             </div>
           </div>
 
-          {/* Paste Outline Area */}
+          {/* Paste Stage Outline Area */}
           <div className="creator-paste-section">
             <label className="paste-label">
-              <FileText size={14} />
-              <span>Or Paste Your Stage Outline Here:</span>
+              <FileText size={15} />
+              <span>3. Paste Your Stages Text:</span>
             </label>
             <textarea
               className="creator-paste-textarea"
-              rows={8}
-              value={importText}
+              rows={9}
+              value={inputText}
               onChange={e => setImportText(e.target.value)}
-              placeholder={`STAGE 1 — FOUNDATIONS\n  1.1 Core Concepts\n  1.2 Syntax Basics\nSTAGE 2 — PRACTICAL APPLICATION\n  2.1 Implementation Patterns`}
+              placeholder={`STAGE 1 — CORE FUNDAMENTALS\n  1.1 First Principles & Setup\n  1.2 Syntax & Basic Patterns\nSTAGE 2 — DEEP DIVE\n  2.1 Key Implementation Patterns\n  2.2 Edge Cases & Debugging\nSTAGE 3 — ADVANCED MASTERY\n  3.1 Performance Optimization`}
             />
             <div className="creator-paste-actions">
               <button
                 type="button"
                 className="build-roadmap-btn"
-                onClick={handleBuildFromPastedText}
-                disabled={!importText.trim()}
+                onClick={handleGenerateRoadmap}
+                disabled={!inputText.trim()}
               >
-                <Check size={14} />
-                <span>Build Stages from Outline</span>
+                <Check size={15} />
+                <span>Generate Roadmap & Checkpoints</span>
               </button>
-              <button
-                type="button"
-                className="starter-fallback-btn"
-                onClick={() => {
-                  const raw = getStarterCurriculumRaw(activeSubject);
-                  const parsed = parseCurriculumText(raw);
-                  parsed.subject = activeSubject;
-                  setCurriculum(parsed);
-                  saveSubjectCurriculum(activeSubject, parsed);
-                }}
-              >
-                <RotateCcw size={13} />
-                <span>Use Starter Template</span>
-              </button>
+
+              {customSubjects.includes(activeSubject) && (
+                <button
+                  type="button"
+                  className="delete-subject-btn"
+                  onClick={handleDeleteRoadmap}
+                >
+                  <Trash2 size={13} />
+                  <span>Remove Subject</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
       )}
 
-      {/* 4. Subject Overview & Stage Selector Bar (When Stages Exist) */}
+      {/* 4. Command Center & Stage Switcher (When Stages Exist) */}
       {hasStages && (
         <>
           <div className="roadmap-command-center">
@@ -534,7 +579,7 @@ export default function StageRoadmapsView({
                 </span>
                 <span className="timetable-pinned-badge">
                   <Flame size={12} color="#b45309" />
-                  <span>Timetable Pinned: STAGE {progress.activeStageIndex + 1}</span>
+                  <span>Timetable Active: STAGE {progress.activeStageIndex + 1}</span>
                 </span>
               </div>
 
@@ -543,31 +588,24 @@ export default function StageRoadmapsView({
                   type="button"
                   className="command-tool-btn"
                   onClick={handleStartEdit}
-                  title="Edit outline text directly"
+                  title="Edit roadmap outline"
                 >
                   <Layers size={13} />
                   <span>{isEditingOutline ? 'Close Editor' : 'Edit Outline'}</span>
                 </button>
                 <button
                   type="button"
-                  className="command-tool-btn"
-                  onClick={() => fileInputRef.current?.click()}
-                  title="Upload a new roadmap file"
+                  className="command-tool-btn danger"
+                  onClick={handleDeleteRoadmap}
+                  title="Delete this entire roadmap"
                 >
-                  <Upload size={13} />
-                  <span>Upload File</span>
+                  <Trash2 size={13} />
+                  <span>Delete Roadmap</span>
                 </button>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept=".txt,.md"
-                  onChange={handleFileUpload}
-                  style={{ display: 'none' }}
-                />
               </div>
             </div>
 
-            {/* Overall Progress Fill Bar */}
+            {/* Overall Progress Track */}
             <div className="roadmap-full-progress-track">
               <div
                 className="roadmap-full-progress-fill"
@@ -575,9 +613,9 @@ export default function StageRoadmapsView({
               />
             </div>
 
-            {/* Stage Selector Tabs: Click on a stage to view ONLY that stage! */}
+            {/* STAGE SELECTOR TABS: Click on a stage to view ONLY that stage! */}
             <div className="stage-tabs-navigation-bar">
-              <span className="stage-nav-label">Select Stage to View:</span>
+              <span className="stage-nav-label">Click a Stage to View:</span>
               <div className="stage-tabs-scroll">
                 {curriculum.stages.map((st, idx) => {
                   const isViewing = idx === activeStageIdx;
@@ -602,7 +640,7 @@ export default function StageRoadmapsView({
                   );
                 })}
 
-                {/* Add Stage Button */}
+                {/* Add Stage Inline */}
                 {showAddStageInput ? (
                   <div className="add-stage-inline-form">
                     <input
@@ -638,14 +676,14 @@ export default function StageRoadmapsView({
             </div>
           </div>
 
-          {/* Outline Editor (If Opened) */}
+          {/* Raw Outline Editor Drawer */}
           {isEditingOutline && (
             <div className="roadmap-outline-editor-card">
               <div className="editor-card-header">
                 <div>
                   <strong>Edit Full Roadmap Outline — {activeSubject}</strong>
                   <p className="editor-subtext">
-                    Format as <code>STAGE 1 — NAME</code> followed by <code>1.1 Topic</code> and subtopics.
+                    Format as <code>STAGE 1 — NAME</code> followed by <code>1.1 Topic</code>.
                   </p>
                 </div>
                 <button type="button" className="editor-ai-btn" onClick={handleCopyChatGPT}>
@@ -671,7 +709,7 @@ export default function StageRoadmapsView({
             </div>
           )}
 
-          {/* 5. SINGLE STAGE DETAIL VIEW (ONLY SHOWS THE SELECTED STAGE!) */}
+          {/* 5. SINGLE STAGE DETAIL VIEW: ONLY SHOWS THIS PARTICULAR STAGE! */}
           {!isEditingOutline && currentStage && (
             <div className="single-stage-focused-card">
               {/* Stage Header Banner */}
@@ -694,7 +732,7 @@ export default function StageRoadmapsView({
                       type="button"
                       className="pin-timetable-btn"
                       onClick={() => handleSetTimetableActiveStage(currentStage.id, currentStage.title)}
-                      title="Pin this stage so its next checkpoint displays on your timetable"
+                      title="Set this stage so its next checkpoint displays on your timetable"
                     >
                       <Flame size={12} />
                       <span>Set as Active on Timetable</span>
@@ -720,7 +758,7 @@ export default function StageRoadmapsView({
               <div className="stage-focus-checkpoints-list">
                 {(!currentStage.checkpoints || currentStage.checkpoints.length === 0) ? (
                   <div className="empty-checkpoints-prompt">
-                    <span>No checkpoints in this stage yet. Add your first topic below!</span>
+                    <span>No checkpoints in this stage yet. Add your first checkpoint below!</span>
                   </div>
                 ) : (
                   currentStage.checkpoints.map(cp => (
@@ -762,7 +800,7 @@ export default function StageRoadmapsView({
                 )}
               </div>
 
-              {/* Add Checkpoint Form */}
+              {/* Add Checkpoint to this Stage */}
               <div className="stage-focus-add-checkpoint-row">
                 <input
                   type="text"
@@ -771,7 +809,7 @@ export default function StageRoadmapsView({
                   onKeyDown={e => {
                     if (e.key === 'Enter') handleAddCheckpoint(currentStage.id);
                   }}
-                  placeholder={`+ Add checkpoint to Stage ${activeStageIdx + 1} (e.g. 1.4 Sequence Length & Masks)...`}
+                  placeholder={`+ Add checkpoint to Stage ${activeStageIdx + 1}...`}
                   className="add-checkpoint-input"
                 />
                 <button
@@ -797,7 +835,7 @@ export default function StageRoadmapsView({
                 </button>
 
                 <span className="stage-nav-counter">
-                  Stage {activeStageIdx + 1} of {curriculum.stages.length}
+                  Viewing Stage {activeStageIdx + 1} of {curriculum.stages.length}
                 </span>
 
                 <button

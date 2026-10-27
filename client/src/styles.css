@@ -5225,3 +5225,82 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Roadmap Pill Empty Badge */
+.roadmap-pill-empty {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #64748b !important;
+  border: 1px dashed #cbd5e1;
+}
+
+.roadmap-subject-pill.active .roadmap-pill-empty {
+  background: #a5b4fc;
+  color: #1e1b4b !important;
+  border: none;
+}
+
+/* Format Guide Box */
+.roadmap-format-guide-box {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.format-guide-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #1e1b4b !important;
+  margin-bottom: 8px;
+}
+
+.format-guide-code {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #0f172a !important;
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+
+/* Danger / Delete Buttons */
+.command-tool-btn.danger {
+  color: #991b1b !important;
+  border-color: #fca5a5;
+  background: #fff5f5;
+}
+
+.command-tool-btn.danger:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.delete-subject-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fff5f5;
+  color: #991b1b !important;
+  border: 1.5px solid #fca5a5;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.delete-subject-btn:hover {
+  background: #fee2e2;
+}
