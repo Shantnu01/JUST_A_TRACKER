@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import {
   AlarmClock,
   ArrowUpRight,
+  Award,
   BookOpen,
   Calendar,
   Check,
@@ -22,6 +23,7 @@ import {
   Lock,
   LogIn,
   LogOut,
+  Medal,
   Menu,
   Moon,
   Pause,
@@ -37,7 +39,8 @@ import {
   UserPlus,
   Users,
   Utensils,
-  X
+  X,
+  Zap
 } from 'lucide-react';
 import './styles.css';
 
@@ -148,26 +151,38 @@ function readStore() {
   }
 }
 
-// Gentle Web Audio API chime for reminders and timers
-function playChime() {
+// Gentle Web Audio API chime for reminders, timers, and nudges
+function playChime(isNudge = false) {
   try {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) return;
     const ctx = new AudioContextClass();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.25); // A5
-    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 1.2);
-  } catch {
-    // Audio context may require user gesture on some browsers
-  }
+
+    if (isNudge) {
+      // Friendly double-ping for incoming nudge
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.6);
+    } else {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.25); // A5
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 1.2);
+    }
+  } catch {}
 }
 
 function App() {
@@ -190,12 +205,17 @@ function App() {
   const [groups, setGroups] = useState([]);
   const [activeGroupId, setActiveGroupId] = useState(() => localStorage.getItem('daymark-active-group') || '');
   const [podMembers, setPodMembers] = useState([]);
+  const [leaderboard, setLeaderboard] = useState(null);
   const [createPodModalOpen, setCreatePodModalOpen] = useState(false);
   const [joinPodModalOpen, setJoinPodModalOpen] = useState(false);
   const [newPodName, setNewPodName] = useState('');
   const [joinInviteCode, setJoinInviteCode] = useState('');
   const [podError, setPodError] = useState('');
   const [podDropdownOpen, setPodDropdownOpen] = useState(false);
+
+  // 1:00 AM Recap State
+  const [recapModalOpen, setRecapModalOpen] = useState(false);
+  const [recapData, setRecapData] = useState(null);
 
   // Core App State
   const [store, setStore] = useState(readStore);
@@ -206,7 +226,7 @@ function App() {
   const [alarmEnabled, setAlarmEnabled] = useState(false);
   const [alarmTime, setAlarmTime] = useState('06:55');
   const [toast, setToast] = useState('');
-  const [view, setView] = useState('Today'); // 'Today' | 'Weekly report' | 'Routine settings' | 'Study pods'
+  const [view, setView] = useState('Today'); // 'Today' | 'Weekly report' | 'Study pods' | 'Routine settings'
   const [notes, setNotes] = useState('');
   const [dbStatus, setDbStatus] = useState('checking'); // 'connected' | 'local' | 'checking'
 
@@ -260,27 +280,79 @@ function App() {
     fetchGroups();
   }, [token]);
 
-  // Load pod members for active group (polled every 15s for live presence)
+  // Load pod leaderboard and members for active group (polled every 15s)
   useEffect(() => {
     if (!token || !activeGroupId) {
       setPodMembers([]);
+      setLeaderboard(null);
       return;
     }
-    const fetchMembers = async () => {
+    const fetchLeaderboard = async () => {
       try {
-        const res = await fetch(`${API}/groups/${activeGroupId}/members`, {
+        const res = await fetch(`${API}/groups/${activeGroupId}/leaderboard?date=${todayKey}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
           const data = await res.json();
-          setPodMembers(data);
+          setLeaderboard(data);
+          setPodMembers(data.members || []);
         }
       } catch {}
     };
-    fetchMembers();
-    const interval = setInterval(fetchMembers, 15000);
+    fetchLeaderboard();
+    const interval = setInterval(fetchLeaderboard, 15000);
     return () => clearInterval(interval);
-  }, [token, activeGroupId]);
+  }, [token, activeGroupId, todayKey]);
+
+  // Heartbeat loop: Sends live presence status when studying
+  useEffect(() => {
+    if (!token) return;
+    const sendHeartbeat = async () => {
+      const currentBlock = schedule.find(s => s.id === activeId);
+      try {
+        await fetch(`${API}/presence/heartbeat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            is_studying: running,
+            current_block_title: running ? currentBlock?.title || 'Focused session' : ''
+          })
+        });
+      } catch {}
+    };
+
+    sendHeartbeat();
+    if (!running) return;
+    const interval = setInterval(sendHeartbeat, 20000); // 20s heartbeat
+    return () => clearInterval(interval);
+  }, [running, activeId, token, schedule]);
+
+  // Unread nudges poller (checks every 15s)
+  useEffect(() => {
+    if (!token) return;
+    const checkNudges = async () => {
+      try {
+        const res = await fetch(`${API}/nudges/unread`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const nudges = await res.json();
+          if (Array.isArray(nudges) && nudges.length > 0) {
+            const first = nudges[0];
+            playChime(true);
+            setToast(`👋 ${first.from_username} nudged you in "${first.group_name}": Time to lock in!`);
+            setTimeout(() => setToast(''), 5000);
+          }
+        }
+      } catch {}
+    };
+
+    const interval = setInterval(checkNudges, 15000);
+    return () => clearInterval(interval);
+  }, [token]);
 
   // Load custom schedule from database on startup
   useEffect(() => {
@@ -661,6 +733,7 @@ function App() {
     setGroups([]);
     setActiveGroupId('');
     setPodMembers([]);
+    setLeaderboard(null);
     setToast('Logged out');
     setTimeout(() => setToast(''), 2000);
   };
@@ -723,6 +796,52 @@ function App() {
       setTimeout(() => setToast(''), 3000);
     } catch {
       setPodError('Network error joining pod.');
+    }
+  };
+
+  const handleNudge = async (toUserId, toUsername) => {
+    if (!activeGroupId || !token) return;
+    try {
+      const res = await fetch(`${API}/groups/${activeGroupId}/nudge`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ to_user_id: toUserId })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        playChime(true);
+        setToast(`👋 Nudged ${toUsername}!`);
+      } else {
+        setToast(data.error || 'Failed to nudge');
+      }
+      setTimeout(() => setToast(''), 3000);
+    } catch {
+      setToast('Network error sending nudge');
+      setTimeout(() => setToast(''), 2500);
+    }
+  };
+
+  // Open 1:00 AM Recap for yesterday
+  const openRecapModal = async () => {
+    if (!activeGroupId || !token) return;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yKey = dateKey(yesterday);
+    try {
+      const res = await fetch(`${API}/groups/${activeGroupId}/leaderboard?date=${yKey}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setRecapData(data);
+        setRecapModalOpen(true);
+      }
+    } catch {
+      setToast('Failed to load yesterday recap');
+      setTimeout(() => setToast(''), 2000);
     }
   };
 
@@ -814,7 +933,7 @@ function App() {
                 : view === 'Weekly report'
                 ? 'Your progress, at a glance'
                 : view === 'Study pods'
-                ? 'Competitive Study Pods'
+                ? 'Competitive Study Pod'
                 : 'Customize your routine schedule'}
             </h1>
           </div>
@@ -1324,7 +1443,7 @@ function App() {
           </section>
         )}
 
-        {/* Study Pods Competitive View */}
+        {/* Study Pods Competitive Arena View */}
         {view === 'Study pods' && (
           <section style={{ maxWidth: '1000px', margin: '0 auto', paddingTop: '10px' }}>
             {!user ? (
@@ -1340,120 +1459,149 @@ function App() {
               </div>
             ) : (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+                {/* Active Pod Banner & Controls */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
                   <div>
-                    <h3 style={{ font: '700 22px Manrope', margin: '0 0 4px', color: '#1f2e24' }}>
-                      Your Study Pods <span style={{ fontSize: '14px', color: '#768178', fontWeight: '500' }}>({groups.length} pods)</span>
+                    <span className="eyebrow">ACCOUNTABILITY POD</span>
+                    <h3 style={{ font: '700 22px Manrope', margin: '2px 0 4px', color: '#1f2e24', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {activeGroup ? activeGroup.name : 'Select or Create a Pod'}
+                      {activeGroup && (
+                        <span
+                          className="invite-code-chip"
+                          onClick={() => copyInviteCode(activeGroup.invite_code)}
+                          title="Click to copy invite code"
+                        >
+                          <Copy size={11} /> {activeGroup.invite_code}
+                        </span>
+                      )}
                     </h3>
-                    <p className="muted" style={{ fontSize: '12px', margin: 0 }}>
-                      Maximum 5 members per pod. Switch active pods anytime from the header.
-                    </p>
                   </div>
-                  <div style={{ display: 'flex', gap: '10px' }}>
+
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {activeGroup && (
+                      <button className="recap-btn" onClick={openRecapModal}>
+                        <Award size={15} /> 1:00 AM Recap
+                      </button>
+                    )}
                     <button className="save-schedule-btn" onClick={() => setCreatePodModalOpen(true)}>
-                      <UserPlus size={15} /> Create a Pod
+                      <UserPlus size={15} /> Create Pod
                     </button>
                     <button className="reset-schedule-btn" onClick={() => setJoinPodModalOpen(true)}>
-                      <Share2 size={15} /> Join with Invite Code
+                      <Share2 size={15} /> Join with Code
                     </button>
                   </div>
                 </div>
 
-                {groups.length === 0 ? (
+                {/* Combined Pod Output Banner */}
+                {activeGroup && leaderboard && (
+                  <div className="pod-summary-banner">
+                    <div className="pod-summary-stat">
+                      <small>Combined Pod Focus Today</small>
+                      <strong>
+                        {Math.floor(leaderboard.total_pod_minutes / 60)}h {leaderboard.total_pod_minutes % 60}m
+                      </strong>
+                    </div>
+                    <div className="pod-summary-stat">
+                      <small>Pod Habits Completed</small>
+                      <strong>{leaderboard.total_pod_habits} checked</strong>
+                    </div>
+                    <div className="pod-summary-stat">
+                      <small>Active Members</small>
+                      <strong>{activeGroup.member_count} of 5 max</strong>
+                    </div>
+                    <div className="pod-summary-stat">
+                      <small>Reset & Champion Cutoff</small>
+                      <strong style={{ fontSize: '18px', color: '#44664e' }}>1:00 AM Daily</strong>
+                    </div>
+                  </div>
+                )}
+
+                {/* Competitive Leaderboard */}
+                {activeGroup ? (
+                  <div className="panel" style={{ padding: '22px', marginBottom: '24px' }}>
+                    <div className="panel-heading" style={{ marginBottom: '12px' }}>
+                      <div>
+                        <span className="eyebrow">LIVE LEADERBOARD</span>
+                        <h3>Today's Pod Rankings</h3>
+                      </div>
+                      <span className="count-badge" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Flame size={13} color="#d97706" /> Grind Points (GP)
+                      </span>
+                    </div>
+
+                    <div className="leaderboard-table">
+                      {podMembers.map((member, idx) => {
+                        const isSelf = member.id === user.id;
+                        return (
+                          <div className={`leaderboard-row rank-${member.rank || idx + 1}`} key={member.id}>
+                            <div className="rank-badge">
+                              {member.rank === 1 ? <Crown size={15} color="#fff" /> : member.rank || idx + 1}
+                            </div>
+                            <div
+                              className="member-avatar"
+                              style={{ background: member.avatar_color, width: '34px', height: '34px', fontSize: '13px' }}
+                            >
+                              {member.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="leaderboard-user-info">
+                              <strong>
+                                {member.username} {isSelf && <span style={{ color: '#527c5f', fontSize: '11px' }}>(You)</span>}
+                                {member.rank === 1 && member.points > 0 && (
+                                  <span style={{ fontSize: '10px', color: '#b45309', fontWeight: '800' }}>👑 POD LEADER</span>
+                                )}
+                              </strong>
+                              <small>
+                                {Math.floor(member.total_minutes / 60)}h {member.total_minutes % 60}m logged · {member.habits_done}/6 habits
+                              </small>
+                            </div>
+
+                            {/* Live Presence indicator */}
+                            <div style={{ textAlign: 'center', padding: '0 8px' }}>
+                              {member.is_studying ? (
+                                <span className="studying-pill">
+                                  <span className="status-dot synced" style={{ width: '6px', height: '6px' }} />
+                                  {member.current_block_title || 'In Focus'}
+                                </span>
+                              ) : (
+                                <span style={{ fontSize: '11px', color: '#97a098' }}>On break</span>
+                              )}
+                            </div>
+
+                            {/* Grind Points Score */}
+                            <div className="gp-badge">
+                              <Zap size={12} /> {member.points} GP
+                            </div>
+
+                            {/* Nudge Button (only for other members) */}
+                            {!isSelf && (
+                              <button
+                                className="nudge-btn"
+                                onClick={() => handleNudge(member.id, member.username)}
+                                title={`Send an instant notification nudge to ${member.username}`}
+                              >
+                                👋 Nudge
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
                   <div className="panel" style={{ padding: '32px', textAlign: 'center' }}>
                     <Flame size={32} color="#c5973b" style={{ marginBottom: '10px' }} />
-                    <h4 style={{ font: '700 16px Manrope', margin: '0 0 6px' }}>You haven't joined any pods yet</h4>
+                    <h4 style={{ font: '700 16px Manrope', margin: '0 0 6px' }}>No active pod selected</h4>
                     <p className="muted" style={{ fontSize: '12px', margin: '0 0 16px' }}>
-                      Create a new pod and invite up to 4 friends with your private code, or enter an existing invite code.
+                      Create a new study pod or join with an invite code from a friend.
                     </p>
                     <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                       <button className="save-schedule-btn" onClick={() => setCreatePodModalOpen(true)}>
-                        Create Your First Pod
+                        Create a Pod
                       </button>
                       <button className="reset-schedule-btn" onClick={() => setJoinPodModalOpen(true)}>
                         Enter Code
                       </button>
                     </div>
-                  </div>
-                ) : (
-                  <div className="pods-grid">
-                    {groups.map(g => {
-                      const isActive = g.id === activeGroupId;
-                      return (
-                        <div className={`pod-card ${isActive ? 'active-pod' : ''}`} key={g.id}>
-                          <div className="pod-card-header">
-                            <div>
-                              <h4>{g.name}</h4>
-                              <small style={{ color: '#88938b', fontSize: '11px' }}>
-                                {g.member_count} of 5 members
-                              </small>
-                            </div>
-                            <span
-                              className="invite-code-chip"
-                              onClick={() => copyInviteCode(g.invite_code)}
-                              title="Click to copy invite code"
-                            >
-                              <Copy size={11} /> {g.invite_code}
-                            </span>
-                          </div>
-
-                          <div className="member-list-wrap">
-                            {isActive && podMembers.length > 0 ? (
-                              podMembers.map(m => {
-                                const mTotalMinutes = Object.values(m.today_completed_minutes || {}).reduce((a, b) => a + b, 0);
-                                const mHabitsDone = Object.values(m.today_checks || {}).filter(Boolean).length;
-                                return (
-                                  <div className="member-item" key={m.id}>
-                                    <div className="member-avatar" style={{ background: m.avatar_color }}>
-                                      {m.username.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div className="member-meta">
-                                      <strong>
-                                        {m.username} {m.id === user.id && <span style={{ color: '#527c5f', fontSize: '10px' }}>(You)</span>}
-                                      </strong>
-                                      <small>
-                                        {Math.floor(mTotalMinutes / 60)}h {mTotalMinutes % 60}m logged · {mHabitsDone}/6 habits
-                                      </small>
-                                    </div>
-                                    {m.is_studying ? (
-                                      <span className="studying-pill">
-                                        <span className="status-dot synced" style={{ width: '5px', height: '5px' }} />
-                                        Studying
-                                      </span>
-                                    ) : (
-                                      <span style={{ fontSize: '10px', color: '#97a098' }}>Idle</span>
-                                    )}
-                                  </div>
-                                );
-                              })
-                            ) : (
-                              <p className="muted" style={{ fontSize: '11px', margin: '4px 0' }}>
-                                {isActive ? 'Loading member activity...' : 'Select this pod to view live member performance'}
-                              </p>
-                            )}
-                          </div>
-
-                          <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            {isActive ? (
-                              <span style={{ fontSize: '11px', color: '#315b45', fontWeight: '700' }}>
-                                ✓ Active Pod
-                              </span>
-                            ) : (
-                              <button
-                                className="action-button"
-                                style={{ fontSize: '11px', padding: '6px 12px' }}
-                                onClick={() => {
-                                  setActiveGroupId(g.id);
-                                  localStorage.setItem('daymark-active-group', g.id);
-                                }}
-                              >
-                                Select as Active Pod
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
                   </div>
                 )}
               </div>
@@ -1555,6 +1703,103 @@ function App() {
           <span>Progress over perfection.</span>
         </footer>
       </main>
+
+      {/* 1:00 AM Daily Recap Modal */}
+      {recapModalOpen && recapData && (
+        <div className="modal-overlay" onClick={() => setRecapModalOpen(false)}>
+          <div className="modal-card" style={{ maxWidth: '540px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <span className="eyebrow">1:00 AM DAILY RESET</span>
+                <h3 style={{ marginTop: '3px' }}>Yesterday's Pod Recap & Champion</h3>
+              </div>
+              <button className="modal-close" onClick={() => setRecapModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Pod Total Banner */}
+            <div className="pod-summary-banner" style={{ margin: '10px 0 16px' }}>
+              <div>
+                <small>Combined Pod Focus</small>
+                <strong>
+                  {Math.floor(recapData.total_pod_minutes / 60)}h {recapData.total_pod_minutes % 60}m
+                </strong>
+              </div>
+              <div>
+                <small>Habits Logged</small>
+                <strong>{recapData.total_pod_habits} checked</strong>
+              </div>
+            </div>
+
+            {/* Podium Standings */}
+            <div style={{ marginBottom: '18px' }}>
+              <strong style={{ fontSize: '11px', color: '#68776b', letterSpacing: '0.5px' }}>
+                FINAL YESTERDAY STANDINGS
+              </strong>
+              <div style={{ display: 'grid', gap: '8px', marginTop: '8px' }}>
+                {recapData.members.map((m, idx) => (
+                  <div
+                    key={m.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '10px 14px',
+                      background: m.is_winner ? '#fef9ee' : '#f9faf7',
+                      border: `1px solid ${m.is_winner ? '#f0dfab' : '#eaeee6'}`,
+                      borderRadius: '8px'
+                    }}
+                  >
+                    <span style={{ fontSize: '14px', fontWeight: '800' }}>
+                      {m.is_winner ? '👑' : `#${m.rank || idx + 1}`}
+                    </span>
+                    <div className="member-avatar" style={{ background: m.avatar_color }}>
+                      {m.username.charAt(0).toUpperCase()}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <strong style={{ fontSize: '12px', display: 'block' }}>
+                        {m.username} {m.is_winner && <span style={{ color: '#b45309', fontSize: '10px' }}>(Champion)</span>}
+                      </strong>
+                      <small style={{ fontSize: '10px', color: '#7e8780' }}>
+                        {Math.floor(m.total_minutes / 60)}h {m.total_minutes % 60}m · {m.habits_done}/6 habits
+                      </small>
+                    </div>
+                    <span className="gp-badge" style={{ fontSize: '11px' }}>
+                      {m.points} GP
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* What Each Member Shipped */}
+            <div>
+              <strong style={{ fontSize: '11px', color: '#68776b', letterSpacing: '0.5px' }}>
+                WHAT EVERYONE SHIPPED & LEARNED
+              </strong>
+              <div style={{ display: 'grid', gap: '8px', marginTop: '8px', maxHeight: '180px', overflowY: 'auto' }}>
+                {recapData.members.map(m => (
+                  <div className="notes-quote-card" key={m.id}>
+                    <strong>{m.username} shipped:</strong>
+                    <p style={{ margin: 0, fontStyle: m.notes ? 'normal' : 'italic', color: m.notes ? '#334437' : '#99a39a' }}>
+                      {m.notes || 'No end-of-day notes submitted.'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              className="form-submit-btn"
+              style={{ marginTop: '18px' }}
+              onClick={() => setRecapModalOpen(false)}
+            >
+              Let's Crush Today's Grind
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Auth Modal (Sign In / Register) */}
       {authModalOpen && (

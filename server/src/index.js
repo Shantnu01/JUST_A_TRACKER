@@ -127,8 +127,10 @@ async function ensureTable() {
       group_id UUID REFERENCES study_groups(id) ON DELETE CASCADE,
       from_user_id UUID REFERENCES users(id) ON DELETE CASCADE,
       to_user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+      acknowledged BOOLEAN DEFAULT false,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )`);
+    await pool.query(`ALTER TABLE group_nudges ADD COLUMN IF NOT EXISTS acknowledged BOOLEAN DEFAULT false;`);
 
     dbInitialized = true;
     console.log('[Database] Connected and schema verified.');
@@ -436,6 +438,201 @@ app.post('/api/groups/:id/leave', authenticateToken, async (req, res) => {
   }
 });
 
+// ================= GRIND POINTS SCORING HELPER =================
+function calculateGrindPoints(completedMinutesObj = {}, checksObj = {}, notes = '') {
+  const totalMins = Object.values(completedMinutesObj).reduce((a, b) => a + Number(b || 0), 0);
+  const habitsDone = Object.values(checksObj).filter(Boolean).length;
+
+  // 1. Focus time: 10 GP per 30 minutes
+  let points = Math.floor(totalMins / 30) * 10;
+
+  // 2. Minimum goal milestone: 6+ hours (360 mins) => +30 GP
+  if (totalMins >= 360) points += 30;
+
+  // 3. Full day monster goal: 10+ hours (600 mins) => additional +30 GP (+60 total)
+  if (totalMins >= 600) points += 30;
+
+  // 4. Habits: 5 GP per checked habit
+  points += habitsDone * 5;
+
+  // 5. Daily Ship log bonus: +15 GP if meaningful notes logged (>= 10 chars)
+  if (typeof notes === 'string' && notes.trim().length >= 10) {
+    points += 15;
+  }
+
+  return { points, totalMins, habitsDone };
+}
+
+// ================= LIVE PRESENCE & HEARTBEAT =================
+app.post('/api/presence/heartbeat', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const { is_studying = false, current_block_title = '' } = req.body || {};
+  try {
+    await ensureTable();
+    await pool.query(
+      `INSERT INTO user_presence (user_id, is_studying, current_block_title, session_started_at, last_seen)
+       VALUES ($1, $2, $3, CASE WHEN $2 THEN NOW() ELSE NULL END, NOW())
+       ON CONFLICT (user_id) DO UPDATE SET
+         is_studying = EXCLUDED.is_studying,
+         current_block_title = EXCLUDED.current_block_title,
+         session_started_at = CASE
+           WHEN EXCLUDED.is_studying AND NOT user_presence.is_studying THEN NOW()
+           WHEN NOT EXCLUDED.is_studying THEN NULL
+           ELSE user_presence.session_started_at
+         END,
+         last_seen = NOW()`,
+      [req.user.id, Boolean(is_studying), String(current_block_title).slice(0, 50)]
+    );
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Heartbeat error:', error.message);
+    return res.status(500).json({ error: 'Failed to update presence.' });
+  }
+});
+
+// ================= NUDGE SYSTEM =================
+app.post('/api/groups/:id/nudge', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
+  const { to_user_id } = req.body || {};
+  if (!to_user_id) return res.status(400).json({ error: 'Recipient is required.' });
+  if (to_user_id === req.user.id) return res.status(400).json({ error: 'You cannot nudge yourself.' });
+
+  try {
+    await ensureTable();
+    // Verify both are in the group
+    const check = await pool.query(
+      `SELECT count(*)::int as count FROM group_members WHERE group_id = $1 AND user_id IN ($2, $3)`,
+      [groupId, req.user.id, to_user_id]
+    );
+    if (check.rows[0].count < 2) {
+      return res.status(403).json({ error: 'Both users must be members of the pod.' });
+    }
+
+    // Rate limit: 1 nudge per user pair per 5 minutes
+    const recent = await pool.query(
+      `SELECT created_at FROM group_nudges 
+       WHERE group_id = $1 AND from_user_id = $2 AND to_user_id = $3 
+       AND created_at > NOW() - INTERVAL '5 minutes'`,
+      [groupId, req.user.id, to_user_id]
+    );
+    if (recent.rows.length > 0) {
+      return res.status(429).json({ error: 'You recently nudged this friend. Please wait 5 minutes before nudging again.' });
+    }
+
+    await pool.query(
+      `INSERT INTO group_nudges (group_id, from_user_id, to_user_id) VALUES ($1, $2, $3)`,
+      [groupId, req.user.id, to_user_id]
+    );
+
+    return res.json({ success: true, message: 'Nudge sent successfully!' });
+  } catch (error) {
+    console.error('Nudge error:', error.message);
+    return res.status(500).json({ error: 'Failed to send nudge.' });
+  }
+});
+
+app.get('/api/nudges/unread', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `SELECT n.id, n.group_id, g.name as group_name, u.username as from_username, n.created_at
+       FROM group_nudges n
+       JOIN users u ON u.id = n.from_user_id
+       JOIN study_groups g ON g.id = n.group_id
+       WHERE n.to_user_id = $1 AND n.acknowledged = false AND n.created_at > NOW() - INTERVAL '24 hours'
+       ORDER BY n.created_at DESC`,
+      [req.user.id]
+    );
+
+    if (result.rows.length > 0) {
+      const ids = result.rows.map(r => r.id);
+      await pool.query(`UPDATE group_nudges SET acknowledged = true WHERE id = ANY($1::uuid[])`, [ids]);
+    }
+
+    return res.json(result.rows);
+  } catch (error) {
+    console.error('Fetch nudges error:', error.message);
+    return res.status(500).json({ error: 'Failed to read nudges.' });
+  }
+});
+
+// ================= COMPETITIVE LEADERBOARD & 1:00 AM RECAP =================
+app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
+  const targetDate = req.query.date || new Date().toISOString().slice(0, 10);
+
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `SELECT u.id, u.username, u.avatar_color,
+         COALESCE(p.is_studying, false) as is_studying,
+         COALESCE(p.current_block_title, '') as current_block_title,
+         COALESCE(d.completed_minutes, '{}'::jsonb) as completed_minutes,
+         COALESCE(d.checks, '{}'::jsonb) as checks,
+         COALESCE(d.notes, '') as notes
+       FROM group_members gm
+       JOIN users u ON u.id = gm.user_id
+       LEFT JOIN user_presence p ON p.user_id = u.id
+       LEFT JOIN user_routine_days d ON d.user_id = u.id AND d.day_date = $2
+       WHERE gm.group_id = $1`,
+      [groupId, targetDate]
+    );
+
+    const membersWithScores = result.rows.map(member => {
+      const { points, totalMins, habitsDone } = calculateGrindPoints(
+        member.completed_minutes,
+        member.checks,
+        member.notes
+      );
+      return {
+        id: member.id,
+        username: member.username,
+        avatar_color: member.avatar_color,
+        is_studying: member.is_studying,
+        current_block_title: member.current_block_title,
+        total_minutes: totalMins,
+        habits_done: habitsDone,
+        notes: member.notes,
+        points
+      };
+    });
+
+    // Sort descending by points, then total focus minutes
+    membersWithScores.sort((a, b) => {
+      if (b.points !== a.points) return b.points - a.points;
+      return b.total_minutes - a.total_minutes;
+    });
+
+    // Assign rank and MVP Crown bonus (+50 GP to #1 if points > 0)
+    const ranked = membersWithScores.map((m, index) => {
+      const isWinner = index === 0 && m.points > 0;
+      return {
+        ...m,
+        rank: index + 1,
+        is_winner: isWinner,
+        points: isWinner ? m.points + 50 : m.points
+      };
+    });
+
+    const totalPodMinutes = ranked.reduce((acc, m) => acc + m.total_minutes, 0);
+    const totalPodHabits = ranked.reduce((acc, m) => acc + m.habits_done, 0);
+
+    return res.json({
+      date: targetDate,
+      group_id: groupId,
+      total_pod_minutes: totalPodMinutes,
+      total_pod_habits: totalPodHabits,
+      members: ranked
+    });
+  } catch (error) {
+    console.error('Leaderboard error:', error.message);
+    return res.status(500).json({ error: 'Failed to compute leaderboard.' });
+  }
+});
+
 // ================= ROUTINE TRACKING ENDPOINTS =================
 // Supports both authenticated users (isolated) and guests (legacy)
 app.get('/api/days/:date', optionalAuth, async (req, res) => {
@@ -495,13 +692,14 @@ app.put('/api/days/:date', optionalAuth, async (req, res) => {
   try {
     await ensureTable();
     if (req.user) {
+      const { points } = calculateGrindPoints(completed_minutes, checks, notes);
       const result = await pool.query(
-        `INSERT INTO user_routine_days (user_id, day_date, checks, notes, completed_minutes, alarms, updated_at)
-         VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6::jsonb, NOW())
+        `INSERT INTO user_routine_days (user_id, day_date, checks, notes, completed_minutes, alarms, points, updated_at)
+         VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6::jsonb, $7, NOW())
          ON CONFLICT (user_id, day_date) DO UPDATE SET checks=EXCLUDED.checks, notes=EXCLUDED.notes,
-           completed_minutes=EXCLUDED.completed_minutes, alarms=EXCLUDED.alarms, updated_at=NOW()
-         RETURNING day_date, checks, notes, completed_minutes, alarms, updated_at`,
-        [req.user.id, req.params.date, JSON.stringify(checks), notes.slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms)]
+           completed_minutes=EXCLUDED.completed_minutes, alarms=EXCLUDED.alarms, points=EXCLUDED.points, updated_at=NOW()
+         RETURNING day_date, checks, notes, completed_minutes, alarms, points, updated_at`,
+        [req.user.id, req.params.date, JSON.stringify(checks), notes.slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms), points]
       );
       return res.json(result.rows[0]);
     } else {
