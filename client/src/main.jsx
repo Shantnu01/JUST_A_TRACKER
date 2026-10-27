@@ -496,6 +496,7 @@ function App() {
     }
   });
   const [codingModalOpen, setCodingModalOpen] = useState(false);
+  const [webhookExpanded, setWebhookExpanded] = useState(false);
   const [inputLcUser, setInputLcUser] = useState('');
   const [inputGhUser, setInputGhUser] = useState('');
   const [leetcodeData, setLeetcodeData] = useState(null);
@@ -2714,502 +2715,628 @@ function App() {
 
             {/* SUBTAB 1: OVERVIEW & SMART COMMIT SYNC */}
             {codingSubTab === 'overview' && (
-              <div className="coding-overview-grid">
-                {/* 1. Smart GitHub Commit Auto-Check for Project Habit */}
-                <div className="panel smart-commit-panel" style={{ gridColumn: '1 / -1' }}>
-                  <div className="smart-commit-header">
-                    <div>
-                      <span className="potd-chip" style={{ background: '#e0f2fe', borderColor: '#bae6fd', color: '#0369a1' }}>
-                        <GitBranch size={13} color="#0284c7" /> PROJECT HABIT AUTO-SYNC
-                      </span>
-                      <h4 style={{ margin: '6px 0 3px', font: '700 17px Manrope' }}>
-                        Smart GitHub Commit → "Project" Habit Verification
-                      </h4>
-                      <p className="muted" style={{ fontSize: '12px', margin: 0 }}>
-                        Whenever you push code, Daymark verifies that your present focus timer has logged sufficient deep work on your Project before marking it Done.
-                      </p>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      <button
-                        className="save-schedule-btn"
-                        style={{ padding: '7px 12px', fontSize: '11px' }}
-                        onClick={verifyGithubCommitForProject}
-                        disabled={verifyingCommit}
-                      >
-                        <RefreshCw size={13} className={verifyingCommit ? 'spin-anim' : ''} /> Verify Commits Now
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Progress Gauge */}
-                  <div className="smart-commit-metrics">
-                    <div className="commit-stat-box">
-                      <small>Assigned Project Time</small>
-                      <strong>{projectPlannedMins} mins ({Math.round(projectPlannedMins / 60)}h)</strong>
-                    </div>
-                    <div className="commit-stat-box">
-                      <small>Today's Logged Time</small>
-                      <strong style={{ color: '#2e7d32' }}>
-                        {projectLoggedMins} mins ({projectPercent}%)
-                      </strong>
-                    </div>
-                  </div>
-
-                  <div className="lc-track" style={{ height: '8px', margin: '12px 0 6px' }}>
-                    <div
-                      className="fill"
-                      style={{
-                        width: `${projectPercent}%`,
-                        background: '#16a34a'
-                      }}
-                    />
-                  </div>
-
-                  {commitVerificationResult && (
-                    <div
-                      className={`verification-msg-box ${commitVerificationResult.habitMarked ? 'success' : 'warn'}`}
-                    >
-                      <CheckCircle2 size={15} />
-                      <span>{commitVerificationResult.message}</span>
-                    </div>
-                  )}
-
-                  {/* Webhook copy banner */}
-                  <div className="webhook-box">
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <small style={{ fontWeight: '700', color: '#4b5563', display: 'block' }}>
-                        Zero-Click Push Automation Webhook URL:
-                      </small>
-                      <code style={{ fontSize: '11px', wordBreak: 'break-all' }}>
-                        {typeof window !== 'undefined' ? `${window.location.origin}/api/webhooks/github/${user ? user.id : 'guest'}` : ''}
-                      </code>
-                    </div>
-                    <button
-                      className="reset-schedule-btn"
-                      style={{ padding: '4px 8px', fontSize: '10px' }}
-                      onClick={() => {
-                        const url = `${window.location.origin}/api/webhooks/github/${user ? user.id : 'guest'}`;
-                        navigator.clipboard.writeText(url);
-                        setToast('GitHub Webhook URL copied to clipboard!');
-                        setTimeout(() => setToast(''), 2500);
-                      }}
-                    >
-                      <Copy size={12} /> Copy URL
-                    </button>
-                  </div>
-                </div>
-
-                {/* 2. Daily DSA Problem of the Day */}
-                <div className="panel dsa-potd-card" style={{ gridColumn: '1 / -1' }}>
-                  <div className="potd-badge-row">
-                    <span className="potd-chip">
-                      <Flame size={13} color="#f59e0b" /> PROBLEM OF THE DAY
-                    </span>
-                    <span className={`diff-badge ${potd.difficulty.toLowerCase()}`}>{potd.difficulty}</span>
-                    <span className="topic-pill">{potd.category}</span>
-                    {potd.companies && (
-                      <span className="topic-pill" style={{ background: '#fef3c7', color: '#92400e' }}>
-                        Asked by {potd.companies.slice(0, 3).join(', ')}
-                      </span>
-                    )}
-                  </div>
-                  <div className="potd-body">
-                    <h4>{potd.title}</h4>
-                    <p>
-                      Solve today's high-frequency interview problem to earn +50 Grind Points toward your daily pod standing!
-                    </p>
-                  </div>
-                  <div className="potd-actions">
-                    <a
-                      href={potd.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="potd-solve-btn"
-                    >
-                      <ExternalLink size={14} /> Solve on LeetCode
-                    </a>
-                    <button
-                      className="potd-solve-btn"
-                      onClick={() => startMockInterview(potd.title)}
-                    >
-                      <Clock3 size={14} /> Start 45m Mock
-                    </button>
-                    <button
-                      className={`potd-check-btn ${codingProfile.solved_dsa_ids?.includes(potd.id) ? 'done' : ''}`}
-                      onClick={() => toggleDsaSolved(potd.id, true)}
-                    >
-                      <Check size={14} />
-                      {codingProfile.solved_dsa_ids?.includes(potd.id) ? 'Solved Today (+50 GP)' : 'Mark as Solved'}
-                    </button>
-                  </div>
-                </div>
-
-                {/* 3. LeetCode Performance Card */}
-                <div className="panel coding-metric-panel">
-                  <div className="coding-panel-header">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span className="platform-icon lc">LC</span>
-                      <div>
-                        <strong>LeetCode Stats</strong>
-                        <small>
-                          {codingProfile.leetcode_username ? `@${codingProfile.leetcode_username}` : 'No account connected'}
-                        </small>
+              <div className="coding-overview-container">
+                {/* 1. Executive Platform Status Ribbon */}
+                <div className="coding-hero-ribbon">
+                  {/* LeetCode Pill */}
+                  <div
+                    className="coding-ribbon-card coding-anim-1"
+                    onClick={() => {
+                      if (!codingProfile.leetcode_username) {
+                        setInputLcUser('');
+                        setInputGhUser(codingProfile.github_username || '');
+                        setInputCfUser(codingProfile.codeforces_username || '');
+                        setCodingModalOpen(true);
+                      }
+                    }}
+                  >
+                    <span className="platform-icon lc">LC</span>
+                    <div className="ribbon-card-content">
+                      <div className="ribbon-card-top">
+                        <strong>LeetCode</strong>
+                        {codingProfile.leetcode_username ? (
+                          <span className="ribbon-handle">@{codingProfile.leetcode_username}</span>
+                        ) : (
+                          <span className="ribbon-connect-tag">+ Connect</span>
+                        )}
+                      </div>
+                      <div className="ribbon-card-stat">
+                        {leetcodeData ? (
+                          <>
+                            <span className="ribbon-val">{leetcodeData.totalSolved}</span>
+                            <span className="ribbon-sub">/ {leetcodeData.totalQuestions || 3300} solved</span>
+                            {leetcodeData.ranking && (
+                              <span className="ribbon-rank-pill">#{leetcodeData.ranking.toLocaleString()}</span>
+                            )}
+                          </>
+                        ) : (
+                          <span className="ribbon-hint">{leetcodeLoading ? 'Syncing…' : 'Sync profile & stats'}</span>
+                        )}
                       </div>
                     </div>
-                    {codingProfile.leetcode_username ? (
-                      <a
-                        href={leetcodeData?.profileUrl || `https://leetcode.com/u/${codingProfile.leetcode_username}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="external-link-btn"
-                        title="View LeetCode profile"
-                      >
-                        <ExternalLink size={14} />
-                      </a>
-                    ) : (
-                      <button
-                        className="quick-link-btn"
-                        onClick={() => {
-                          setInputLcUser('');
-                          setInputGhUser(codingProfile.github_username || '');
-                          setInputCfUser(codingProfile.codeforces_username || '');
-                          setCodingModalOpen(true);
-                        }}
-                      >
-                        + Connect
-                      </button>
-                    )}
                   </div>
 
-                  {leetcodeLoading && (
-                    <div className="loading-state">
-                      <RefreshCw size={18} className="spin-anim" />
-                      <span>Fetching LeetCode stats…</span>
+                  {/* GitHub Pill */}
+                  <div
+                    className="coding-ribbon-card coding-anim-2"
+                    onClick={() => {
+                      if (!codingProfile.github_username) {
+                        setInputLcUser(codingProfile.leetcode_username || '');
+                        setInputGhUser('');
+                        setInputCfUser(codingProfile.codeforces_username || '');
+                        setCodingModalOpen(true);
+                      }
+                    }}
+                  >
+                    <span className="platform-icon gh"><Github size={15} /></span>
+                    <div className="ribbon-card-content">
+                      <div className="ribbon-card-top">
+                        <strong>GitHub</strong>
+                        {codingProfile.github_username ? (
+                          <span className="ribbon-handle">@{codingProfile.github_username}</span>
+                        ) : (
+                          <span className="ribbon-connect-tag">+ Connect</span>
+                        )}
+                      </div>
+                      <div className="ribbon-card-stat">
+                        {githubData ? (
+                          <>
+                            <span className="ribbon-val">{githubData.user?.public_repos ?? 0}</span>
+                            <span className="ribbon-sub">repos</span>
+                            <span className="ribbon-sep">•</span>
+                            <span className="ribbon-val">{githubData.user?.followers ?? 0}</span>
+                            <span className="ribbon-sub">followers</span>
+                          </>
+                        ) : (
+                          <span className="ribbon-hint">{githubLoading ? 'Syncing…' : 'Track heatmap & repos'}</span>
+                        )}
+                      </div>
                     </div>
-                  )}
+                  </div>
 
-                  {leetcodeError && !leetcodeLoading && (
-                    <div className="coding-error-box">
-                      <p>{leetcodeError}</p>
-                      <button onClick={() => refreshLeetcode()}>Retry</button>
-                    </div>
-                  )}
-
-                  {!codingProfile.leetcode_username && (
-                    <div className="empty-prompt">
-                      <Terminal size={32} color="#8a948c" />
-                      <p>Connect your LeetCode username to see total solved, Easy/Medium/Hard breakdown, and rank.</p>
-                      <button
-                        className="save-schedule-btn"
-                        onClick={() => {
-                          setInputLcUser('');
-                          setInputGhUser(codingProfile.github_username || '');
-                          setInputCfUser(codingProfile.codeforces_username || '');
-                          setCodingModalOpen(true);
-                        }}
-                      >
-                        Connect LeetCode
-                      </button>
-                    </div>
-                  )}
-
-                  {leetcodeData && !leetcodeLoading && (
-                    <div className="lc-stats-body">
-                      <div className="lc-total-row">
-                        <div className="lc-total-num">
-                          <strong>{leetcodeData.totalSolved}</strong>
-                          <small>/ {leetcodeData.totalQuestions} Solved</small>
-                        </div>
-                        <div className="lc-badges">
-                          {leetcodeData.ranking && (
-                            <span className="lc-rank-badge">
-                              <Trophy size={12} color="#f59e0b" /> Rank #{leetcodeData.ranking.toLocaleString()}
+                  {/* Codeforces Pill */}
+                  <div
+                    className="coding-ribbon-card coding-anim-3"
+                    onClick={() => {
+                      if (!codingProfile.codeforces_username) {
+                        setInputLcUser(codingProfile.leetcode_username || '');
+                        setInputGhUser(codingProfile.github_username || '');
+                        setInputCfUser('');
+                        setCodingModalOpen(true);
+                      }
+                    }}
+                  >
+                    <span className="platform-icon cf">CF</span>
+                    <div className="ribbon-card-content">
+                      <div className="ribbon-card-top">
+                        <strong>Codeforces</strong>
+                        {codingProfile.codeforces_username ? (
+                          <span className="ribbon-handle">@{codingProfile.codeforces_username}</span>
+                        ) : (
+                          <span className="ribbon-connect-tag">+ Connect</span>
+                        )}
+                      </div>
+                      <div className="ribbon-card-stat">
+                        {codeforcesData ? (
+                          <>
+                            <span className="ribbon-val" style={{ color: codeforcesData.rankColor }}>{codeforcesData.rating}</span>
+                            <span className="ribbon-rank-pill" style={{ color: codeforcesData.rankColor, background: '#f8fafc' }}>
+                              {codeforcesData.rank}
                             </span>
-                          )}
-                          <span className="lc-acc-badge">
-                            Acc: {leetcodeData.acceptanceRate}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Difficulty Progress Bars */}
-                      <div className="lc-diff-bars">
-                        <div className="lc-diff-bar-item">
-                          <div className="lc-diff-label">
-                            <span className="dot easy" />
-                            <span>Easy</span>
-                            <strong>{leetcodeData.easySolved} <em>/ {leetcodeData.totalEasy}</em></strong>
-                          </div>
-                          <div className="lc-track">
-                            <div
-                              className="fill easy"
-                              style={{ width: `${Math.min(100, (leetcodeData.easySolved / (leetcodeData.totalEasy || 1)) * 100)}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="lc-diff-bar-item">
-                          <div className="lc-diff-label">
-                            <span className="dot medium" />
-                            <span>Medium</span>
-                            <strong>{leetcodeData.mediumSolved} <em>/ {leetcodeData.totalMedium}</em></strong>
-                          </div>
-                          <div className="lc-track">
-                            <div
-                              className="fill medium"
-                              style={{ width: `${Math.min(100, (leetcodeData.mediumSolved / (leetcodeData.totalMedium || 1)) * 100)}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="lc-diff-bar-item">
-                          <div className="lc-diff-label">
-                            <span className="dot hard" />
-                            <span>Hard</span>
-                            <strong>{leetcodeData.hardSolved} <em>/ {leetcodeData.totalHard}</em></strong>
-                          </div>
-                          <div className="lc-track">
-                            <div
-                              className="fill hard"
-                              style={{ width: `${Math.min(100, (leetcodeData.hardSolved / (leetcodeData.totalHard || 1)) * 100)}%` }}
-                            />
-                          </div>
-                        </div>
+                          </>
+                        ) : (
+                          <span className="ribbon-hint">{codeforcesLoading ? 'Syncing…' : 'Contest rating & division'}</span>
+                        )}
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
 
-                {/* 4. GitHub Activity & Heatmap Card */}
-                <div className="panel coding-metric-panel">
-                  <div className="coding-panel-header">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span className="platform-icon gh"><Github size={15} /></span>
-                      <div>
-                        <strong>GitHub Profile</strong>
-                        <small>
-                          {codingProfile.github_username ? `@${codingProfile.github_username}` : 'No account connected'}
-                        </small>
+                {/* Main 2-Column Responsive Showcase Grid */}
+                <div className="coding-overview-grid">
+                  {/* LEFT COLUMN: Daily Practice & Detailed LeetCode */}
+                  <div className="coding-col">
+                    {/* 1. Daily Problem of the Day Spotlight */}
+                    <div className="panel dsa-potd-card coding-anim-2">
+                      <div className="potd-badge-row">
+                        <span className="potd-chip">
+                          <Flame size={12} color="#f59e0b" /> PROBLEM OF THE DAY
+                        </span>
+                        <span className={`diff-badge ${potd.difficulty.toLowerCase()}`}>{potd.difficulty}</span>
+                        <span className="topic-pill">{potd.category}</span>
+                        {potd.companies && (
+                          <span className="topic-pill" style={{ background: '#fef3c7', color: '#92400e' }}>
+                            {potd.companies.slice(0, 2).join(' • ')}
+                          </span>
+                        )}
+                      </div>
+                      <div className="potd-body">
+                        <h4>{potd.title}</h4>
+                        <p>Solve today's high-frequency problem to claim +50 Grind Points toward your squad rank.</p>
+                      </div>
+                      <div className="potd-actions">
+                        <a
+                          href={potd.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="potd-solve-btn"
+                        >
+                          <ExternalLink size={13} /> Solve Challenge
+                        </a>
+                        <button
+                          className="potd-solve-btn secondary"
+                          onClick={() => startMockInterview(potd.title)}
+                        >
+                          <Clock3 size={13} /> 45m Mock
+                        </button>
+                        <button
+                          className={`potd-check-btn ${codingProfile.solved_dsa_ids?.includes(potd.id) ? 'done' : ''}`}
+                          onClick={() => toggleDsaSolved(potd.id, true)}
+                        >
+                          <Check size={13} />
+                          {codingProfile.solved_dsa_ids?.includes(potd.id) ? 'Solved (+50 GP)' : 'Mark Solved'}
+                        </button>
                       </div>
                     </div>
-                    {codingProfile.github_username ? (
-                      <a
-                        href={`https://github.com/${codingProfile.github_username}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="external-link-btn"
-                        title="View GitHub profile"
-                      >
-                        <ExternalLink size={14} />
-                      </a>
-                    ) : (
-                      <button
-                        className="quick-link-btn"
-                        onClick={() => {
-                          setInputLcUser(codingProfile.leetcode_username || '');
-                          setInputGhUser('');
-                          setInputCfUser(codingProfile.codeforces_username || '');
-                          setCodingModalOpen(true);
-                        }}
-                      >
-                        + Connect
-                      </button>
-                    )}
-                  </div>
 
-                  {githubLoading && (
-                    <div className="loading-state">
-                      <RefreshCw size={18} className="spin-anim" />
-                      <span>Fetching GitHub activity…</span>
-                    </div>
-                  )}
-
-                  {!codingProfile.github_username && (
-                    <div className="empty-prompt">
-                      <Github size={32} color="#8a948c" />
-                      <p>Connect your GitHub handle to see your commit streak heatmap and public projects.</p>
-                      <button
-                        className="save-schedule-btn"
-                        onClick={() => {
-                          setInputLcUser(codingProfile.leetcode_username || '');
-                          setInputGhUser('');
-                          setInputCfUser(codingProfile.codeforces_username || '');
-                          setCodingModalOpen(true);
-                        }}
-                      >
-                        Connect GitHub
-                      </button>
-                    </div>
-                  )}
-
-                  {githubData && !githubLoading && (
-                    <div className="gh-body">
-                      <div className="gh-user-row">
-                        <img
-                          src={githubData.user?.avatar_url || `https://github.com/${codingProfile.github_username}.png`}
-                          alt={githubData.user?.name}
-                          className="gh-avatar"
-                        />
-                        <div className="gh-meta">
-                          <strong>{githubData.user?.name || codingProfile.github_username}</strong>
-                          {githubData.user?.bio && <p>{githubData.user.bio}</p>}
-                          <div className="gh-counts">
-                            {githubData.user?.public_repos !== null && (
-                              <span><strong>{githubData.user?.public_repos}</strong> repos</span>
-                            )}
-                            {githubData.user?.followers !== null && (
-                              <span><strong>{githubData.user?.followers}</strong> followers</span>
-                            )}
+                    {/* 2. LeetCode Deep Dive Panel */}
+                    <div className="panel coding-metric-panel coding-anim-4">
+                      <div className="coding-panel-header">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span className="platform-icon lc">LC</span>
+                          <div>
+                            <strong>LeetCode Breakdown</strong>
+                            <small>
+                              {codingProfile.leetcode_username ? `@${codingProfile.leetcode_username}` : 'No account connected'}
+                            </small>
                           </div>
                         </div>
+                        {codingProfile.leetcode_username ? (
+                          <a
+                            href={leetcodeData?.profileUrl || `https://leetcode.com/u/${codingProfile.leetcode_username}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="external-link-btn"
+                            title="View LeetCode profile"
+                          >
+                            <ExternalLink size={14} />
+                          </a>
+                        ) : (
+                          <button
+                            className="quick-link-btn"
+                            onClick={() => {
+                              setInputLcUser('');
+                              setInputGhUser(codingProfile.github_username || '');
+                              setInputCfUser(codingProfile.codeforces_username || '');
+                              setCodingModalOpen(true);
+                            }}
+                          >
+                            + Connect
+                          </button>
+                        )}
                       </div>
 
-                      {/* Live Commit Consistency Heatmap */}
-                      <div className="gh-chart-container">
-                        <div className="gh-chart-title">
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <GitBranch size={13} />
-                            <span>Annual Contribution Heatmap</span>
-                          </div>
-                          <span style={{ fontSize: '10px', color: '#7a867c', fontWeight: '500' }}>Live GitHub Graph</span>
+                      {leetcodeLoading && (
+                        <div className="loading-state">
+                          <RefreshCw size={18} className="spin-anim" />
+                          <span>Fetching LeetCode stats…</span>
                         </div>
-                        <div className="gh-chart-scroll">
-                          <img
-                            src={githubData.chartUrl || `https://ghchart.rshah.org/315b45/${encodeURIComponent(codingProfile.github_username)}`}
-                            alt="GitHub Contribution Calendar"
-                            className="gh-chart-img"
-                            onError={e => { e.target.style.display = 'none'; }}
-                          />
-                        </div>
-                      </div>
+                      )}
 
-                      {/* Top Repositories */}
-                      {githubData.repos && githubData.repos.length > 0 && (
-                        <div className="gh-repos-list">
-                          <div className="gh-chart-title" style={{ marginTop: '12px' }}>
-                            <Star size={13} />
-                            <span>Recent Public Repositories</span>
+                      {leetcodeError && !leetcodeLoading && (
+                        <div className="coding-error-box">
+                          <p>{leetcodeError}</p>
+                          <button onClick={() => refreshLeetcode()}>Retry</button>
+                        </div>
+                      )}
+
+                      {!codingProfile.leetcode_username && (
+                        <div className="empty-prompt">
+                          <Terminal size={28} color="#8a948c" />
+                          <p>Connect your LeetCode username to see total solved, difficulty breakdown, and rank.</p>
+                          <button
+                            className="save-schedule-btn"
+                            onClick={() => {
+                              setInputLcUser('');
+                              setInputGhUser(codingProfile.github_username || '');
+                              setInputCfUser(codingProfile.codeforces_username || '');
+                              setCodingModalOpen(true);
+                            }}
+                          >
+                            Connect LeetCode
+                          </button>
+                        </div>
+                      )}
+
+                      {leetcodeData && !leetcodeLoading && (
+                        <div className="lc-stats-body">
+                          <div className="lc-total-row">
+                            <div className="lc-total-num">
+                              <strong>{leetcodeData.totalSolved}</strong>
+                              <small>/ {leetcodeData.totalQuestions} Solved</small>
+                            </div>
+                            <div className="lc-badges">
+                              {leetcodeData.ranking && (
+                                <span className="lc-rank-badge">
+                                  <Trophy size={12} color="#f59e0b" /> #{leetcodeData.ranking.toLocaleString()}
+                                </span>
+                              )}
+                              <span className="lc-acc-badge">
+                                Acc: {leetcodeData.acceptanceRate}
+                              </span>
+                            </div>
                           </div>
-                          <div className="gh-repos-grid">
-                            {githubData.repos.slice(0, 3).map(repo => (
-                              <a
-                                key={repo.name}
-                                href={repo.html_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="gh-repo-chip"
-                              >
-                                <span className="gh-repo-name">{repo.name}</span>
-                                <div className="gh-repo-stats">
-                                  {repo.language && <span className="lang-tag">{repo.language}</span>}
-                                  {repo.stargazers_count > 0 && (
-                                    <span className="star-tag"><Star size={11} /> {repo.stargazers_count}</span>
-                                  )}
-                                </div>
-                              </a>
-                            ))}
+
+                          <div className="lc-diff-bars">
+                            <div className="lc-diff-bar-item">
+                              <div className="lc-diff-label">
+                                <span className="dot easy" />
+                                <span>Easy</span>
+                                <strong>{leetcodeData.easySolved} <em>/ {leetcodeData.totalEasy}</em></strong>
+                              </div>
+                              <div className="lc-track">
+                                <div
+                                  className="fill easy"
+                                  style={{ width: `${Math.min(100, (leetcodeData.easySolved / (leetcodeData.totalEasy || 1)) * 100)}%` }}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="lc-diff-bar-item">
+                              <div className="lc-diff-label">
+                                <span className="dot medium" />
+                                <span>Medium</span>
+                                <strong>{leetcodeData.mediumSolved} <em>/ {leetcodeData.totalMedium}</em></strong>
+                              </div>
+                              <div className="lc-track">
+                                <div
+                                  className="fill medium"
+                                  style={{ width: `${Math.min(100, (leetcodeData.mediumSolved / (leetcodeData.totalMedium || 1)) * 100)}%` }}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="lc-diff-bar-item">
+                              <div className="lc-diff-label">
+                                <span className="dot hard" />
+                                <span>Hard</span>
+                                <strong>{leetcodeData.hardSolved} <em>/ {leetcodeData.totalHard}</em></strong>
+                              </div>
+                              <div className="lc-track">
+                                <div
+                                  className="fill hard"
+                                  style={{ width: `${Math.min(100, (leetcodeData.hardSolved / (leetcodeData.totalHard || 1)) * 100)}%` }}
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
-
-                {/* 5. Codeforces Card */}
-                <div className="panel coding-metric-panel">
-                  <div className="coding-panel-header">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span className="platform-icon cf" style={{ background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe' }}>CF</span>
-                      <div>
-                        <strong>Codeforces Rating</strong>
-                        <small>
-                          {codingProfile.codeforces_username ? `@${codingProfile.codeforces_username}` : 'No handle connected'}
-                        </small>
-                      </div>
-                    </div>
-                    {codingProfile.codeforces_username ? (
-                      <a
-                        href={codeforcesData?.profileUrl || `https://codeforces.com/profile/${codingProfile.codeforces_username}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="external-link-btn"
-                        title="View Codeforces profile"
-                      >
-                        <ExternalLink size={14} />
-                      </a>
-                    ) : (
-                      <button
-                        className="quick-link-btn"
-                        onClick={() => {
-                          setInputLcUser(codingProfile.leetcode_username || '');
-                          setInputGhUser(codingProfile.github_username || '');
-                          setInputCfUser('');
-                          setCodingModalOpen(true);
-                        }}
-                      >
-                        + Connect
-                      </button>
-                    )}
                   </div>
 
-                  {codeforcesLoading && (
-                    <div className="loading-state">
-                      <RefreshCw size={18} className="spin-anim" />
-                      <span>Fetching Codeforces rating…</span>
-                    </div>
-                  )}
-
-                  {!codingProfile.codeforces_username && (
-                    <div className="empty-prompt">
-                      <Trophy size={32} color="#8a948c" />
-                      <p>Connect your Codeforces handle to track contest rating, division, and compete in pod battle arenas.</p>
-                      <button
-                        className="save-schedule-btn"
-                        onClick={() => {
-                          setInputLcUser(codingProfile.leetcode_username || '');
-                          setInputGhUser(codingProfile.github_username || '');
-                          setInputCfUser('');
-                          setCodingModalOpen(true);
-                        }}
-                      >
-                        Connect Codeforces
-                      </button>
-                    </div>
-                  )}
-
-                  {codeforcesData && !codeforcesLoading && (
-                    <div className="lc-stats-body">
-                      <div className="lc-total-row">
-                        <div className="lc-total-num">
-                          <strong style={{ color: codeforcesData.rankColor }}>{codeforcesData.rating}</strong>
-                          <small>/ Max {codeforcesData.maxRating}</small>
+                  {/* RIGHT COLUMN: Smart GitHub Commit Sync & Heatmap */}
+                  <div className="coding-col">
+                    {/* 3. Smart GitHub Commit Auto-Check */}
+                    <div className="panel smart-commit-panel coding-anim-3">
+                      <div className="smart-commit-header">
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span className="live-pulse-dot" />
+                            <strong style={{ fontSize: '13px', color: '#1f3325' }}>Project Habit Auto-Verification</strong>
+                          </div>
+                          <p className="muted" style={{ fontSize: '11px', margin: '3px 0 0' }}>
+                            Pushes to GitHub automatically verify your Project focus block today.
+                          </p>
                         </div>
-                        <div className="lc-badges">
-                          <span
-                            className="lc-rank-badge"
-                            style={{ background: '#f1f5f9', color: codeforcesData.rankColor, fontWeight: '800' }}
-                          >
-                            {codeforcesData.rank}
-                          </span>
+                        <button
+                          className="save-schedule-btn"
+                          style={{ padding: '6px 11px', fontSize: '11px' }}
+                          onClick={verifyGithubCommitForProject}
+                          disabled={verifyingCommit}
+                          title="Verify latest commit and focus time"
+                        >
+                          <RefreshCw size={12} className={verifyingCommit ? 'spin-anim' : ''} /> Verify Now
+                        </button>
+                      </div>
+
+                      <div className="smart-commit-metrics">
+                        <div className="commit-stat-box">
+                          <small>Scheduled</small>
+                          <strong>{projectPlannedMins}m</strong>
+                        </div>
+                        <div className="commit-stat-box">
+                          <small>Logged Focus</small>
+                          <strong style={{ color: '#2e7d32' }}>{projectLoggedMins}m ({projectPercent}%)</strong>
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '6px' }}>
-                        <img
-                          src={codeforcesData.avatar}
-                          alt={codeforcesData.handle}
-                          style={{ width: '42px', height: '42px', borderRadius: '8px', border: `2px solid ${codeforcesData.rankColor}` }}
+                      <div className="lc-track" style={{ height: '7px', margin: '10px 0 4px' }}>
+                        <div
+                          className="fill"
+                          style={{
+                            width: `${projectPercent}%`,
+                            background: '#16a34a'
+                          }}
                         />
-                        <div style={{ fontSize: '11px', color: '#64748b' }}>
-                          <span style={{ display: 'block', fontWeight: '700', color: '#1e293b' }}>
-                            Organization: {codeforcesData.organization || 'Independent'}
-                          </span>
-                          <span>Contribution: {codeforcesData.contribution > 0 ? `+${codeforcesData.contribution}` : codeforcesData.contribution}</span>
+                      </div>
+
+                      {commitVerificationResult && (
+                        <div
+                          className={`verification-msg-box ${commitVerificationResult.habitMarked ? 'success' : 'warn'}`}
+                        >
+                          <CheckCircle2 size={14} />
+                          <span>{commitVerificationResult.message}</span>
                         </div>
+                      )}
+
+                      {/* Expandable Webhook Accordion */}
+                      <div className="webhook-accordion">
+                        <button
+                          type="button"
+                          className="webhook-toggle-btn"
+                          onClick={() => setWebhookExpanded(v => !v)}
+                        >
+                          <GitBranch size={12} />
+                          <span>{webhookExpanded ? 'Hide Webhook Setup' : 'Zero-Click Webhook Setup'}</span>
+                          <ChevronDown size={13} style={{ transform: webhookExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: 'auto' }} />
+                        </button>
+                        {webhookExpanded && (
+                          <div className="webhook-box coding-anim-1">
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <small style={{ fontWeight: '700', color: '#4b5563', display: 'block' }}>
+                                Dedicated Webhook URL:
+                              </small>
+                              <code style={{ fontSize: '11px', wordBreak: 'break-all' }}>
+                                {typeof window !== 'undefined' ? `${window.location.origin}/api/webhooks/github/${user ? user.id : 'guest'}` : ''}
+                              </code>
+                            </div>
+                            <button
+                              className="reset-schedule-btn"
+                              style={{ padding: '4px 8px', fontSize: '10px' }}
+                              onClick={() => {
+                                const url = `${window.location.origin}/api/webhooks/github/${user ? user.id : 'guest'}`;
+                                navigator.clipboard.writeText(url);
+                                setToast('GitHub Webhook URL copied!');
+                                setTimeout(() => setToast(''), 2500);
+                              }}
+                            >
+                              <Copy size={12} /> Copy
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
+
+                    {/* 4. GitHub Activity & Heatmap Card */}
+                    <div className="panel coding-metric-panel coding-anim-4">
+                      <div className="coding-panel-header">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span className="platform-icon gh"><Github size={15} /></span>
+                          <div>
+                            <strong>GitHub Activity</strong>
+                            <small>
+                              {codingProfile.github_username ? `@${codingProfile.github_username}` : 'No account connected'}
+                            </small>
+                          </div>
+                        </div>
+                        {codingProfile.github_username ? (
+                          <a
+                            href={`https://github.com/${codingProfile.github_username}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="external-link-btn"
+                            title="View GitHub profile"
+                          >
+                            <ExternalLink size={14} />
+                          </a>
+                        ) : (
+                          <button
+                            className="quick-link-btn"
+                            onClick={() => {
+                              setInputLcUser(codingProfile.leetcode_username || '');
+                              setInputGhUser('');
+                              setInputCfUser(codingProfile.codeforces_username || '');
+                              setCodingModalOpen(true);
+                            }}
+                          >
+                            + Connect
+                          </button>
+                        )}
+                      </div>
+
+                      {githubLoading && (
+                        <div className="loading-state">
+                          <RefreshCw size={18} className="spin-anim" />
+                          <span>Fetching GitHub activity…</span>
+                        </div>
+                      )}
+
+                      {!codingProfile.github_username && (
+                        <div className="empty-prompt">
+                          <Github size={28} color="#8a948c" />
+                          <p>Connect your GitHub handle to see your commit streak heatmap and public projects.</p>
+                          <button
+                            className="save-schedule-btn"
+                            onClick={() => {
+                              setInputLcUser(codingProfile.leetcode_username || '');
+                              setInputGhUser('');
+                              setInputCfUser(codingProfile.codeforces_username || '');
+                              setCodingModalOpen(true);
+                            }}
+                          >
+                            Connect GitHub
+                          </button>
+                        </div>
+                      )}
+
+                      {githubData && !githubLoading && (
+                        <div className="gh-body">
+                          <div className="gh-user-row">
+                            <img
+                              src={githubData.user?.avatar_url || `https://github.com/${codingProfile.github_username}.png`}
+                              alt={githubData.user?.name}
+                              className="gh-avatar"
+                            />
+                            <div className="gh-meta">
+                              <strong>{githubData.user?.name || codingProfile.github_username}</strong>
+                              {githubData.user?.bio && <p>{githubData.user.bio}</p>}
+                              <div className="gh-counts">
+                                {githubData.user?.public_repos !== null && (
+                                  <span><strong>{githubData.user?.public_repos}</strong> repos</span>
+                                )}
+                                {githubData.user?.followers !== null && (
+                                  <span><strong>{githubData.user?.followers}</strong> followers</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="gh-chart-container">
+                            <div className="gh-chart-title">
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <GitBranch size={13} />
+                                <span>Annual Contribution Heatmap</span>
+                              </div>
+                              <span style={{ fontSize: '10px', color: '#7a867c', fontWeight: '500' }}>Live Graph</span>
+                            </div>
+                            <div className="gh-chart-scroll">
+                              <img
+                                src={githubData.chartUrl || `https://ghchart.rshah.org/315b45/${encodeURIComponent(codingProfile.github_username)}`}
+                                alt="GitHub Contribution Calendar"
+                                className="gh-chart-img"
+                                onError={e => { e.target.style.display = 'none'; }}
+                              />
+                            </div>
+                          </div>
+
+                          {githubData.repos && githubData.repos.length > 0 && (
+                            <div className="gh-repos-list">
+                              <div className="gh-chart-title" style={{ marginTop: '10px' }}>
+                                <Star size={12} />
+                                <span>Recent Repositories</span>
+                              </div>
+                              <div className="gh-repos-grid">
+                                {githubData.repos.slice(0, 3).map(repo => (
+                                  <a
+                                    key={repo.name}
+                                    href={repo.html_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="gh-repo-chip"
+                                  >
+                                    <span className="gh-repo-name">{repo.name}</span>
+                                    <div className="gh-repo-stats">
+                                      {repo.language && <span className="lang-tag">{repo.language}</span>}
+                                      {repo.stargazers_count > 0 && (
+                                        <span className="star-tag"><Star size={11} /> {repo.stargazers_count}</span>
+                                      )}
+                                    </div>
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 5. Codeforces Card */}
+                    <div className="panel coding-metric-panel coding-anim-5">
+                      <div className="coding-panel-header">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span className="platform-icon cf">CF</span>
+                          <div>
+                            <strong>Codeforces Rating</strong>
+                            <small>
+                              {codingProfile.codeforces_username ? `@${codingProfile.codeforces_username}` : 'No handle connected'}
+                            </small>
+                          </div>
+                        </div>
+                        {codingProfile.codeforces_username ? (
+                          <a
+                            href={codeforcesData?.profileUrl || `https://codeforces.com/profile/${codingProfile.codeforces_username}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="external-link-btn"
+                            title="View Codeforces profile"
+                          >
+                            <ExternalLink size={14} />
+                          </a>
+                        ) : (
+                          <button
+                            className="quick-link-btn"
+                            onClick={() => {
+                              setInputLcUser(codingProfile.leetcode_username || '');
+                              setInputGhUser(codingProfile.github_username || '');
+                              setInputCfUser('');
+                              setCodingModalOpen(true);
+                            }}
+                          >
+                            + Connect
+                          </button>
+                        )}
+                      </div>
+
+                      {codeforcesLoading && (
+                        <div className="loading-state">
+                          <RefreshCw size={18} className="spin-anim" />
+                          <span>Fetching Codeforces rating…</span>
+                        </div>
+                      )}
+
+                      {!codingProfile.codeforces_username && (
+                        <div className="empty-prompt">
+                          <Trophy size={28} color="#8a948c" />
+                          <p>Connect your Codeforces handle to track contest rating and division standings.</p>
+                          <button
+                            className="save-schedule-btn"
+                            onClick={() => {
+                              setInputLcUser(codingProfile.leetcode_username || '');
+                              setInputGhUser(codingProfile.github_username || '');
+                              setInputCfUser('');
+                              setCodingModalOpen(true);
+                            }}
+                          >
+                            Connect Codeforces
+                          </button>
+                        </div>
+                      )}
+
+                      {codeforcesData && !codeforcesLoading && (
+                        <div className="lc-stats-body">
+                          <div className="lc-total-row">
+                            <div className="lc-total-num">
+                              <strong style={{ color: codeforcesData.rankColor }}>{codeforcesData.rating}</strong>
+                              <small>/ Max {codeforcesData.maxRating}</small>
+                            </div>
+                            <div className="lc-badges">
+                              <span
+                                className="lc-rank-badge"
+                                style={{ background: '#f1f5f9', color: codeforcesData.rankColor, fontWeight: '800' }}
+                              >
+                                {codeforcesData.rank}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '6px' }}>
+                            <img
+                              src={codeforcesData.avatar}
+                              alt={codeforcesData.handle}
+                              style={{ width: '38px', height: '38px', borderRadius: '8px', border: `2px solid ${codeforcesData.rankColor}` }}
+                            />
+                            <div style={{ fontSize: '11px', color: '#64748b' }}>
+                              <span style={{ display: 'block', fontWeight: '700', color: '#1e293b' }}>
+                                {codeforcesData.organization || 'Independent'}
+                              </span>
+                              <span>Contribution: {codeforcesData.contribution > 0 ? `+${codeforcesData.contribution}` : codeforcesData.contribution}</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
