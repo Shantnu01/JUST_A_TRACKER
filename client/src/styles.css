@@ -419,6 +419,45 @@
 .nudge-popup-icon{font-size:44px;margin-bottom:8px;animation:wave 1s infinite alternate}
 @keyframes wave{0%{transform:rotate(0deg)}100%{transform:rotate(24deg)}}
 
+/* Multi-Alarm UI Styles */
+.alarms-list{display:grid;gap:8px;margin-bottom:12px}
+.alarm-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f9fbf8;border:1px solid #e1e6dc;border-radius:9px;transition:background .15s}
+.alarm-row.active{background:#fff;border-color:#ced6cb}
+.alarm-time-group input[type="time"]{border:1px solid #d4dad0;background:#fff;border-radius:6px;padding:5px 8px;font-size:12px;font-weight:700;color:#203224}
+.alarm-label-input{flex:1;min-width:0;border:1px solid #dbe1d7;background:#fff;border-radius:6px;padding:5px 8px;font-size:11px;color:#354439}
+.alarm-label-input:focus,.alarm-time-group input:focus{border-color:#487455;outline:none}
+.alarm-delete-btn{border:0;background:transparent;color:#9aa39a;padding:4px;border-radius:4px;display:grid;place-items:center;cursor:pointer}
+.alarm-delete-btn:hover{color:#b91c1c;background:#fee2e2}
+.alarm-panel-footer{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:8px;border-top:1px dashed #e4e8df}
+.add-alarm-btn{display:inline-flex;align-items:center;gap:5px;background:#f0f5ec;border:1px solid #d0dccb;color:#315b45;padding:6px 11px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.add-alarm-btn:hover{background:#e3ede0;border-color:#b8cab3}
+.alarm-max-pill{font-size:10px;color:#859086;font-weight:600}
+.test-sound-btn{display:inline-flex;align-items:center;gap:4px;background:#f0f5ec;border:1px solid #d5dfd1;color:#375742;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer}
+.test-sound-btn:hover{background:#e2eee0}
+.alarm-active-indicator{font-size:10px;color:#677469;display:flex;align-items:center;gap:5px}
+
+/* Ringing Alarm Modal */
+.alarm-ringing-backdrop{position:fixed;inset:0;background:rgba(20,35,26,0.65);backdrop-filter:blur(3px);z-index:9999;display:grid;place-items:center;padding:16px}
+.alarm-ringing-modal{background:#fff;border:2px solid #f59e0b;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,0.3);width:100%;max-width:380px;padding:28px 22px;text-align:center;animation:popIn .2s ease-out}
+@keyframes popIn{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+.alarm-ringing-icon-wrap{width:70px;height:70px;border-radius:50%;background:#fef3c7;display:grid;place-items:center;margin:0 auto 14px}
+.alarm-ringing-bell{animation:ringShake .5s infinite alternate ease-in-out}
+@keyframes ringShake{0%{transform:rotate(-14deg)}100%{transform:rotate(14deg)}}
+.alarm-ringing-time{font:800 36px Manrope,sans-serif;margin:4px 0 8px;color:#1e2d23;letter-spacing:-1px}
+.alarm-ringing-label{font-size:14px;color:#495a4f;margin:0 0 22px}
+.alarm-ringing-actions{display:flex;gap:10px}
+.alarm-dismiss-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#15803d;color:#fff;border:0;border-radius:10px;padding:12px;font-size:13px;font-weight:700;cursor:pointer}
+.alarm-dismiss-btn:hover{background:#166534}
+.alarm-snooze-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:10px;padding:12px;font-size:13px;font-weight:700;cursor:pointer}
+.alarm-snooze-btn:hover{background:#e5e7eb}
+
+/* PWA Install Sidebar Button & Modal */
+.pwa-install-nav-btn{display:flex;align-items:center;gap:8px;width:100%;background:#f1f5ee;border:1px solid #d7e0d3;color:#284333;padding:9px 12px;border-radius:9px;font-size:12px;font-weight:700;transition:all .15s;cursor:pointer}
+.pwa-install-nav-btn:hover{background:#e4ede0;border-color:#b9cbb5}
+.install-guide-card{background:#f9faf7;border:1px solid #e1e6dc;border-radius:10px;padding:14px}
+.install-guide-card h4{margin:0 0 8px;font-size:13px;color:#233527}
+.install-guide-card ol{margin:0;padding-left:18px;font-size:12px;color:#4a594d;line-height:1.7}
+
 .spin-anim{animation:spin 1s linear infinite}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 

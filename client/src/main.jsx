@@ -4,6 +4,7 @@ import {
   AlarmClock,
   ArrowUpRight,
   Award,
+  Bell,
   BookOpen,
   Calendar,
   Check,
@@ -32,11 +33,13 @@ import {
   Moon,
   Pause,
   Play,
+  Plus,
   RefreshCw,
   RotateCcw,
   Save,
   Settings2,
   Share2,
+  Smartphone,
   Sparkles,
   Star,
   Sun,
@@ -48,6 +51,7 @@ import {
   UserPlus,
   Users,
   Utensils,
+  Volume2,
   X,
   Zap
 } from 'lucide-react';
@@ -314,12 +318,40 @@ function readStore() {
   }
 }
 
+// Pre-unlocked, resilient Web Audio API context for browser compatibility
+let globalAudioCtx = null;
+function getAudioContext() {
+  if (!globalAudioCtx && typeof window !== 'undefined') {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      globalAudioCtx = new AudioCtx();
+    }
+  }
+  if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
+    globalAudioCtx.resume().catch(() => {});
+  }
+  return globalAudioCtx;
+}
+
+// Unlock audio on first touch/click anywhere on page
+if (typeof window !== 'undefined') {
+  const unlockAudio = () => {
+    const ctx = getAudioContext();
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+    window.removeEventListener('click', unlockAudio);
+    window.removeEventListener('touchstart', unlockAudio);
+  };
+  window.addEventListener('click', unlockAudio, { passive: true });
+  window.addEventListener('touchstart', unlockAudio, { passive: true });
+}
+
 // Gentle Web Audio API chime for reminders, timers, and nudges
 function playChime(isNudge = false) {
   try {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -328,7 +360,7 @@ function playChime(isNudge = false) {
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
       osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15); // A5
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -338,7 +370,7 @@ function playChime(isNudge = false) {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
       osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.25); // A5
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -346,6 +378,51 @@ function playChime(isNudge = false) {
       osc.stop(ctx.currentTime + 1.2);
     }
   } catch {}
+}
+
+// Prominent, energetic multi-note alarm melody ringtone
+function playAlarmMelody() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const notes = [
+      { f: 523.25, t: 0.0, d: 0.18 },
+      { f: 659.25, t: 0.18, d: 0.18 },
+      { f: 783.99, t: 0.36, d: 0.18 },
+      { f: 1046.50, t: 0.54, d: 0.45 },
+      { f: 783.99, t: 1.05, d: 0.18 },
+      { f: 1046.50, t: 1.25, d: 0.5 }
+    ];
+
+    notes.forEach(({ f, t, d }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(f, now + t);
+      gain.gain.setValueAtTime(0.35, now + t);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + t + d);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + t);
+      osc.stop(now + t + d + 0.05);
+    });
+  } catch {}
+}
+
+function readSavedAlarms(userId = null) {
+  try {
+    const key = userId ? `daymark-alarms-${userId}` : 'daymark-alarms-guest';
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed.slice(0, 5);
+    }
+  } catch {}
+  return [
+    { id: 'alarm-1', time: '06:55', label: 'Morning routine start', enabled: true },
+    { id: 'alarm-2', time: '11:00', label: 'Deep project focus session', enabled: false }
+  ];
 }
 
 function App() {
@@ -386,8 +463,11 @@ function App() {
   const [activeId, setActiveId] = useState(null);
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
-  const [alarmEnabled, setAlarmEnabled] = useState(false);
-  const [alarmTime, setAlarmTime] = useState('06:55');
+  const [alarms, setAlarms] = useState(() => readSavedAlarms(user ? user.id : null));
+  const [activeAlarmModal, setActiveAlarmModal] = useState(null);
+  const [lastTriggeredMinute, setLastTriggeredMinute] = useState('');
+  const [installModalOpen, setInstallModalOpen] = useState(false);
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState(null);
   const [toast, setToast] = useState('');
   const [view, setView] = useState('Today'); // 'Today' | 'Weekly report' | 'Study pods' | 'Routine settings'
   const [notes, setNotes] = useState('');
@@ -1098,21 +1178,65 @@ function App() {
     };
   }, [key, token]);
 
+  // Sync alarms when switching user or when day.alarms is loaded from DB
   useEffect(() => {
-    if (!alarmEnabled || !isToday) return;
-    const timer = setInterval(() => {
+    if (day.alarms && Array.isArray(day.alarms) && day.alarms.length > 0) {
+      setAlarms(day.alarms.slice(0, 5));
+    } else {
+      const saved = readSavedAlarms(user ? user.id : null);
+      setAlarms(saved);
+    }
+  }, [user?.id, day.alarms]);
+
+  // Capture beforeinstallprompt for PWA mobile install
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredInstallPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  // Reliable Alarm Interval Loop (checked every second, immune to background throttling)
+  useEffect(() => {
+    if (!isToday) return;
+    const interval = setInterval(() => {
       const now = new Date();
-      if (`${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` === alarmTime && now.getSeconds() < 2) {
-        playChime();
+      const currentMinute = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const todayDateStr = dateKey(now);
+      const minuteKey = `${todayDateStr} ${currentMinute}`;
+
+      if (minuteKey === lastTriggeredMinute) return;
+
+      const triggered = alarms.find(a => a.enabled && a.time === currentMinute);
+      if (triggered) {
+        setLastTriggeredMinute(minuteKey);
+        setActiveAlarmModal(triggered);
+        playAlarmMelody();
+
+        // Browser notification if granted
         if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification('Daymark Reminder', { body: 'Time to start your planned routine.' });
+          try {
+            new Notification(`⏰ Daymark Alarm (${triggered.time})`, {
+              body: triggered.label || 'Time for your routine activity!',
+              icon: '/favicon.svg'
+            });
+          } catch {}
         }
-        setToast('Routine reminder triggered');
-        setTimeout(() => setToast(''), 3500);
       }
     }, 1000);
-    return () => clearInterval(timer);
-  }, [alarmEnabled, alarmTime, isToday]);
+    return () => clearInterval(interval);
+  }, [alarms, isToday, lastTriggeredMinute]);
+
+  // Repeating melody ringtone while alarm is actively ringing (repeats every 2.4s)
+  useEffect(() => {
+    if (!activeAlarmModal) return;
+    const ringInterval = setInterval(() => {
+      playAlarmMelody();
+    }, 2400);
+    return () => clearInterval(ringInterval);
+  }, [activeAlarmModal]);
 
   const doneCount = habits.filter(h => day.checks[h.id]).length;
   const completion = Math.round((doneCount / habits.length) * 100);
@@ -1226,24 +1350,100 @@ function App() {
     setTimeout(() => setToast(''), 2200);
   };
 
-  const requestAlarm = async () => {
+  const saveAlarms = (nextAlarms) => {
+    const capped = nextAlarms.slice(0, 5);
+    setAlarms(capped);
+    const key = user ? `daymark-alarms-${user.id}` : 'daymark-alarms-guest';
+    localStorage.setItem(key, JSON.stringify(capped));
+    patchDay({ alarms: capped });
+  };
+
+  const addAlarm = () => {
+    if (alarms.length >= 5) {
+      setToast('Maximum 5 alarms limit reached');
+      setTimeout(() => setToast(''), 3000);
+      return;
+    }
+    const newAlarm = {
+      id: `alarm-${Date.now()}`,
+      time: '08:00',
+      label: 'Focus session',
+      enabled: true
+    };
+    saveAlarms([...alarms, newAlarm]);
+    setToast('New alarm added (up to 5 max)');
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  const updateAlarm = (id, field, value) => {
+    const updated = alarms.map(a => a.id === id ? { ...a, [field]: value } : a);
+    saveAlarms(updated);
+  };
+
+  const toggleAlarm = async (id) => {
     if (!isToday) {
       setToast('Alarms can only be adjusted on today’s schedule.');
       setTimeout(() => setToast(''), 2500);
       return;
     }
-    if (!('Notification' in window)) {
-      setToast('This browser does not support web notifications');
+    // Attempt notification permission if not yet decided, but don't block audio alarm!
+    if ('Notification' in window && Notification.permission === 'default') {
+      try {
+        await Notification.requestPermission();
+      } catch {}
+    }
+    const target = alarms.find(a => a.id === id);
+    const updated = alarms.map(a => a.id === id ? { ...a, enabled: !a.enabled } : a);
+    saveAlarms(updated);
+    setToast(target?.enabled ? `Alarm turned off` : `Alarm turned on (${target?.time || ''})`);
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  const removeAlarm = (id) => {
+    if (alarms.length <= 1) {
+      setToast('Keep at least 1 alarm in your routine');
+      setTimeout(() => setToast(''), 2500);
       return;
     }
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      setAlarmEnabled(v => !v);
-      setToast(!alarmEnabled ? 'Alarm notifications enabled' : 'Alarm disabled');
-    } else {
-      setToast('Allow notifications in browser settings');
-    }
+    const updated = alarms.filter(a => a.id !== id);
+    saveAlarms(updated);
+  };
+
+  const testAlarmSound = () => {
+    playAlarmMelody();
+    setToast('🔔 Playing alarm test chime!');
     setTimeout(() => setToast(''), 3000);
+  };
+
+  const dismissAlarm = () => {
+    setActiveAlarmModal(null);
+  };
+
+  const snoozeAlarm = () => {
+    if (!activeAlarmModal) return;
+    const [h, m] = activeAlarmModal.time.split(':').map(Number);
+    const total = h * 60 + m + 5;
+    const newH = Math.floor((total % (24 * 60)) / 60);
+    const newM = total % 60;
+    const snoozeTime = `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
+    
+    updateAlarm(activeAlarmModal.id, 'time', snoozeTime);
+    setActiveAlarmModal(null);
+    setToast(`Snoozed for 5 minutes (next alarm at ${snoozeTime})`);
+    setTimeout(() => setToast(''), 3500);
+  };
+
+  const triggerPwaInstall = async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      if (choice.outcome === 'accepted') {
+        setDeferredInstallPrompt(null);
+        setInstallModalOpen(false);
+      }
+    } else {
+      setInstallModalOpen(true);
+    }
   };
 
   const shiftDate = (amount) => {
@@ -1547,6 +1747,18 @@ function App() {
           ))}
         </nav>
 
+        <div style={{ padding: '12px 12px 0' }}>
+          <button
+            type="button"
+            className="pwa-install-nav-btn"
+            onClick={() => setInstallModalOpen(true)}
+            title="Download Daymark app on your phone"
+          >
+            <Smartphone size={14} color="#315b45" />
+            <span>Install on Phone</span>
+          </button>
+        </div>
+
         {/* Daily Inspiring Quote (Changes Daily) */}
         <div className="sidebar-bottom">
           <div className="quote-mark">“</div>
@@ -1686,6 +1898,9 @@ function App() {
               />
               <span>{dbStatus === 'connected' ? 'Cloud Synced' : dbStatus === 'checking' ? 'Checking…' : 'Local Storage'}</span>
             </div>
+            <button className="icon-button" title="Install Daymark app on phone" onClick={() => setInstallModalOpen(true)}>
+              <Smartphone size={16} />
+            </button>
             <button className="icon-button" title="Export progress as CSV" onClick={exportCsv}>
               <Download size={17} />
             </button>
@@ -1957,42 +2172,91 @@ function App() {
                 <section className={`panel alarm-panel ${!isToday ? 'read-only' : ''}`}>
                   <div className="panel-heading">
                     <div>
-                      <span className="eyebrow">GENTLE REMINDER</span>
-                      <h3>Routine alarm</h3>
+                      <span className="eyebrow">GENTLE REMINDERS</span>
+                      <h3>Routine Alarms</h3>
                     </div>
-                    <div className="alarm-icon">
-                      <AlarmClock size={18} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button
+                        type="button"
+                        className="test-sound-btn"
+                        onClick={testAlarmSound}
+                        title="Test alarm ringtone sound"
+                      >
+                        <Volume2 size={13} /> Test Sound
+                      </button>
+                      <div className="alarm-icon">
+                        <AlarmClock size={17} />
+                      </div>
                     </div>
                   </div>
+
                   <p className="muted alarm-copy">
                     {isToday
-                      ? 'Get an audio chime & browser reminder when it’s time to begin.'
+                      ? `Set up to 5 alarms remembered for your daily routine with melody audio & browser alerts.`
                       : 'Alarms are active only during today’s session.'}
                   </p>
-                  <div className="alarm-controls">
-                    <input
-                      aria-label="Alarm time"
-                      type="time"
-                      value={alarmTime}
-                      disabled={!isToday}
-                      onChange={e => setAlarmTime(e.target.value)}
-                    />
-                    <button
-                      className={`toggle ${alarmEnabled && isToday ? 'on' : ''}`}
-                      onClick={requestAlarm}
-                      disabled={!isToday}
-                      aria-label="Toggle alarm"
-                    >
-                      <span />
-                    </button>
+
+                  <div className="alarms-list">
+                    {alarms.map(alarm => (
+                      <div className={`alarm-row ${alarm.enabled ? 'active' : ''}`} key={alarm.id}>
+                        <div className="alarm-time-group">
+                          <input
+                            type="time"
+                            value={alarm.time}
+                            disabled={!isToday}
+                            onChange={e => updateAlarm(alarm.id, 'time', e.target.value)}
+                            aria-label="Alarm time"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          className="alarm-label-input"
+                          value={alarm.label}
+                          placeholder="Alarm label or subject"
+                          disabled={!isToday}
+                          onChange={e => updateAlarm(alarm.id, 'label', e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          className={`toggle ${alarm.enabled && isToday ? 'on' : ''}`}
+                          onClick={() => toggleAlarm(alarm.id)}
+                          disabled={!isToday}
+                          aria-label={`Toggle alarm at ${alarm.time}`}
+                          title={alarm.enabled ? 'Disable alarm' : 'Enable alarm'}
+                        >
+                          <span />
+                        </button>
+                        {alarms.length > 1 && isToday && (
+                          <button
+                            type="button"
+                            className="alarm-delete-btn"
+                            onClick={() => removeAlarm(alarm.id)}
+                            title="Delete this alarm"
+                          >
+                            <X size={13} />
+                          </button>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                  <div className="alarm-foot">
-                    <span className={`status-dot ${alarmEnabled && isToday ? '' : 'inactive'}`} />
-                    {isToday
-                      ? alarmEnabled
-                        ? 'Notifications enabled'
-                        : 'Browser permission required'
-                      : 'Available on Today'}
+
+                  <div className="alarm-panel-footer">
+                    {alarms.length < 5 ? (
+                      <button
+                        type="button"
+                        className="add-alarm-btn"
+                        onClick={addAlarm}
+                        disabled={!isToday}
+                      >
+                        <Plus size={13} /> Add Alarm ({alarms.length}/5 max)
+                      </button>
+                    ) : (
+                      <span className="alarm-max-pill">5 of 5 alarms set (maximum limit)</span>
+                    )}
+                    <span className="alarm-active-indicator">
+                      <span className={`status-dot ${alarms.some(a => a.enabled) && isToday ? '' : 'inactive'}`} />
+                      {alarms.filter(a => a.enabled).length} of {alarms.length} active
+                    </span>
                   </div>
                 </section>
 
@@ -3742,6 +4006,82 @@ function App() {
                 onClick={() => setNudgePopup(prev => ({ ...prev, open: false }))}
               >
                 Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Active Alarm Ringing Overlay Modal */}
+      {activeAlarmModal && (
+        <div className="alarm-ringing-backdrop">
+          <div className="alarm-ringing-modal">
+            <div className="alarm-ringing-icon-wrap">
+              <AlarmClock size={40} className="alarm-ringing-bell" color="#d97706" />
+            </div>
+            <span className="eyebrow" style={{ color: '#d97706', letterSpacing: '1px' }}>ROUTINE ALARM TRIGGERED</span>
+            <h2 className="alarm-ringing-time">{activeAlarmModal.time}</h2>
+            <p className="alarm-ringing-label">{activeAlarmModal.label || 'Time for your routine activity!'}</p>
+            <div className="alarm-ringing-actions">
+              <button className="alarm-dismiss-btn" onClick={dismissAlarm}>
+                <Check size={16} /> Dismiss Alarm
+              </button>
+              <button className="alarm-snooze-btn" onClick={snoozeAlarm}>
+                <Clock3 size={15} /> Snooze 5 Min
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Install App on Phone Modal */}
+      {installModalOpen && (
+        <div className="modal-overlay" onClick={() => setInstallModalOpen(false)}>
+          <div className="modal-card" style={{ maxWidth: '480px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Smartphone size={20} color="#315b45" />
+                <h3 style={{ margin: 0 }}>Install Daymark on Your Phone</h3>
+              </div>
+              <button className="modal-close" onClick={() => setInstallModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <p className="muted" style={{ fontSize: '13px', margin: '-4px 0 16px', lineHeight: '1.5' }}>
+              Daymark is built as a progressive web app (PWA). You can install it on your iPhone or Android home screen for full-screen view, instant access, and smooth performance.
+            </p>
+
+            <div className="install-tabs">
+              <div className="install-guide-card">
+                <h4>🍎 iPhone (Safari)</h4>
+                <ol>
+                  <li>Open this webapp in <strong>Safari</strong> on your iPhone.</li>
+                  <li>Tap the <strong>Share</strong> button (the square with an arrow pointing up at the bottom).</li>
+                  <li>Scroll down and tap <strong>"Add to Home Screen"</strong>.</li>
+                  <li>Tap <strong>Add</strong> in the top-right corner.</li>
+                </ol>
+              </div>
+
+              <div className="install-guide-card" style={{ marginTop: '12px' }}>
+                <h4>🤖 Android (Chrome / Brave / Edge)</h4>
+                <ol>
+                  <li>Open this webapp in <strong>Google Chrome</strong> on your phone.</li>
+                  <li>Tap the <strong>3 dots menu (⋮)</strong> in the top-right corner.</li>
+                  <li>Tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</li>
+                  <li>Tap <strong>Install</strong> to confirm.</li>
+                </ol>
+                {deferredInstallPrompt && (
+                  <button className="save-schedule-btn" style={{ width: '100%', marginTop: '10px', justifyContent: 'center' }} onClick={triggerPwaInstall}>
+                    <Download size={14} /> Install Now
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div style={{ marginTop: '18px', display: 'flex', justifyContent: 'flex-end' }}>
+              <button className="save-schedule-btn" onClick={() => setInstallModalOpen(false)}>
+                Got it
               </button>
             </div>
           </div>
