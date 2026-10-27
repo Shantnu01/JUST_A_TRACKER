@@ -323,8 +323,33 @@ const dsaCuratedList = [
   { id: 'course-schedule', title: 'Course Schedule', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/course-schedule/', companies: ['Google', 'Amazon'] }
 ];
 
+// 4:00 AM Daily Rollover Logic:
+// A routine tracking day runs until 4:00 AM next morning.
+// If local time is between 00:00 and 03:59:59, the day belongs to previous calendar date.
+const getLogicalDate = (date = new Date()) => {
+  const d = new Date(date);
+  if (d.getHours() < 4) {
+    d.setDate(d.getDate() - 1);
+  }
+  return d;
+};
+
 const dateKey = (date = new Date()) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+const getLogicalDateKey = (date = new Date()) => dateKey(getLogicalDate(date));
+
+function getSavedScheduleOverride(dateKeyStr) {
+  if (!dateKeyStr) return null;
+  try {
+    const raw = localStorage.getItem(`daymark-schedule-override-${dateKeyStr}`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+  return null;
+}
 
 const prettyDate = (date = new Date()) =>
   new Intl.DateTimeFormat('en-IN', { weekday: 'long', day: 'numeric', month: 'long' }).format(date);
@@ -521,7 +546,6 @@ function App() {
 
   // Core App State
   const [store, setStore] = useState(readStore);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeId, setActiveId] = useState(null);
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
@@ -600,16 +624,31 @@ function App() {
     return dsaCuratedList[dayOfYear % dsaCuratedList.length];
   }, []);
 
-  // Dynamic schedule state loaded from DB / LocalStorage
-  const [schedule, setSchedule] = useState(readSavedSchedule);
-  const [editingSchedule, setEditingSchedule] = useState(schedule);
-  const habits = useMemo(() => getRoutineGoals(schedule), [schedule]);
+  // Dynamic base daily schedule (Master Blueprint) loaded from DB / LocalStorage
+  const [baseSchedule, setBaseSchedule] = useState(readSavedSchedule);
+  const [editingSchedule, setEditingSchedule] = useState(baseSchedule);
 
-  const todayKey = dateKey(new Date());
+  // Logical date tracking (rolls over at 4:00 AM)
+  const [currentLogicalDate, setCurrentLogicalDate] = useState(() => getLogicalDate(new Date()));
+  const [selectedDate, setSelectedDate] = useState(() => getLogicalDate(new Date()));
+
+  const todayKey = dateKey(currentLogicalDate);
   const key = dateKey(selectedDate);
   const isToday = key === todayKey;
   const isPast = key < todayKey;
   const isFuture = key > todayKey;
+
+  // Day record from store
+  const day = store[key] || blankDay();
+
+  // Day-Specific Healed Override Resolution:
+  // AI Healed Plan or Elastic Shift applies ONLY to today/selected date.
+  // Next day and standard days always use baseSchedule (normal daily timetable).
+  const dayScheduleOverride = day?.scheduleOverride || getSavedScheduleOverride(key);
+  const schedule = dayScheduleOverride || baseSchedule;
+  const hasDayOverride = Boolean(dayScheduleOverride);
+
+  const habits = useMemo(() => getRoutineGoals(schedule), [schedule]);
 
   // 1. Circadian Energy & Cognitive Matching
   const circadianScore = useMemo(() => calculateCircadianScore(schedule), [schedule]);
@@ -657,7 +696,7 @@ function App() {
   const [closeoutPriority, setCloseoutPriority] = useState('');
   const [morningPriority, setMorningPriority] = useState(() => localStorage.getItem('daymark-tomorrow-priority') || '');
 
-  const day = store[key] || blankDay();
+  // day record loaded above
   const activeGroup = groups.find(g => g.id === activeGroupId) || null;
 
   // Daily new quote calculation based on calendar day
@@ -808,7 +847,7 @@ function App() {
         if (response.ok) {
           const data = await response.json();
           if (mounted && Array.isArray(data) && data.length > 0) {
-            setSchedule(data);
+            setBaseSchedule(data);
             const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
             localStorage.setItem(storageKey, JSON.stringify(data));
           }
@@ -1570,28 +1609,67 @@ function App() {
     setTimeout(() => setToast(''), 2200);
   };
 
-  // 1. Elastic Schedule Auto-Shift Action
+  // Day-Specific Schedule Override Storage Handlers (Applies ONLY to that specific day)
+  const saveDayScheduleOverride = (targetDateKey, newSchedule) => {
+    localStorage.setItem(`daymark-schedule-override-${targetDateKey}`, JSON.stringify(newSchedule));
+
+    setStore(prev => {
+      const existingDay = prev[targetDateKey] || blankDay();
+      const updatedDay = {
+        ...existingDay,
+        scheduleOverride: newSchedule
+      };
+      const nextStore = { ...prev, [targetDateKey]: updatedDay };
+      localStorage.setItem('daymark-data', JSON.stringify(nextStore));
+      return nextStore;
+    });
+
+    if (token) {
+      fetch(`${API}/days/${targetDateKey}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ scheduleOverride: newSchedule })
+      }).catch(() => {});
+    }
+  };
+
+  const revertDayScheduleOverride = (targetDateKey) => {
+    localStorage.removeItem(`daymark-schedule-override-${targetDateKey}`);
+
+    setStore(prev => {
+      const existingDay = prev[targetDateKey] || blankDay();
+      const { scheduleOverride, ...rest } = existingDay;
+      const nextStore = { ...prev, [targetDateKey]: rest };
+      localStorage.setItem('daymark-data', JSON.stringify(nextStore));
+      return nextStore;
+    });
+
+    if (token) {
+      fetch(`${API}/days/${targetDateKey}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ scheduleOverride: null })
+      }).catch(() => {});
+    }
+
+    setToast('✓ Reverted to standard daily timetable');
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  // 1. Elastic Schedule Auto-Shift Action (Day-Specific Override)
   const applyElasticShift = (fromNow = false) => {
     const updated = calculateAutoShift(schedule, {
       shiftMinutes: elasticShiftMins,
       fromNow,
       compressBreaks: elasticCompressBreaks
     });
-    setSchedule(updated);
-    setEditingSchedule(updated);
-    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
-    localStorage.setItem(storageKey, JSON.stringify(updated));
+    // Save only for current day key (does NOT overwrite base daily timetable)
+    saveDayScheduleOverride(key, updated);
     setElasticModalOpen(false);
-    setToast(fromNow ? 'Schedule auto-shifted from current time!' : `Schedule shifted forward by ${elasticShiftMins} minutes!`);
-    setTimeout(() => setToast(''), 2500);
-
-    if (token) {
-      fetch(`${API}/settings/schedule`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(updated)
-      }).catch(() => {});
-    }
+    setToast(fromNow 
+      ? '✨ Schedule auto-shifted for today only! Normal timetable resumes at 4 AM.' 
+      : `✨ Schedule shifted forward by ${elasticShiftMins}m for today! Normal timetable resumes at 4 AM.`);
+    setTimeout(() => setToast(''), 3500);
   };
 
   // 2. Micro-Artifact Proof of Work Submit
@@ -1713,6 +1791,26 @@ function App() {
 
   // --- AGENTIC EFFECTS & HANDLERS (Placed after all core state and functions) ---
 
+    // 4:00 AM Daily Rollover Timer:
+  // Automatically detects when the clock strikes 4:00 AM,
+  // rolling over to the new day and restoring the normal daily timetable.
+  useEffect(() => {
+    const checkRollover = () => {
+      const nextLogical = getLogicalDate(new Date());
+      const nextKey = dateKey(nextLogical);
+      if (nextKey !== dateKey(currentLogicalDate)) {
+        console.log('[Day Rollover] 4:00 AM reached. Advancing day to', nextKey);
+        setCurrentLogicalDate(nextLogical);
+        setSelectedDate(prev => (dateKey(prev) === dateKey(currentLogicalDate) ? nextLogical : prev));
+        setToast('🌅 4:00 AM: New day started! Daily timetable restored to normal.');
+        setTimeout(() => setToast(''), 4500);
+      }
+    };
+
+    const timer = setInterval(checkRollover, 15000);
+    return () => clearInterval(timer);
+  }, [currentLogicalDate]);
+
   // Theme attribute effect
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -1806,19 +1904,8 @@ function App() {
 
     if (applyAlignment && schedule && schedule.length > 0) {
       const { alignedSchedule } = slotScheduleToCircadian(schedule, morningPriority);
-      setSchedule(alignedSchedule);
-      setEditingSchedule(alignedSchedule);
-      const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
-      localStorage.setItem(storageKey, JSON.stringify(alignedSchedule));
-
-      if (token) {
-        fetch(`${API}/settings/schedule`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify(alignedSchedule)
-        }).catch(() => {});
-      }
-      setToast('🚀 Day Launched! Priority locked to Circadian Morning Peak.');
+      saveDayScheduleOverride(todayStr, alignedSchedule);
+      setToast('🚀 Day Launched! Priority locked to Circadian Morning Peak for today.');
     } else {
       setToast('🚀 Day Launched! Timetable locked in.');
     }
@@ -1853,23 +1940,13 @@ function App() {
     if (!plan || !plan.proposedSchedule) return;
 
     const updated = plan.proposedSchedule;
-    setSchedule(updated);
-    setEditingSchedule(updated);
-    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
-    localStorage.setItem(storageKey, JSON.stringify(updated));
+    // Save as Day-Specific Override for today only (does NOT alter normal daily timetable!)
+    saveDayScheduleOverride(key, updated);
 
     setChiefOfStaffAlert(null);
     setChiefOfStaffModalOpen(false);
-    setToast(`✨ Chief of Staff healed schedule! Saved ${plan.savingsMinutes || 0}m.`);
-    setTimeout(() => setToast(''), 3000);
-
-    if (token) {
-      fetch(`${API}/settings/schedule`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(updated)
-      }).catch(() => {});
-    }
+    setToast(`✨ AI Healed Plan applied for today only! Saved ${plan.savingsMinutes || 0}m. Normal timetable resumes at 4 AM.`);
+    setTimeout(() => setToast(''), 3500);
   };
 
   const runManualChiefAudit = () => {
@@ -2034,7 +2111,7 @@ function App() {
   };
 
   const saveScheduleChanges = async () => {
-    setSchedule(editingSchedule);
+    setBaseSchedule(editingSchedule);
     const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
     localStorage.setItem(storageKey, JSON.stringify(editingSchedule));
     try {
@@ -2061,7 +2138,7 @@ function App() {
 
   const resetScheduleToDefaults = async () => {
     setEditingSchedule(defaultSchedule);
-    setSchedule(defaultSchedule);
+    setBaseSchedule(defaultSchedule);
     const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
     localStorage.setItem(storageKey, JSON.stringify(defaultSchedule));
     try {
@@ -2576,7 +2653,7 @@ function App() {
                     ? `Viewing past record for ${prettyDate(selectedDate)}. This day is archived in read-only mode to keep your historical tracking honest.`
                     : `Viewing future schedule for ${prettyDate(selectedDate)}. Sessions and habit tracking unlock on this day.`}
                 </span>
-                <button className="jump-today-btn" onClick={() => setSelectedDate(new Date())}>
+                <button className="jump-today-btn" onClick={() => setSelectedDate(getLogicalDate(new Date()))}>
                   Return to Today
                 </button>
               </div>
@@ -2792,6 +2869,28 @@ function App() {
                     })}
                   </div>
                 </div>
+
+                {/* Active Day Healed Plan Banner */}
+                {hasDayOverride && (
+                  <div className="healed-plan-today-banner">
+                    <div className="healed-banner-left">
+                      <Sparkles size={14} className="healed-icon" />
+                      <span>
+                        <strong>✨ AI Healed Plan Active (Today Only)</strong>
+                        <span className="healed-banner-sub"> · Resets to normal timetable at 4:00 AM</span>
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="healed-banner-revert-btn"
+                      onClick={() => revertDayScheduleOverride(key)}
+                      title="Revert today's schedule back to the normal daily timetable"
+                    >
+                      <RotateCcw size={12} />
+                      <span>Revert to Normal</span>
+                    </button>
+                  </div>
+                )}
 
                 <div className="schedule-list">
                   {schedule.map(item => {

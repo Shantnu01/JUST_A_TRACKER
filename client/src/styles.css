@@ -3752,3 +3752,94 @@
     max-height: 280px;
   }
 }
+
+/* ==========================================================================
+   AI HEALED PLAN (DAY-SPECIFIC OVERRIDE & 4:00 AM ROLLOVER)
+   ========================================================================== */
+
+.healed-plan-today-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(99, 102, 241, 0.09);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  border-radius: 9px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  color: var(--text-main, #f8fafc);
+  animation: fadeIn 0.2s ease;
+}
+
+.healed-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.healed-banner-left .healed-icon {
+  color: #818cf8;
+  flex-shrink: 0;
+}
+
+.healed-banner-sub {
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.72rem;
+}
+
+.healed-banner-revert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main, #f1f5f9);
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.healed-banner-revert-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+[data-theme="neo-brutalist"] .healed-plan-today-banner {
+  background: #fef08a;
+  border: 2px solid #000000;
+  color: #000000;
+  box-shadow: 2px 2px 0 #000000;
+}
+
+[data-theme="neo-brutalist"] .healed-banner-sub {
+  color: #333333;
+}
+
+[data-theme="neo-brutalist"] .healed-banner-revert-btn {
+  background: #ffffff;
+  border: 1.5px solid #000000;
+  color: #000000;
+  box-shadow: 2px 2px 0 #000000;
+}
+
+[data-theme="acid-runway"] .healed-plan-today-banner {
+  background: rgba(198, 255, 0, 0.08);
+  border-color: #c6ff00;
+  color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .healed-banner-sub {
+  color: #a3e635;
+}
+
+[data-theme="acid-runway"] .healed-banner-revert-btn {
+  border-color: #c6ff00;
+  color: #c6ff00;
+}
