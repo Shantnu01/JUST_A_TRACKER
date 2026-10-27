@@ -4,6 +4,7 @@ import {
   AlarmClock,
   ArrowUpRight,
   BookOpen,
+  Calendar,
   Check,
   CheckCircle2,
   ChevronLeft,
@@ -14,6 +15,7 @@ import {
   Database,
   Download,
   Leaf,
+  Lock,
   Menu,
   Moon,
   Pause,
@@ -51,6 +53,41 @@ const habits = [
   { id: 'revision', label: 'Revision · 1 hour' },
   { id: 'breaks', label: 'Take both breaks' },
   { id: 'sleep', label: 'Sleep 7–8 hours' },
+];
+
+// Curated daily inspiring quotes for discipline, focus, craftsmanship & progress
+const dailyQuotes = [
+  { quote: "Small, consistent effort compounds into extraordinary results.", author: "Daily Practice" },
+  { quote: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle" },
+  { quote: "Focus is a muscle. The more you protect your attention, the stronger it gets.", author: "Deep Work" },
+  { quote: "You do not rise to the level of your goals. You fall to the level of your systems.", author: "James Clear" },
+  { quote: "Simplicity is prerequisite for reliability.", author: "Edsger W. Dijkstra" },
+  { quote: "First make it work, then make it right, then make it fast.", author: "Kent Beck" },
+  { quote: "Action isn't just the effect of motivation; it is also the cause of it.", author: "Mark Manson" },
+  { quote: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
+  { quote: "It is not that we have a short time to live, but that we waste a lot of it.", author: "Seneca" },
+  { quote: "Mastery is not a function of genius or talent, but of time and intense focus.", author: "Robert Greene" },
+  { quote: "Consistency is the DNA of mastery.", author: "Robin Sharma" },
+  { quote: "The way to build an extraordinary life is to build ordinary days well.", author: "Quiet Routine" },
+  { quote: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt" },
+  { quote: "Progress made in silence sounds loudest over time.", author: "Focus Rule" },
+  { quote: "Patience and persistence are the quietest superpowers.", author: "Calm Mind" },
+  { quote: "Show up every day, do the reps, and let the outcome take care of itself.", author: "The Practice" },
+  { quote: "Great things are done by a series of small things brought together.", author: "Vincent van Gogh" },
+  { quote: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+  { quote: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { quote: "Code is like humor. When you have to explain it, it's bad.", author: "Cory House" },
+  { quote: "One day or day one. You decide.", author: "Daily Mindset" },
+  { quote: "Energy flows where attention goes.", author: "Focused Attention" },
+  { quote: "Deep craftsmanship demands unbroken solitude.", author: "The Builder" },
+  { quote: "Keep your habits small enough to start, but meaningful enough to matter.", author: "Atomic Habits" },
+  { quote: "Routine, in an intelligent person, is an ambition of time.", author: "W. H. Auden" },
+  { quote: "Clarity comes from engagement, not thought alone.", author: "Marie Forleo" },
+  { quote: "Your future is found in your daily routine.", author: "John C. Maxwell" },
+  { quote: "Consistency always beats intensity.", author: "Long-term View" },
+  { quote: "Protect your mornings; that is where your foundation is poured.", author: "Daily Ritual" },
+  { quote: "Before software can be reusable it first has to be usable.", author: "Ralph Johnson" },
+  { quote: "The quieter you become, the more you are able to hear.", author: "Rumi" }
 ];
 
 const dateKey = (date = new Date()) =>
@@ -104,8 +141,21 @@ function App() {
   const [notes, setNotes] = useState('');
   const [dbStatus, setDbStatus] = useState('checking'); // 'connected' | 'local' | 'checking'
 
+  const todayKey = dateKey(new Date());
   const key = dateKey(selectedDate);
+  const isToday = key === todayKey;
+  const isPast = key < todayKey;
+  const isFuture = key > todayKey;
+
   const day = store[key] || blankDay();
+
+  // Daily new quote calculation based on calendar day
+  const todayQuote = useMemo(() => {
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
+    return dailyQuotes[dayOfYear % dailyQuotes.length];
+  }, []);
 
   // Monitor database connection status
   useEffect(() => {
@@ -130,7 +180,18 @@ function App() {
     };
   }, []);
 
+  // Guard: ONLY today's date can be updated. Past and future records are protected and read-only.
   const patchDay = (patch) => {
+    if (!isToday) {
+      setToast(
+        isPast
+          ? 'Past records are archived and read-only to preserve your history.'
+          : 'Future dates cannot be modified ahead of time.'
+      );
+      setTimeout(() => setToast(''), 3000);
+      return;
+    }
+
     const nextDay = { ...blankDay(), ...(store[key] || {}), ...patch };
     setStore(prev => {
       const updated = { ...prev, [key]: nextDay };
@@ -203,7 +264,7 @@ function App() {
   }, [key]);
 
   useEffect(() => {
-    if (!alarmEnabled) return;
+    if (!alarmEnabled || !isToday) return;
     const timer = setInterval(() => {
       const now = new Date();
       if (`${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` === alarmTime && now.getSeconds() < 2) {
@@ -216,7 +277,7 @@ function App() {
       }
     }, 1000);
     return () => clearInterval(timer);
-  }, [alarmEnabled, alarmTime]);
+  }, [alarmEnabled, alarmTime, isToday]);
 
   const doneCount = habits.filter(h => day.checks[h.id]).length;
   const completion = Math.round((doneCount / habits.length) * 100);
@@ -224,6 +285,7 @@ function App() {
   const focusMinutes = Math.min(720, completedMinutes);
 
   const current = schedule.find(item => {
+    if (!isToday) return false;
     const now = new Date();
     const mins = now.getHours() * 60 + now.getMinutes();
     const [sh, sm] = item.start.split(':').map(Number);
@@ -253,10 +315,25 @@ function App() {
 
   const weekAvg = Math.round(weekly.reduce((sum, d) => sum + d.percent, 0) / 7);
 
-  const toggleHabit = (id) =>
+  const toggleHabit = (id) => {
+    if (!isToday) {
+      setToast(
+        isPast
+          ? 'Past habits are locked in view-only mode to preserve history.'
+          : 'Future habits cannot be checked ahead of time.'
+      );
+      setTimeout(() => setToast(''), 2500);
+      return;
+    }
     patchDay({ checks: { ...(day.checks || {}), [id]: !day.checks?.[id] } });
+  };
 
   const startSession = (id) => {
+    if (!isToday) {
+      setToast('Focus timers are only permitted for today’s active schedule.');
+      setTimeout(() => setToast(''), 2500);
+      return;
+    }
     setActiveId(id);
     setSeconds(0);
     setRunning(true);
@@ -265,7 +342,7 @@ function App() {
   };
 
   const finishSession = () => {
-    if (activeId) {
+    if (activeId && isToday) {
       const mins = Math.max(1, Math.round(seconds / 60));
       const previous = day.completedMinutes?.[activeId] || 0;
       patchDay({ completedMinutes: { ...(day.completedMinutes || {}), [activeId]: previous + mins } });
@@ -279,6 +356,11 @@ function App() {
   };
 
   const requestAlarm = async () => {
+    if (!isToday) {
+      setToast('Alarms can only be adjusted on today’s schedule.');
+      setTimeout(() => setToast(''), 2500);
+      return;
+    }
     if (!('Notification' in window)) {
       setToast('This browser does not support web notifications');
       return;
@@ -300,6 +382,11 @@ function App() {
   };
 
   const saveNotes = () => {
+    if (!isToday) {
+      setToast('Notes on past and future dates are read-only.');
+      setTimeout(() => setToast(''), 2500);
+      return;
+    }
     patchDay({ notes });
     setToast('Notes saved');
     setTimeout(() => setToast(''), 2000);
@@ -354,11 +441,14 @@ function App() {
             </button>
           ))}
         </nav>
+
+        {/* Daily Inspiring Quote (Changes Daily) */}
         <div className="sidebar-bottom">
           <div className="quote-mark">“</div>
-          <p>Small, consistent effort compounds into extraordinary results.</p>
-          <span>YOUR DAILY PRACTICE</span>
+          <p>{todayQuote.quote}</p>
+          <span>{todayQuote.author.toUpperCase()}</span>
         </div>
+
         <div className="profile">
           <div className="avatar">D</div>
           <div>
@@ -375,7 +465,11 @@ function App() {
             <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
             <h1>
               {view === 'Today'
-                ? 'A calmer way to make progress'
+                ? isToday
+                  ? 'A calmer way to make progress'
+                  : isPast
+                  ? 'Archived Performance Record'
+                  : 'Upcoming Routine Plan'
                 : view === 'Weekly report'
                 ? 'Your progress, at a glance'
                 : 'Make the routine work for you'}
@@ -401,28 +495,61 @@ function App() {
               <Download size={17} />
             </button>
             <div className="date-chip">
-              <span className="status-dot" />
-              {prettyDate()}
+              <span className={`status-dot ${isToday ? '' : 'inactive'}`} />
+              {prettyDate(selectedDate)}
             </div>
           </div>
         </header>
 
         {view === 'Today' && (
           <>
+            {/* Read-Only Status Banner when viewing past or future dates */}
+            {!isToday && (
+              <div className={`date-lock-banner ${isPast ? 'past' : 'future'}`}>
+                <Lock size={15} />
+                <span>
+                  {isPast
+                    ? `Viewing past record for ${prettyDate(selectedDate)}. This day is archived in read-only mode to keep your historical tracking honest.`
+                    : `Viewing future schedule for ${prettyDate(selectedDate)}. Sessions and habit tracking unlock on this day.`}
+                </span>
+                <button className="jump-today-btn" onClick={() => setSelectedDate(new Date())}>
+                  Return to Today
+                </button>
+              </div>
+            )}
+
             <section className="welcome-row">
               <div>
                 <p className="muted">{prettyDate(selectedDate)}</p>
                 <h2>
-                  One day at a time<span>.</span>
+                  {isToday ? (
+                    <>
+                      One day at a time<span>.</span>
+                    </>
+                  ) : isPast ? (
+                    <>
+                      Historical record<span>.</span>
+                    </>
+                  ) : (
+                    <>
+                      Upcoming routine<span>.</span>
+                    </>
+                  )}
                 </h2>
-                <p className="subhead">Show up, focus on the next block, and let the progress add up.</p>
+                <p className="subhead">
+                  {isToday
+                    ? 'Show up, focus on the next block, and let the progress add up.'
+                    : isPast
+                    ? 'Review what you accomplished on this date.'
+                    : 'Plan ahead and stay prepared for this routine.'}
+                </p>
               </div>
               <div className="streak-card">
                 <div className="streak-icon">
                   <Target size={19} />
                 </div>
                 <div>
-                  <small>DAILY COMPLETION</small>
+                  <small>{isToday ? 'DAILY COMPLETION' : isPast ? 'RECORDED SCORE' : 'PLANNED'}</small>
                   <strong>{completion}%</strong>
                 </div>
                 <div className="ring" style={{ '--progress': `${completion * 3.6}deg` }}>
@@ -438,7 +565,7 @@ function App() {
               <Metric
                 label="Focus logged"
                 value={`${Math.floor(focusMinutes / 60)}h ${focusMinutes % 60}m`}
-                detail="Tracked session time"
+                detail={isToday ? 'Tracked session time' : isPast ? 'Completed session time' : 'Scheduled sessions'}
                 icon={Clock3}
                 tone="sage"
               />
@@ -450,8 +577,8 @@ function App() {
                 tone="blue"
               />
               <Metric
-                label="Current block"
-                value={current?.title || 'Between sessions'}
+                label={isToday ? 'Current block' : 'Routine structure'}
+                value={current?.title || (isToday ? 'Between sessions' : 'Standard 12h block')}
                 detail={current ? `${current.start} – ${current.end}` : 'Follow your planned schedule'}
                 icon={Sun}
                 tone="sand"
@@ -462,17 +589,21 @@ function App() {
               <section className="panel schedule-panel">
                 <div className="panel-heading">
                   <div>
-                    <span className="eyebrow">YOUR PLAN</span>
-                    <h3>Today's schedule</h3>
+                    <span className="eyebrow">{isToday ? 'YOUR PLAN' : isPast ? 'PAST LOG' : 'UPCOMING'}</span>
+                    <h3>{isToday ? "Today's schedule" : `Schedule for ${prettyDate(selectedDate)}`}</h3>
                   </div>
                   <div className="date-controls">
-                    <button className="icon-button small" onClick={() => shiftDate(-1)}>
+                    <button className="icon-button small" onClick={() => shiftDate(-1)} title="Previous day">
                       <ChevronLeft size={16} />
                     </button>
-                    <button className="today-button" onClick={() => setSelectedDate(new Date())}>
+                    <button
+                      className={`today-button ${isToday ? 'current' : ''}`}
+                      onClick={() => setSelectedDate(new Date())}
+                      title="Jump to today"
+                    >
                       Today
                     </button>
-                    <button className="icon-button small" onClick={() => shiftDate(1)}>
+                    <button className="icon-button small" onClick={() => shiftDate(1)} title="Next day">
                       <ChevronRight size={16} />
                     </button>
                   </div>
@@ -481,7 +612,7 @@ function App() {
                 <div className="schedule-list">
                   {schedule.map(item => {
                     const Icon = item.icon;
-                    const isActive = activeId === item.id;
+                    const isActive = isToday && activeId === item.id;
                     const logged = day.completedMinutes?.[item.id] || 0;
                     return (
                       <article className={`schedule-item ${item.tone} ${isActive ? 'active-session' : ''}`} key={item.id}>
@@ -505,16 +636,27 @@ function App() {
                           )}
                         </div>
                         <div className="event-action">
-                          {isActive ? (
-                            <button className="action-button running" onClick={() => setRunning(v => !v)}>
-                              {running ? <Pause size={15} /> : <Play size={15} />}
-                              <span>{running ? 'Pause' : 'Resume'}</span>
-                            </button>
+                          {isToday ? (
+                            isActive ? (
+                              <button className="action-button running" onClick={() => setRunning(v => !v)}>
+                                {running ? <Pause size={15} /> : <Play size={15} />}
+                                <span>{running ? 'Pause' : 'Resume'}</span>
+                              </button>
+                            ) : (
+                              <button
+                                className="action-button"
+                                onClick={() => startSession(item.id)}
+                                title="Start a timed session"
+                              >
+                                <Play size={15} />
+                                <span>Start</span>
+                              </button>
+                            )
                           ) : (
-                            <button className="action-button" onClick={() => startSession(item.id)} title="Start a timed session">
-                              <Play size={15} />
-                              <span>Start</span>
-                            </button>
+                            <span className="read-only-badge" title={isPast ? 'Past record (read-only)' : 'Future date (locked)'}>
+                              <Lock size={11} />
+                              {logged > 0 ? `${Math.floor(logged / 60)}h ${logged % 60}m` : isPast ? 'Archived' : 'Locked'}
+                            </span>
                           )}
                           {isActive && (
                             <button className="finish-button" onClick={finishSession}>
@@ -531,22 +673,28 @@ function App() {
                   <div className="session-clock">
                     <Clock3 size={17} />
                     <span>
-                      {activeId
-                        ? `${String(Math.floor(seconds / 3600)).padStart(2, '0')}:${String(
-                            Math.floor(seconds / 60) % 60
-                          ).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`
-                        : 'Ready when you are'}
+                      {isToday
+                        ? activeId
+                          ? `${String(Math.floor(seconds / 3600)).padStart(2, '0')}:${String(
+                              Math.floor(seconds / 60) % 60
+                            ).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`
+                          : 'Ready when you are'
+                        : isPast
+                        ? 'Day concluded (Read-Only)'
+                        : 'Future day'}
                     </span>
                   </div>
-                  <span className="muted small-text">50 min focus · 10 min reset</span>
+                  <span className="muted small-text">
+                    {isToday ? '50 min focus · 10 min reset' : 'Historical records cannot be modified'}
+                  </span>
                 </div>
               </section>
 
               <div className="right-column">
-                <section className="panel habits-panel">
+                <section className={`panel habits-panel ${!isToday ? 'read-only' : ''}`}>
                   <div className="panel-heading">
                     <div>
-                      <span className="eyebrow">DAILY CHECK-IN</span>
+                      <span className="eyebrow">{isToday ? 'DAILY CHECK-IN' : 'ARCHIVED HABITS'}</span>
                       <h3>Keep yourself honest</h3>
                     </div>
                     <span className="count-badge">
@@ -557,17 +705,19 @@ function App() {
                     {habits.map(h => (
                       <button
                         key={h.id}
-                        className={`habit-row ${day.checks?.[h.id] ? 'checked' : ''}`}
+                        className={`habit-row ${day.checks?.[h.id] ? 'checked' : ''} ${!isToday ? 'read-only' : ''}`}
                         onClick={() => toggleHabit(h.id)}
+                        title={!isToday ? 'Past and future habits are view-only' : undefined}
                       >
                         <span className="check-box">{day.checks?.[h.id] && <Check size={14} />}</span>
                         <span>{h.label}</span>
+                        {!isToday && <Lock size={12} style={{ marginLeft: 'auto', opacity: 0.4 }} />}
                       </button>
                     ))}
                   </div>
                   <div className="habit-progress">
                     <div className="progress-caption">
-                      <span>Today's consistency</span>
+                      <span>{isToday ? "Today's consistency" : 'Consistency rate'}</span>
                       <strong>{completion}%</strong>
                     </div>
                     <div className="progress-track">
@@ -576,7 +726,7 @@ function App() {
                   </div>
                 </section>
 
-                <section className="panel alarm-panel">
+                <section className={`panel alarm-panel ${!isToday ? 'read-only' : ''}`}>
                   <div className="panel-heading">
                     <div>
                       <span className="eyebrow">GENTLE REMINDER</span>
@@ -586,41 +736,63 @@ function App() {
                       <AlarmClock size={18} />
                     </div>
                   </div>
-                  <p className="muted alarm-copy">Get an audio chime & browser reminder when it's time to begin.</p>
+                  <p className="muted alarm-copy">
+                    {isToday
+                      ? 'Get an audio chime & browser reminder when it’s time to begin.'
+                      : 'Alarms are active only during today’s session.'}
+                  </p>
                   <div className="alarm-controls">
                     <input
                       aria-label="Alarm time"
                       type="time"
                       value={alarmTime}
+                      disabled={!isToday}
                       onChange={e => setAlarmTime(e.target.value)}
                     />
                     <button
-                      className={`toggle ${alarmEnabled ? 'on' : ''}`}
+                      className={`toggle ${alarmEnabled && isToday ? 'on' : ''}`}
                       onClick={requestAlarm}
+                      disabled={!isToday}
                       aria-label="Toggle alarm"
                     >
                       <span />
                     </button>
                   </div>
                   <div className="alarm-foot">
-                    <span className={`status-dot ${alarmEnabled ? '' : 'inactive'}`} />
-                    {alarmEnabled ? 'Notifications enabled' : 'Browser permission required'}
+                    <span className={`status-dot ${alarmEnabled && isToday ? '' : 'inactive'}`} />
+                    {isToday
+                      ? alarmEnabled
+                        ? 'Notifications enabled'
+                        : 'Browser permission required'
+                      : 'Available on Today'}
                   </div>
                 </section>
 
-                <section className="note-panel">
+                <section className={`note-panel ${!isToday ? 'read-only' : ''}`}>
                   <div className="note-title">
                     <BookOpen size={17} />
-                    <strong>End-of-day notes</strong>
+                    <strong>{isToday ? 'End-of-day notes' : `Notes (${prettyDate(selectedDate)})`}</strong>
+                    {!isToday && <Lock size={13} style={{ marginLeft: 'auto', opacity: 0.6 }} />}
                   </div>
                   <textarea
                     value={notes}
+                    readOnly={!isToday}
                     onChange={e => setNotes(e.target.value)}
-                    placeholder="What did you learn? What did you ship? What needs attention tomorrow?"
+                    placeholder={
+                      isToday
+                        ? 'What did you learn? What did you ship? What needs attention tomorrow?'
+                        : 'No notes logged for this archived date.'
+                    }
                   />
-                  <button onClick={saveNotes}>
-                    Save notes <ArrowUpRight size={15} />
-                  </button>
+                  {isToday ? (
+                    <button onClick={saveNotes}>
+                      Save notes <ArrowUpRight size={15} />
+                    </button>
+                  ) : (
+                    <button className="locked" disabled>
+                      Archived (Read-Only) <Lock size={13} />
+                    </button>
+                  )}
                 </section>
               </div>
             </div>
@@ -667,7 +839,7 @@ function App() {
                 <div>
                   <small>Days with progress</small>
                   <strong>
-                    {weekly.filter(d => d.count > 0).length}
+                    {weekly.filter(d=>d.count>0).length}
                     <em> / 7</em>
                   </strong>
                 </div>
@@ -709,7 +881,7 @@ function App() {
             <span className="eyebrow">YOUR BASELINE</span>
             <h3>Keep the plan simple</h3>
             <p className="muted">
-              Your routine is set to the schedule you defined. Edit alarm time on the Today page.
+              Your routine is set to the schedule you defined. Today is the only active editable day; past records are preserved in read-only mode for historical accuracy.
             </p>
 
             <div className="db-status-banner">
@@ -721,7 +893,7 @@ function App() {
                 <p>
                   {dbStatus === 'connected'
                     ? 'All daily check-ins, focus minutes, alarms, and notes are persisting directly to PostgreSQL.'
-                    : 'The webapp is currently using local browser storage and is ready for your PostgreSQL database link. As soon as you configure DATABASE_URL in server/.env, it will automatically connect and create required tables.'}
+                    : 'The webapp is currently using local browser storage and is ready for your PostgreSQL database link.'}
                 </p>
               </div>
             </div>
