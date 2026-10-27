@@ -331,7 +331,7 @@
 /* Smart GitHub Commit & Verification */
 .smart-commit-panel{background:linear-gradient(135deg,#f8fbf6,#f0f7ec);border:1px solid #d4e3ce;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px}
 .smart-commit-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-.smart-commit-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:8px}
+.smart-commit-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
 .commit-stat-box{background:#fff;border:1px solid #e1e8dc;border-radius:9px;padding:10px 12px}
 .commit-stat-box small{display:block;font-size:10px;color:#707c72;margin-bottom:2px}
 .commit-stat-box strong{display:block;font-size:14px;color:#203124}

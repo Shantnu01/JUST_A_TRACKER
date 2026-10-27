@@ -1265,11 +1265,9 @@ async function evaluateProjectCommitVerification(userId, userSchedule, userDayDa
     habitMarked: isEligible,
     loggedMinutes,
     plannedMinutes,
-    thresholdMinutes,
-    percent,
     message: isEligible
-      ? `Commit verified! Project focus logged is ${loggedMinutes}m / ${plannedMinutes}m (${percent}% >= 75%). Project habit automatically marked Done!`
-      : `Commit detected on GitHub, but Project timer is currently at ${loggedMinutes}m / ${plannedMinutes}m (${percent}%). At least 75% (${thresholdMinutes}m) required to auto-complete this habit.`
+      ? `Commit verified on GitHub! Significant project focus detected — Project habit automatically marked Done!`
+      : `Commit detected on GitHub, but not enough focused project time has been logged yet today. Keep building!`
   };
 }
 
@@ -1283,18 +1281,15 @@ app.post('/api/coding/github/verify-commit', optionalAuth, async (req, res) => {
     const plannedMinutes = 120;
     const thresholdMinutes = 90;
     const logged = Number(clientLogged || 0);
-    const percent = Math.round((logged / plannedMinutes) * 100);
     const isEligible = logged >= thresholdMinutes;
     return res.json({
       verified: isEligible,
       habitMarked: isEligible,
       loggedMinutes: logged,
       plannedMinutes,
-      thresholdMinutes,
-      percent,
       message: isEligible
-        ? `Commit verified! Project focus logged is ${logged}m / ${plannedMinutes}m (${percent}% >= 75%). Project habit marked Done!`
-        : `Commit detected, but Project timer is currently at ${logged}m / ${plannedMinutes}m (${percent}%). At least 75% (${thresholdMinutes}m) required to auto-complete this habit.`
+        ? `Commit verified on GitHub! Significant project focus detected — Project habit marked Done!`
+        : `Commit detected on GitHub, but not enough focused project time has been logged yet today. Keep building!`
     });
   }
 

@@ -185,46 +185,6 @@ const dsaCuratedList = [
   { id: 'course-schedule', title: 'Course Schedule', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/course-schedule/', companies: ['Google', 'Amazon'] }
 ];
 
-// Curated Ideas & Recommendations to make Daymark the ultimate Coder Hub
-const coderSuggestions = [
-  {
-    id: 'cf-rating',
-    title: 'Codeforces Rating & Div. Battle Arena',
-    badge: 'Popular',
-    desc: 'Link your Codeforces handle to display current rating (Specialist, Expert, Candidate Master) and compete with pod members on contest rating delta.'
-  },
-  {
-    id: 'git-commit-sync',
-    title: 'Automated GitHub Commit → Habit Sync',
-    badge: 'Recommended',
-    desc: 'Connect GitHub webhooks so whenever you git push to any repo, your daily "Project" or "DSA" habit is marked Done automatically with zero friction.'
-  },
-  {
-    id: 'lofi-player',
-    title: 'Built-in Lo-Fi Coding Radio & Rain Ambient',
-    badge: 'Flow State',
-    desc: 'Stream synthwave, lofi beats, and rain sounds directly alongside the focus timer to maintain uninterrupted concentration without leaving the tab.'
-  },
-  {
-    id: 'pod-code-share',
-    title: 'Peer Code Review & Snippet Sharing in Pods',
-    badge: 'Social',
-    desc: 'Share code snippets with syntax highlighting directly to your 5-member study pod to get unblocked on tricky edge cases or time complexity optimizations.'
-  },
-  {
-    id: 'wakatime-sync',
-    title: 'VS Code & JetBrains WakaTime Sync',
-    badge: 'Productivity',
-    desc: 'Pull precise active coding hours from your code editor into Daymark daily metrics so you see exact language and project breakdowns.'
-  },
-  {
-    id: 'company-sheets',
-    title: 'FAANG / MAANG Company-Targeted Problem Filters',
-    badge: 'Interview Prep',
-    desc: 'Toggle between Google, Amazon, Meta, and Microsoft high-frequency tags with time-boxed 45-minute mock interview simulator modes.'
-  }
-];
-
 const dateKey = (date = new Date()) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
@@ -341,7 +301,7 @@ function App() {
   const [githubData, setGithubData] = useState(null);
   const [githubLoading, setGithubLoading] = useState(false);
   const [githubError, setGithubError] = useState('');
-  const [codingSubTab, setCodingSubTab] = useState('overview'); // 'overview' | 'sheet' | 'contests' | 'suggestions'
+  const [codingSubTab, setCodingSubTab] = useState('overview'); // 'overview' | 'sheet' | 'snippets' | 'arena' | 'contests'
   const [contestsList, setContestsList] = useState([]);
 
   // Codeforces State
@@ -752,9 +712,9 @@ function App() {
       if (data.habitMarked) {
         patchDay({ checks: { ...(day.checks || {}), project: true } });
         playChime(true);
-        setToast(`🎉 Commit Verified! Project timer reached ${data.loggedMinutes}m / ${data.plannedMinutes}m (${data.percent}% >= 75%). Project habit automatically marked Done!`);
+        setToast(data.message || '🎉 Commit Verified! Project habit automatically marked Done!');
       } else {
-        setToast(`⚠️ Commit check: Project timer is at ${data.loggedMinutes}m / ${data.plannedMinutes}m (${data.percent}%). Need 75% (${data.thresholdMinutes}m) to auto-mark Done.`);
+        setToast(data.message || '⚠️ Commit detected, but not enough focused project time logged yet today.');
       }
       setTimeout(() => setToast(''), 4500);
     } catch {
@@ -2203,15 +2163,14 @@ function App() {
               </div>
             </div>
 
-            {/* Sub-Tabs: Overview, Top Patterns Sheet, Snippets, CF Arena, Contests, Suggestions */}
+            {/* Sub-Tabs: Overview, Top Patterns Sheet, Snippets, CF Arena, Contests */}
             <div className="coding-subtabs">
               {[
                 ['overview', 'Stats & Sync', Flame],
                 ['sheet', 'Company Interview Sheet', CheckCircle2],
                 ['snippets', 'Pod Code Reviews', Share2],
                 ['arena', 'CF Battle Arena', Trophy],
-                ['contests', 'Contest Calendar', Calendar],
-                ['suggestions', 'Coder Hub Ideas', Sparkles]
+                ['contests', 'Contest Calendar', Calendar]
               ].map(([id, label, Icon]) => (
                 <button
                   key={id}
@@ -2244,7 +2203,7 @@ function App() {
                         Smart GitHub Commit → "Project" Habit Verification
                       </h4>
                       <p className="muted" style={{ fontSize: '12px', margin: 0 }}>
-                        Whenever you push code, Daymark verifies that your present focus timer has reached at least <strong>75%</strong> of your scheduled Project time before marking it Done.
+                        Whenever you push code, Daymark verifies that your present focus timer has logged sufficient deep work on your Project before marking it Done.
                       </p>
                     </div>
 
@@ -2267,19 +2226,9 @@ function App() {
                       <strong>{projectPlannedMins} mins ({Math.round(projectPlannedMins / 60)}h)</strong>
                     </div>
                     <div className="commit-stat-box">
-                      <small>75% Verification Goal</small>
-                      <strong>{projectThresholdMins} mins</strong>
-                    </div>
-                    <div className="commit-stat-box">
                       <small>Today's Logged Time</small>
-                      <strong style={{ color: isProjectEligible ? '#2e7d32' : '#c2410c' }}>
+                      <strong style={{ color: '#2e7d32' }}>
                         {projectLoggedMins} mins ({projectPercent}%)
-                      </strong>
-                    </div>
-                    <div className="commit-stat-box">
-                      <small>Verification Status</small>
-                      <strong style={{ fontSize: '12px', color: isProjectEligible ? '#2e7d32' : '#b45309' }}>
-                        {isProjectEligible ? '✅ Threshold Met' : `⏳ Need ${projectThresholdMins - projectLoggedMins}m more`}
                       </strong>
                     </div>
                   </div>
@@ -2289,7 +2238,7 @@ function App() {
                       className="fill"
                       style={{
                         width: `${projectPercent}%`,
-                        background: isProjectEligible ? '#16a34a' : '#f59e0b'
+                        background: '#16a34a'
                       }}
                     />
                   </div>
@@ -3075,36 +3024,6 @@ function App() {
                       >
                         Register / Enter Contest <ArrowUpRight size={14} />
                       </a>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* SUBTAB 6: CODER HUB SUGGESTIONS & IDEAS */}
-            {codingSubTab === 'suggestions' && (
-              <div className="panel coding-suggestions-panel">
-                <div className="panel-heading">
-                  <div>
-                    <span className="eyebrow">ROADMAP & ENHANCEMENTS</span>
-                    <h3>Ideas to Make Daymark the Ultimate Coder Hub</h3>
-                    <p className="muted">
-                      High-impact developer workflows requested by coders.
-                    </p>
-                  </div>
-                  <span className="count-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Sparkles size={13} color="#d97706" /> 6 Ideas
-                  </span>
-                </div>
-
-                <div className="suggestions-grid">
-                  {coderSuggestions.map(s => (
-                    <div className="suggestion-card" key={s.id}>
-                      <div className="suggestion-badge-row">
-                        <span className="suggestion-badge">{s.badge}</span>
-                      </div>
-                      <h4>{s.title}</h4>
-                      <p>{s.desc}</p>
                     </div>
                   ))}
                 </div>
