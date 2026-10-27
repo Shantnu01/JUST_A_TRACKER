@@ -37,7 +37,8 @@ function initPool() {
 
   const newPool = new Pool({
     connectionString,
-    ssl: sslSetting
+    ssl: sslSetting,
+    connectionTimeoutMillis: 5000
   });
 
   newPool.on('error', (err) => {
@@ -151,12 +152,14 @@ app.get('*', (req, res, next) => {
 });
 
 async function start() {
-  if (pool) {
-    await ensureTable();
-  }
   app.listen(port, () => {
     console.log(`Routine API & WebApp listening on http://localhost:${port}`);
   });
+  if (pool) {
+    ensureTable().catch(err => {
+      console.warn('[Database] Initial connection attempt deferred:', err.message);
+    });
+  }
 }
 
 start().catch(error => {

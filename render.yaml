@@ -3,7 +3,7 @@ services:
     name: routine-tracker
     runtime: node
     plan: free
-    region: oregon
+    region: singapore
     buildCommand: npm run install:all && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
