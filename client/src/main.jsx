@@ -66,6 +66,10 @@ import {
   Link2,
   ShieldCheck,
   SlidersHorizontal,
+  Rocket,
+  Brain,
+  ListTodo,
+  Wind,
   X,
   Zap
 } from 'lucide-react';
@@ -668,14 +672,7 @@ function App() {
     setEditingSchedule(schedule);
   }, [schedule]);
 
-  // Web Audio focus soundscape sync with active timer
-  useEffect(() => {
-    if (running && focusSoundType !== 'off') {
-      playFocusSound(focusSoundType, focusSoundVolume);
-    } else {
-      stopFocusSound();
-    }
-  }, [running, focusSoundType]);
+
 
   useEffect(() => {
     setSoundVolume(focusSoundVolume);
@@ -4886,6 +4883,714 @@ function App() {
                 <Clock3 size={15} /> Snooze 5 Min
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+
+      
+      {/* 1. Chief of Staff: Floating Proactive Drift Alert Card */}
+      {chiefOfStaffAlert && !chiefOfStaffModalOpen && (
+        <div className="chief-alert-floating">
+          <div className="chief-alert-header">
+            <div className="chief-alert-title">
+              <ShieldCheck size={16} />
+              <span>Chief of Staff (Schedule Arbiter)</span>
+            </div>
+            {chiefOfStaffAlert.driftMinutes > 0 && (
+              <span className="chief-drift-badge">+{chiefOfStaffAlert.driftMinutes}m Slip</span>
+            )}
+          </div>
+          <div className="chief-alert-body">
+            {chiefOfStaffAlert.slippingItem ? (
+              <span>
+                <strong>{chiefOfStaffAlert.slippingItem.title}</strong> has drifted.{' '}
+              </span>
+            ) : null}
+            {chiefOfStaffAlert.narrative}
+          </div>
+          <div className="chief-alert-actions">
+            <button className="chief-heal-btn" onClick={() => applyChiefOfStaffHeal()}>
+              <Sparkles size={13} /> Accept AI Heal
+            </button>
+            <button className="chief-inspect-btn" onClick={() => setChiefOfStaffModalOpen(true)}>
+              Inspect Strategy
+            </button>
+            <button
+              className="chief-dismiss-btn"
+              onClick={() => {
+                setChiefDismissUntil(Date.now() + 20 * 60 * 1000);
+                setChiefOfStaffAlert(null);
+              }}
+            >
+              Dismiss (20m)
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Chief of Staff: Detailed Strategy & Reconciliation Modal */}
+      {chiefOfStaffModalOpen && chiefOfStaffAlert && (
+        <div className="modal-overlay" onClick={() => setChiefOfStaffModalOpen(false)}>
+          <div className="modal-content" style={{ maxWidth: '640px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <ShieldCheck size={20} color="#2563eb" />
+                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Chief of Staff: Schedule Re-sequencer</h3>
+              </div>
+              <button className="modal-close" onClick={() => setChiefOfStaffModalOpen(false)}>×</button>
+            </div>
+
+            <div style={{ padding: '16px 0', fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.5 }}>
+              <p style={{ margin: '0 0 12px 0' }}>
+                {chiefOfStaffAlert.narrative}
+              </p>
+
+              <div className="chief-stat-chips">
+                <div className="chief-stat-chip">
+                  <div className="chief-stat-chip-label">Blocks Realigned</div>
+                  <div className="chief-stat-chip-value">{chiefOfStaffAlert.shiftedCount || 0}</div>
+                </div>
+                <div className="chief-stat-chip">
+                  <div className="chief-stat-chip-label">Break Time Compacted</div>
+                  <div className="chief-stat-chip-value">{chiefOfStaffAlert.savingsMinutes || 0}m</div>
+                </div>
+                <div className="chief-stat-chip">
+                  <div className="chief-stat-chip-label">Projected Cutoff</div>
+                  <div className="chief-stat-chip-value">{chiefOfStaffAlert.healedEnd || '--:--'}</div>
+                </div>
+              </div>
+
+              <div className="chief-strategy-grid">
+                <div className="chief-strategy-col">
+                  <div className="chief-col-title" style={{ color: '#dc2626' }}>
+                    Current Slipping Plan
+                  </div>
+                  {(schedule || []).slice(0, 6).map((item, i) => (
+                    <div key={item.id || i} className="chief-item-row">
+                      <span style={{ fontWeight: 500 }}>{item.title}</span>
+                      <span style={{ fontFamily: 'monospace', color: '#6b7280' }}>{item.start} - {item.end}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="chief-strategy-col healed">
+                  <div className="chief-col-title" style={{ color: '#16a34a' }}>
+                    ✨ AI Healed Plan
+                  </div>
+                  {(chiefOfStaffAlert.proposedSchedule || []).slice(0, 6).map((item, i) => (
+                    <div key={item.id || i} className="chief-item-row">
+                      <span style={{ fontWeight: 600, color: '#15803d' }}>{item.title}</span>
+                      <span style={{ fontFamily: 'monospace', color: '#15803d', fontWeight: 600 }}>{item.start} - {item.end}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button className="secondary-button" onClick={() => setChiefOfStaffModalOpen(false)}>
+                Keep Current
+              </button>
+              <button
+                className="primary-button"
+                style={{ background: '#2563eb', color: '#ffffff' }}
+                onClick={() => applyChiefOfStaffHeal()}
+              >
+                <Sparkles size={14} /> Accept & Apply Healed Timetable
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Elastic Schedule Auto-Shift Modal */}
+      {elasticModalOpen && (
+        <div className="modal-overlay" onClick={() => setElasticModalOpen(false)}>
+          <div className="modal-content" style={{ maxWidth: '520px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <SlidersHorizontal size={20} color="#2563eb" />
+                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Elastic Schedule Auto-Shift</h3>
+              </div>
+              <button className="modal-close" onClick={() => setElasticModalOpen(false)}>×</button>
+            </div>
+
+            <div style={{ padding: '16px 0', fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.5 }}>
+              <p style={{ margin: '0 0 16px 0' }}>
+                Running late? Shift your remaining schedule forward smoothly without breaking deep focus durations.
+              </p>
+
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontWeight: 600, color: '#1e293b', marginBottom: '8px' }}>
+                  Shift Remaining Blocks By:
+                </label>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {[15, 30, 45, 60].map(mins => (
+                    <button
+                      key={mins}
+                      type="button"
+                      className={`secondary-button ${elasticShiftMins === mins && !elasticFromNow ? 'primary' : ''}`}
+                      style={{ flex: 1, minWidth: '60px', padding: '8px', fontWeight: 700 }}
+                      onClick={() => { setElasticShiftMins(mins); setElasticFromNow(false); }}
+                    >
+                      +{mins}m
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    className={`secondary-button ${elasticFromNow ? 'primary' : ''}`}
+                    style={{ flex: 1.5, minWidth: '100px', padding: '8px', fontWeight: 700, background: elasticFromNow ? '#2563eb' : '', color: elasticFromNow ? '#ffffff' : '' }}
+                    onClick={() => setElasticFromNow(true)}
+                  >
+                    ⚡ From Now
+                  </button>
+                </div>
+              </div>
+
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <input
+                  type="checkbox"
+                  checked={elasticCompressBreaks}
+                  onChange={e => setElasticCompressBreaks(e.target.checked)}
+                  style={{ accentColor: '#2563eb' }}
+                />
+                <span style={{ fontSize: '0.82rem', color: '#334155' }}>
+                  <strong>Compress remaining breaks by 35%</strong> to recover time for evening shutdown
+                </span>
+              </label>
+            </div>
+
+            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button className="secondary-button" onClick={() => setElasticModalOpen(false)}>Cancel</button>
+              <button
+                className="primary-button"
+                style={{ background: '#2563eb', color: '#ffffff' }}
+                onClick={() => applyElasticShift(elasticFromNow)}
+              >
+                Apply Shift Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Subject Curriculum & Stage Roadmap Modal */}
+      {curriculumModalOpen && (
+        <div className="modal-overlay" onClick={() => setCurriculumModalOpen(false)}>
+          <div className="modal-content" style={{ maxWidth: '680px', maxHeight: '88vh', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Milestone size={22} color="#4f46e5" />
+                <h3 style={{ margin: 0, fontSize: '1.15rem' }}>{curriculumSubject} — Curriculum & Stage Roadmap</h3>
+              </div>
+              <button className="modal-close" onClick={() => setCurriculumModalOpen(false)}>×</button>
+            </div>
+
+            <div style={{ padding: '16px 0', overflowY: 'auto', flex: 1 }}>
+              {activeCurriculum && !curriculumEditMode && (() => {
+                const prog = calculateCurriculumProgress(activeCurriculum);
+                return (
+                  <>
+                    <div className="curriculum-header-stats">
+                      <div className="curriculum-progress-circle" style={{ '--p': `${prog.percent}%` }}>
+                        <div className="curriculum-progress-inner">
+                          {prog.percent}%
+                        </div>
+                      </div>
+                      <div className="curriculum-stat-text">
+                        <div className="curriculum-stage-badge">
+                          ACTIVE: STAGE {prog.activeStageIndex + 1} OF {activeCurriculum.stages.length}
+                        </div>
+                        <div className="curriculum-stage-title">
+                          {prog.activeStage ? prog.activeStage.title : 'All Stages Complete!'}
+                        </div>
+                        <div className="curriculum-count-subtitle">
+                          {prog.completedCheckpoints} of {prog.totalCheckpoints} checkpoints mastered ({prog.percent}%)
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="curriculum-actions-bar">
+                      <button className="curriculum-btn-secondary" onClick={handleCopyChatGPTTemplate} title="Copy prompt to generate roadmaps for any subject">
+                        <Copy size={13} /> Copy ChatGPT Prompt
+                      </button>
+                      <button className="curriculum-btn-secondary" onClick={() => setCurriculumEditMode(true)}>
+                        <Layers size={13} /> Paste / Edit Outline
+                      </button>
+                    </div>
+
+                    <div className="curriculum-stages-container">
+                      {activeCurriculum.stages.map((stage, sIdx) => {
+                        const isActive = sIdx === prog.activeStageIndex;
+                        const isExpanded = curriculumStageOpen[stage.id] !== undefined ? curriculumStageOpen[stage.id] : (isActive || sIdx < 3);
+                        const stageCompletedCount = (stage.checkpoints || []).filter(c => c.completed).length;
+                        const stageTotalCount = (stage.checkpoints || []).length;
+                        const isStageDone = stageCompletedCount === stageTotalCount && stageTotalCount > 0;
+
+                        return (
+                          <div key={stage.id || sIdx} className={`curriculum-stage-card ${isActive ? 'active-stage' : ''}`}>
+                            <div
+                              className="curriculum-stage-head"
+                              onClick={() => setCurriculumStageOpen(prev => ({ ...prev, [stage.id]: !isExpanded }))}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ color: isStageDone ? '#16a34a' : isActive ? '#4f46e5' : '#64748b' }}>
+                                  {isStageDone ? '✓' : isActive ? '▶' : '•'}
+                                </span>
+                                <span>{stage.title}</span>
+                              </div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', color: '#64748b' }}>
+                                <span>{stageCompletedCount}/{stageTotalCount}</span>
+                                <span>{isExpanded ? '▲' : '▼'}</span>
+                              </div>
+                            </div>
+
+                            {isExpanded && (
+                              <div className="curriculum-checkpoint-list">
+                                {(stage.checkpoints || []).map((cp) => (
+                                  <div key={cp.id} className="curriculum-checkpoint-item">
+                                    <input
+                                      type="checkbox"
+                                      checked={cp.completed}
+                                      onChange={() => handleToggleCheckpoint(stage.id, cp.id)}
+                                      className="curriculum-checkbox"
+                                    />
+                                    <div className="curriculum-checkpoint-content">
+                                      <div className={`curriculum-checkpoint-title ${cp.completed ? 'done' : ''}`}>
+                                        {cp.title}
+                                      </div>
+                                      {cp.details && cp.details.length > 0 && (
+                                        <div className="curriculum-details-tags">
+                                          {cp.details.map((d, dIdx) => (
+                                            <span key={dIdx} className="curriculum-detail-tag">{d}</span>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                );
+              })()}
+
+              {curriculumEditMode && (
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '0.86rem', fontWeight: 600, color: '#1e293b' }}>
+                      Paste ASCII Tree or Outline for {curriculumSubject}:
+                    </span>
+                    <button className="curriculum-btn-secondary" onClick={handleCopyChatGPTTemplate} style={{ padding: '4px 8px', fontSize: '0.75rem' }}>
+                      <Copy size={11} /> Copy Prompt for ChatGPT
+                    </button>
+                  </div>
+                  <textarea
+                    className="unblock-textarea"
+                    rows={12}
+                    placeholder={`Paste your stages here! For example:\n\nSTAGE 1 — FUNDAMENTALS\n├── 1.1 Topic One\n│   ├── Sub-detail\n│   └── Sub-detail\n├── 1.2 Topic Two\n\nSTAGE 2 — ADVANCED CONCEPTS\n├── 2.1 Next Topic`}
+                    value={curriculumRawText}
+                    onChange={e => setCurriculumRawText(e.target.value)}
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
+                    {activeCurriculum && (
+                      <button className="secondary-button" onClick={() => setCurriculumEditMode(false)}>
+                        Cancel & View Current
+                      </button>
+                    )}
+                    <button
+                      className="primary-button"
+                      style={{ background: '#4f46e5', marginLeft: 'auto' }}
+                      onClick={handleImportCurriculum}
+                      disabled={!curriculumRawText.trim()}
+                    >
+                      <Milestone size={14} /> Import & Build Stages
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Pre-Flight Mission Dispatch Modal */}
+      {preflightModalOpen && (
+        <div className="modal-overlay" onClick={() => { setPreflightModalOpen(false); setPreflightDismissed(true); }}>
+          <div className="modal-content" style={{ maxWidth: '600px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Sun size={22} color="#f59e0b" />
+                <h3 style={{ margin: 0, fontSize: '1.15rem' }}>Morning Pre-Flight Mission Dispatch</h3>
+              </div>
+              <button className="modal-close" onClick={() => { setPreflightModalOpen(false); setPreflightDismissed(true); }}>×</button>
+            </div>
+
+            <div style={{ padding: '16px 0' }}>
+              <div className="preflight-modal-banner">
+                <div>
+                  <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: '#92400e', fontWeight: 700, letterSpacing: '0.04em' }}>
+                    DAILY BIOLOGICAL READINESS
+                  </div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: '#78350f', marginTop: '2px' }}>
+                    {isDeloadDay ? 'Deload Recovery State (50% Volume Cap)' : 'Prime Circadian Focus Window Active'}
+                  </div>
+                </div>
+                <span className={`preflight-badge ${isDeloadDay ? 'strain' : ''}`}>
+                  {isDeloadDay ? '🛡️ Deload Shield' : '⚡ 95% Cognitive Peak'}
+                </span>
+              </div>
+
+              {/* Pledged Priority Card */}
+              {morningPriority ? (
+                <div className="preflight-priority-box">
+                  <div className="preflight-priority-label">
+                    <span>★ YESTERDAY'S LOCKED NON-NEGOTIABLE PRIORITY</span>
+                  </div>
+                  <div className="preflight-priority-title">
+                    {morningPriority}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: '#92400e', marginTop: '4px' }}>
+                    Targeted for slotting into the 09:00 - 12:00 biological peak window.
+                  </div>
+                </div>
+              ) : null}
+
+              {/* Proposed Battle Plan Preview */}
+              <div className="preflight-timeline-card">
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#64748b', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>CIRCADIAN BATTLE PLAN PREVIEW</span>
+                  <span style={{ color: '#16a34a' }}>Peak Window: 09:00 - 12:00</span>
+                </div>
+                {(schedule || []).slice(0, 5).map((item, i) => {
+                  const { tier, color } = getCognitiveTier(item);
+                  return (
+                    <div key={item.id || i} className="preflight-timeline-row">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#475569' }}>{item.start} - {item.end}</span>
+                        <span style={{ fontWeight: 600, color: '#1e293b' }}>{item.title}</span>
+                      </div>
+                      <span className="preflight-tier-tag" style={{ background: `${color}18`, color }}>
+                        {tier.toUpperCase()}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <button className="secondary-button" onClick={() => handleLaunchDay(false)}>
+                Keep Current Timetable
+              </button>
+              <button className="preflight-launch-btn" onClick={() => handleLaunchDay(true)}>
+                <Rocket size={15} /> Commit & Launch Day
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. Evening Closeout & Morning Non-Negotiable Modal */}
+      {closeoutModalOpen && (
+        <div className="modal-overlay" onClick={() => setCloseoutModalOpen(false)}>
+          <div className="modal-content" style={{ maxWidth: '540px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Moon size={22} color="#7c3aed" />
+                <h3 style={{ margin: 0, fontSize: '1.15rem' }}>Evening Shutdown & Next-Day Anchor</h3>
+              </div>
+              <button className="modal-close" onClick={() => setCloseoutModalOpen(false)}>×</button>
+            </div>
+
+            <form onSubmit={handleSaveCloseout} style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                  1. What moved the needle today? (Daily Highlights / Wins)
+                </label>
+                <textarea
+                  className="unblock-textarea"
+                  rows={2}
+                  placeholder="e.g., Shipped authentication module and fixed database timeout bug."
+                  value={closeoutWins}
+                  onChange={e => setCloseoutWins(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                  2. What caused friction or context-switching?
+                </label>
+                <textarea
+                  className="unblock-textarea"
+                  rows={2}
+                  placeholder="e.g., Spent 45m troubleshooting dependency conflict before asking."
+                  value={closeoutFriction}
+                  onChange={e => setCloseoutFriction(e.target.value)}
+                />
+              </div>
+
+              <div style={{ background: '#fffbeb', border: '1.5px solid #f59e0b', borderRadius: '10px', padding: '12px' }}>
+                <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 800, color: '#92400e', marginBottom: '6px' }}>
+                  ★ 3. Tomorrow's Single Non-Negotiable Morning Priority:
+                </label>
+                <input
+                  type="text"
+                  className="unblock-textarea"
+                  style={{ height: '40px', resize: 'none' }}
+                  placeholder="e.g., Refactor Payment Webhook Handler (Must ship before lunch)"
+                  value={closeoutPriority}
+                  onChange={e => setCloseoutPriority(e.target.value)}
+                  required
+                />
+                <div style={{ fontSize: '0.75rem', color: '#b45309', marginTop: '4px' }}>
+                  This will be pinned as your hero spotlight at 09:00 AM tomorrow.
+                </div>
+              </div>
+
+              <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', padding: 0 }}>
+                <button type="button" className="secondary-button" onClick={() => setCloseoutModalOpen(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="primary-button" style={{ background: '#7c3aed' }}>
+                  Lock Shutdown & Save Priority
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Friction & Context-Switch Interceptor Modal */}
+      {interceptorModalOpen && interceptTask && (
+        <div className="modal-overlay" onClick={() => { if (!resetActive) setInterceptorModalOpen(false); }}>
+          <div className="modal-content" style={{ maxWidth: '580px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Brain size={22} color="#ef4444" />
+                <h3 style={{ margin: 0, fontSize: '1.15rem' }}>Context-Switch Interceptor</h3>
+              </div>
+              {!resetActive && (
+                <button className="modal-close" onClick={() => setInterceptorModalOpen(false)}>×</button>
+              )}
+            </div>
+
+            <div style={{ padding: '16px 0' }}>
+              <div className="interceptor-banner">
+                <div>
+                  <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: '#b91c1c', fontWeight: 700, letterSpacing: '0.04em' }}>
+                    PREMATURE EXIT DETECTED
+                  </div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: '#991b1b', marginTop: '2px' }}>
+                    {interceptTask.title}
+                  </div>
+                </div>
+                <span className="interceptor-badge">
+                  {interceptTask.elapsedMins}m / {interceptTask.scheduledMins}m ({interceptTask.percent}%)
+                </span>
+              </div>
+
+              {interceptorTab === 'triage' && (
+                <>
+                  <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.5, margin: '0 0 14px 0' }}>
+                    You scheduled <strong>{interceptTask.scheduledMins} minutes</strong> for deep work, but only completed <strong>{interceptTask.elapsedMins} minutes</strong>. What resistance are you experiencing?
+                  </p>
+
+                  <div className="interceptor-pathways">
+                    <div className="interceptor-tile" onClick={() => setInterceptorTab('unblock')}>
+                      <div className="interceptor-tile-icon" style={{ background: '#eff6ff', color: '#2563eb' }}>
+                        <ListTodo size={20} />
+                      </div>
+                      <div>
+                        <div className="interceptor-tile-title">🧱 I'm Stuck / Hit a Wall</div>
+                        <div className="interceptor-tile-desc">Dismantle the problem into 2-3 micro-actions to break through the obstacle.</div>
+                      </div>
+                    </div>
+
+                    <div className="interceptor-tile" onClick={startBreathingReset}>
+                      <div className="interceptor-tile-icon" style={{ background: '#f5f3ff', color: '#7c3aed' }}>
+                        <Wind size={20} />
+                      </div>
+                      <div>
+                        <div className="interceptor-tile-title">🧘 Mental Fog / Distracted</div>
+                        <div className="interceptor-tile-desc">Trigger a 2-minute box breathing cycle with 40Hz Gamma binaural beats to reset focus.</div>
+                      </div>
+                    </div>
+
+                    <div className="interceptor-tile" onClick={() => setInterceptorTab('early_proof')}>
+                      <div className="interceptor-tile-icon" style={{ background: '#f0fdf4', color: '#16a34a' }}>
+                        <Check size={20} />
+                      </div>
+                      <div>
+                        <div className="interceptor-tile-title">🏁 Genuinely Finished Early</div>
+                        <div className="interceptor-tile-desc">Shipped ahead of schedule? Enter a 1-sentence proof of completion to log the block.</div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {interceptorTab === 'unblock' && (
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#1e293b', marginBottom: '8px' }}>
+                    Break down the blocker into 2-3 tiny 5-minute micro-actions:
+                  </div>
+                  <textarea
+                    className="unblock-textarea"
+                    rows={4}
+                    placeholder="1. Print error response in console&#10;2. Check auth token expiry&#10;3. Run test with isolated mock data"
+                    value={unblockSteps}
+                    onChange={e => setUnblockSteps(e.target.value)}
+                    autoFocus
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '14px' }}>
+                    <button className="secondary-button" onClick={() => setInterceptorTab('triage')}>Back</button>
+                    <button className="primary-button" onClick={handleUnblockSubmit} style={{ background: '#2563eb' }}>
+                      <Rocket size={14} /> Lock Micro-Steps & Resume Sprint
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {interceptorTab === 'reset' && (
+                <div className="breathing-box">
+                  <div className="breathing-circle-outer">
+                    <div className="breathing-circle-pulse">
+                      <div className="breathing-timer">
+                        {Math.floor(resetSecondsLeft / 60)}:{(resetSecondsLeft % 60).toString().padStart(2, '0')}
+                      </div>
+                      <div className="breathing-phase">
+                        {resetSecondsLeft % 16 >= 12
+                          ? 'HOLD'
+                          : resetSecondsLeft % 16 >= 8
+                          ? 'EXHALE'
+                          : resetSecondsLeft % 16 >= 4
+                          ? 'HOLD'
+                          : 'INHALE'}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
+                    🎧 40Hz Gamma Neural Sync Active. Follow the circle rhythm to clear mental resistance.
+                  </div>
+                  <div style={{ marginTop: '16px' }}>
+                    <button className="secondary-button" onClick={stopBreathingEarly} style={{ background: 'rgba(255,255,255,0.1)', color: '#ffffff', borderColor: 'rgba(255,255,255,0.2)' }}>
+                      Finish Reset & Return to Task
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {interceptorTab === 'early_proof' && (
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#1e293b', marginBottom: '8px' }}>
+                    What did you complete or ship ahead of time?
+                  </div>
+                  <input
+                    type="text"
+                    className="unblock-textarea"
+                    style={{ height: '42px', resize: 'none' }}
+                    placeholder="e.g., Finished OAuth login flow and verified unit tests passed"
+                    value={earlyProofText}
+                    onChange={e => setEarlyProofText(e.target.value)}
+                    autoFocus
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '14px' }}>
+                    <button className="secondary-button" onClick={() => setInterceptorTab('triage')}>Back</button>
+                    <button
+                      className="primary-button"
+                      onClick={handleEarlyProofSubmit}
+                      disabled={!earlyProofText.trim()}
+                      style={{ background: '#16a34a' }}
+                    >
+                      <Check size={14} /> Verify & Log Completion
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {interceptorTab === 'triage' && (
+              <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <button
+                  className="secondary-button"
+                  onClick={() => {
+                    setInterceptorModalOpen(false);
+                    finishSession(true);
+                  }}
+                  style={{ color: '#94a3b8', fontSize: '0.78rem' }}
+                >
+                  Force Log Partial Session ({interceptTask.elapsedMins}m)
+                </button>
+                <button className="primary-button" onClick={() => setInterceptorModalOpen(false)}>
+                  Resume Deep Work
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 8. Micro-Artifact & Proof of Work Modal */}
+      {artifactModalOpen && closingTask && (
+        <div className="modal-overlay" onClick={() => setArtifactModalOpen(false)}>
+          <div className="modal-content" style={{ maxWidth: '520px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Award size={20} color="#16a34a" />
+                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Proof of Work: {closingTask.title}</h3>
+              </div>
+              <button className="modal-close" onClick={() => setArtifactModalOpen(false)}>×</button>
+            </div>
+
+            <form onSubmit={handleArtifactSubmit} style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: '#4b5563' }}>
+                Great work! You logged <strong>{closingTask.loggedMins || 0} minutes</strong>. Take 15 seconds to anchor what you shipped or accomplished:
+              </p>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                  What did you complete or ship? *
+                </label>
+                <textarea
+                  className="unblock-textarea"
+                  rows={3}
+                  placeholder="e.g., Built and verified the user authentication API endpoint with JWT tests."
+                  value={artifactNotes}
+                  onChange={e => setArtifactNotes(e.target.value)}
+                  required
+                  autoFocus
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                  Deliverable / Artifact Link (Optional):
+                </label>
+                <input
+                  type="url"
+                  className="unblock-textarea"
+                  style={{ height: '40px', resize: 'none' }}
+                  placeholder="https://github.com/... or PR link, Google Doc, Loom"
+                  value={artifactUrl}
+                  onChange={e => setArtifactUrl(e.target.value)}
+                />
+              </div>
+
+              <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', padding: 0 }}>
+                <button type="button" className="secondary-button" onClick={() => setArtifactModalOpen(false)}>
+                  Skip
+                </button>
+                <button type="submit" className="primary-button" style={{ background: '#16a34a' }}>
+                  Verify & Log Proof
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
