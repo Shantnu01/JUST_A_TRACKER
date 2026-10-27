@@ -27,8 +27,9 @@
   .pod-header-title{font-size:18px}
   .pod-header-actions{width:100%;justify-content:flex-start}
   .pod-header-actions button{flex:1;min-width:90px;justify-content:center;padding:7px 8px;font-size:11px}
-  .gh-chart-container{padding:10px 8px}
-  .gh-chart-img{min-width:440px}
+  .gh-chart-container{padding:10px 8px;width:100%;max-width:100%;box-sizing:border-box;overflow:hidden}
+  .gh-chart-scroll{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;display:block}
+  .gh-chart-img{width:100%!important;max-width:100%!important;min-width:0!important;height:auto!important;aspect-ratio:663 / 104;object-fit:contain;margin:0 auto;display:block}
   .welcome-row{display:flex;flex-direction:column;align-items:stretch;gap:14px;padding:16px 0}
   .welcome-row h2{font-size:22px;line-height:1.25}
   .streak-card{min-width:0;width:100%;padding:12px 14px}

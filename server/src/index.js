@@ -864,7 +864,7 @@ app.put('/api/coding/profile', optionalAuth, async (req, res) => {
   }
 });
 
-// 2. Fetch LeetCode performance stats with caching & fallback
+// 2. Fetch LeetCode performance stats with official GraphQL + fallback
 app.get('/api/coding/leetcode/:username', async (req, res) => {
   const username = req.params.username.trim();
   if (!username) return res.status(400).json({ error: 'Username required' });
@@ -873,6 +873,81 @@ app.get('/api/coding/leetcode/:username', async (req, res) => {
   const cached = getCached(cacheKey);
   if (cached) return res.json(cached);
 
+  // Strategy 1: Official LeetCode GraphQL API
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 7000);
+
+    const graphqlQuery = `query getUserProfile($username: String!) {
+      matchedUser(username: $username) {
+        username
+        profile { ranking reputation }
+        submitStatsGlobal {
+          acSubmissionNum { difficulty count }
+          totalSubmissionNum { difficulty count }
+        }
+      }
+      allQuestionsCount { difficulty count }
+    }`;
+
+    const apiRes = await fetch('https://leetcode.com/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Referer': 'https://leetcode.com',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+      },
+      body: JSON.stringify({
+        query: graphqlQuery,
+        variables: { username }
+      }),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (apiRes.ok) {
+      const data = await apiRes.json();
+      if (data.data?.matchedUser) {
+        const u = data.data.matchedUser;
+        const acList = u.submitStatsGlobal?.acSubmissionNum || [];
+        const totList = data.data.allQuestionsCount || [];
+        const subList = u.submitStatsGlobal?.totalSubmissionNum || [];
+
+        const getAc = (diff) => acList.find(x => x.difficulty === diff)?.count || 0;
+        const getTot = (diff) => totList.find(x => x.difficulty === diff)?.count || 0;
+
+        const totalSolved = getAc('All');
+        const allSubmissions = subList.find(x => x.difficulty === 'All')?.count || 0;
+        const acceptanceRate = allSubmissions > 0 ? ((totalSolved / allSubmissions) * 100).toFixed(1) + '%' : '0%';
+
+        const payload = {
+          username: u.username,
+          profileUrl: `https://leetcode.com/u/${u.username}`,
+          totalSolved,
+          totalQuestions: getTot('All') || 3300,
+          easySolved: getAc('Easy'),
+          totalEasy: getTot('Easy') || 820,
+          mediumSolved: getAc('Medium'),
+          totalMedium: getTot('Medium') || 1700,
+          hardSolved: getAc('Hard'),
+          totalHard: getTot('Hard') || 750,
+          ranking: u.profile?.ranking || null,
+          reputation: u.profile?.reputation || 0,
+          acceptanceRate,
+          recentSubmissions: []
+        };
+
+        setCached(cacheKey, payload);
+        return res.json(payload);
+      } else if (data.errors && data.errors.some(e => e.message && e.message.toLowerCase().includes('not exist'))) {
+        return res.status(404).json({ error: `LeetCode profile "${username}" not found.` });
+      }
+    }
+  } catch (err) {
+    console.warn('LeetCode direct GraphQL failed, attempting mirror:', err.message);
+  }
+
+  // Strategy 2: Fallback to mirror API
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 6000);
@@ -882,46 +957,43 @@ app.get('/api/coding/leetcode/:username', async (req, res) => {
     });
     clearTimeout(timeoutId);
 
-    if (!apiRes.ok) {
-      return res.status(404).json({ error: `LeetCode profile for "${username}" not found or service unavailable.` });
+    if (apiRes.ok) {
+      const data = await apiRes.json();
+      if (!data.errors && (data.totalSolved || data.totalSolved === 0)) {
+        const allSubmissions = data.totalSubmissions?.find(s => s.difficulty === 'All')?.submissions || 0;
+        const allAc = data.totalSolved || 0;
+        const acceptanceRate = allSubmissions > 0 ? ((allAc / allSubmissions) * 100).toFixed(1) + '%' : '0%';
+
+        const payload = {
+          username,
+          profileUrl: `https://leetcode.com/u/${username}`,
+          totalSolved: data.totalSolved || 0,
+          totalQuestions: data.totalQuestions || 3300,
+          easySolved: data.easySolved || 0,
+          totalEasy: data.totalEasy || 820,
+          mediumSolved: data.mediumSolved || 0,
+          totalMedium: data.totalMedium || 1700,
+          hardSolved: data.hardSolved || 0,
+          totalHard: data.totalHard || 750,
+          ranking: data.ranking || null,
+          reputation: data.reputation || 0,
+          acceptanceRate,
+          recentSubmissions: (data.recentSubmissions || []).slice(0, 5)
+        };
+
+        setCached(cacheKey, payload);
+        return res.json(payload);
+      }
     }
-
-    const data = await apiRes.json();
-    if (data.errors || (!data.totalSolved && data.totalSolved !== 0)) {
-      return res.status(404).json({ error: `LeetCode profile "${username}" not found.` });
-    }
-
-    const allSubmissions = data.totalSubmissions?.find(s => s.difficulty === 'All')?.submissions || 0;
-    const allAc = data.totalSolved || 0;
-    const acceptanceRate = allSubmissions > 0 ? ((allAc / allSubmissions) * 100).toFixed(1) + '%' : '0%';
-
-    const payload = {
-      username,
-      profileUrl: `https://leetcode.com/u/${username}`,
-      totalSolved: data.totalSolved || 0,
-      totalQuestions: data.totalQuestions || 3300,
-      easySolved: data.easySolved || 0,
-      totalEasy: data.totalEasy || 820,
-      mediumSolved: data.mediumSolved || 0,
-      totalMedium: data.totalMedium || 1700,
-      hardSolved: data.hardSolved || 0,
-      totalHard: data.totalHard || 750,
-      ranking: data.ranking || null,
-      reputation: data.reputation || 0,
-      acceptanceRate,
-      recentSubmissions: (data.recentSubmissions || []).slice(0, 5)
-    };
-
-    setCached(cacheKey, payload);
-    return res.json(payload);
   } catch (err) {
-    console.error('LeetCode fetch error:', err.message);
-    return res.status(502).json({
-      error: 'Unable to reach LeetCode service at the moment.',
-      username,
-      fallbackUrl: `https://leetcode.com/u/${username}`
-    });
+    console.warn('LeetCode mirror fallback failed:', err.message);
   }
+
+  return res.status(502).json({
+    error: 'Unable to reach LeetCode service at the moment.',
+    username,
+    fallbackUrl: `https://leetcode.com/u/${username}`
+  });
 });
 
 // 3. Fetch GitHub Profile & Recent Repositories (with rate-limit fallback)
