@@ -18,7 +18,11 @@ import {
   Crown,
   Database,
   Download,
+  ExternalLink,
   Flame,
+  GitBranch,
+  GitFork,
+  Github,
   Leaf,
   Lock,
   LogIn,
@@ -28,13 +32,18 @@ import {
   Moon,
   Pause,
   Play,
+  RefreshCw,
   RotateCcw,
   Save,
   Settings2,
   Share2,
+  Sparkles,
+  Star,
   Sun,
   Target,
+  Terminal,
   TrendingUp,
+  Trophy,
   UserCheck,
   UserPlus,
   Users,
@@ -136,6 +145,86 @@ const dailyQuotes = [
   { quote: "The quieter you become, the more you are able to hear.", author: "Rumi" }
 ];
 
+// Curated Top Patterns & Interview DSA Sheet (Blind 75 & NeetCode standard)
+const dsaCuratedList = [
+  // Arrays & Hashing
+  { id: 'two-sum', title: 'Two Sum', category: 'Arrays & Hashing', difficulty: 'Easy', url: 'https://leetcode.com/problems/two-sum/' },
+  { id: 'valid-anagram', title: 'Valid Anagram', category: 'Arrays & Hashing', difficulty: 'Easy', url: 'https://leetcode.com/problems/valid-anagram/' },
+  { id: 'group-anagrams', title: 'Group Anagrams', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/group-anagrams/' },
+  { id: 'top-k-frequent', title: 'Top K Frequent Elements', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/top-k-frequent-elements/' },
+  { id: 'product-of-array', title: 'Product of Array Except Self', category: 'Arrays & Hashing', difficulty: 'Medium', url: 'https://leetcode.com/problems/product-of-array-except-self/' },
+
+  // Two Pointers & Sliding Window
+  { id: 'valid-palindrome', title: 'Valid Palindrome', category: 'Two Pointers & Sliding Window', difficulty: 'Easy', url: 'https://leetcode.com/problems/valid-palindrome/' },
+  { id: 'three-sum', title: '3Sum', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/3sum/' },
+  { id: 'container-water', title: 'Container With Most Water', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/container-with-most-water/' },
+  { id: 'best-time-stock', title: 'Best Time to Buy and Sell Stock', category: 'Two Pointers & Sliding Window', difficulty: 'Easy', url: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/' },
+  { id: 'longest-substring', title: 'Longest Substring Without Repeating Characters', category: 'Two Pointers & Sliding Window', difficulty: 'Medium', url: 'https://leetcode.com/problems/longest-substring-without-repeating-characters/' },
+
+  // Binary Search
+  { id: 'binary-search', title: 'Binary Search', category: 'Binary Search', difficulty: 'Easy', url: 'https://leetcode.com/problems/binary-search/' },
+  { id: 'search-rotated-array', title: 'Search in Rotated Sorted Array', category: 'Binary Search', difficulty: 'Medium', url: 'https://leetcode.com/problems/search-in-rotated-sorted-array/' },
+  { id: 'find-min-rotated', title: 'Find Minimum in Rotated Sorted Array', category: 'Binary Search', difficulty: 'Medium', url: 'https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/' },
+
+  // Linked List
+  { id: 'reverse-linked-list', title: 'Reverse Linked List', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/reverse-linked-list/' },
+  { id: 'merge-two-sorted-lists', title: 'Merge Two Sorted Lists', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/merge-two-sorted-lists/' },
+  { id: 'linked-list-cycle', title: 'Linked List Cycle', category: 'Linked List', difficulty: 'Easy', url: 'https://leetcode.com/problems/linked-list-cycle/' },
+
+  // Trees & BST
+  { id: 'invert-binary-tree', title: 'Invert Binary Tree', category: 'Trees & BST', difficulty: 'Easy', url: 'https://leetcode.com/problems/invert-binary-tree/' },
+  { id: 'max-depth-tree', title: 'Maximum Depth of Binary Tree', category: 'Trees & BST', difficulty: 'Easy', url: 'https://leetcode.com/problems/maximum-depth-of-binary-tree/' },
+  { id: 'lca-bst', title: 'Lowest Common Ancestor of a BST', category: 'Trees & BST', difficulty: 'Medium', url: 'https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/' },
+  { id: 'level-order-traversal', title: 'Binary Tree Level Order Traversal', category: 'Trees & BST', difficulty: 'Medium', url: 'https://leetcode.com/problems/binary-tree-level-order-traversal/' },
+
+  // Dynamic Programming & Graphs
+  { id: 'climbing-stairs', title: 'Climbing Stairs', category: 'Dynamic Programming & Graphs', difficulty: 'Easy', url: 'https://leetcode.com/problems/climbing-stairs/' },
+  { id: 'coin-change', title: 'Coin Change', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/coin-change/' },
+  { id: 'house-robber', title: 'House Robber', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/house-robber/' },
+  { id: 'number-of-islands', title: 'Number of Islands', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/number-of-islands/' },
+  { id: 'course-schedule', title: 'Course Schedule', category: 'Dynamic Programming & Graphs', difficulty: 'Medium', url: 'https://leetcode.com/problems/course-schedule/' }
+];
+
+// Curated Ideas & Recommendations to make Daymark the ultimate Coder Hub
+const coderSuggestions = [
+  {
+    id: 'cf-rating',
+    title: 'Codeforces Rating & Div. Battle Arena',
+    badge: 'Popular',
+    desc: 'Link your Codeforces handle to display current rating (Specialist, Expert, Candidate Master) and compete with pod members on contest rating delta.'
+  },
+  {
+    id: 'git-commit-sync',
+    title: 'Automated GitHub Commit → Habit Sync',
+    badge: 'Recommended',
+    desc: 'Connect GitHub webhooks so whenever you git push to any repo, your daily "Project" or "DSA" habit is marked Done automatically with zero friction.'
+  },
+  {
+    id: 'lofi-player',
+    title: 'Built-in Lo-Fi Coding Radio & Rain Ambient',
+    badge: 'Flow State',
+    desc: 'Stream synthwave, lofi beats, and rain sounds directly alongside the focus timer to maintain uninterrupted concentration without leaving the tab.'
+  },
+  {
+    id: 'pod-code-share',
+    title: 'Peer Code Review & Snippet Sharing in Pods',
+    badge: 'Social',
+    desc: 'Share code snippets with syntax highlighting directly to your 5-member study pod to get unblocked on tricky edge cases or time complexity optimizations.'
+  },
+  {
+    id: 'wakatime-sync',
+    title: 'VS Code & JetBrains WakaTime Sync',
+    badge: 'Productivity',
+    desc: 'Pull precise active coding hours from your code editor into Daymark daily metrics so you see exact language and project breakdowns.'
+  },
+  {
+    id: 'company-sheets',
+    title: 'FAANG / MAANG Company-Targeted Problem Filters',
+    badge: 'Interview Prep',
+    desc: 'Toggle between Google, Amazon, Meta, and Microsoft high-frequency tags with time-boxed 45-minute mock interview simulator modes.'
+  }
+];
+
 const dateKey = (date = new Date()) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
@@ -230,6 +319,38 @@ function App() {
   const [view, setView] = useState('Today'); // 'Today' | 'Weekly report' | 'Study pods' | 'Routine settings'
   const [notes, setNotes] = useState('');
   const [dbStatus, setDbStatus] = useState('checking'); // 'connected' | 'local' | 'checking'
+
+  // Developer & Coding Hub State
+  const [codingProfile, setCodingProfile] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('daymark-coding-profile')) || {
+        leetcode_username: '',
+        github_username: '',
+        solved_dsa_ids: []
+      };
+    } catch {
+      return { leetcode_username: '', github_username: '', solved_dsa_ids: [] };
+    }
+  });
+  const [codingModalOpen, setCodingModalOpen] = useState(false);
+  const [inputLcUser, setInputLcUser] = useState('');
+  const [inputGhUser, setInputGhUser] = useState('');
+  const [leetcodeData, setLeetcodeData] = useState(null);
+  const [leetcodeLoading, setLeetcodeLoading] = useState(false);
+  const [leetcodeError, setLeetcodeError] = useState('');
+  const [githubData, setGithubData] = useState(null);
+  const [githubLoading, setGithubLoading] = useState(false);
+  const [githubError, setGithubError] = useState('');
+  const [codingSubTab, setCodingSubTab] = useState('overview'); // 'overview' | 'sheet' | 'contests' | 'suggestions'
+  const [contestsList, setContestsList] = useState([]);
+
+  // Problem of the day based on day of year
+  const potd = useMemo(() => {
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
+    return dsaCuratedList[dayOfYear % dsaCuratedList.length];
+  }, []);
 
   // Dynamic schedule state loaded from DB / LocalStorage
   const [schedule, setSchedule] = useState(readSavedSchedule);
@@ -402,6 +523,167 @@ function App() {
       clearInterval(interval);
     };
   }, []);
+
+  // Developer & Coding Hub Handlers and Polling
+  useEffect(() => {
+    if (!token) return;
+    const fetchCodingProfile = async () => {
+      try {
+        const res = await fetch(`${API}/coding/profile`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && (data.leetcode_username || data.github_username || data.solved_dsa_ids?.length)) {
+            setCodingProfile(prev => {
+              const merged = {
+                leetcode_username: data.leetcode_username || prev.leetcode_username,
+                github_username: data.github_username || prev.github_username,
+                solved_dsa_ids: Array.from(new Set([...(prev.solved_dsa_ids || []), ...(data.solved_dsa_ids || [])]))
+              };
+              localStorage.setItem('daymark-coding-profile', JSON.stringify(merged));
+              return merged;
+            });
+          }
+        }
+      } catch {}
+    };
+    fetchCodingProfile();
+  }, [token]);
+
+  const refreshLeetcode = async (uname) => {
+    const target = (uname !== undefined ? uname : codingProfile.leetcode_username || '').trim();
+    if (!target) {
+      setLeetcodeData(null);
+      return;
+    }
+    setLeetcodeLoading(true);
+    setLeetcodeError('');
+    try {
+      const res = await fetch(`${API}/coding/leetcode/${encodeURIComponent(target)}`);
+      const data = await res.json();
+      if (res.ok) {
+        setLeetcodeData(data);
+      } else {
+        setLeetcodeError(data.error || 'Failed to fetch LeetCode data');
+      }
+    } catch {
+      setLeetcodeError('Network error connecting to LeetCode service');
+    } finally {
+      setLeetcodeLoading(false);
+    }
+  };
+
+  const refreshGithub = async (uname) => {
+    const target = (uname !== undefined ? uname : codingProfile.github_username || '').trim();
+    if (!target) {
+      setGithubData(null);
+      return;
+    }
+    setGithubLoading(true);
+    setGithubError('');
+    try {
+      const res = await fetch(`${API}/coding/github/${encodeURIComponent(target)}`);
+      const data = await res.json();
+      if (res.ok) {
+        setGithubData(data);
+      } else {
+        setGithubError(data.error || 'Failed to fetch GitHub data');
+      }
+    } catch {
+      setGithubError('Network error connecting to GitHub service');
+    } finally {
+      setGithubLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchContests = async () => {
+      try {
+        const res = await fetch(`${API}/coding/contests`);
+        if (res.ok) {
+          const data = await res.json();
+          setContestsList(data.contests || []);
+        }
+      } catch {}
+    };
+    fetchContests();
+  }, []);
+
+  useEffect(() => {
+    if (codingProfile.leetcode_username) {
+      refreshLeetcode(codingProfile.leetcode_username);
+    }
+    if (codingProfile.github_username) {
+      refreshGithub(codingProfile.github_username);
+    }
+  }, [codingProfile.leetcode_username, codingProfile.github_username]);
+
+  const handleSaveCodingHandles = async (e) => {
+    e?.preventDefault?.();
+    const updated = {
+      ...codingProfile,
+      leetcode_username: inputLcUser.trim(),
+      github_username: inputGhUser.trim()
+    };
+    setCodingProfile(updated);
+    localStorage.setItem('daymark-coding-profile', JSON.stringify(updated));
+    setCodingModalOpen(false);
+
+    if (token) {
+      try {
+        await fetch(`${API}/coding/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(updated)
+        });
+      } catch {}
+    }
+
+    refreshLeetcode(updated.leetcode_username);
+    refreshGithub(updated.github_username);
+    setToast('Coding handles saved & synced!');
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  const toggleDsaSolved = async (problemId, isPotd = false) => {
+    const isCurrentlySolved = (codingProfile.solved_dsa_ids || []).includes(problemId);
+    const updatedIds = isCurrentlySolved
+      ? codingProfile.solved_dsa_ids.filter(id => id !== problemId)
+      : [...(codingProfile.solved_dsa_ids || []), problemId];
+
+    const updated = { ...codingProfile, solved_dsa_ids: updatedIds };
+    setCodingProfile(updated);
+    localStorage.setItem('daymark-coding-profile', JSON.stringify(updated));
+
+    if (token) {
+      try {
+        await fetch(`${API}/coding/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(updated)
+        });
+      } catch {}
+    }
+
+    if (!isCurrentlySolved) {
+      playChime(true);
+      if (isPotd) {
+        setToast('🔥 Problem of the Day Solved! +50 Grind Points added to your pod score!');
+      } else {
+        setToast('✨ Problem marked as solved!');
+      }
+    } else {
+      setToast('Problem unmarked.');
+    }
+    setTimeout(() => setToast(''), 3000);
+  };
 
   // Guard: ONLY today's date can be updated. Past and future records are protected and read-only.
   const patchDay = (patch) => {
@@ -889,6 +1171,7 @@ function App() {
             ['Today', Sun],
             ['Weekly report', TrendingUp],
             ['Study pods', Users],
+            ['Coding', Code2],
             ['Routine settings', Settings2]
           ].map(([label, Icon]) => (
             <button
@@ -901,6 +1184,9 @@ function App() {
               {label === 'Today' && <span className="nav-indicator" />}
               {label === 'Study pods' && groups.length > 0 && (
                 <span className="nav-indicator" style={{ background: '#3b82f6' }} />
+              )}
+              {label === 'Coding' && (
+                <span className="nav-indicator" style={{ background: '#10b981' }} />
               )}
             </button>
           ))}
@@ -955,6 +1241,8 @@ function App() {
                 ? 'Your progress, at a glance'
                 : view === 'Study pods'
                 ? 'Competitive Study Pod'
+                : view === 'Coding'
+                ? 'Developer & DSA Performance Hub'
                 : 'Customize your routine schedule'}
             </h1>
           </div>
@@ -1630,6 +1918,513 @@ function App() {
           </section>
         )}
 
+        {/* Developer & Coding Performance Hub View */}
+        {view === 'Coding' && (
+          <section className="coding-hub-layout">
+            {/* Top Bar: Connected Handles & Actions */}
+            <div className="coding-top-banner">
+              <div>
+                <span className="eyebrow">DEVELOPER & DSA HUB</span>
+                <h3>Code. Ship. Master Patterns.</h3>
+                <p className="muted">
+                  Track your real LeetCode stats, monitor your public GitHub contributions, solve curated interview problems, and stay ahead in contests.
+                </p>
+              </div>
+              <div className="coding-handles-actions">
+                <button
+                  className="save-schedule-btn"
+                  onClick={() => {
+                    setInputLcUser(codingProfile.leetcode_username || '');
+                    setInputGhUser(codingProfile.github_username || '');
+                    setCodingModalOpen(true);
+                  }}
+                >
+                  <Terminal size={15} /> {codingProfile.leetcode_username || codingProfile.github_username ? 'Edit Handles' : 'Connect LeetCode / GitHub'}
+                </button>
+                {(codingProfile.leetcode_username || codingProfile.github_username) && (
+                  <button
+                    className="reset-schedule-btn"
+                    onClick={() => {
+                      refreshLeetcode();
+                      refreshGithub();
+                      setToast('Refreshing stats…');
+                      setTimeout(() => setToast(''), 1500);
+                    }}
+                    title="Refresh live stats"
+                  >
+                    <RefreshCw size={14} className={leetcodeLoading || githubLoading ? 'spin-anim' : ''} /> Refresh
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Sub-Tabs: Overview, Top Patterns Sheet, Contests, Suggestions */}
+            <div className="coding-subtabs">
+              {[
+                ['overview', 'Stats & POTD', Flame],
+                ['sheet', 'Interview Patterns (Blind 75)', CheckCircle2],
+                ['contests', 'Contest Calendar', Trophy],
+                ['suggestions', 'Coder Hub Ideas', Sparkles]
+              ].map(([id, label, Icon]) => (
+                <button
+                  key={id}
+                  className={`coding-subtab-btn ${codingSubTab === id ? 'active' : ''}`}
+                  onClick={() => setCodingSubTab(id)}
+                >
+                  <Icon size={14} />
+                  <span>{label}</span>
+                  {id === 'sheet' && codingProfile.solved_dsa_ids?.length > 0 && (
+                    <span className="count-pill">{codingProfile.solved_dsa_ids.length}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* SUBTAB 1: OVERVIEW */}
+            {codingSubTab === 'overview' && (
+              <div className="coding-overview-grid">
+                {/* 1. Daily DSA Problem of the Day */}
+                <div className="panel dsa-potd-card">
+                  <div className="potd-badge-row">
+                    <span className="potd-chip">
+                      <Flame size={13} color="#f59e0b" /> PROBLEM OF THE DAY
+                    </span>
+                    <span className={`diff-badge ${potd.difficulty.toLowerCase()}`}>{potd.difficulty}</span>
+                    <span className="topic-pill">{potd.category}</span>
+                  </div>
+                  <div className="potd-body">
+                    <h4>{potd.title}</h4>
+                    <p>
+                      Solve today's high-frequency interview problem to earn +50 Grind Points toward your daily pod standing!
+                    </p>
+                  </div>
+                  <div className="potd-actions">
+                    <a
+                      href={potd.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="potd-solve-btn"
+                    >
+                      <ExternalLink size={14} /> Solve on LeetCode
+                    </a>
+                    <button
+                      className={`potd-check-btn ${codingProfile.solved_dsa_ids?.includes(potd.id) ? 'done' : ''}`}
+                      onClick={() => toggleDsaSolved(potd.id, true)}
+                    >
+                      <Check size={14} />
+                      {codingProfile.solved_dsa_ids?.includes(potd.id) ? 'Solved Today (+50 GP)' : 'Mark as Solved'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. LeetCode Performance Card */}
+                <div className="panel coding-metric-panel">
+                  <div className="coding-panel-header">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="platform-icon lc">LC</span>
+                      <div>
+                        <strong>LeetCode Stats</strong>
+                        <small>
+                          {codingProfile.leetcode_username ? `@${codingProfile.leetcode_username}` : 'No account connected'}
+                        </small>
+                      </div>
+                    </div>
+                    {codingProfile.leetcode_username ? (
+                      <a
+                        href={leetcodeData?.profileUrl || `https://leetcode.com/u/${codingProfile.leetcode_username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="external-link-btn"
+                        title="View LeetCode profile"
+                      >
+                        <ExternalLink size={14} />
+                      </a>
+                    ) : (
+                      <button
+                        className="quick-link-btn"
+                        onClick={() => {
+                          setInputLcUser('');
+                          setInputGhUser(codingProfile.github_username || '');
+                          setCodingModalOpen(true);
+                        }}
+                      >
+                        + Connect
+                      </button>
+                    )}
+                  </div>
+
+                  {leetcodeLoading && (
+                    <div className="loading-state">
+                      <RefreshCw size={18} className="spin-anim" />
+                      <span>Fetching LeetCode stats…</span>
+                    </div>
+                  )}
+
+                  {leetcodeError && !leetcodeLoading && (
+                    <div className="coding-error-box">
+                      <p>{leetcodeError}</p>
+                      <button onClick={() => refreshLeetcode()}>Retry</button>
+                    </div>
+                  )}
+
+                  {!codingProfile.leetcode_username && (
+                    <div className="empty-prompt">
+                      <Terminal size={32} color="#8a948c" />
+                      <p>Connect your LeetCode username to see total solved, Easy/Medium/Hard breakdown, and rank.</p>
+                      <button
+                        className="save-schedule-btn"
+                        onClick={() => {
+                          setInputLcUser('');
+                          setInputGhUser(codingProfile.github_username || '');
+                          setCodingModalOpen(true);
+                        }}
+                      >
+                        Connect LeetCode
+                      </button>
+                    </div>
+                  )}
+
+                  {leetcodeData && !leetcodeLoading && (
+                    <div className="lc-stats-body">
+                      <div className="lc-total-row">
+                        <div className="lc-total-num">
+                          <strong>{leetcodeData.totalSolved}</strong>
+                          <small>/ {leetcodeData.totalQuestions} Solved</small>
+                        </div>
+                        <div className="lc-badges">
+                          {leetcodeData.ranking && (
+                            <span className="lc-rank-badge">
+                              <Trophy size={12} color="#f59e0b" /> Rank #{leetcodeData.ranking.toLocaleString()}
+                            </span>
+                          )}
+                          <span className="lc-acc-badge">
+                            Acc: {leetcodeData.acceptanceRate}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Difficulty Progress Bars */}
+                      <div className="lc-diff-bars">
+                        <div className="lc-diff-bar-item">
+                          <div className="lc-diff-label">
+                            <span className="dot easy" />
+                            <span>Easy</span>
+                            <strong>{leetcodeData.easySolved} <em>/ {leetcodeData.totalEasy}</em></strong>
+                          </div>
+                          <div className="lc-track">
+                            <div
+                              className="fill easy"
+                              style={{ width: `${Math.min(100, (leetcodeData.easySolved / (leetcodeData.totalEasy || 1)) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="lc-diff-bar-item">
+                          <div className="lc-diff-label">
+                            <span className="dot medium" />
+                            <span>Medium</span>
+                            <strong>{leetcodeData.mediumSolved} <em>/ {leetcodeData.totalMedium}</em></strong>
+                          </div>
+                          <div className="lc-track">
+                            <div
+                              className="fill medium"
+                              style={{ width: `${Math.min(100, (leetcodeData.mediumSolved / (leetcodeData.totalMedium || 1)) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="lc-diff-bar-item">
+                          <div className="lc-diff-label">
+                            <span className="dot hard" />
+                            <span>Hard</span>
+                            <strong>{leetcodeData.hardSolved} <em>/ {leetcodeData.totalHard}</em></strong>
+                          </div>
+                          <div className="lc-track">
+                            <div
+                              className="fill hard"
+                              style={{ width: `${Math.min(100, (leetcodeData.hardSolved / (leetcodeData.totalHard || 1)) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. GitHub Activity & Heatmap Card */}
+                <div className="panel coding-metric-panel">
+                  <div className="coding-panel-header">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="platform-icon gh"><Github size={15} /></span>
+                      <div>
+                        <strong>GitHub Profile</strong>
+                        <small>
+                          {codingProfile.github_username ? `@${codingProfile.github_username}` : 'No account connected'}
+                        </small>
+                      </div>
+                    </div>
+                    {codingProfile.github_username ? (
+                      <a
+                        href={`https://github.com/${codingProfile.github_username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="external-link-btn"
+                        title="View GitHub profile"
+                      >
+                        <ExternalLink size={14} />
+                      </a>
+                    ) : (
+                      <button
+                        className="quick-link-btn"
+                        onClick={() => {
+                          setInputLcUser(codingProfile.leetcode_username || '');
+                          setInputGhUser('');
+                          setCodingModalOpen(true);
+                        }}
+                      >
+                        + Connect
+                      </button>
+                    )}
+                  </div>
+
+                  {githubLoading && (
+                    <div className="loading-state">
+                      <RefreshCw size={18} className="spin-anim" />
+                      <span>Fetching GitHub activity…</span>
+                    </div>
+                  )}
+
+                  {!codingProfile.github_username && (
+                    <div className="empty-prompt">
+                      <Github size={32} color="#8a948c" />
+                      <p>Connect your GitHub handle to see your commit streak heatmap and public projects.</p>
+                      <button
+                        className="save-schedule-btn"
+                        onClick={() => {
+                          setInputLcUser(codingProfile.leetcode_username || '');
+                          setInputGhUser('');
+                          setCodingModalOpen(true);
+                        }}
+                      >
+                        Connect GitHub
+                      </button>
+                    </div>
+                  )}
+
+                  {githubData && !githubLoading && (
+                    <div className="gh-body">
+                      <div className="gh-user-row">
+                        <img
+                          src={githubData.user?.avatar_url || `https://github.com/${codingProfile.github_username}.png`}
+                          alt={githubData.user?.name}
+                          className="gh-avatar"
+                        />
+                        <div className="gh-meta">
+                          <strong>{githubData.user?.name || codingProfile.github_username}</strong>
+                          {githubData.user?.bio && <p>{githubData.user.bio}</p>}
+                          <div className="gh-counts">
+                            {githubData.user?.public_repos !== null && (
+                              <span><strong>{githubData.user?.public_repos}</strong> repos</span>
+                            )}
+                            {githubData.user?.followers !== null && (
+                              <span><strong>{githubData.user?.followers}</strong> followers</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Live Commit Consistency Heatmap */}
+                      <div className="gh-chart-container">
+                        <div className="gh-chart-title">
+                          <GitBranch size={13} />
+                          <span>Annual Contribution Heatmap</span>
+                        </div>
+                        <div className="gh-chart-scroll">
+                          <img
+                            src={githubData.chartUrl || `https://ghchart.rshah.org/315b45/${encodeURIComponent(codingProfile.github_username)}`}
+                            alt="GitHub Contribution Calendar"
+                            className="gh-chart-img"
+                            onError={e => { e.target.style.display = 'none'; }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Top Repositories */}
+                      {githubData.repos && githubData.repos.length > 0 && (
+                        <div className="gh-repos-list">
+                          <div className="gh-chart-title" style={{ marginTop: '12px' }}>
+                            <Star size={13} />
+                            <span>Recent Public Repositories</span>
+                          </div>
+                          <div className="gh-repos-grid">
+                            {githubData.repos.slice(0, 3).map(repo => (
+                              <a
+                                key={repo.name}
+                                href={repo.html_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="gh-repo-chip"
+                              >
+                                <span className="gh-repo-name">{repo.name}</span>
+                                <div className="gh-repo-stats">
+                                  {repo.language && <span className="lang-tag">{repo.language}</span>}
+                                  {repo.stargazers_count > 0 && (
+                                    <span className="star-tag"><Star size={11} /> {repo.stargazers_count}</span>
+                                  )}
+                                </div>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* SUBTAB 2: INTERVIEW PATTERNS / BLIND 75 SHEET */}
+            {codingSubTab === 'sheet' && (
+              <div className="panel coding-sheet-panel">
+                <div className="sheet-header">
+                  <div>
+                    <span className="eyebrow">ESSENTIAL INTERVIEW PATTERNS</span>
+                    <h3>Curated Blind 75 / Top Patterns Checklist</h3>
+                    <p className="muted">
+                      Master the highest-yield DSA patterns tested in top tech engineering interviews.
+                    </p>
+                  </div>
+                  <div className="sheet-progress-box">
+                    <div className="progress-caption">
+                      <span>Patterns Mastered</span>
+                      <strong>
+                        {codingProfile.solved_dsa_ids?.length || 0} / {dsaCuratedList.length}
+                      </strong>
+                    </div>
+                    <div className="progress-track">
+                      <div
+                        style={{
+                          width: `${Math.round(
+                            ((codingProfile.solved_dsa_ids?.length || 0) / dsaCuratedList.length) * 100
+                          )}%`
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Categorized Problems */}
+                {['Arrays & Hashing', 'Two Pointers & Sliding Window', 'Binary Search', 'Linked List', 'Trees & BST', 'Dynamic Programming & Graphs'].map(cat => {
+                  const items = dsaCuratedList.filter(p => p.category === cat);
+                  const solvedCount = items.filter(p => codingProfile.solved_dsa_ids?.includes(p.id)).length;
+                  return (
+                    <div className="pattern-group" key={cat}>
+                      <div className="pattern-group-header">
+                        <h4>{cat}</h4>
+                        <span className="pattern-count">{solvedCount} / {items.length}</span>
+                      </div>
+                      <div className="pattern-items-list">
+                        {items.map(p => {
+                          const isSolved = codingProfile.solved_dsa_ids?.includes(p.id);
+                          return (
+                            <div className={`pattern-item-row ${isSolved ? 'solved' : ''}`} key={p.id}>
+                              <button
+                                className="pattern-check-box"
+                                onClick={() => toggleDsaSolved(p.id)}
+                                title={isSolved ? 'Mark as unsolved' : 'Mark as solved'}
+                              >
+                                {isSolved && <Check size={13} color="#fff" />}
+                              </button>
+                              <span className="pattern-title">{p.title}</span>
+                              <span className={`diff-pill ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
+                              <a
+                                href={p.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="pattern-link"
+                                title="Solve on LeetCode"
+                              >
+                                <ExternalLink size={13} />
+                              </a>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* SUBTAB 3: UPCOMING CONTESTS */}
+            {codingSubTab === 'contests' && (
+              <div className="panel coding-contests-panel">
+                <div className="panel-heading">
+                  <div>
+                    <span className="eyebrow">COMPETITIVE PROGRAMMING</span>
+                    <h3>Weekly Contests Schedule</h3>
+                    <p className="muted">
+                      Participate regularly in timed rounds to build real interview speed and problem-solving agility.
+                    </p>
+                  </div>
+                  <span className="count-badge">Weekly Cycle</span>
+                </div>
+
+                <div className="contests-grid">
+                  {contestsList.map(c => (
+                    <div className={`contest-card ${c.tone || 'amber'}`} key={c.id}>
+                      <div className="contest-badge-row">
+                        <span className="platform-tag">{c.platform}</span>
+                        <span className="duration-tag">{c.duration}</span>
+                      </div>
+                      <h4>{c.name}</h4>
+                      <p className="contest-time">{c.scheduleText}</p>
+                      <a
+                        href={c.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="contest-link-btn"
+                      >
+                        Register / Enter Contest <ArrowUpRight size={14} />
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* SUBTAB 4: CODER HUB SUGGESTIONS & IDEAS */}
+            {codingSubTab === 'suggestions' && (
+              <div className="panel coding-suggestions-panel">
+                <div className="panel-heading">
+                  <div>
+                    <span className="eyebrow">ROADMAP & ENHANCEMENTS</span>
+                    <h3>Ideas to Make Daymark the Ultimate Coder Hub</h3>
+                    <p className="muted">
+                      Here are high-impact features specifically designed for developers and competitive programmers.
+                    </p>
+                  </div>
+                  <span className="count-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Sparkles size={13} color="#d97706" /> 6 Ideas
+                  </span>
+                </div>
+
+                <div className="suggestions-grid">
+                  {coderSuggestions.map(s => (
+                    <div className="suggestion-card" key={s.id}>
+                      <div className="suggestion-badge-row">
+                        <span className="suggestion-badge">{s.badge}</span>
+                      </div>
+                      <h4>{s.title}</h4>
+                      <p>{s.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
         {view === 'Routine settings' && (
           <section className="panel settings-panel">
             <span className="eyebrow">ROUTINE CONFIGURATION</span>
@@ -1957,6 +2752,58 @@ function App() {
               </div>
               <button type="submit" className="form-submit-btn">
                 Join Pod
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Connect LeetCode & GitHub Handles Modal */}
+      {codingModalOpen && (
+        <div className="modal-overlay" onClick={() => setCodingModalOpen(false)}>
+          <div className="modal-card" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Connect Coding Accounts</h3>
+              <button className="modal-close" onClick={() => setCodingModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+            <p className="muted" style={{ fontSize: '12px', margin: '-8px 0 16px' }}>
+              Link your public LeetCode and GitHub handles to track your solved problems, acceptance rate, and contribution streak.
+            </p>
+
+            <form onSubmit={handleSaveCodingHandles}>
+              <div className="form-group">
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>LeetCode Username</span>
+                  <small style={{ color: '#889189', textTransform: 'none' }}>(e.g. neal_wu or tourister)</small>
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={inputLcUser}
+                  onChange={e => setInputLcUser(e.target.value)}
+                  placeholder="LeetCode username"
+                />
+              </div>
+
+              <div className="form-group">
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Github size={13} />
+                  <span>GitHub Username</span>
+                  <small style={{ color: '#889189', textTransform: 'none' }}>(e.g. torvalds or your username)</small>
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={inputGhUser}
+                  onChange={e => setInputGhUser(e.target.value)}
+                  placeholder="GitHub username"
+                />
+              </div>
+
+              <button type="submit" className="form-submit-btn">
+                Save Handles & Fetch Stats
               </button>
             </form>
           </div>

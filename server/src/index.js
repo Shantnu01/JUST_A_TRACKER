@@ -132,6 +132,16 @@ async function ensureTable() {
     )`);
     await pool.query(`ALTER TABLE group_nudges ADD COLUMN IF NOT EXISTS acknowledged BOOLEAN DEFAULT false;`);
 
+    // 9. User Coding Profiles (LeetCode, GitHub, Solved DSA)
+    await pool.query(`CREATE TABLE IF NOT EXISTS user_coding_profiles (
+      user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      leetcode_username TEXT DEFAULT '',
+      github_username TEXT DEFAULT '',
+      codeforces_username TEXT DEFAULT '',
+      solved_dsa_ids JSONB DEFAULT '[]'::jsonb,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )`);
+
     dbInitialized = true;
     console.log('[Database] Connected and schema verified.');
   } catch (error) {
@@ -767,6 +777,275 @@ app.put('/api/settings/schedule', optionalAuth, async (req, res) => {
     console.error('Save schedule settings failed:', error.message);
     return res.status(500).json({ error: 'Unable to save schedule settings.' });
   }
+});
+
+// ================= CODING HUB ENDPOINTS =================
+const codingCache = new Map();
+
+function getCached(key) {
+  const item = codingCache.get(key);
+  if (item && Date.now() - item.time < 5 * 60 * 1000) {
+    return item.data;
+  }
+  return null;
+}
+
+function setCached(key, data) {
+  codingCache.set(key, { time: Date.now(), data });
+}
+
+// 1. Get or Update User Coding Profile (LeetCode & GitHub handles, Solved DSA)
+app.get('/api/coding/profile', optionalAuth, async (req, res) => {
+  if (!req.user || !pool) {
+    return res.json({ leetcode_username: '', github_username: '', codeforces_username: '', solved_dsa_ids: [] });
+  }
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `SELECT leetcode_username, github_username, codeforces_username, solved_dsa_ids FROM user_coding_profiles WHERE user_id = $1`,
+      [req.user.id]
+    );
+    if (result.rows.length > 0) {
+      return res.json(result.rows[0]);
+    }
+    return res.json({ leetcode_username: '', github_username: '', codeforces_username: '', solved_dsa_ids: [] });
+  } catch (err) {
+    console.error('Fetch coding profile error:', err.message);
+    return res.status(500).json({ error: 'Failed to fetch coding profile' });
+  }
+});
+
+app.put('/api/coding/profile', optionalAuth, async (req, res) => {
+  const { leetcode_username = '', github_username = '', codeforces_username = '', solved_dsa_ids = [] } = req.body;
+  if (!req.user || !pool) {
+    return res.json({ leetcode_username, github_username, codeforces_username, solved_dsa_ids });
+  }
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `INSERT INTO user_coding_profiles (user_id, leetcode_username, github_username, codeforces_username, solved_dsa_ids, updated_at)
+       VALUES ($1, $2, $3, $4, $5::jsonb, NOW())
+       ON CONFLICT (user_id) DO UPDATE SET
+         leetcode_username = EXCLUDED.leetcode_username,
+         github_username = EXCLUDED.github_username,
+         codeforces_username = EXCLUDED.codeforces_username,
+         solved_dsa_ids = EXCLUDED.solved_dsa_ids,
+         updated_at = NOW()
+       RETURNING leetcode_username, github_username, codeforces_username, solved_dsa_ids`,
+      [req.user.id, leetcode_username.trim(), github_username.trim(), codeforces_username.trim(), JSON.stringify(solved_dsa_ids)]
+    );
+    return res.json({ success: true, profile: result.rows[0] });
+  } catch (err) {
+    console.error('Update coding profile error:', err.message);
+    return res.status(500).json({ error: 'Failed to update coding profile' });
+  }
+});
+
+// 2. Fetch LeetCode performance stats with caching & fallback
+app.get('/api/coding/leetcode/:username', async (req, res) => {
+  const username = req.params.username.trim();
+  if (!username) return res.status(400).json({ error: 'Username required' });
+
+  const cacheKey = `leetcode:${username.toLowerCase()}`;
+  const cached = getCached(cacheKey);
+  if (cached) return res.json(cached);
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+    const apiRes = await fetch(`https://alfa-leetcode-api.onrender.com/userProfile/${encodeURIComponent(username)}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (!apiRes.ok) {
+      return res.status(404).json({ error: `LeetCode profile for "${username}" not found or service unavailable.` });
+    }
+
+    const data = await apiRes.json();
+    if (data.errors || (!data.totalSolved && data.totalSolved !== 0)) {
+      return res.status(404).json({ error: `LeetCode profile "${username}" not found.` });
+    }
+
+    const allSubmissions = data.totalSubmissions?.find(s => s.difficulty === 'All')?.submissions || 0;
+    const allAc = data.totalSolved || 0;
+    const acceptanceRate = allSubmissions > 0 ? ((allAc / allSubmissions) * 100).toFixed(1) + '%' : '0%';
+
+    const payload = {
+      username,
+      profileUrl: `https://leetcode.com/u/${username}`,
+      totalSolved: data.totalSolved || 0,
+      totalQuestions: data.totalQuestions || 3300,
+      easySolved: data.easySolved || 0,
+      totalEasy: data.totalEasy || 820,
+      mediumSolved: data.mediumSolved || 0,
+      totalMedium: data.totalMedium || 1700,
+      hardSolved: data.hardSolved || 0,
+      totalHard: data.totalHard || 750,
+      ranking: data.ranking || null,
+      reputation: data.reputation || 0,
+      acceptanceRate,
+      recentSubmissions: (data.recentSubmissions || []).slice(0, 5)
+    };
+
+    setCached(cacheKey, payload);
+    return res.json(payload);
+  } catch (err) {
+    console.error('LeetCode fetch error:', err.message);
+    return res.status(502).json({
+      error: 'Unable to reach LeetCode service at the moment.',
+      username,
+      fallbackUrl: `https://leetcode.com/u/${username}`
+    });
+  }
+});
+
+// 3. Fetch GitHub Profile & Recent Repositories (with rate-limit fallback)
+app.get('/api/coding/github/:username', async (req, res) => {
+  const username = req.params.username.trim();
+  if (!username) return res.status(400).json({ error: 'Username required' });
+
+  const cacheKey = `github:${username.toLowerCase()}`;
+  const cached = getCached(cacheKey);
+  if (cached) return res.json(cached);
+
+  const fallbackPayload = {
+    user: {
+      login: username,
+      name: username,
+      avatar_url: `https://github.com/${username}.png`,
+      html_url: `https://github.com/${username}`,
+      bio: 'Public GitHub developer account',
+      public_repos: null,
+      followers: null,
+      following: null,
+      rate_limited: false
+    },
+    repos: [],
+    chartUrl: `https://ghchart.rshah.org/315b45/${encodeURIComponent(username)}`
+  };
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const headers = { 'User-Agent': 'DaymarkRoutineTracker' };
+    if (process.env.GITHUB_TOKEN) {
+      headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+    }
+
+    const [userRes, reposRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${encodeURIComponent(username)}`, {
+        headers,
+        signal: controller.signal
+      }),
+      fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=6`, {
+        headers,
+        signal: controller.signal
+      })
+    ]);
+    clearTimeout(timeoutId);
+
+    if (userRes.status === 403 || userRes.status === 429) {
+      // Rate-limited by GitHub IP quota: gracefully return the fallback payload with avatar & heatmap
+      fallbackPayload.user.rate_limited = true;
+      setCached(cacheKey, fallbackPayload);
+      return res.json(fallbackPayload);
+    }
+
+    if (!userRes.ok) {
+      return res.status(userRes.status).json({ error: `GitHub user "${username}" not found.` });
+    }
+
+    const userData = await userRes.json();
+    let reposData = [];
+    if (reposRes.ok) {
+      const rawRepos = await reposRes.json();
+      if (Array.isArray(rawRepos)) {
+        reposData = rawRepos.map(r => ({
+          name: r.name,
+          html_url: r.html_url,
+          description: r.description,
+          language: r.language,
+          stargazers_count: r.stargazers_count,
+          forks_count: r.forks_count,
+          updated_at: r.updated_at
+        }));
+      }
+    }
+
+    const payload = {
+      user: {
+        login: userData.login,
+        name: userData.name || userData.login,
+        avatar_url: userData.avatar_url || `https://github.com/${username}.png`,
+        html_url: userData.html_url,
+        bio: userData.bio,
+        public_repos: userData.public_repos,
+        followers: userData.followers,
+        following: userData.following,
+        created_at: userData.created_at,
+        rate_limited: false
+      },
+      repos: reposData,
+      chartUrl: `https://ghchart.rshah.org/315b45/${encodeURIComponent(username)}`
+    };
+
+    setCached(cacheKey, payload);
+    return res.json(payload);
+  } catch (err) {
+    console.warn('GitHub fetch error (using fallback):', err.message);
+    fallbackPayload.user.rate_limited = true;
+    setCached(cacheKey, fallbackPayload);
+    return res.json(fallbackPayload);
+  }
+});
+
+// 4. Upcoming & Weekly Coding Contests Schedule
+app.get('/api/coding/contests', (_req, res) => {
+  // Curated recurring programming contest calendar
+  const now = new Date();
+  const contests = [
+    {
+      id: 'lc-weekly',
+      platform: 'LeetCode',
+      name: 'LeetCode Weekly Contest',
+      scheduleText: 'Every Sunday · 08:00 AM IST (02:30 UTC)',
+      duration: '1h 30m',
+      url: 'https://leetcode.com/contest/',
+      tone: 'amber'
+    },
+    {
+      id: 'lc-biweekly',
+      platform: 'LeetCode',
+      name: 'LeetCode Biweekly Contest',
+      scheduleText: 'Alternate Saturdays · 08:00 PM IST (14:30 UTC)',
+      duration: '1h 30m',
+      url: 'https://leetcode.com/contest/',
+      tone: 'amber'
+    },
+    {
+      id: 'cf-round',
+      platform: 'Codeforces',
+      name: 'Codeforces Round (Div. 2 & Div. 3)',
+      scheduleText: 'Weekly regular rounds',
+      duration: '2h 15m',
+      url: 'https://codeforces.com/contests',
+      tone: 'blue'
+    },
+    {
+      id: 'atcoder-abc',
+      platform: 'AtCoder',
+      name: 'AtCoder Beginner Contest (ABC)',
+      scheduleText: 'Every Saturday · 05:30 PM IST (12:00 UTC)',
+      duration: '1h 40m',
+      url: 'https://atcoder.jp/contests',
+      tone: 'green'
+    }
+  ];
+
+  return res.json({ contests, timestamp: now.toISOString() });
 });
 
 // Serve frontend build in production / single-service deployment
