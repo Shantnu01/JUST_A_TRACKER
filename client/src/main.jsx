@@ -423,6 +423,17 @@ function readSavedAlarms(userId = null) {
   ];
 }
 
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 function App() {
   // Authentication State
   const [token, setToken] = useState(() => localStorage.getItem('daymark-token') || '');
@@ -468,6 +479,9 @@ function App() {
   const [view, setView] = useState('Today'); // 'Today' | 'Weekly report' | 'Study pods' | 'Routine settings'
   const [notes, setNotes] = useState('');
   const [dbStatus, setDbStatus] = useState('checking'); // 'connected' | 'local' | 'checking'
+  const [pushSubscribed, setPushSubscribed] = useState(() => {
+    return typeof Notification !== 'undefined' && Notification.permission === 'granted';
+  });
 
   // Developer & Coding Hub State
   const [codingProfile, setCodingProfile] = useState(() => {
@@ -725,6 +739,90 @@ function App() {
       clearInterval(interval);
     };
   }, []);
+
+  // Web Push & Service Worker Registration
+  const requestPushSubscription = async (userToken = null, silent = false) => {
+    if (typeof window === 'undefined') return false;
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+      return false;
+    }
+    try {
+      let perm = Notification.permission;
+      if (perm !== 'granted') {
+        if (silent) return false;
+        perm = await Notification.requestPermission();
+      }
+      if (perm !== 'granted') {
+        setPushSubscribed(false);
+        return false;
+      }
+
+      setPushSubscribed(true);
+      const reg = await navigator.serviceWorker.ready;
+      const keyRes = await fetch(`${API}/push/public-key`);
+      if (!keyRes.ok) return false;
+      const { publicKey } = await keyRes.json();
+      if (!publicKey) return false;
+
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) {
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(publicKey)
+        });
+      }
+
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+      const headers = { 'Content-Type': 'application/json' };
+      if (userToken || token) headers['Authorization'] = `Bearer ${userToken || token}`;
+
+      await fetch(`${API}/push/subscribe`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ subscription: sub, timezone })
+      });
+
+      return true;
+    } catch (err) {
+      console.warn('[Push] Setup failed:', err);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(err => {
+        console.warn('[SW] Registration failed:', err);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+      requestPushSubscription(token, true);
+    }
+  }, [token]);
+
+  const handleEnablePushAlerts = async () => {
+    const success = await requestPushSubscription(token, false);
+    if (success) {
+      setToast('🔔 Phone Notification Bar Alerts Enabled!');
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          fetch(`${API}/push/test`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subscription: sub })
+          });
+        }
+      } catch {}
+    } else {
+      setToast('Notification permission was denied or not supported');
+    }
+    setTimeout(() => setToast(''), 3500);
+  };
 
   // Developer & Coding Hub Handlers and Polling
   useEffect(() => {
@@ -1372,16 +1470,22 @@ function App() {
       setTimeout(() => setToast(''), 2500);
       return;
     }
-    // Attempt notification permission if not yet decided, but don't block audio alarm!
-    if ('Notification' in window && Notification.permission === 'default') {
-      try {
-        await Notification.requestPermission();
-      } catch {}
-    }
     const target = alarms.find(a => a.id === id);
+    const turningOn = !target?.enabled;
     const updated = alarms.map(a => a.id === id ? { ...a, enabled: !a.enabled } : a);
     saveAlarms(updated);
-    setToast(target?.enabled ? `Alarm turned off` : `Alarm turned on (${target?.time || ''})`);
+
+    if (turningOn) {
+      requestPushSubscription(token, false).then(subscribed => {
+        if (subscribed) {
+          setToast(`Alarm turned on (${target?.time || ''}) • Notification bar alert active`);
+        } else {
+          setToast(`Alarm turned on (${target?.time || ''})`);
+        }
+      });
+    } else {
+      setToast('Alarm turned off');
+    }
     setTimeout(() => setToast(''), 2500);
   };
 
@@ -2142,6 +2246,15 @@ function App() {
                         title="Test alarm ringtone sound"
                       >
                         <Volume2 size={13} /> Test Sound
+                      </button>
+                      <button
+                        type="button"
+                        className="test-sound-btn"
+                        style={pushSubscribed ? { background: '#ecfdf5', color: '#047857', borderColor: '#a7f3d0' } : {}}
+                        onClick={handleEnablePushAlerts}
+                        title={pushSubscribed ? 'Notification bar alerts are active' : 'Enable alerts in your phone notification bar'}
+                      >
+                        <Bell size={13} /> {pushSubscribed ? 'Alerts Active' : 'Enable Phone Alerts'}
                       </button>
                       <div className="alarm-icon">
                         <AlarmClock size={17} />

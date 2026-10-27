@@ -7,6 +7,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import webpush from 'web-push';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +17,17 @@ const { Pool } = pg;
 const app = express();
 const port = Number(process.env.PORT || 4000);
 const JWT_SECRET = process.env.JWT_SECRET || 'daymark-super-pod-secret-2026';
+
+const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || 'BFwc377QGxvjG5osnK0EUqYwTGhppYUmz7XfKVopVlS8bjuHlk_zuM5Co6U_VErhTorjdVeNK5lzvxGoywEEfOk';
+const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || 'TlEm_0ug8x-Vpj5G1LSQNZ_rDNLUx6X2D6yA2SYU4jM';
+const VAPID_EMAIL = process.env.VAPID_EMAIL || 'mailto:tracker@daymark.app';
+
+try {
+  webpush.setVapidDetails(VAPID_EMAIL, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+  console.log('[WebPush] VAPID configured successfully.');
+} catch (err) {
+  console.warn('[WebPush] Initialization warning:', err.message);
+}
 
 app.use(cors({
   origin: process.env.CLIENT_ORIGIN || true,
@@ -163,6 +175,18 @@ async function ensureTable() {
       comment TEXT NOT NULL,
       suggested_code TEXT DEFAULT '',
       created_at TIMESTAMPTZ DEFAULT NOW()
+    )`);
+
+    // 11. Web Push Subscriptions for mobile/desktop notifications
+    await pool.query(`CREATE TABLE IF NOT EXISTS push_subscriptions (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id UUID,
+      endpoint TEXT NOT NULL UNIQUE,
+      p256dh TEXT NOT NULL,
+      auth TEXT NOT NULL,
+      user_timezone TEXT DEFAULT 'Asia/Kolkata',
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
     )`);
 
     dbInitialized = true;
@@ -557,6 +581,30 @@ app.post('/api/groups/:id/nudge', authenticateToken, async (req, res) => {
       `INSERT INTO group_nudges (group_id, from_user_id, to_user_id) VALUES ($1, $2, $3)`,
       [groupId, req.user.id, to_user_id]
     );
+
+    // Instant Mobile/Desktop Notification Bar Alert
+    try {
+      const infoRes = await pool.query(
+        `SELECT g.name as group_name, u.username as sender_name 
+         FROM study_groups g, users u 
+         WHERE g.id = $1 AND u.id = $2`,
+        [groupId, req.user.id]
+      );
+      const groupName = infoRes.rows[0]?.group_name || 'Study Pod';
+      const senderName = infoRes.rows[0]?.sender_name || req.user.username || 'A teammate';
+
+      sendPushToUser(to_user_id, {
+        title: `⚡ ${senderName} nudged you!`,
+        body: `Time to lock in and focus with your team in ${groupName}!`,
+        icon: '/favicon.svg',
+        badge: '/favicon.svg',
+        tag: `pod-nudge-${groupId}`,
+        data: { url: '/?view=pods' },
+        requireInteraction: true
+      });
+    } catch (pushErr) {
+      console.warn('[WebPush] Failed sending nudge push notification:', pushErr.message);
+    }
 
     return res.json({ success: true, message: 'Nudge sent successfully!' });
   } catch (error) {
@@ -1514,6 +1562,188 @@ app.post('/api/snippets/:id/like', authenticateToken, async (req, res) => {
     return res.status(500).json({ error: 'Failed to like snippet.' });
   }
 });
+
+// ================= WEB PUSH NOTIFICATION SYSTEM =================
+async function sendPushToUser(userId, payload) {
+  if (!pool || !userId) return;
+  try {
+    const res = await pool.query(
+      `SELECT endpoint, p256dh, auth FROM push_subscriptions WHERE user_id = $1`,
+      [userId]
+    );
+    for (const sub of res.rows) {
+      const pushConfig = {
+        endpoint: sub.endpoint,
+        keys: {
+          p256dh: sub.p256dh,
+          auth: sub.auth
+        }
+      };
+      webpush.sendNotification(pushConfig, JSON.stringify(payload)).catch(err => {
+        if (err.statusCode === 404 || err.statusCode === 410) {
+          pool.query(`DELETE FROM push_subscriptions WHERE endpoint = $1`, [sub.endpoint]).catch(() => {});
+        } else {
+          console.warn('[WebPush] Send error:', err.message);
+        }
+      });
+    }
+  } catch (err) {
+    console.error('[WebPush] Error querying subscriptions for user:', err.message);
+  }
+}
+
+// 1. Get VAPID Public Key for client subscription
+app.get('/api/push/public-key', (req, res) => {
+  return res.json({ publicKey: VAPID_PUBLIC_KEY });
+});
+
+// 2. Subscribe endpoint
+app.post('/api/push/subscribe', optionalAuth, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database not ready' });
+  const { subscription, timezone } = req.body || {};
+  if (!subscription || !subscription.endpoint || !subscription.keys) {
+    return res.status(400).json({ error: 'Invalid push subscription payload' });
+  }
+
+  const userId = req.user ? req.user.id : null;
+  const userTz = timezone || 'Asia/Kolkata';
+
+  try {
+    await ensureTable();
+    await pool.query(
+      `INSERT INTO push_subscriptions (user_id, endpoint, p256dh, auth, user_timezone, updated_at)
+       VALUES ($1, $2, $3, $4, $5, NOW())
+       ON CONFLICT (endpoint) DO UPDATE SET
+         user_id = COALESCE(EXCLUDED.user_id, push_subscriptions.user_id),
+         p256dh = EXCLUDED.p256dh,
+         auth = EXCLUDED.auth,
+         user_timezone = EXCLUDED.user_timezone,
+         updated_at = NOW()`,
+      [userId, subscription.endpoint, subscription.keys.p256dh, subscription.keys.auth, userTz]
+    );
+
+    return res.json({ success: true, message: 'Push subscription registered.' });
+  } catch (err) {
+    console.error('[WebPush] Subscribe error:', err.message);
+    return res.status(500).json({ error: 'Failed to save push subscription.' });
+  }
+});
+
+// 3. Test Push endpoint
+app.post('/api/push/test', optionalAuth, async (req, res) => {
+  const { subscription } = req.body || {};
+  if (!subscription || !subscription.endpoint || !subscription.keys) {
+    return res.status(400).json({ error: 'Subscription required' });
+  }
+  try {
+    const pushConfig = {
+      endpoint: subscription.endpoint,
+      keys: {
+        p256dh: subscription.keys.p256dh,
+        auth: subscription.keys.auth
+      }
+    };
+    await webpush.sendNotification(pushConfig, JSON.stringify({
+      title: '🔔 Notification Alerts Active',
+      body: 'Daymark will now notify you for Pod Nudges and scheduled Alarms even when closed!',
+      icon: '/favicon.svg',
+      badge: '/favicon.svg',
+      tag: 'daymark-test-alert',
+      data: { url: '/' }
+    }));
+    return res.json({ success: true });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// 4. Background Alarm Scheduler Loop (Checked every 30s)
+const sentAlarmsCache = new Set();
+setInterval(async () => {
+  if (!pool) return;
+  try {
+    const subsRes = await pool.query(
+      `SELECT ps.id as sub_id, ps.user_id, ps.endpoint, ps.p256dh, ps.auth, ps.user_timezone
+       FROM push_subscriptions ps`
+    );
+    if (!subsRes.rows || subsRes.rows.length === 0) return;
+
+    for (const sub of subsRes.rows) {
+      const tz = sub.user_timezone || 'Asia/Kolkata';
+      let nowTime = '';
+      let todayDate = '';
+      try {
+        const now = new Date();
+        nowTime = now.toLocaleTimeString('en-US', {
+          timeZone: tz,
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        todayDate = now.toLocaleDateString('en-CA', { timeZone: tz });
+      } catch {
+        continue;
+      }
+
+      let alarmsList = [];
+      if (sub.user_id) {
+        const dayRes = await pool.query(
+          `SELECT alarms FROM user_routine_days WHERE user_id = $1 AND day_date = $2`,
+          [sub.user_id, todayDate]
+        );
+        alarmsList = dayRes.rows[0]?.alarms || [];
+      } else {
+        const dayRes = await pool.query(
+          `SELECT alarms FROM routine_days WHERE day_date = $1`,
+          [todayDate]
+        );
+        alarmsList = dayRes.rows[0]?.alarms || [];
+      }
+
+      if (!Array.isArray(alarmsList) || alarmsList.length === 0) continue;
+
+      for (const alarm of alarmsList) {
+        if (!alarm.enabled || !alarm.time) continue;
+        if (alarm.time === nowTime) {
+          const cacheKey = `${sub.sub_id}:${todayDate}:${alarm.id}:${alarm.time}`;
+          if (sentAlarmsCache.has(cacheKey)) continue;
+
+          sentAlarmsCache.add(cacheKey);
+          if (sentAlarmsCache.size > 2000) {
+            sentAlarmsCache.clear();
+            sentAlarmsCache.add(cacheKey);
+          }
+
+          const pushConfig = {
+            endpoint: sub.endpoint,
+            keys: {
+              p256dh: sub.p256dh,
+              auth: sub.auth
+            }
+          };
+
+          const payload = {
+            title: `⏰ Alarm: ${alarm.label || 'Routine Block'}`,
+            body: `Scheduled alarm for ${alarm.time}. Time to focus!`,
+            icon: '/favicon.svg',
+            badge: '/favicon.svg',
+            tag: `alarm-${alarm.id}`,
+            data: { url: '/' },
+            requireInteraction: true
+          };
+
+          webpush.sendNotification(pushConfig, JSON.stringify(payload)).catch(err => {
+            if (err.statusCode === 404 || err.statusCode === 410) {
+              pool.query(`DELETE FROM push_subscriptions WHERE endpoint = $1`, [sub.endpoint]).catch(() => {});
+            }
+          });
+        }
+      }
+    }
+  } catch (err) {
+    // Background alarm check suppressed
+  }
+}, 30000);
 
 // Serve frontend build in production / single-service deployment
 app.use(express.static(clientDistPath));
