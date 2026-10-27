@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   AlarmClock,
+  Activity,
   ArrowUpRight,
   Award,
   Bell,
@@ -601,6 +602,7 @@ function App() {
   const [closingTask, setClosingTask] = useState(null);
   const [artifactNotes, setArtifactNotes] = useState('');
   const [artifactUrl, setArtifactUrl] = useState('');
+  const [verifiedArtifacts, setVerifiedArtifacts] = useState({});
 
   // 4. Native Web Audio Focus Soundscape State
   const [focusSoundType, setFocusSoundType] = useState('off');
@@ -1700,7 +1702,7 @@ function App() {
     setInterceptorModalOpen(false);
     finishSession(true);
     if (earlyProofText.trim()) {
-      const storageKey = `daymark-artifacts-${format(selectedDate, 'yyyy-MM-dd')}`;
+      const storageKey = `daymark-artifacts-${key}`;
       const current = JSON.parse(localStorage.getItem(storageKey) || '[]');
       current.push({
         taskId: interceptTask?.id,
@@ -1719,7 +1721,7 @@ function App() {
   // Pre-Flight Morning First-Open Gate
   useEffect(() => {
     if (!isToday) return;
-    const todayStr = format(selectedDate, 'yyyy-MM-dd');
+    const todayStr = key;
     const launchedKey = `daymark-preflight-launched-${todayStr}`;
     const hasLaunched = localStorage.getItem(launchedKey);
     const hour = new Date().getHours();
@@ -1729,7 +1731,7 @@ function App() {
   }, [isToday, selectedDate, preflightDismissed]);
 
   const handleLaunchDay = (applyAlignment = true) => {
-    const todayStr = format(selectedDate, 'yyyy-MM-dd');
+    const todayStr = key;
     localStorage.setItem(`daymark-preflight-launched-${todayStr}`, 'true');
 
     if (applyAlignment && schedule && schedule.length > 0) {
@@ -1761,8 +1763,8 @@ function App() {
 
     const runDriftCheck = () => {
       if (Date.now() < chiefDismissUntil) return;
-      const completedIds = (routine || []).filter(r => r.completed).map(r => r.id);
-      const report = detectScheduleDrift(schedule, completedIds, activeTask?.id);
+      const completedIds = habits.filter(h => day.checks?.[h.id]).map(h => h.id);
+      const report = detectScheduleDrift(schedule, completedIds, activeId);
       if (report && report.hasDrift) {
         setChiefOfStaffAlert(report);
       } else {
@@ -1773,7 +1775,7 @@ function App() {
     runDriftCheck();
     const interval = setInterval(runDriftCheck, 30000);
     return () => clearInterval(interval);
-  }, [isToday, schedule, routine, activeTask, chiefDismissUntil]);
+  }, [isToday, schedule, habits, day, activeId, chiefDismissUntil]);
 
   // Chief of Staff Action Handlers
   const applyChiefOfStaffHeal = (planToApply = null) => {
@@ -1801,7 +1803,7 @@ function App() {
   };
 
   const runManualChiefAudit = () => {
-    const completedIds = (routine || []).filter(r => r.completed).map(r => r.id);
+    const completedIds = habits.filter(h => day.checks?.[h.id]).map(h => h.id);
     const plan = generateChiefOfStaffPlan(schedule, completedIds);
     setChiefOfStaffAlert({
       hasDrift: true,
