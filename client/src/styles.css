@@ -21,6 +21,14 @@
   .topbar h1{font-size:20px;line-height:1.25;margin:4px 0 0}
   .top-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;width:100%}
   .sync-chip,.date-chip,.pod-pill{padding:6px 10px;font-size:11px}
+  .pod-pill{max-width:140px}
+  .pod-pill span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pod-dropdown-menu{left:0!important;right:auto!important;max-width:calc(100vw - 28px)!important}
+  .pod-header-title{font-size:18px}
+  .pod-header-actions{width:100%;justify-content:flex-start}
+  .pod-header-actions button{flex:1;min-width:90px;justify-content:center;padding:7px 8px;font-size:11px}
+  .gh-chart-container{padding:10px 8px}
+  .gh-chart-img{min-width:440px}
   .welcome-row{display:flex;flex-direction:column;align-items:stretch;gap:14px;padding:16px 0}
   .welcome-row h2{font-size:22px;line-height:1.25}
   .streak-card{min-width:0;width:100%;padding:12px 14px}
@@ -154,6 +162,39 @@
 .pod-pill{background:#fffefa;border:1px solid #e1e4dc;border-radius:30px;padding:7px 13px;display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:#355340}
 .pod-pill:hover{background:#f6f9f3;border-color:#b9cbbd}
 .pod-pill-count{background:#e7efe4;color:#2e523a;padding:2px 7px;border-radius:12px;font-size:10px}
+
+/* Topbar Pod Dropdown */
+.pod-dropdown-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.18);z-index:99;backdrop-filter:blur(1px)}
+.pod-dropdown-menu{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid #d8dfd4;border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,0.14);min-width:240px;max-width:min(280px,calc(100vw - 24px));z-index:100;padding:6px 0;animation:podFade .15s ease-out}
+@keyframes podFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.pod-dropdown-heading{padding:6px 12px 6px;font-size:10px;font-weight:700;color:#7e8b80;letter-spacing:0.5px}
+.pod-dropdown-item{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 12px;border:0;background:transparent;color:#28382c;font-size:12px;font-weight:500;text-align:left;transition:background .15s}
+.pod-dropdown-item:hover{background:#f3f7ef}
+.pod-dropdown-item.active{background:#ebf3e7;color:#21442c;font-weight:700}
+.pod-dropdown-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:165px}
+.pod-dropdown-count{color:#6c796e;font-size:10px;font-weight:600;margin-left:8px;flex-shrink:0}
+.pod-dropdown-divider{border-top:1px solid #eef2eb;margin:4px 0}
+.pod-dropdown-action{display:flex;align-items:center;gap:7px;width:100%;padding:8px 12px;border:0;background:transparent;color:#315b45;font-size:11px;font-weight:700;text-align:left;transition:background .15s}
+.pod-dropdown-action:hover{background:#f3f7ef}
+
+/* Study Pods Switcher Bar */
+.pod-switcher-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:8px 12px;background:#fff;border:1px solid #e3e8de;border-radius:10px;overflow-x:auto}
+.pod-switcher-label{font-size:11px;font-weight:700;color:#6d796f;white-space:nowrap}
+.pod-switcher-scroll{display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none}
+.pod-switcher-scroll::-webkit-scrollbar{display:none}
+.pod-switcher-pill{display:inline-flex;align-items:center;gap:6px;background:#f3f6f0;border:1px solid #dbe2d7;color:#495b4e;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;transition:all .15s}
+.pod-switcher-pill:hover{background:#e9efe5;border-color:#b9c8b5}
+.pod-switcher-pill.active{background:#294935;border-color:#294935;color:#fff}
+.pod-switcher-pill.active .pod-switcher-count{background:rgba(255,255,255,0.22);color:#fff}
+.pod-switcher-count{font-size:10px;color:#6b786d;background:#e5ebe0;padding:1px 6px;border-radius:10px}
+.pod-switcher-add-btn{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px dashed #ced6c8;color:#42694d;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.pod-switcher-add-btn:hover{background:#f4f7f1;border-color:#42694d}
+
+/* Pod Header Row */
+.pod-header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.pod-header-title-box{min-width:0;flex:1}
+.pod-header-title{font:700 22px Manrope,sans-serif;margin:2px 0 4px;color:#1f2e24;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pod-header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .pods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:16px}
 .pod-card{background:#fffefa;border:1px solid #e2e6de;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;position:relative}
 .pod-card.active-pod{border-color:#537c5f;box-shadow:0 0 0 2px #537c5f22}
@@ -275,10 +316,13 @@
 .gh-meta strong{display:block;font-size:13px;color:#213125}
 .gh-meta p{font-size:11px;color:#677369;margin:2px 0 4px;line-height:1.4}
 .gh-counts{display:flex;gap:12px;font-size:11px;color:#78837a}
-.gh-chart-container{background:#f9faf7;border:1px solid #e6ebe0;border-radius:10px;padding:12px}
-.gh-chart-title{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#546457;margin-bottom:8px}
-.gh-chart-scroll{overflow-x:auto;padding-bottom:4px}
-.gh-chart-img{width:100%;min-width:550px;height:auto;display:block}
+.gh-chart-container{background:#f9faf7;border:1px solid #e6ebe0;border-radius:10px;padding:12px;width:100%;box-sizing:border-box;overflow:hidden}
+.gh-chart-title{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:11px;font-weight:700;color:#546457;margin-bottom:8px}
+.gh-chart-scroll{width:100%;overflow-x:auto;overflow-y:hidden;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#ced6cb transparent}
+.gh-chart-scroll::-webkit-scrollbar{height:4px}
+.gh-chart-scroll::-webkit-scrollbar-track{background:transparent}
+.gh-chart-scroll::-webkit-scrollbar-thumb{background:#ced6cb;border-radius:4px}
+.gh-chart-img{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:670 / 110;object-fit:contain;margin:0 auto}
 .gh-repos-grid{display:grid;gap:6px;margin-top:6px}
 .gh-repo-chip{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:#fff;border:1px solid #e1e6dc;border-radius:8px;text-decoration:none;transition:border-color .15s}
 .gh-repo-chip:hover{border-color:#487455;background:#f9fbf8}

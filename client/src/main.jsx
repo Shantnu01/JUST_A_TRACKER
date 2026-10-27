@@ -1617,92 +1617,56 @@ function App() {
                 </button>
 
                 {podDropdownOpen && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '100%',
-                      right: 0,
-                      marginTop: '6px',
-                      background: '#fff',
-                      border: '1px solid #dbe0d7',
-                      borderRadius: '10px',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                      width: '230px',
-                      zIndex: 100,
-                      padding: '8px 0'
-                    }}
-                  >
-                    <div style={{ padding: '4px 12px 8px', fontSize: '10px', fontWeight: '700', color: '#889289' }}>
-                      YOUR STUDY PODS (MAX 5)
-                    </div>
-                    {groups.map(g => (
+                  <>
+                    <div
+                      className="pod-dropdown-backdrop"
+                      onClick={() => setPodDropdownOpen(false)}
+                    />
+                    <div className="pod-dropdown-menu">
+                      <div className="pod-dropdown-heading">
+                        YOUR STUDY PODS (MAX 5)
+                      </div>
+                      {groups.length === 0 ? (
+                        <div style={{ padding: '8px 14px', fontSize: '11px', color: '#7b877d' }}>
+                          No pods joined yet
+                        </div>
+                      ) : (
+                        groups.map(g => (
+                          <button
+                            key={g.id}
+                            className={`pod-dropdown-item ${g.id === activeGroupId ? 'active' : ''}`}
+                            onClick={() => {
+                              setActiveGroupId(g.id);
+                              localStorage.setItem('daymark-active-group', g.id);
+                              setPodDropdownOpen(false);
+                            }}
+                          >
+                            <span className="pod-dropdown-name">{g.name}</span>
+                            <small className="pod-dropdown-count">{g.member_count}/5</small>
+                          </button>
+                        ))
+                      )}
+                      <div className="pod-dropdown-divider" />
                       <button
-                        key={g.id}
+                        className="pod-dropdown-action"
                         onClick={() => {
-                          setActiveGroupId(g.id);
-                          localStorage.setItem('daymark-active-group', g.id);
                           setPodDropdownOpen(false);
-                        }}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          width: '100%',
-                          padding: '8px 14px',
-                          border: 0,
-                          background: g.id === activeGroupId ? '#f0f5ee' : 'transparent',
-                          color: '#28382c',
-                          fontSize: '12px',
-                          fontWeight: g.id === activeGroupId ? '700' : '500',
-                          textAlign: 'left'
+                          setCreatePodModalOpen(true);
                         }}
                       >
-                        <span>{g.name}</span>
-                        <small style={{ color: '#68776b', fontSize: '10px' }}>{g.member_count}/5</small>
+                        <UserPlus size={13} /> Create New Pod
                       </button>
-                    ))}
-                    <div style={{ borderTop: '1px solid #edf0ea', margin: '6px 0' }} />
-                    <button
-                      onClick={() => {
-                        setPodDropdownOpen(false);
-                        setCreatePodModalOpen(true);
-                      }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        width: '100%',
-                        padding: '7px 14px',
-                        border: 0,
-                        background: 'transparent',
-                        color: '#315b45',
-                        fontSize: '11px',
-                        fontWeight: '700'
-                      }}
-                    >
-                      <UserPlus size={13} /> Create New Pod
-                    </button>
-                    <button
-                      onClick={() => {
-                        setPodDropdownOpen(false);
-                        setJoinPodModalOpen(true);
-                      }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        width: '100%',
-                        padding: '7px 14px',
-                        border: 0,
-                        background: 'transparent',
-                        color: '#496b52',
-                        fontSize: '11px',
-                        fontWeight: '700'
-                      }}
-                    >
-                      <Share2 size={13} /> Join Pod with Code
-                    </button>
-                  </div>
+                      <button
+                        className="pod-dropdown-action"
+                        onClick={() => {
+                          setPodDropdownOpen(false);
+                          setJoinPodModalOpen(true);
+                        }}
+                      >
+                        <Share2 size={13} /> Join Pod with Code
+                      </button>
+                    </div>
+                  </>
                 )}
               </div>
             )}
@@ -2156,12 +2120,49 @@ function App() {
               </div>
             ) : (
               <div>
+                {/* Horizontal Pod Switcher Bar */}
+                {groups.length > 0 && (
+                  <div className="pod-switcher-bar">
+                    <span className="pod-switcher-label">My Pods:</span>
+                    <div className="pod-switcher-scroll">
+                      {groups.map(g => (
+                        <button
+                          key={g.id}
+                          className={`pod-switcher-pill ${g.id === activeGroupId ? 'active' : ''}`}
+                          onClick={() => {
+                            setActiveGroupId(g.id);
+                            localStorage.setItem('daymark-active-group', g.id);
+                          }}
+                        >
+                          <Users size={12} />
+                          <span>{g.name}</span>
+                          <span className="pod-switcher-count">{g.member_count}/5</span>
+                        </button>
+                      ))}
+                      <button
+                        className="pod-switcher-add-btn"
+                        onClick={() => setCreatePodModalOpen(true)}
+                        title="Create another pod (max 5)"
+                      >
+                        <UserPlus size={12} /> New Pod
+                      </button>
+                      <button
+                        className="pod-switcher-add-btn"
+                        onClick={() => setJoinPodModalOpen(true)}
+                        title="Join another pod with invite code"
+                      >
+                        <Share2 size={12} /> Join Pod
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Active Pod Banner & Controls */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
-                  <div>
+                <div className="pod-header-row">
+                  <div className="pod-header-title-box">
                     <span className="eyebrow">ACCOUNTABILITY POD</span>
-                    <h3 style={{ font: '700 22px Manrope', margin: '2px 0 4px', color: '#1f2e24', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {activeGroup ? activeGroup.name : 'Select or Create a Pod'}
+                    <h3 className="pod-header-title">
+                      <span>{activeGroup ? activeGroup.name : 'Select or Create a Pod'}</span>
                       {activeGroup && (
                         <span
                           className="invite-code-chip"
@@ -2174,17 +2175,17 @@ function App() {
                     </h3>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <div className="pod-header-actions">
                     {activeGroup && (
                       <button className="recap-btn" onClick={openRecapModal}>
-                        <Award size={15} /> 1:00 AM Recap
+                        <Award size={14} /> 1:00 AM Recap
                       </button>
                     )}
                     <button className="save-schedule-btn" onClick={() => setCreatePodModalOpen(true)}>
-                      <UserPlus size={15} /> Create Pod
+                      <UserPlus size={14} /> Create Pod
                     </button>
                     <button className="reset-schedule-btn" onClick={() => setJoinPodModalOpen(true)}>
-                      <Share2 size={15} /> Join with Code
+                      <Share2 size={14} /> Join with Code
                     </button>
                   </div>
                 </div>
@@ -2731,8 +2732,11 @@ function App() {
                       {/* Live Commit Consistency Heatmap */}
                       <div className="gh-chart-container">
                         <div className="gh-chart-title">
-                          <GitBranch size={13} />
-                          <span>Annual Contribution Heatmap</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <GitBranch size={13} />
+                            <span>Annual Contribution Heatmap</span>
+                          </div>
+                          <span style={{ fontSize: '10px', color: '#7a867c', fontWeight: '500' }}>Live GitHub Graph</span>
                         </div>
                         <div className="gh-chart-scroll">
                           <img
