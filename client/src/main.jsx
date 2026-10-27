@@ -468,6 +468,69 @@ function App() {
   const [joinInviteCode, setJoinInviteCode] = useState('');
   const [podError, setPodError] = useState('');
   const [podDropdownOpen, setPodDropdownOpen] = useState(false);
+  
+  // Chief of Staff Agent States
+  const [chiefOfStaffAlert, setChiefOfStaffAlert] = useState(null);
+  const [chiefOfStaffModalOpen, setChiefOfStaffModalOpen] = useState(false);
+  const [chiefDismissUntil, setChiefDismissUntil] = useState(0);
+
+  // Chief of Staff Proactive Slip Detector (Tick every 30 seconds)
+  useEffect(() => {
+    if (!isToday || !schedule || schedule.length === 0) return;
+
+    const runDriftCheck = () => {
+      if (Date.now() < chiefDismissUntil) return;
+      const completedIds = (routine || []).filter(r => r.completed).map(r => r.id);
+      const report = detectScheduleDrift(schedule, completedIds, activeTask?.id);
+      if (report && report.hasDrift) {
+        setChiefOfStaffAlert(report);
+      } else {
+        setChiefOfStaffAlert(null);
+      }
+    };
+
+    runDriftCheck();
+    const interval = setInterval(runDriftCheck, 30000);
+    return () => clearInterval(interval);
+  }, [isToday, schedule, routine, activeTask, chiefDismissUntil]);
+
+  // Chief of Staff Action Handlers
+  const applyChiefOfStaffHeal = (planToApply = null) => {
+    const plan = planToApply || chiefOfStaffAlert;
+    if (!plan || !plan.proposedSchedule) return;
+
+    const updated = plan.proposedSchedule;
+    setSchedule(updated);
+    setEditingSchedule(updated);
+    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+
+    setChiefOfStaffAlert(null);
+    setChiefOfStaffModalOpen(false);
+    setToast(`✨ Chief of Staff healed schedule! Saved ${plan.savingsMinutes || 0}m.`);
+    setTimeout(() => setToast(''), 3000);
+
+    if (token) {
+      fetch(`${API}/settings/schedule`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(updated)
+      }).catch(() => {});
+    }
+  };
+
+  const runManualChiefAudit = () => {
+    const completedIds = (routine || []).filter(r => r.completed).map(r => r.id);
+    const plan = generateChiefOfStaffPlan(schedule, completedIds);
+    setChiefOfStaffAlert({
+      hasDrift: true,
+      driftMinutes: 0,
+      slippingItem: null,
+      ...plan
+    });
+    setChiefOfStaffModalOpen(true);
+  };
+
   // Theme State: 'default' | 'neo-brutalist' | 'zen-paper' | 'ghibli-meadow' | 'acid-runway' | 'spider-verse'
   const [theme, setTheme] = useState(() => localStorage.getItem('daymark-theme') || 'default');
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
@@ -2448,14 +2511,24 @@ function App() {
                   </div>
                   <div className="date-controls">
                     {isToday && (
-                      <button 
-                        className="elastic-btn" 
-                        onClick={() => setElasticModalOpen(true)}
-                        title="Auto-shift schedule if running late"
-                      >
-                        <SlidersHorizontal size={13} />
-                        <span>Elastic Shift</span>
-                      </button>
+                      <>
+                        <button 
+                          className="chief-audit-btn" 
+                          onClick={runManualChiefAudit}
+                          title="Autonomous Chief of Staff Schedule Audit"
+                        >
+                          <ShieldCheck size={13} />
+                          <span>Chief of Staff</span>
+                        </button>
+                        <button 
+                          className="elastic-btn" 
+                          onClick={() => setElasticModalOpen(true)}
+                          title="Auto-shift schedule if running late"
+                        >
+                          <SlidersHorizontal size={13} />
+                          <span>Elastic Shift</span>
+                        </button>
+                      </>
                     )}
                     <button className="icon-button small" onClick={() => shiftDate(-1)} title="Previous day">
                       <ChevronLeft size={16} />

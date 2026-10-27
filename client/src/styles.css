@@ -1840,3 +1840,271 @@
     display: none;
   }
 }
+
+
+
+/* ==========================================================================
+   AGENTIC CHIEF OF STAFF: SCHEDULE ARBITER & AUTO-HEAL
+   ========================================================================== */
+
+/* Floating Proactive Alert Pill */
+.chief-alert-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: 420px;
+  background: rgba(23, 29, 25, 0.95);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 20px rgba(245, 158, 11, 0.15);
+  border-radius: 14px;
+  padding: 16px 18px;
+  z-index: 1050;
+  color: #f7f5f0;
+  animation: chiefSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@keyframes chiefSlideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.chief-alert-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chief-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fbbf24;
+  text-transform: uppercase;
+}
+
+.chief-drift-badge {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #fde68a;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.chief-alert-body {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #d1d5db;
+}
+
+.chief-alert-body strong {
+  color: #ffffff;
+}
+
+.chief-alert-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.chief-heal-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 13px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.chief-heal-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
+}
+
+.chief-inspect-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 7px 11px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chief-inspect-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.chief-dismiss-btn {
+  background: transparent;
+  color: #9ca3af;
+  border: none;
+  font-size: 0.78rem;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.chief-dismiss-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Header Audit Button */
+.chief-audit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(45, 90, 61, 0.1);
+  border: 1px solid rgba(45, 90, 61, 0.35);
+  color: #2d5a3d;
+  font-weight: 600;
+  font-size: 0.78rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chief-audit-btn:hover {
+  background: rgba(45, 90, 61, 0.18);
+  border-color: #2d5a3d;
+  transform: translateY(-1px);
+}
+
+/* Chief of Staff Strategy Modal Details */
+.chief-strategy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.chief-strategy-col {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.chief-strategy-col.healed {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.chief-col-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chief-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 0.8rem;
+}
+
+.chief-item-row:last-child {
+  border-bottom: none;
+}
+
+.chief-stat-chips {
+  display: flex;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.chief-stat-chip {
+  flex: 1;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.chief-stat-chip-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.chief-stat-chip-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 2px;
+}
+
+/* Dark / Theme overrides for Chief of Staff */
+[data-theme="acid-runway"] .chief-alert-floating {
+  background: #000000;
+  border-color: #c6ff00;
+  box-shadow: 0 12px 32px rgba(198, 255, 0, 0.15);
+}
+
+[data-theme="acid-runway"] .chief-alert-title {
+  color: #c6ff00;
+}
+
+[data-theme="acid-runway"] .chief-heal-btn {
+  background: #c6ff00;
+  color: #000000;
+}
+
+[data-theme="neo-brutalist"] .chief-alert-floating {
+  background: #f7f4ec;
+  color: #000000;
+  border: 2.5px solid #000000;
+  box-shadow: 6px 6px 0 #000000;
+}
+
+[data-theme="neo-brutalist"] .chief-alert-title {
+  color: #000000;
+}
+
+[data-theme="neo-brutalist"] .chief-alert-body {
+  color: #333333;
+}
+
+[data-theme="neo-brutalist"] .chief-heal-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 3px 3px 0 #000000;
+}

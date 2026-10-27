@@ -132,3 +132,141 @@ export function calculateAutoShift(schedule, { shiftMinutes = 30, fromNow = fals
     return item;
   });
 }
+
+
+// Chief of Staff: Schedule Healer Plan Generator
+export function generateChiefOfStaffPlan(schedule = [], completedItemIds = [], currentMinsOverride = null) {
+  if (!schedule || schedule.length === 0) return { proposedSchedule: [], savingsMinutes: 0, narrative: '', shiftedCount: 0 };
+
+  const now = new Date();
+  const currentMins = currentMinsOverride !== null ? currentMinsOverride : (now.getHours() * 60 + now.getMinutes());
+
+  let nextStartMins = null;
+  let totalBreakSavings = 0;
+  let shiftedCount = 0;
+  let originalEndMins = 0;
+  let newEndMins = 0;
+
+  const proposedSchedule = schedule.map(item => {
+    const origStart = toMinutes(item.start);
+    const origEnd = toMinutes(item.end);
+    let duration = origEnd - origStart;
+    if (duration <= 0) duration += 24 * 60;
+
+    originalEndMins = Math.max(originalEndMins, origEnd);
+
+    // If item is already completed, keep untouched
+    if (completedItemIds.includes(item.id)) {
+      return item;
+    }
+
+    const isBreak = item.kind === 'break' || (item.title || '').toLowerCase().includes('break');
+
+    // Start sequence from current time + 2 min buffer if it's in the past
+    if (nextStartMins === null) {
+      if (origStart < currentMins) {
+        nextStartMins = currentMins + 2;
+      } else {
+        nextStartMins = origStart;
+      }
+    }
+
+    // Break compaction heuristic: Compress breaks longer than 20m by 35-45% to absorb drift
+    if (isBreak && duration > 20) {
+      const compressedDuration = Math.max(15, Math.round(duration * 0.6));
+      totalBreakSavings += (duration - compressedDuration);
+      duration = compressedDuration;
+    }
+
+    const newStart = toTimeStr(nextStartMins);
+    const newEnd = toTimeStr(nextStartMins + duration);
+    newEndMins = Math.max(newEndMins, nextStartMins + duration);
+    nextStartMins = nextStartMins + duration;
+    shiftedCount++;
+
+    return {
+      ...item,
+      start: newStart,
+      end: newEnd,
+      hours: Math.round((duration / 60) * 10) / 10
+    };
+  });
+
+  const deltaEnd = newEndMins - originalEndMins;
+  let narrative = `Realigned ${shiftedCount} remaining blocks starting from ${toTimeStr(currentMins + 2)}.`;
+  if (totalBreakSavings > 0) {
+    narrative += ` Compacted breaks by ${totalBreakSavings}m to absorb schedule drift.`;
+  }
+  if (deltaEnd <= 0) {
+    narrative += ` Your day cutoff remains on time!`;
+  } else {
+    narrative += ` Day end adjusted by +${deltaEnd}m to ${toTimeStr(newEndMins)}.`;
+  }
+
+  return {
+    proposedSchedule,
+    savingsMinutes: totalBreakSavings,
+    shiftedCount,
+    originalEnd: toTimeStr(originalEndMins),
+    healedEnd: toTimeStr(newEndMins),
+    narrative
+  };
+}
+
+// Chief of Staff: Proactive Schedule Slip & Collision Detector
+export function detectScheduleDrift(schedule = [], completedItemIds = [], activeItemId = null) {
+  if (!schedule || schedule.length === 0) return { hasDrift: false, driftMinutes: 0 };
+
+  const now = new Date();
+  const currentMins = now.getHours() * 60 + now.getMinutes();
+
+  // Find incomplete items
+  const incompleteItems = schedule.filter(item => !completedItemIds.includes(item.id));
+  if (incompleteItems.length === 0) return { hasDrift: false, driftMinutes: 0 };
+
+  let maxDriftMinutes = 0;
+  let slippingItem = null;
+  let overdueType = 'start'; // 'start' or 'finish'
+
+  for (const item of incompleteItems) {
+    const startMins = toMinutes(item.start);
+    const endMins = toMinutes(item.end);
+
+    // If item is actively running
+    if (activeItemId === item.id) {
+      if (currentMins > endMins) {
+        const drift = currentMins - endMins;
+        if (drift > maxDriftMinutes) {
+          maxDriftMinutes = drift;
+          slippingItem = item;
+          overdueType = 'finish';
+        }
+      }
+    } else {
+      // Item not active, but start time is in the past by > 12 minutes
+      if (currentMins > startMins + 12) {
+        const drift = currentMins - startMins;
+        if (drift > maxDriftMinutes) {
+          maxDriftMinutes = drift;
+          slippingItem = item;
+          overdueType = 'start';
+        }
+      }
+    }
+  }
+
+  if (maxDriftMinutes < 15 || !slippingItem) {
+    return { hasDrift: false, driftMinutes: maxDriftMinutes };
+  }
+
+  // Generate the proposed healed schedule
+  const healResult = generateChiefOfStaffPlan(schedule, completedItemIds, currentMins);
+
+  return {
+    hasDrift: true,
+    driftMinutes: maxDriftMinutes,
+    slippingItem,
+    overdueType,
+    ...healResult
+  };
+}
