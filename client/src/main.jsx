@@ -101,14 +101,127 @@ function readSavedSchedule(userId = null) {
   return defaultSchedule;
 }
 
-const habits = [
-  { id: 'dsa', label: 'DSA · 3 hours' },
-  { id: 'project', label: 'Project · 6 hours' },
-  { id: 'reading', label: 'Reading · 2 hours' },
-  { id: 'revision', label: 'Revision · 1 hour' },
-  { id: 'breaks', label: 'Take both breaks' },
-  { id: 'sleep', label: 'Sleep 7–8 hours' },
-];
+// Subject extractor & normalizer: groups repeated blocks of the same subject (e.g. Maths 5hr + Maths 3hr = 8hr)
+function extractSubject(item) {
+  const rawTitle = (item.title || '').trim();
+  const lower = rawTitle.toLowerCase();
+
+  if (item.kind === 'break' || lower.includes('break') || lower.includes('lunch') || lower.includes('breakfast')) {
+    return { name: 'Break', key: 'breaks', isBreak: true };
+  }
+  if (lower.startsWith('dsa') || lower.includes('leetcode')) {
+    return { name: 'DSA', key: 'dsa', isBreak: false };
+  }
+  if (lower.includes('project')) {
+    return { name: 'Project', key: 'project', isBreak: false };
+  }
+  if (lower.includes('revision') || lower.includes('review')) {
+    return { name: 'Revision', key: 'revision', isBreak: false };
+  }
+  if (lower.includes('reading') || lower.includes('system design')) {
+    return { name: 'Reading', key: 'reading', isBreak: false };
+  }
+
+  // Remove trailing session numbers: e.g. "Maths 1" -> "Maths", "Maths - Session 2" -> "Maths"
+  const cleaned = rawTitle
+    .replace(/\s*[-–—]\s*(session|part|block)?\s*\d+$/i, '')
+    .replace(/\s+(part|session|block)?\s*\d+$/i, '')
+    .trim();
+
+  const finalName = cleaned || rawTitle || 'Focus';
+  const key = finalName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'focus';
+  return { name: finalName, key, isBreak: false };
+}
+
+// Derive routine goals dynamically from the schedule.
+// Aggregates multiple blocks of the same subject (e.g. Maths 5hr + Maths 3hr = 8hr).
+function getRoutineGoals(schedule = []) {
+  if (!Array.isArray(schedule) || schedule.length === 0) {
+    return [
+      { id: 'dsa', label: 'DSA · 3 hours', subject: 'DSA', assignedMinutes: 180, blockIds: ['dsa'], kind: 'focus', thresholdMinutes: 135 },
+      { id: 'project', label: 'Project · 6 hours', subject: 'Project', assignedMinutes: 360, blockIds: ['project1', 'project2'], kind: 'focus', thresholdMinutes: 270 },
+      { id: 'reading', label: 'Reading · 2 hours', subject: 'Reading', assignedMinutes: 120, blockIds: ['reading'], kind: 'focus', thresholdMinutes: 90 },
+      { id: 'revision', label: 'Revision · 1 hour', subject: 'Revision', assignedMinutes: 60, blockIds: ['revision'], kind: 'focus', thresholdMinutes: 45 },
+      { id: 'breaks', label: 'Take scheduled breaks', subject: 'Break', assignedMinutes: 0, blockIds: ['break1', 'break2'], kind: 'break', thresholdMinutes: 0 },
+      { id: 'sleep', label: 'Sleep 7–8 hours', subject: 'Sleep', assignedMinutes: 0, blockIds: [], kind: 'health', thresholdMinutes: 0 }
+    ];
+  }
+
+  const subjectMap = new Map();
+
+  for (const item of schedule) {
+    const { name, key, isBreak } = extractSubject(item);
+    const durationHours = Number(item.hours) || computeDurationHours(item.start, item.end);
+    const durationMins = Math.round(durationHours * 60);
+
+    if (!subjectMap.has(key)) {
+      subjectMap.set(key, {
+        id: key,
+        subject: name,
+        assignedMinutes: 0,
+        blockIds: [],
+        kind: isBreak ? 'break' : 'focus'
+      });
+    }
+
+    const group = subjectMap.get(key);
+    group.assignedMinutes += durationMins;
+    if (item.id && !group.blockIds.includes(item.id)) {
+      group.blockIds.push(item.id);
+    }
+  }
+
+  const goals = [];
+
+  // Focus goals first
+  for (const group of subjectMap.values()) {
+    if (group.kind === 'focus') {
+      const hours = Math.round((group.assignedMinutes / 60) * 10) / 10;
+      goals.push({
+        ...group,
+        label: `${group.subject} · ${hours} hour${hours === 1 ? '' : 's'}`,
+        thresholdMinutes: Math.ceil(group.assignedMinutes * 0.75)
+      });
+    }
+  }
+
+  // Break habit
+  const breakGroup = subjectMap.get('breaks');
+  if (breakGroup) {
+    goals.push({
+      ...breakGroup,
+      label: breakGroup.blockIds.length > 1 ? `Take all ${breakGroup.blockIds.length} breaks` : 'Take scheduled break',
+      thresholdMinutes: 0
+    });
+  }
+
+  // Sleep health habit
+  goals.push({
+    id: 'sleep',
+    subject: 'Sleep',
+    label: 'Sleep 7–8 hours',
+    assignedMinutes: 0,
+    blockIds: [],
+    kind: 'health',
+    thresholdMinutes: 0
+  });
+
+  return goals;
+}
+
+// Calculate total logged focus minutes for a goal across all its schedule blocks
+function getSubjectLoggedMinutes(goal, dayCompletedMinutes = {}) {
+  let logged = 0;
+  if (goal.blockIds && goal.blockIds.length > 0) {
+    for (const bid of goal.blockIds) {
+      logged += Number(dayCompletedMinutes[bid] || 0);
+    }
+  }
+  if (dayCompletedMinutes[goal.id] && !goal.blockIds?.includes(goal.id)) {
+    logged += Number(dayCompletedMinutes[goal.id] || 0);
+  }
+  return logged;
+}
 
 // Curated daily inspiring quotes for discipline, focus, craftsmanship & progress
 const dailyQuotes = [
@@ -346,6 +459,7 @@ function App() {
   // Dynamic schedule state loaded from DB / LocalStorage
   const [schedule, setSchedule] = useState(readSavedSchedule);
   const [editingSchedule, setEditingSchedule] = useState(schedule);
+  const habits = useMemo(() => getRoutineGoals(schedule), [schedule]);
 
   const todayKey = dateKey(new Date());
   const key = dateKey(selectedDate);
@@ -682,10 +796,18 @@ function App() {
     }
   }, [activeGroupId, token, view]);
 
-  // Project Focus metrics for 75% commit auto-check
-  const projectBlock = schedule.find(s => s.id === 'project' || (s.title && s.title.toLowerCase().includes('project')));
-  const projectPlannedMins = projectBlock ? (Number(projectBlock.hours || 2) * 60) : 120;
-  const projectLoggedMins = day.completedMinutes?.['project'] || (projectBlock ? day.completedMinutes?.[projectBlock.id] || 0 : 0);
+  // Project Focus metrics for 75% commit auto-check (aggregating all project blocks)
+  const projectBlocks = schedule.filter(
+    s => (s.id && s.id.toLowerCase().includes('project')) || (s.title && s.title.toLowerCase().includes('project'))
+  );
+  const projectPlannedMins = projectBlocks.reduce(
+    (acc, s) => acc + Math.round((Number(s.hours) || computeDurationHours(s.start, s.end)) * 60),
+    0
+  ) || 120;
+  const projectLoggedMins = projectBlocks.reduce(
+    (acc, s) => acc + Number(day.completedMinutes?.[s.id] || 0),
+    0
+  ) + Number(day.completedMinutes?.['project'] || 0);
   const projectThresholdMins = Math.ceil(projectPlannedMins * 0.75);
   const projectPercent = Math.min(100, Math.round((projectLoggedMins / projectPlannedMins) * 100));
   const isProjectEligible = projectLoggedMins >= projectThresholdMins;
@@ -1044,7 +1166,37 @@ function App() {
       setTimeout(() => setToast(''), 2500);
       return;
     }
-    patchDay({ checks: { ...(day.checks || {}), [id]: !day.checks?.[id] } });
+
+    const isCurrentlyChecked = !!day.checks?.[id];
+
+    // If currently checked, allow unchecking
+    if (isCurrentlyChecked) {
+      patchDay({ checks: { ...(day.checks || {}), [id]: false } });
+      return;
+    }
+
+    // If attempting to check (mark done), enforce 75% focus time rule on goals with assigned time
+    const goal = habits.find(h => h.id === id);
+    if (goal && goal.assignedMinutes > 0 && goal.kind === 'focus') {
+      const logged = getSubjectLoggedMinutes(goal, day.completedMinutes || {});
+      const threshold = goal.thresholdMinutes || Math.ceil(goal.assignedMinutes * 0.75);
+
+      if (logged < threshold) {
+        const loggedHoursStr = `${Math.floor(logged / 60)}h ${logged % 60}m`;
+        const assignedHoursStr = `${Math.round((goal.assignedMinutes / 60) * 10) / 10}h`;
+        const thresholdHoursStr = `${Math.floor(threshold / 60)}h ${threshold % 60}m`;
+        setToast(
+          `⚠️ Cannot mark "${goal.subject}" done yet: Logged ${loggedHoursStr} / ${assignedHoursStr}. At least 75% (${thresholdHoursStr}) required!`
+        );
+        setTimeout(() => setToast(''), 4500);
+        return;
+      }
+    }
+
+    patchDay({ checks: { ...(day.checks || {}), [id]: true } });
+    playChime(true);
+    setToast(`🎉 Goal completed: ${goal?.subject || id}!`);
+    setTimeout(() => setToast(''), 3000);
   };
 
   const startSession = (id) => {
@@ -1112,7 +1264,8 @@ function App() {
   };
 
   const exportCsv = () => {
-    const rows = [['Date', 'Focus Logged', 'DSA', 'Project', 'Reading', 'Revision', 'Breaks', 'Sleep', 'Notes']];
+    const habitHeaders = habits.map(h => h.subject || h.label);
+    const rows = [['Date', 'Focus Logged', ...habitHeaders, 'Notes']];
     const dateSet = new Set(Object.keys(store));
     if (key) dateSet.add(key);
     if (todayKey) dateSet.add(todayKey);
@@ -1780,18 +1933,51 @@ function App() {
                     </span>
                   </div>
                   <div className="habit-list">
-                    {habits.map(h => (
-                      <button
-                        key={h.id}
-                        className={`habit-row ${day.checks?.[h.id] ? 'checked' : ''} ${!isToday ? 'read-only' : ''}`}
-                        onClick={() => toggleHabit(h.id)}
-                        title={!isToday ? 'Past and future habits are view-only' : undefined}
-                      >
-                        <span className="check-box">{day.checks?.[h.id] && <Check size={14} />}</span>
-                        <span>{h.label}</span>
-                        {!isToday && <Lock size={12} style={{ marginLeft: 'auto', opacity: 0.4 }} />}
-                      </button>
-                    ))}
+                    {habits.map(h => {
+                      const logged = getSubjectLoggedMinutes(h, day.completedMinutes || {});
+                      const threshold = h.thresholdMinutes || Math.ceil(h.assignedMinutes * 0.75);
+                      const isChecked = !!day.checks?.[h.id];
+                      const isEligible = h.assignedMinutes === 0 || logged >= threshold;
+                      const percent = h.assignedMinutes > 0 ? Math.min(100, Math.round((logged / h.assignedMinutes) * 100)) : 100;
+
+                      return (
+                        <button
+                          key={h.id}
+                          className={`habit-row ${isChecked ? 'checked' : ''} ${!isToday ? 'read-only' : ''} ${!isChecked && !isEligible ? 'locked-goal' : ''}`}
+                          onClick={() => toggleHabit(h.id)}
+                          title={
+                            !isToday
+                              ? 'Past and future habits are view-only'
+                              : !isChecked && !isEligible
+                              ? `Need at least 75% logged time to complete (${Math.floor(logged / 60)}h ${logged % 60}m / ${Math.round((h.assignedMinutes / 60) * 10) / 10}h)`
+                              : undefined
+                          }
+                        >
+                          <span className="check-box">
+                            {isChecked ? <Check size={14} /> : (!isEligible && isToday ? <Lock size={11} style={{ opacity: 0.4 }} /> : null)}
+                          </span>
+                          <span style={{ flex: 1, textAlign: 'left' }}>{h.label}</span>
+                          {h.assignedMinutes > 0 && isToday && (
+                            <span
+                              className="habit-logged-pill"
+                              style={{
+                                fontSize: '10px',
+                                padding: '2px 7px',
+                                borderRadius: '10px',
+                                background: isChecked ? '#eaf7eb' : (isEligible ? '#ecfdf5' : '#f3f4f6'),
+                                color: isChecked ? '#15803d' : (isEligible ? '#059669' : '#6b7280'),
+                                fontWeight: '600',
+                                marginLeft: '8px',
+                                whiteSpace: 'nowrap'
+                              }}
+                            >
+                              {Math.floor(logged / 60)}h {logged % 60}m ({percent}%)
+                            </span>
+                          )}
+                          {!isToday && <Lock size={12} style={{ marginLeft: 'auto', opacity: 0.4 }} />}
+                        </button>
+                      );
+                    })}
                   </div>
                   <div className="habit-progress">
                     <div className="progress-caption">
@@ -2062,7 +2248,7 @@ function App() {
                                 )}
                               </strong>
                               <small>
-                                {Math.floor(member.total_minutes / 60)}h {member.total_minutes % 60}m logged · {member.habits_done}/6 habits
+                                {Math.floor(member.total_minutes / 60)}h {member.total_minutes % 60}m logged · {member.habits_done}/{habits.length} habits
                               </small>
                             </div>
 
@@ -3185,7 +3371,7 @@ function App() {
                         {m.username} {m.is_winner && <span style={{ color: '#b45309', fontSize: '10px' }}>(Champion)</span>}
                       </strong>
                       <small style={{ fontSize: '10px', color: '#7e8780' }}>
-                        {Math.floor(m.total_minutes / 60)}h {m.total_minutes % 60}m · {m.habits_done}/6 habits
+                        {Math.floor(m.total_minutes / 60)}h {m.total_minutes % 60}m · {m.habits_done}/{habits.length} habits
                       </small>
                     </div>
                     <span className="gp-badge" style={{ fontSize: '11px' }}>

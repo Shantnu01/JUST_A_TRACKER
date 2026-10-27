@@ -97,6 +97,8 @@
 .jump-today-btn:hover{background:#f0f4ee}
 .read-only-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#8b928a;background:#f0f2eb;padding:5px 8px;border-radius:6px;border:1px solid #e4e7df}
 .habit-row.read-only{opacity:.85;cursor:not-allowed}
+.habit-row.locked-goal{background:#fafbf9;border-color:#e2e5dc}
+.habit-row.locked-goal .check-box{background:#f3f5ee;border-color:#d4d9cd}
 .note-panel.read-only textarea{background:#f0f4ee;color:#556358}
 .note-panel button.locked{color:#8b928a;cursor:not-allowed}
 .alarm-panel.read-only{opacity:.7}

@@ -1199,21 +1199,28 @@ app.get('/api/groups/:id/cf-arena', authenticateToken, async (req, res) => {
 
 // ================= SMART GITHUB COMMIT VERIFICATION (PROJECT HABIT) =================
 async function evaluateProjectCommitVerification(userId, userSchedule, userDayDate) {
-  let plannedMinutes = 120;
-  if (Array.isArray(userSchedule)) {
-    const projBlock = userSchedule.find(s => s.id === 'project' || (s.title && s.title.toLowerCase().includes('project')));
-    if (projBlock) {
-      if (projBlock.hours) {
-        plannedMinutes = Math.round(Number(projBlock.hours) * 60) || 120;
-      } else if (projBlock.start && projBlock.end) {
-        const [sh, sm] = projBlock.start.split(':').map(Number);
-        const [eh, em] = projBlock.end.split(':').map(Number);
+  let plannedMinutes = 0;
+  const projectBlockIds = [];
+  if (Array.isArray(userSchedule) && userSchedule.length > 0) {
+    const projBlocks = userSchedule.filter(
+      s => (s.id && s.id.toLowerCase().includes('project')) || (s.title && s.title.toLowerCase().includes('project'))
+    );
+    for (const pb of projBlocks) {
+      if (pb.id) projectBlockIds.push(pb.id);
+      let mins = 0;
+      if (pb.hours) {
+        mins = Math.round(Number(pb.hours) * 60);
+      } else if (pb.start && pb.end) {
+        const [sh, sm] = pb.start.split(':').map(Number);
+        const [eh, em] = pb.end.split(':').map(Number);
         let diff = (eh * 60 + em) - (sh * 60 + sm);
         if (diff < 0) diff += 24 * 60;
-        plannedMinutes = diff || 120;
+        mins = diff;
       }
+      plannedMinutes += (mins || 120);
     }
   }
+  if (plannedMinutes === 0) plannedMinutes = 120;
 
   const thresholdMinutes = Math.ceil(plannedMinutes * 0.75);
   let loggedMinutes = 0;
@@ -1234,10 +1241,9 @@ async function evaluateProjectCommitVerification(userId, userSchedule, userDayDa
       currentAlarms = row.alarms || {};
       completedMins = row.completed_minutes || {};
       loggedMinutes = Number(completedMins['project'] || 0);
-      if (loggedMinutes === 0 && Array.isArray(userSchedule)) {
-        const pBlock = userSchedule.find(s => s.title && s.title.toLowerCase().includes('project'));
-        if (pBlock && completedMins[pBlock.id]) {
-          loggedMinutes = Number(completedMins[pBlock.id]);
+      for (const pid of projectBlockIds) {
+        if (pid !== 'project') {
+          loggedMinutes += Number(completedMins[pid] || 0);
         }
       }
     }
