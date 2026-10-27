@@ -21,6 +21,7 @@ import {
   Pause,
   Play,
   RotateCcw,
+  Save,
   Settings2,
   Sun,
   Target,
@@ -36,15 +37,46 @@ const API = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api`
   : '/api';
 
-const schedule = [
-  { id: 'dsa', start: '07:00', end: '10:00', title: 'DSA practice', subtitle: 'Patterns, problem solving & complexity', hours: 3, kind: 'focus', icon: Code2, tone: 'sage' },
-  { id: 'break1', start: '10:00', end: '11:00', title: 'Morning break', subtitle: 'Breakfast, walk, reset', hours: 1, kind: 'break', icon: Coffee, tone: 'sand' },
-  { id: 'project1', start: '11:00', end: '14:00', title: 'Project development', subtitle: 'Build core features and architecture', hours: 3, kind: 'focus', icon: Code2, tone: 'blue' },
-  { id: 'break2', start: '14:00', end: '15:00', title: 'Lunch break', subtitle: 'Eat, move, clear your head', hours: 1, kind: 'break', icon: Utensils, tone: 'sand' },
-  { id: 'project2', start: '15:00', end: '18:00', title: 'Project development', subtitle: 'Testing, debugging & shipping', hours: 3, kind: 'focus', icon: Code2, tone: 'blue' },
-  { id: 'reading', start: '18:00', end: '20:00', title: 'System design reading', subtitle: 'Read, take notes, connect to your project', hours: 2, kind: 'focus', icon: BookOpen, tone: 'lilac' },
-  { id: 'revision', start: '20:00', end: '21:00', title: 'Daily revision', subtitle: 'Recall key ideas and plan tomorrow', hours: 1, kind: 'focus', icon: RotateCcw, tone: 'rose' },
+const iconMap = {
+  Code2,
+  Coffee,
+  Utensils,
+  BookOpen,
+  RotateCcw,
+  Clock3,
+  Sun
+};
+
+const defaultSchedule = [
+  { id: 'dsa', start: '07:00', end: '10:00', title: 'DSA practice', subtitle: 'Patterns, problem solving & complexity', hours: 3, kind: 'focus', icon: 'Code2', tone: 'sage' },
+  { id: 'break1', start: '10:00', end: '11:00', title: 'Morning break', subtitle: 'Breakfast, walk, reset', hours: 1, kind: 'break', icon: 'Coffee', tone: 'sand' },
+  { id: 'project1', start: '11:00', end: '14:00', title: 'Project development', subtitle: 'Build core features and architecture', hours: 3, kind: 'focus', icon: 'Code2', tone: 'blue' },
+  { id: 'break2', start: '14:00', end: '15:00', title: 'Lunch break', subtitle: 'Eat, move, clear your head', hours: 1, kind: 'break', icon: 'Utensils', tone: 'sand' },
+  { id: 'project2', start: '15:00', end: '18:00', title: 'Project development', subtitle: 'Testing, debugging & shipping', hours: 3, kind: 'focus', icon: 'Code2', tone: 'blue' },
+  { id: 'reading', start: '18:00', end: '20:00', title: 'System design reading', subtitle: 'Read, take notes, connect to your project', hours: 2, kind: 'focus', icon: 'BookOpen', tone: 'lilac' },
+  { id: 'revision', start: '20:00', end: '21:00', title: 'Daily revision', subtitle: 'Recall key ideas and plan tomorrow', hours: 1, kind: 'focus', icon: 'RotateCcw', tone: 'rose' },
 ];
+
+function computeDurationHours(start, end) {
+  if (!start || !end) return 1;
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+  let mins = (eh * 60 + em) - (sh * 60 + sm);
+  if (mins < 0) mins += 24 * 60;
+  const h = Math.round((mins / 60) * 10) / 10;
+  return h > 0 ? h : 1;
+}
+
+function readSavedSchedule() {
+  try {
+    const raw = localStorage.getItem('daymark-schedule');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+  return defaultSchedule;
+}
 
 const habits = [
   { id: 'dsa', label: 'DSA · 3 hours' },
@@ -141,6 +173,10 @@ function App() {
   const [notes, setNotes] = useState('');
   const [dbStatus, setDbStatus] = useState('checking'); // 'connected' | 'local' | 'checking'
 
+  // Dynamic schedule state loaded from DB / LocalStorage
+  const [schedule, setSchedule] = useState(readSavedSchedule);
+  const [editingSchedule, setEditingSchedule] = useState(schedule);
+
   const todayKey = dateKey(new Date());
   const key = dateKey(selectedDate);
   const isToday = key === todayKey;
@@ -155,6 +191,34 @@ function App() {
     const startOfYear = new Date(now.getFullYear(), 0, 0);
     const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
     return dailyQuotes[dayOfYear % dailyQuotes.length];
+  }, []);
+
+  // Sync editingSchedule whenever schedule updates
+  useEffect(() => {
+    setEditingSchedule(schedule);
+  }, [schedule]);
+
+  // Load custom schedule from database on startup
+  useEffect(() => {
+    let mounted = true;
+    const fetchScheduleFromDb = async () => {
+      try {
+        const response = await fetch(`${API}/settings/schedule`);
+        if (response.ok) {
+          const data = await response.json();
+          if (mounted && Array.isArray(data) && data.length > 0) {
+            setSchedule(data);
+            localStorage.setItem('daymark-schedule', JSON.stringify(data));
+          }
+        }
+      } catch {
+        // Fall back to localStorage schedule
+      }
+    };
+    fetchScheduleFromDb();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Monitor database connection status
@@ -284,6 +348,12 @@ function App() {
   const completedMinutes = Object.values(day.completedMinutes || {}).reduce((a, b) => a + b, 0);
   const focusMinutes = Math.min(720, completedMinutes);
 
+  const totalPlannedFocusHours = useMemo(() => {
+    return schedule
+      .filter(s => s.kind === 'focus')
+      .reduce((acc, s) => acc + (s.hours || computeDurationHours(s.start, s.end)), 0);
+  }, [schedule]);
+
   const current = schedule.find(item => {
     if (!isToday) return false;
     const now = new Date();
@@ -412,6 +482,57 @@ function App() {
     URL.revokeObjectURL(a.href);
   };
 
+  // Schedule timing editing handlers
+  const handleBlockChange = (index, field, value) => {
+    setEditingSchedule(prev => {
+      const copy = [...prev];
+      const item = { ...copy[index], [field]: value };
+      if (field === 'start' || field === 'end') {
+        item.hours = computeDurationHours(item.start, item.end);
+      }
+      copy[index] = item;
+      return copy;
+    });
+  };
+
+  const saveScheduleChanges = async () => {
+    setSchedule(editingSchedule);
+    localStorage.setItem('daymark-schedule', JSON.stringify(editingSchedule));
+    try {
+      const res = await fetch(`${API}/settings/schedule`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editingSchedule)
+      });
+      if (res.ok) {
+        setDbStatus('connected');
+        setToast('Routine timings updated and saved to PostgreSQL database!');
+      } else {
+        setToast('Routine saved locally (syncing with database)');
+      }
+    } catch {
+      setToast('Routine saved locally in offline storage');
+    }
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  const resetScheduleToDefaults = async () => {
+    setEditingSchedule(defaultSchedule);
+    setSchedule(defaultSchedule);
+    localStorage.setItem('daymark-schedule', JSON.stringify(defaultSchedule));
+    try {
+      await fetch(`${API}/settings/schedule`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(defaultSchedule)
+      });
+      setToast('Routine reset to default 7 AM - 9 PM schedule');
+    } catch {
+      setToast('Routine reset locally');
+    }
+    setTimeout(() => setToast(''), 2500);
+  };
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -472,7 +593,7 @@ function App() {
                   : 'Upcoming Routine Plan'
                 : view === 'Weekly report'
                 ? 'Your progress, at a glance'
-                : 'Make the routine work for you'}
+                : 'Customize your routine schedule'}
             </h1>
           </div>
           <div className="top-actions">
@@ -571,14 +692,14 @@ function App() {
               />
               <Metric
                 label="Planned focus"
-                value="12 hours"
-                detail="DSA, project, reading, revision"
+                value={`${totalPlannedFocusHours} hours`}
+                detail="Customizable in Routine Settings"
                 icon={Target}
                 tone="blue"
               />
               <Metric
                 label={isToday ? 'Current block' : 'Routine structure'}
-                value={current?.title || (isToday ? 'Between sessions' : 'Standard 12h block')}
+                value={current?.title || (isToday ? 'Between sessions' : `${schedule.length} routine blocks`)}
                 detail={current ? `${current.start} – ${current.end}` : 'Follow your planned schedule'}
                 icon={Sun}
                 tone="sand"
@@ -611,7 +732,7 @@ function App() {
 
                 <div className="schedule-list">
                   {schedule.map(item => {
-                    const Icon = item.icon;
+                    const Icon = iconMap[item.icon] || Clock3;
                     const isActive = isToday && activeId === item.id;
                     const logged = day.completedMinutes?.[item.id] || 0;
                     return (
@@ -626,7 +747,7 @@ function App() {
                         <div className="event-body">
                           <div className="event-title-row">
                             <h4>{item.title}</h4>
-                            <span className="duration-pill">{item.hours}h</span>
+                            <span className="duration-pill">{item.hours || computeDurationHours(item.start, item.end)}h</span>
                           </div>
                           <p>{item.subtitle}</p>
                           {logged > 0 && (
@@ -839,7 +960,7 @@ function App() {
                 <div>
                   <small>Days with progress</small>
                   <strong>
-                    {weekly.filter(d=>d.count>0).length}
+                    {weekly.filter(d => d.count > 0).length}
                     <em> / 7</em>
                   </strong>
                 </div>
@@ -878,10 +999,10 @@ function App() {
 
         {view === 'Routine settings' && (
           <section className="panel settings-panel">
-            <span className="eyebrow">YOUR BASELINE</span>
-            <h3>Keep the plan simple</h3>
+            <span className="eyebrow">ROUTINE CONFIGURATION</span>
+            <h3>Edit Routine Timings & Blocks</h3>
             <p className="muted">
-              Your routine is set to the schedule you defined. Today is the only active editable day; past records are preserved in read-only mode for historical accuracy.
+              Customize the start time, end time, and titles of your daily schedule. Any changes made here are saved directly to your PostgreSQL database and will update your daily tracker instantly.
             </p>
 
             <div className="db-status-banner">
@@ -892,28 +1013,73 @@ function App() {
                 </strong>
                 <p>
                   {dbStatus === 'connected'
-                    ? 'All daily check-ins, focus minutes, alarms, and notes are persisting directly to PostgreSQL.'
-                    : 'The webapp is currently using local browser storage and is ready for your PostgreSQL database link.'}
+                    ? 'Routine schedule updates are synchronized in real-time to the routine_settings table in PostgreSQL.'
+                    : 'The webapp is currently storing your custom schedule in local browser storage until PostgreSQL is connected.'}
                 </p>
               </div>
             </div>
 
-            <div className="settings-summary">
-              {schedule.map(item => (
-                <div key={item.id}>
-                  <span>
-                    {item.start} – {item.end}
-                  </span>
-                  <strong>{item.title}</strong>
-                  <small>
-                    {item.hours} hour{item.hours > 1 ? 's' : ''}
-                  </small>
-                </div>
-              ))}
+            {/* Save & Reset Actions Bar */}
+            <div className="settings-actions">
+              <button className="save-schedule-btn" onClick={saveScheduleChanges}>
+                <Save size={15} /> Save Routine Changes to Database
+              </button>
+              <button className="reset-schedule-btn" onClick={resetScheduleToDefaults}>
+                <RotateCcw size={15} /> Reset to Default Schedule
+              </button>
             </div>
-            <div className="settings-note">
+
+            {/* Editable Schedule Blocks */}
+            <div className="schedule-editor-grid">
+              {editingSchedule.map((item, index) => {
+                const Icon = iconMap[item.icon] || Clock3;
+                const hours = computeDurationHours(item.start, item.end);
+                return (
+                  <div className="schedule-edit-card" key={item.id}>
+                    <div className="edit-times">
+                      <input
+                        type="time"
+                        value={item.start}
+                        onChange={e => handleBlockChange(index, 'start', e.target.value)}
+                        aria-label={`Start time for ${item.title}`}
+                      />
+                      <span>to</span>
+                      <input
+                        type="time"
+                        value={item.end}
+                        onChange={e => handleBlockChange(index, 'end', e.target.value)}
+                        aria-label={`End time for ${item.title}`}
+                      />
+                    </div>
+                    <div className="edit-details">
+                      <input
+                        type="text"
+                        className="edit-title-input"
+                        value={item.title}
+                        onChange={e => handleBlockChange(index, 'title', e.target.value)}
+                        placeholder="Block title"
+                      />
+                      <input
+                        type="text"
+                        className="edit-sub-input"
+                        value={item.subtitle}
+                        onChange={e => handleBlockChange(index, 'subtitle', e.target.value)}
+                        placeholder="Focus description or notes"
+                      />
+                    </div>
+                    <span className="edit-duration-badge">
+                      {hours}h {item.kind === 'break' ? 'Break' : 'Focus'}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="settings-note" style={{ marginTop: '20px' }}>
               <Moon size={18} />
-              <span>Protect 7–8 hours of sleep. This schedule ends at 9 PM, so set a consistent wind-down time.</span>
+              <span>
+                Tip: Keep buffer blocks between deep sessions to avoid cognitive fatigue and sustain long-term consistency.
+              </span>
             </div>
           </section>
         )}

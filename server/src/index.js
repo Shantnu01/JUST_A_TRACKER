@@ -61,6 +61,11 @@ async function ensureTable() {
       alarms JSONB NOT NULL DEFAULT '{}'::jsonb,
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS routine_settings (
+      key TEXT PRIMARY KEY,
+      value JSONB NOT NULL,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`);
     dbInitialized = true;
     console.log('[Database] Connected and schema verified.');
   } catch (error) {
@@ -137,6 +142,47 @@ app.put('/api/days/:date', async (req, res) => {
   } catch (error) {
     console.error('Save day failed:', error.message);
     return res.status(500).json({ error: 'Unable to save routine data.' });
+  }
+});
+
+app.get('/api/settings/schedule', async (_req, res) => {
+  if (!pool) {
+    return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
+  }
+  try {
+    await ensureTable();
+    const result = await pool.query('SELECT value FROM routine_settings WHERE key = $1', ['schedule']);
+    if (result.rows.length > 0) {
+      return res.json(result.rows[0].value);
+    }
+    return res.json(null);
+  } catch (error) {
+    console.error('Read schedule settings failed:', error.message);
+    return res.status(500).json({ error: 'Unable to read schedule settings.' });
+  }
+});
+
+app.put('/api/settings/schedule', async (req, res) => {
+  if (!pool) {
+    return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
+  }
+  const scheduleData = req.body;
+  if (!Array.isArray(scheduleData)) {
+    return res.status(400).json({ error: 'Schedule must be an array of routine blocks.' });
+  }
+  try {
+    await ensureTable();
+    const result = await pool.query(
+      `INSERT INTO routine_settings (key, value, updated_at)
+       VALUES ($1, $2::jsonb, NOW())
+       ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
+       RETURNING key, value, updated_at`,
+      ['schedule', JSON.stringify(scheduleData)]
+    );
+    return res.json({ success: true, schedule: result.rows[0].value });
+  } catch (error) {
+    console.error('Save schedule settings failed:', error.message);
+    return res.status(500).json({ error: 'Unable to save schedule settings.' });
   }
 });
 
