@@ -80,9 +80,10 @@ function computeDurationHours(start, end) {
   return h > 0 ? h : 1;
 }
 
-function readSavedSchedule() {
+function readSavedSchedule(userId = null) {
   try {
-    const raw = localStorage.getItem('daymark-schedule');
+    const key = userId ? `daymark-schedule-${userId}` : 'daymark-schedule-guest';
+    const raw = localStorage.getItem(key) || localStorage.getItem('daymark-schedule');
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -354,17 +355,19 @@ function App() {
     return () => clearInterval(interval);
   }, [token]);
 
-  // Load custom schedule from database on startup
+  // Load custom schedule from database on startup and when user account changes
   useEffect(() => {
     let mounted = true;
     const fetchScheduleFromDb = async () => {
       try {
-        const response = await fetch(`${API}/settings/schedule`);
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await fetch(`${API}/settings/schedule`, { headers });
         if (response.ok) {
           const data = await response.json();
           if (mounted && Array.isArray(data) && data.length > 0) {
             setSchedule(data);
-            localStorage.setItem('daymark-schedule', JSON.stringify(data));
+            const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+            localStorage.setItem(storageKey, JSON.stringify(data));
           }
         }
       } catch {
@@ -375,7 +378,7 @@ function App() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [token, user]);
 
   // Monitor database connection status
   useEffect(() => {
@@ -659,16 +662,21 @@ function App() {
 
   const saveScheduleChanges = async () => {
     setSchedule(editingSchedule);
-    localStorage.setItem('daymark-schedule', JSON.stringify(editingSchedule));
+    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+    localStorage.setItem(storageKey, JSON.stringify(editingSchedule));
     try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      };
       const res = await fetch(`${API}/settings/schedule`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(editingSchedule)
       });
       if (res.ok) {
         setDbStatus('connected');
-        setToast('Routine timings updated and saved to PostgreSQL database!');
+        setToast('Your personal routine timings were saved to database!');
       } else {
         setToast('Routine saved locally (syncing with database)');
       }
@@ -681,14 +689,19 @@ function App() {
   const resetScheduleToDefaults = async () => {
     setEditingSchedule(defaultSchedule);
     setSchedule(defaultSchedule);
-    localStorage.setItem('daymark-schedule', JSON.stringify(defaultSchedule));
+    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+    localStorage.setItem(storageKey, JSON.stringify(defaultSchedule));
     try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      };
       await fetch(`${API}/settings/schedule`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(defaultSchedule)
       });
-      setToast('Routine reset to default 7 AM - 9 PM schedule');
+      setToast('Your routine reset to default 7 AM - 9 PM schedule');
     } catch {
       setToast('Routine reset locally');
     }

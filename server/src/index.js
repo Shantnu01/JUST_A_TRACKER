@@ -720,15 +720,22 @@ app.put('/api/days/:date', optionalAuth, async (req, res) => {
 });
 
 // ================= ROUTINE SETTINGS ENDPOINTS =================
-app.get('/api/settings/schedule', async (_req, res) => {
+// User-isolated timetable: each user customizes and saves their own schedule
+app.get('/api/settings/schedule', optionalAuth, async (req, res) => {
   if (!pool) {
     return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
   }
+  const settingKey = req.user ? `schedule:${req.user.id}` : 'schedule:default';
   try {
     await ensureTable();
-    const result = await pool.query('SELECT value FROM routine_settings WHERE key = $1', ['schedule']);
+    const result = await pool.query('SELECT value FROM routine_settings WHERE key = $1', [settingKey]);
     if (result.rows.length > 0) {
       return res.json(result.rows[0].value);
+    }
+    // Fallback to default if user hasn't customized yet
+    if (req.user) {
+      const def = await pool.query('SELECT value FROM routine_settings WHERE key = $1', ['schedule:default']);
+      if (def.rows.length > 0) return res.json(def.rows[0].value);
     }
     return res.json(null);
   } catch (error) {
@@ -737,7 +744,7 @@ app.get('/api/settings/schedule', async (_req, res) => {
   }
 });
 
-app.put('/api/settings/schedule', async (req, res) => {
+app.put('/api/settings/schedule', optionalAuth, async (req, res) => {
   if (!pool) {
     return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
   }
@@ -745,6 +752,7 @@ app.put('/api/settings/schedule', async (req, res) => {
   if (!Array.isArray(scheduleData)) {
     return res.status(400).json({ error: 'Schedule must be an array of routine blocks.' });
   }
+  const settingKey = req.user ? `schedule:${req.user.id}` : 'schedule:default';
   try {
     await ensureTable();
     const result = await pool.query(
@@ -752,7 +760,7 @@ app.put('/api/settings/schedule', async (req, res) => {
        VALUES ($1, $2::jsonb, NOW())
        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
        RETURNING key, value, updated_at`,
-      ['schedule', JSON.stringify(scheduleData)]
+      [settingKey, JSON.stringify(scheduleData)]
     );
     return res.json({ success: true, schedule: result.rows[0].value });
   } catch (error) {
