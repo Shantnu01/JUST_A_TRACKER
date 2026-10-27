@@ -2330,20 +2330,21 @@ function App() {
         <div className="side-label">WORKSPACE</div>
         <nav>
           {[
-            ['Today', Sun],
-            ['Stage Roadmaps', Milestone],
-            ['Weekly report', TrendingUp],
-            ['Study pods', Users],
-            ['Coding', Code2],
-            ['Routine settings', Settings2]
-          ].map(([label, Icon]) => (
+            ['Today', Sun, 'Today'],
+            ['Stage Roadmaps', Milestone, 'Roadmaps'],
+            ['Weekly report', TrendingUp, 'Reports'],
+            ['Study pods', Users, 'Pods'],
+            ['Coding', Code2, 'Coding'],
+            ['Routine settings', Settings2, 'Settings']
+          ].map(([label, Icon, shortLabel]) => (
             <button
               key={label}
               className={`nav-item ${view === label ? 'selected' : ''}`}
               onClick={() => setView(label)}
             >
               <Icon size={17} />
-              <span>{label}</span>
+              <span className="nav-item-full">{label}</span>
+              <span className="nav-item-short">{shortLabel}</span>
               {label === 'Today' && <span className="nav-indicator" />}
               {label === 'Stage Roadmaps' && (
                 <span className="nav-indicator" style={{ background: '#818cf8' }} />
@@ -2814,7 +2815,7 @@ function App() {
                   </div>
                   <div className="date-controls">
                     {isToday && (
-                      <>
+                      <div className="chief-elastic-group">
                         <button 
                           className="chief-audit-btn" 
                           onClick={runManualChiefAudit}
@@ -2831,21 +2832,23 @@ function App() {
                           <SlidersHorizontal size={13} />
                           <span>Elastic Shift</span>
                         </button>
-                      </>
+                      </div>
                     )}
-                    <button className="icon-button small" onClick={() => shiftDate(-1)} title="Previous day">
-                      <ChevronLeft size={16} />
-                    </button>
-                    <button
-                      className={`today-button ${isToday ? 'current' : ''}`}
-                      onClick={() => setSelectedDate(new Date())}
-                      title="Jump to today"
-                    >
-                      Today
-                    </button>
-                    <button className="icon-button small" onClick={() => shiftDate(1)} title="Next day">
-                      <ChevronRight size={16} />
-                    </button>
+                    <div className="date-nav-group">
+                      <button className="icon-button small" onClick={() => shiftDate(-1)} title="Previous day">
+                        <ChevronLeft size={16} />
+                      </button>
+                      <button
+                        className={`today-button ${isToday ? 'current' : ''}`}
+                        onClick={() => setSelectedDate(new Date())}
+                        title="Jump to today"
+                      >
+                        Today
+                      </button>
+                      <button className="icon-button small" onClick={() => shiftDate(1)} title="Next day">
+                        <ChevronRight size={16} />
+                      </button>
+                    </div>
                   </div>
                 </div>
 
