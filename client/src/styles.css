@@ -5316,35 +5316,790 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   border: 2px solid #000000 !important;
 }
 
-[data-theme="acid-runway"] .single-stage-focused-card,
-[data-theme="acid-runway"] .roadmap-command-center,
-[data-theme="acid-runway"] .creator-option-box {
-  background: #111111 !important;
-  border-color: rgba(198, 255, 0, 0.4) !important;
+/* ==========================================================================
+   ACID RUNWAY: ULTRA-PREMIUM HIGH-FASHION CYBER-BRUTALIST OVERHAUL
+   Pitch black #050505, Volt Acid Lime #ccff00, Crisp White #ffffff,
+   Onyx Glass Cards, Flawless Contrast across Timetable & Roadmaps.
+   ========================================================================== */
+
+/* 1. Base App & Layout */
+[data-theme="acid-runway"] {
+  background-color: #050505 !important;
+  color: #ffffff !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  --ink: #ffffff;
+  --muted: #a1a1aa;
+  --line: rgba(204, 255, 0, 0.18);
+  --green: #ccff00;
+  --paper: #0b0b0f;
 }
 
-[data-theme="acid-runway"] .stage-focus-header,
-[data-theme="acid-runway"] .stage-focus-add-checkpoint-row,
-[data-theme="acid-runway"] .stage-footer-nav {
-  background: #161616 !important;
-  border-color: rgba(198, 255, 0, 0.25) !important;
+[data-theme="acid-runway"] .main-content {
+  background: transparent !important;
 }
 
-[data-theme="acid-runway"] .single-checkpoint-row {
-  background: #1a1a1a !important;
-  border-color: rgba(198, 255, 0, 0.25) !important;
+/* 2. Topbar, Eyebrow & Headers */
+[data-theme="acid-runway"] .topbar {
+  border-bottom: 1px solid rgba(204, 255, 0, 0.18) !important;
 }
 
-[data-theme="acid-runway"] .roadmap-hub-title,
-[data-theme="acid-runway"] .command-subject-name,
-[data-theme="acid-runway"] .stage-focus-title,
-[data-theme="acid-runway"] .checkpoint-headline {
+[data-theme="acid-runway"] .eyebrow,
+[data-theme="acid-runway"] .side-label {
+  color: #ccff00 !important;
+  letter-spacing: 2px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .topbar h1,
+[data-theme="acid-runway"] .welcome-row h2,
+[data-theme="acid-runway"] .panel-heading h3 {
+  color: #ffffff !important;
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+}
+
+[data-theme="acid-runway"] .muted,
+[data-theme="acid-runway"] .subhead {
+  color: #a1a1aa !important;
+}
+
+/* 3. Top Actions, Chips & Badges */
+[data-theme="acid-runway"] .sync-chip,
+[data-theme="acid-runway"] .date-chip,
+[data-theme="acid-runway"] .pod-pill,
+[data-theme="acid-runway"] .theme-switcher-btn,
+[data-theme="acid-runway"] .icon-button,
+[data-theme="acid-runway"] .today-button {
+  background: #0e0e14 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="acid-runway"] .theme-switcher-btn:hover,
+[data-theme="acid-runway"] .icon-button:hover,
+[data-theme="acid-runway"] .today-button:hover {
+  background: #181822 !important;
+  border-color: #ccff00 !important;
+  color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .status-dot.synced {
+  background: #ccff00 !important;
+  box-shadow: 0 0 8px #ccff00 !important;
+}
+
+/* 4. Panels & Cards */
+[data-theme="acid-runway"] .panel,
+[data-theme="acid-runway"] .metric-card,
+[data-theme="acid-runway"] .streak-card,
+[data-theme="acid-runway"] .note-panel,
+[data-theme="acid-runway"] .report-main,
+[data-theme="acid-runway"] .settings-panel,
+[data-theme="acid-runway"] .coding-top-banner,
+[data-theme="acid-runway"] .dsa-potd-card,
+[data-theme="acid-runway"] .coding-metric-panel,
+[data-theme="acid-runway"] .coding-sheet-panel,
+[data-theme="acid-runway"] .coding-contests-panel,
+[data-theme="acid-runway"] .coding-suggestions-panel {
+  background: #0b0b0f !important;
+  border: 1px solid rgba(204, 255, 0, 0.22) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(204, 255, 0, 0.03) !important;
+}
+
+[data-theme="acid-runway"] .metric-copy strong {
+  color: #ffffff !important;
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .metric-copy span,
+[data-theme="acid-runway"] .metric-copy small {
+  color: #a1a1aa !important;
+}
+
+/* 5. Schedule Items & Checkpoint Capsules (Timetable) */
+[data-theme="acid-runway"] .schedule-item {
+  background: #0f0f15 !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 10px !important;
+  padding: 14px 12px !important;
+  margin-bottom: 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="acid-runway"] .schedule-item:hover {
+  border-color: rgba(204, 255, 0, 0.4) !important;
+}
+
+[data-theme="acid-runway"] .schedule-item.active-session {
+  background: #14141d !important;
+  border: 1.5px solid #ccff00 !important;
+  box-shadow: 0 0 20px rgba(204, 255, 0, 0.15) !important;
+}
+
+[data-theme="acid-runway"] .time-col strong {
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .time-col span {
+  color: #a1a1aa !important;
+  font-size: 10px !important;
+}
+
+[data-theme="acid-runway"] .event-icon {
+  background: #181822 !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.25) !important;
+}
+
+[data-theme="acid-runway"] .event-title-row h4 {
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.3px !important;
+}
+
+[data-theme="acid-runway"] .duration-pill {
+  background: #1c1c28 !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .event-body p {
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+}
+
+[data-theme="acid-runway"] .logged-label {
+  color: #ccff00 !important;
+  font-weight: 700 !important;
+}
+
+/* Timetable Current Checkpoint Capsule in Acid Runway */
+[data-theme="acid-runway"] .timetable-checkpoint-capsule {
+  background: #13131b !important;
+  border: 1px solid rgba(204, 255, 0, 0.35) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="acid-runway"] .timetable-checkpoint-capsule:hover {
+  border-color: #ccff00 !important;
+  box-shadow: 0 0 12px rgba(204, 255, 0, 0.2) !important;
+}
+
+[data-theme="acid-runway"] .timetable-checkpoint-capsule.unassigned {
+  background: #0e0e14 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  border-style: dashed !important;
+}
+
+[data-theme="acid-runway"] .capsule-icon {
+  color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .capsule-label-dim {
+  color: #a1a1aa !important;
+}
+
+[data-theme="acid-runway"] .capsule-stage-pill {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.05em !important;
+}
+
+[data-theme="acid-runway"] .capsule-checkpoint-text {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="acid-runway"] .capsule-checkbox {
+  background: #08080a !important;
+  border: 1.5px solid #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .capsule-checkbox:hover {
+  box-shadow: 0 0 8px rgba(204, 255, 0, 0.4) !important;
+}
+
+[data-theme="acid-runway"] .capsule-checkbox:checked {
+  background: #ccff00 !important;
+  border-color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .capsule-checkbox:checked::before {
+  color: #000000 !important;
+}
+
+[data-theme="acid-runway"] .capsule-nav-btn {
+  background: #181822 !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .capsule-nav-btn:hover {
+  background: #ccff00 !important;
+  color: #000000 !important;
+}
+
+/* 6. Chief of Staff & Elastic Shift Buttons */
+[data-theme="acid-runway"] .chief-audit-btn,
+[data-theme="acid-runway"] .elastic-btn {
+  background: #12121a !important;
+  border: 1px solid rgba(204, 255, 0, 0.35) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .chief-audit-btn:hover,
+[data-theme="acid-runway"] .elastic-btn:hover {
+  background: #ccff00 !important;
+  border-color: #ccff00 !important;
+  color: #000000 !important;
+  box-shadow: 0 0 14px rgba(204, 255, 0, 0.3) !important;
+}
+
+/* 7. Action & Finish Buttons */
+[data-theme="acid-runway"] .action-button {
+  background: #14141c !important;
+  border: 1px solid rgba(204, 255, 0, 0.35) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .action-button:hover {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border-color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .action-button.running {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border-color: #ccff00 !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 14px rgba(204, 255, 0, 0.35) !important;
+}
+
+[data-theme="acid-runway"] .finish-button {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: none !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="acid-runway"] .finish-button:hover {
+  background: #ccff00 !important;
+  box-shadow: 0 0 14px rgba(204, 255, 0, 0.4) !important;
+}
+
+[data-theme="acid-runway"] .read-only-badge {
+  background: #14141c !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #a1a1aa !important;
+}
+
+/* 8. Circadian, Soundscape, Priority & Burnout Banners */
+[data-theme="acid-runway"] .circadian-strip {
+  background: #0c0c12 !important;
+  border: 1px solid rgba(204, 255, 0, 0.22) !important;
+}
+
+[data-theme="acid-runway"] .circadian-badge {
+  background: #1a1a24 !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .circadian-note {
+  color: #a1a1aa !important;
+}
+
+[data-theme="acid-runway"] .soundscape-strip {
+  background: #0c0c12 !important;
+  border: 1px solid rgba(204, 255, 0, 0.2) !important;
+}
+
+[data-theme="acid-runway"] .sound-btn {
+  background: #14141c !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   color: #ffffff !important;
 }
 
-[data-theme="acid-runway"] .roadmap-hub-subtitle,
-[data-theme="acid-runway"] .stage-nav-label {
+[data-theme="acid-runway"] .sound-btn.active {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border-color: #ccff00 !important;
+  font-weight: 900 !important;
+}
+
+/* 9. STAGE ROADMAPS: FLAWLESS CONTRAST & PREMIUM CYBER AESTHETIC */
+[data-theme="acid-runway"] .stage-roadmaps-hub {
+  background: transparent !important;
+}
+
+[data-theme="acid-runway"] .roadmap-hub-header {
+  background: #0c0c12 !important;
+  border: 1px solid rgba(204, 255, 0, 0.25) !important;
+  border-radius: 14px !important;
+}
+
+[data-theme="acid-runway"] .roadmap-hub-icon-wrap {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border-radius: 8px !important;
+}
+
+[data-theme="acid-runway"] .roadmap-hub-title {
+  color: #ffffff !important;
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-hub-subtitle {
   color: #a3e635 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-header-btn.secondary {
+  background: #14141c !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-header-btn.secondary:hover {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border-color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-header-btn.primary {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border: none !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-header-btn.primary:hover {
+  background: #ffffff !important;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Subject Tabs Row */
+[data-theme="acid-runway"] .roadmap-subjects-tabs {
+  border-bottom: 1.5px solid rgba(204, 255, 0, 0.2) !important;
+}
+
+[data-theme="acid-runway"] .roadmap-subject-pill {
+  background: #101017 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  color: #e2e8f0 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-subject-pill:hover {
+  background: #181822 !important;
+  border-color: #ccff00 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="acid-runway"] .roadmap-subject-pill.active {
+  background: #ccff00 !important;
+  border-color: #ccff00 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 16px rgba(204, 255, 0, 0.35) !important;
+}
+
+[data-theme="acid-runway"] .roadmap-pill-percent {
+  background: #1c1c28 !important;
+  color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-subject-pill.active .roadmap-pill-percent {
+  background: #000000 !important;
+  color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-pill-empty {
+  background: #1c1c28 !important;
+  color: #a1a1aa !important;
+  border: 1px dashed rgba(255, 255, 255, 0.25) !important;
+}
+
+[data-theme="acid-runway"] .roadmap-subject-pill.active .roadmap-pill-empty {
+  background: #000000 !important;
+  color: #ccff00 !important;
+  border: none !important;
+}
+
+[data-theme="acid-runway"] .roadmap-add-subject-btn {
+  background: #14141c !important;
+  border: 1.5px dashed rgba(204, 255, 0, 0.45) !important;
+  color: #ccff00 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .roadmap-add-subject-btn:hover {
+  background: #ccff00 !important;
+  color: #000000 !important;
+}
+
+/* Stage Navigation Tabs */
+[data-theme="acid-runway"] .stage-tabs-navigation-bar {
+  border-top: 1.5px solid rgba(204, 255, 0, 0.18) !important;
+}
+
+[data-theme="acid-runway"] .stage-nav-label {
+  color: #ccff00 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+}
+
+[data-theme="acid-runway"] .single-stage-tab-btn {
+  background: #101017 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  color: #cbd5e1 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .single-stage-tab-btn:hover {
+  background: #181822 !important;
+  border-color: #ccff00 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="acid-runway"] .single-stage-tab-btn.viewing {
+  background: #ccff00 !important;
+  border-color: #ccff00 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 14px rgba(204, 255, 0, 0.35) !important;
+}
+
+[data-theme="acid-runway"] .stage-tab-ratio {
+  color: #a1a1aa !important;
+}
+
+[data-theme="acid-runway"] .single-stage-tab-btn.viewing .stage-tab-ratio {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .stage-tab-check {
+  color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .single-stage-tab-btn.viewing .stage-tab-check {
+  color: #000000 !important;
+}
+
+/* Single Stage Focused Card */
+[data-theme="acid-runway"] .single-stage-focused-card,
+[data-theme="acid-runway"] .roadmap-command-center {
+  background: #09090d !important;
+  border: 1.5px solid rgba(204, 255, 0, 0.35) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 20px rgba(204, 255, 0, 0.04) !important;
+}
+
+[data-theme="acid-runway"] .stage-focus-header,
+[data-theme="acid-runway"] .stage-footer-nav {
+  background: #101017 !important;
+  border-color: rgba(204, 255, 0, 0.2) !important;
+}
+
+[data-theme="acid-runway"] .stage-focus-number-badge {
+  background: #1c1c28 !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.35) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .stage-focus-title {
+  color: #ffffff !important;
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .stage-focus-counter {
+  background: #181822 !important;
+  color: #a3e635 !important;
+  border: 1px solid rgba(204, 255, 0, 0.25) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .pin-timetable-btn {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border: none !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="acid-runway"] .pin-timetable-btn:hover {
+  background: #ffffff !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4) !important;
+}
+
+[data-theme="acid-runway"] .pinned-badge-active {
+  background: #181822 !important;
+  color: #ccff00 !important;
+  border: 1.5px solid #ccff00 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .delete-stage-btn {
+  background: #200b0e !important;
+  border: 1px solid #ef4444 !important;
+  color: #f87171 !important;
+}
+
+[data-theme="acid-runway"] .delete-stage-btn:hover {
+  background: #360f14 !important;
+}
+
+/* Individual Checkpoint Rows */
+[data-theme="acid-runway"] .single-checkpoint-row {
+  background: #111118 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="acid-runway"] .single-checkpoint-row:hover {
+  background: #171722 !important;
+  border-color: rgba(204, 255, 0, 0.4) !important;
+}
+
+[data-theme="acid-runway"] .checkpoint-headline {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="acid-runway"] .checkpoint-headline.strikethrough {
+  color: #64748b !important;
+}
+
+[data-theme="acid-runway"] .checkpoint-sub-pill {
+  background: #1c1c28 !important;
+  color: #a3e635 !important;
+  border: 1px solid rgba(204, 255, 0, 0.25) !important;
+}
+
+[data-theme="acid-runway"] .single-checkpoint-box {
+  background: #08080a !important;
+  border: 1.5px solid #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .single-checkpoint-box:checked {
+  background: #ccff00 !important;
+  border-color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .single-checkpoint-box:checked::before {
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="acid-runway"] .stage-nav-arrow-btn {
+  background: #181822 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .stage-nav-arrow-btn:hover {
+  background: #ccff00 !important;
+  color: #000000 !important;
+}
+
+[data-theme="acid-runway"] .stage-nav-counter {
+  color: #a3e635 !important;
+  font-weight: 700 !important;
+}
+
+/* 10. Blank Creator Card (No Roadmaps / Create New Roadmap) */
+[data-theme="acid-runway"] .roadmap-blank-creator-card {
+  background: #09090d !important;
+  border: 1.5px solid rgba(204, 255, 0, 0.35) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="acid-runway"] .blank-creator-badge {
+  background: #1c1c28 !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .blank-creator-title {
+  color: #ffffff !important;
+  font-family: 'Syne', sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .blank-creator-desc {
+  color: #a1a1aa !important;
+}
+
+/* Format Guide Code Box */
+[data-theme="acid-runway"] .roadmap-format-guide-box {
+  background: #101017 !important;
+  border: 1px solid rgba(204, 255, 0, 0.25) !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="acid-runway"] .format-guide-head {
+  color: #ccff00 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .format-guide-code {
+  background: #060608 !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+}
+
+/* Creator Option Boxes (AI Prompt & Upload File) */
+[data-theme="acid-runway"] .creator-option-box {
+  background: #12121a !important;
+  border: 1.5px solid rgba(204, 255, 0, 0.35) !important;
+  border-radius: 12px !important;
+}
+
+[data-theme="acid-runway"] .option-icon-box {
+  background: #1a1a26 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .option-title {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 0.95rem !important;
+}
+
+[data-theme="acid-runway"] .option-desc {
+  color: #a1a1aa !important;
+  font-size: 0.8rem !important;
+}
+
+[data-theme="acid-runway"] .option-action-btn.secondary {
+  background: #181822 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .option-action-btn.secondary:hover {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border-color: #ccff00 !important;
+}
+
+[data-theme="acid-runway"] .option-action-btn.primary {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border: none !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="acid-runway"] .option-action-btn.primary:hover {
+  background: #ffffff !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Paste Outline Section */
+[data-theme="acid-runway"] .paste-label {
+  color: #ccff00 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .creator-paste-textarea {
+  background: #060608 !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(204, 255, 0, 0.3) !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="acid-runway"] .creator-paste-textarea:focus {
+  border-color: #ccff00 !important;
+  box-shadow: 0 0 14px rgba(204, 255, 0, 0.25) !important;
+}
+
+[data-theme="acid-runway"] .build-roadmap-btn {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  border: none !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="acid-runway"] .build-roadmap-btn:hover {
+  background: #ffffff !important;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.4) !important;
+}
+
+[data-theme="acid-runway"] .delete-subject-btn {
+  background: #200b0e !important;
+  border: 1.5px solid #ef4444 !important;
+  color: #f87171 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .delete-subject-btn:hover {
+  background: #360f14 !important;
+}
+
+/* Outline Editor Card */
+[data-theme="acid-runway"] .roadmap-outline-editor-card {
+  background: #09090d !important;
+  border: 1.5px solid rgba(204, 255, 0, 0.35) !important;
+}
+
+[data-theme="acid-runway"] .editor-card-header,
+[data-theme="acid-runway"] .editor-card-footer {
+  background: #101017 !important;
+  border-color: rgba(204, 255, 0, 0.2) !important;
+}
+
+[data-theme="acid-runway"] .roadmap-editor-textarea {
+  background: #060608 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+}
+
+[data-theme="acid-runway"] .editor-save-btn {
+  background: #ccff00 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="acid-runway"] .command-tool-btn {
+  background: #14141c !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="acid-runway"] .command-tool-btn:hover {
+  background: #ccff00 !important;
+  color: #000000 !important;
+}
+
+[data-theme="acid-runway"] .command-progress-badge {
+  background: #1a1a26 !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
+  font-weight: 800 !important;
 }
 
 [data-theme="spider-verse"] .single-stage-focused-card,
