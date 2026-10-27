@@ -12,4 +12,4 @@ services:
       - key: NODE_VERSION
         value: 20
       - key: DATABASE_URL
-        sync: false
+        value: postgresql://routine_db_ebzx_user:RBd3HMxgEATJP3GA5UCA1nmMzOLlx1k6@dpg-dbfvg88m7kps73au3uc0-a/routine_db_ebzx
