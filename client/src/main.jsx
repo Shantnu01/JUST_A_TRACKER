@@ -628,23 +628,31 @@ function App() {
   };
 
   const exportCsv = () => {
-    const rows = [['Date', 'DSA', 'Project', 'Reading', 'Revision', 'Breaks', 'Sleep', 'Notes']];
-    Object.keys(store)
-      .sort()
-      .forEach(k => {
-        const d = store[k];
-        rows.push([
-          k,
-          ...habits.map(h => (d.checks?.[h.id] ? 'Done' : 'Not done')),
-          (d.notes || '').replaceAll('"', '""')
-        ]);
-      });
+    const rows = [['Date', 'Focus Logged', 'DSA', 'Project', 'Reading', 'Revision', 'Breaks', 'Sleep', 'Notes']];
+    const dateSet = new Set(Object.keys(store));
+    if (key) dateSet.add(key);
+    if (todayKey) dateSet.add(todayKey);
+    const sortedDates = Array.from(dateSet).sort();
+
+    sortedDates.forEach(k => {
+      const d = store[k] || blankDay();
+      const totalMins = Object.values(d.completedMinutes || {}).reduce((a, b) => a + Number(b || 0), 0);
+      const focusStr = `${Math.floor(totalMins / 60)}h ${totalMins % 60}m`;
+      rows.push([
+        k,
+        focusStr,
+        ...habits.map(h => (d.checks?.[h.id] ? 'Done' : 'Not done')),
+        (d.notes || '').replaceAll('"', '""')
+      ]);
+    });
     const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-    a.download = 'daymark-progress.csv';
+    a.download = `daymark-routine-export-${todayKey}.csv`;
     a.click();
     URL.revokeObjectURL(a.href);
+    setToast('Progress data exported to CSV');
+    setTimeout(() => setToast(''), 2500);
   };
 
   // Schedule timing editing handlers
