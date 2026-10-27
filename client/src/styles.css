@@ -52,3 +52,45 @@
   .schedule-edit-card{grid-template-columns:1fr;gap:10px}
   .edit-times{width:100%;justify-content:flex-start}
 }
+
+
+/* Auth & Study Pods Styling */
+.auth-btn{background:#315b45;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
+.auth-btn:hover{background:#244634}
+.logout-btn{background:transparent;border:none;color:#8a938b;padding:4px;border-radius:4px;display:grid;place-items:center}
+.logout-btn:hover{color:#b33a3a}
+.modal-overlay{position:fixed;inset:0;background:rgba(20,30,24,0.45);backdrop-filter:blur(3px);z-index:999;display:grid;place-items:center;padding:16px}
+.modal-card{background:#fffefa;border:1px solid #dcdfd6;border-radius:14px;width:100%;max-width:400px;padding:24px;box-shadow:0 20px 40px rgba(0,0,0,0.12);animation:modalIn .2s ease-out}
+@keyframes modalIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-header h3{font:700 18px Manrope,sans-serif;margin:0;color:#203126}
+.modal-close{background:transparent;border:0;color:#889189;cursor:pointer;padding:4px}
+.auth-tabs{display:flex;gap:6px;background:#f0f2eb;padding:3px;border-radius:8px;margin-bottom:18px}
+.auth-tab{flex:1;border:0;background:transparent;padding:8px;border-radius:6px;font-size:12px;font-weight:600;color:#6b756d}
+.auth-tab.active{background:#fff;color:#274332;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;font-weight:700;color:#5a665c;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.form-input{width:100%;border:1px solid #d9dfd4;background:#fbfcf9;border-radius:8px;padding:9px 12px;font-size:13px;color:#223328;outline:none}
+.form-input:focus{border-color:#487455;box-shadow:0 0 0 2px #4874551a}
+.form-submit-btn{width:100%;background:#315b45;color:#fff;border:0;border-radius:8px;padding:11px;font-size:13px;font-weight:700;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px}
+.form-submit-btn:hover{background:#254836}
+.form-error{background:#fdf2f2;border:1px solid #f8d4d4;color:#9b2c2c;padding:8px 12px;border-radius:6px;font-size:11px;margin-bottom:14px}
+
+/* Pods UI */
+.pod-pill{background:#fffefa;border:1px solid #e1e4dc;border-radius:30px;padding:7px 13px;display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:#355340}
+.pod-pill:hover{background:#f6f9f3;border-color:#b9cbbd}
+.pod-pill-count{background:#e7efe4;color:#2e523a;padding:2px 7px;border-radius:12px;font-size:10px}
+.pods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:16px}
+.pod-card{background:#fffefa;border:1px solid #e2e6de;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;position:relative}
+.pod-card.active-pod{border-color:#537c5f;box-shadow:0 0 0 2px #537c5f22}
+.pod-card-header{display:flex;justify-content:space-between;align-items:flex-start}
+.pod-card-header h4{margin:0;font:700 16px Manrope,sans-serif;color:#233529}
+.invite-code-chip{display:inline-flex;align-items:center;gap:6px;background:#f4f6f0;border:1px dashed #ced6c8;border-radius:6px;padding:4px 8px;font-family:monospace;font-size:11px;font-weight:700;color:#3c5a44;cursor:pointer}
+.invite-code-chip:hover{background:#eaefe5}
+.member-list-wrap{display:grid;gap:8px}
+.member-item{display:flex;align-items:center;gap:10px;padding:7px 10px;background:#f9faf7;border-radius:8px;border:1px solid #eef0eb}
+.member-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0}
+.member-meta{flex:1;min-width:0}
+.member-meta strong{display:block;font-size:12px;color:#293b2f}
+.member-meta small{font-size:10px;color:#7e8780}
+.studying-pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;color:#305e3f;background:#dff0df;padding:2px 6px;border-radius:10px;font-weight:700}

@@ -7,15 +7,21 @@ import {
   Calendar,
   Check,
   CheckCircle2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Clock3,
   Code2,
   Coffee,
+  Copy,
+  Crown,
   Database,
   Download,
+  Flame,
   Leaf,
   Lock,
+  LogIn,
+  LogOut,
   Menu,
   Moon,
   Pause,
@@ -23,9 +29,13 @@ import {
   RotateCcw,
   Save,
   Settings2,
+  Share2,
   Sun,
   Target,
   TrendingUp,
+  UserCheck,
+  UserPlus,
+  Users,
   Utensils,
   X
 } from 'lucide-react';
@@ -161,6 +171,33 @@ function playChime() {
 }
 
 function App() {
+  // Authentication State
+  const [token, setToken] = useState(() => localStorage.getItem('daymark-token') || '');
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('daymark-user') || 'null');
+    } catch {
+      return null;
+    }
+  });
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authTab, setAuthTab] = useState('login'); // 'login' | 'register'
+  const [authUsername, setAuthUsername] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+
+  // Groups / Study Pods State
+  const [groups, setGroups] = useState([]);
+  const [activeGroupId, setActiveGroupId] = useState(() => localStorage.getItem('daymark-active-group') || '');
+  const [podMembers, setPodMembers] = useState([]);
+  const [createPodModalOpen, setCreatePodModalOpen] = useState(false);
+  const [joinPodModalOpen, setJoinPodModalOpen] = useState(false);
+  const [newPodName, setNewPodName] = useState('');
+  const [joinInviteCode, setJoinInviteCode] = useState('');
+  const [podError, setPodError] = useState('');
+  const [podDropdownOpen, setPodDropdownOpen] = useState(false);
+
+  // Core App State
   const [store, setStore] = useState(readStore);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeId, setActiveId] = useState(null);
@@ -169,7 +206,7 @@ function App() {
   const [alarmEnabled, setAlarmEnabled] = useState(false);
   const [alarmTime, setAlarmTime] = useState('06:55');
   const [toast, setToast] = useState('');
-  const [view, setView] = useState('Today');
+  const [view, setView] = useState('Today'); // 'Today' | 'Weekly report' | 'Routine settings' | 'Study pods'
   const [notes, setNotes] = useState('');
   const [dbStatus, setDbStatus] = useState('checking'); // 'connected' | 'local' | 'checking'
 
@@ -184,6 +221,7 @@ function App() {
   const isFuture = key > todayKey;
 
   const day = store[key] || blankDay();
+  const activeGroup = groups.find(g => g.id === activeGroupId) || null;
 
   // Daily new quote calculation based on calendar day
   const todayQuote = useMemo(() => {
@@ -197,6 +235,52 @@ function App() {
   useEffect(() => {
     setEditingSchedule(schedule);
   }, [schedule]);
+
+  // Load user groups when token is present
+  useEffect(() => {
+    if (!token) {
+      setGroups([]);
+      return;
+    }
+    const fetchGroups = async () => {
+      try {
+        const res = await fetch(`${API}/groups`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setGroups(data);
+          if (data.length > 0 && !activeGroupId) {
+            setActiveGroupId(data[0].id);
+            localStorage.setItem('daymark-active-group', data[0].id);
+          }
+        }
+      } catch {}
+    };
+    fetchGroups();
+  }, [token]);
+
+  // Load pod members for active group (polled every 15s for live presence)
+  useEffect(() => {
+    if (!token || !activeGroupId) {
+      setPodMembers([]);
+      return;
+    }
+    const fetchMembers = async () => {
+      try {
+        const res = await fetch(`${API}/groups/${activeGroupId}/members`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setPodMembers(data);
+        }
+      } catch {}
+    };
+    fetchMembers();
+    const interval = setInterval(fetchMembers, 15000);
+    return () => clearInterval(interval);
+  }, [token, activeGroupId]);
 
   // Load custom schedule from database on startup
   useEffect(() => {
@@ -263,9 +347,14 @@ function App() {
       return updated;
     });
 
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    };
+
     fetch(`${API}/days/${key}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
         checks: nextDay.checks || {},
         notes: nextDay.notes || '',
@@ -299,7 +388,8 @@ function App() {
     let cancelled = false;
     const loadDay = async () => {
       try {
-        const response = await fetch(`${API}/days/${key}`);
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await fetch(`${API}/days/${key}`, { headers });
         if (!response.ok) return;
         const data = await response.json();
         if (cancelled) return;
@@ -325,7 +415,7 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [key]);
+  }, [key, token]);
 
   useEffect(() => {
     if (!alarmEnabled || !isToday) return;
@@ -533,6 +623,115 @@ function App() {
     setTimeout(() => setToast(''), 2500);
   };
 
+  // Auth Submit Handler
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setAuthError('');
+    const endpoint = authTab === 'login' ? '/auth/login' : '/auth/register';
+    try {
+      const res = await fetch(`${API}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: authUsername, password: authPassword })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAuthError(data.error || 'Authentication failed');
+        return;
+      }
+      setToken(data.token);
+      setUser(data.user);
+      localStorage.setItem('daymark-token', data.token);
+      localStorage.setItem('daymark-user', JSON.stringify(data.user));
+      setAuthModalOpen(false);
+      setAuthUsername('');
+      setAuthPassword('');
+      setToast(`Welcome back, ${data.user.username}!`);
+      setTimeout(() => setToast(''), 3000);
+    } catch {
+      setAuthError('Server unreachable. Please check connection.');
+    }
+  };
+
+  const handleLogout = () => {
+    setToken('');
+    setUser(null);
+    localStorage.removeItem('daymark-token');
+    localStorage.removeItem('daymark-user');
+    setGroups([]);
+    setActiveGroupId('');
+    setPodMembers([]);
+    setToast('Logged out');
+    setTimeout(() => setToast(''), 2000);
+  };
+
+  // Group Create / Join Handlers
+  const handleCreatePod = async (e) => {
+    e.preventDefault();
+    setPodError('');
+    if (!newPodName.trim()) return;
+    try {
+      const res = await fetch(`${API}/groups`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ name: newPodName.trim() })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPodError(data.error || 'Failed to create pod');
+        return;
+      }
+      setGroups(prev => [data, ...prev]);
+      setActiveGroupId(data.id);
+      localStorage.setItem('daymark-active-group', data.id);
+      setCreatePodModalOpen(false);
+      setNewPodName('');
+      setToast(`Created pod "${data.name}"! Share code: ${data.invite_code}`);
+      setTimeout(() => setToast(''), 4000);
+    } catch {
+      setPodError('Network error creating pod.');
+    }
+  };
+
+  const handleJoinPod = async (e) => {
+    e.preventDefault();
+    setPodError('');
+    if (!joinInviteCode.trim()) return;
+    try {
+      const res = await fetch(`${API}/groups/join`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ invite_code: joinInviteCode.trim() })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPodError(data.error || 'Failed to join pod');
+        return;
+      }
+      setGroups(prev => [...prev.filter(g => g.id !== data.id), data]);
+      setActiveGroupId(data.id);
+      localStorage.setItem('daymark-active-group', data.id);
+      setJoinPodModalOpen(false);
+      setJoinInviteCode('');
+      setToast(`Joined pod "${data.name}"!`);
+      setTimeout(() => setToast(''), 3000);
+    } catch {
+      setPodError('Network error joining pod.');
+    }
+  };
+
+  const copyInviteCode = (code) => {
+    navigator.clipboard.writeText(code);
+    setToast(`Invite code ${code} copied to clipboard!`);
+    setTimeout(() => setToast(''), 2500);
+  };
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -549,6 +748,7 @@ function App() {
           {[
             ['Today', Sun],
             ['Weekly report', TrendingUp],
+            ['Study pods', Users],
             ['Routine settings', Settings2]
           ].map(([label, Icon]) => (
             <button
@@ -559,6 +759,9 @@ function App() {
               <Icon size={17} />
               <span>{label}</span>
               {label === 'Today' && <span className="nav-indicator" />}
+              {label === 'Study pods' && groups.length > 0 && (
+                <span className="nav-indicator" style={{ background: '#3b82f6' }} />
+              )}
             </button>
           ))}
         </nav>
@@ -570,13 +773,30 @@ function App() {
           <span>{todayQuote.author.toUpperCase()}</span>
         </div>
 
+        {/* User Account / Profile Area */}
         <div className="profile">
-          <div className="avatar">D</div>
-          <div>
-            <strong>My workspace</strong>
-            <small>Personal routine</small>
+          <div
+            className="avatar"
+            style={{
+              background: user ? user.avatar_color : '#dbe6db',
+              color: user ? '#fff' : '#365a43'
+            }}
+          >
+            {user ? user.username.charAt(0).toUpperCase() : '?'}
           </div>
-          <Menu size={17} className="profile-menu" />
+          <div>
+            <strong>{user ? user.username : 'Guest Mode'}</strong>
+            <small>{activeGroup ? activeGroup.name : 'Personal Routine'}</small>
+          </div>
+          {user ? (
+            <button className="logout-btn" onClick={handleLogout} title="Log out">
+              <LogOut size={16} />
+            </button>
+          ) : (
+            <button className="auth-btn" onClick={() => setAuthModalOpen(true)}>
+              <LogIn size={13} /> Sign In
+            </button>
+          )}
         </div>
       </aside>
 
@@ -593,10 +813,117 @@ function App() {
                   : 'Upcoming Routine Plan'
                 : view === 'Weekly report'
                 ? 'Your progress, at a glance'
+                : view === 'Study pods'
+                ? 'Competitive Study Pods'
                 : 'Customize your routine schedule'}
             </h1>
           </div>
           <div className="top-actions">
+            {/* Active Study Pod Selector Pill */}
+            {user && (
+              <div style={{ position: 'relative' }}>
+                <button
+                  className="pod-pill"
+                  onClick={() => setPodDropdownOpen(v => !v)}
+                  title="Switch or manage study pods"
+                >
+                  <Users size={14} color="#315b45" />
+                  <span>{activeGroup ? activeGroup.name : 'No Pod Selected'}</span>
+                  {activeGroup && <span className="pod-pill-count">{activeGroup.member_count}/5</span>}
+                  <ChevronDown size={13} />
+                </button>
+
+                {podDropdownOpen && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      marginTop: '6px',
+                      background: '#fff',
+                      border: '1px solid #dbe0d7',
+                      borderRadius: '10px',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                      width: '230px',
+                      zIndex: 100,
+                      padding: '8px 0'
+                    }}
+                  >
+                    <div style={{ padding: '4px 12px 8px', fontSize: '10px', fontWeight: '700', color: '#889289' }}>
+                      YOUR STUDY PODS (MAX 5)
+                    </div>
+                    {groups.map(g => (
+                      <button
+                        key={g.id}
+                        onClick={() => {
+                          setActiveGroupId(g.id);
+                          localStorage.setItem('daymark-active-group', g.id);
+                          setPodDropdownOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          width: '100%',
+                          padding: '8px 14px',
+                          border: 0,
+                          background: g.id === activeGroupId ? '#f0f5ee' : 'transparent',
+                          color: '#28382c',
+                          fontSize: '12px',
+                          fontWeight: g.id === activeGroupId ? '700' : '500',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <span>{g.name}</span>
+                        <small style={{ color: '#68776b', fontSize: '10px' }}>{g.member_count}/5</small>
+                      </button>
+                    ))}
+                    <div style={{ borderTop: '1px solid #edf0ea', margin: '6px 0' }} />
+                    <button
+                      onClick={() => {
+                        setPodDropdownOpen(false);
+                        setCreatePodModalOpen(true);
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        width: '100%',
+                        padding: '7px 14px',
+                        border: 0,
+                        background: 'transparent',
+                        color: '#315b45',
+                        fontSize: '11px',
+                        fontWeight: '700'
+                      }}
+                    >
+                      <UserPlus size={13} /> Create New Pod
+                    </button>
+                    <button
+                      onClick={() => {
+                        setPodDropdownOpen(false);
+                        setJoinPodModalOpen(true);
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        width: '100%',
+                        padding: '7px 14px',
+                        border: 0,
+                        background: 'transparent',
+                        color: '#496b52',
+                        fontSize: '11px',
+                        fontWeight: '700'
+                      }}
+                    >
+                      <Share2 size={13} /> Join Pod with Code
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div
               className="sync-chip"
               title={
@@ -997,6 +1324,143 @@ function App() {
           </section>
         )}
 
+        {/* Study Pods Competitive View */}
+        {view === 'Study pods' && (
+          <section style={{ maxWidth: '1000px', margin: '0 auto', paddingTop: '10px' }}>
+            {!user ? (
+              <div className="panel" style={{ padding: '36px', textAlign: 'center' }}>
+                <Users size={40} color="#315b45" style={{ marginBottom: '12px' }} />
+                <h3 style={{ font: '700 20px Manrope', margin: '0 0 8px' }}>Join or Create a Study Pod</h3>
+                <p className="muted" style={{ maxWidth: '480px', margin: '0 auto 20px', fontSize: '13px', lineHeight: '1.6' }}>
+                  Study pods are tight-knit accountability rooms (max 5 members). Sign in or create an account to compete on daily focus hours, habits, and streak rankings.
+                </p>
+                <button className="auth-btn" style={{ padding: '10px 20px', fontSize: '13px' }} onClick={() => setAuthModalOpen(true)}>
+                  <LogIn size={15} /> Sign In or Create Account
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <h3 style={{ font: '700 22px Manrope', margin: '0 0 4px', color: '#1f2e24' }}>
+                      Your Study Pods <span style={{ fontSize: '14px', color: '#768178', fontWeight: '500' }}>({groups.length} pods)</span>
+                    </h3>
+                    <p className="muted" style={{ fontSize: '12px', margin: 0 }}>
+                      Maximum 5 members per pod. Switch active pods anytime from the header.
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button className="save-schedule-btn" onClick={() => setCreatePodModalOpen(true)}>
+                      <UserPlus size={15} /> Create a Pod
+                    </button>
+                    <button className="reset-schedule-btn" onClick={() => setJoinPodModalOpen(true)}>
+                      <Share2 size={15} /> Join with Invite Code
+                    </button>
+                  </div>
+                </div>
+
+                {groups.length === 0 ? (
+                  <div className="panel" style={{ padding: '32px', textAlign: 'center' }}>
+                    <Flame size={32} color="#c5973b" style={{ marginBottom: '10px' }} />
+                    <h4 style={{ font: '700 16px Manrope', margin: '0 0 6px' }}>You haven't joined any pods yet</h4>
+                    <p className="muted" style={{ fontSize: '12px', margin: '0 0 16px' }}>
+                      Create a new pod and invite up to 4 friends with your private code, or enter an existing invite code.
+                    </p>
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                      <button className="save-schedule-btn" onClick={() => setCreatePodModalOpen(true)}>
+                        Create Your First Pod
+                      </button>
+                      <button className="reset-schedule-btn" onClick={() => setJoinPodModalOpen(true)}>
+                        Enter Code
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="pods-grid">
+                    {groups.map(g => {
+                      const isActive = g.id === activeGroupId;
+                      return (
+                        <div className={`pod-card ${isActive ? 'active-pod' : ''}`} key={g.id}>
+                          <div className="pod-card-header">
+                            <div>
+                              <h4>{g.name}</h4>
+                              <small style={{ color: '#88938b', fontSize: '11px' }}>
+                                {g.member_count} of 5 members
+                              </small>
+                            </div>
+                            <span
+                              className="invite-code-chip"
+                              onClick={() => copyInviteCode(g.invite_code)}
+                              title="Click to copy invite code"
+                            >
+                              <Copy size={11} /> {g.invite_code}
+                            </span>
+                          </div>
+
+                          <div className="member-list-wrap">
+                            {isActive && podMembers.length > 0 ? (
+                              podMembers.map(m => {
+                                const mTotalMinutes = Object.values(m.today_completed_minutes || {}).reduce((a, b) => a + b, 0);
+                                const mHabitsDone = Object.values(m.today_checks || {}).filter(Boolean).length;
+                                return (
+                                  <div className="member-item" key={m.id}>
+                                    <div className="member-avatar" style={{ background: m.avatar_color }}>
+                                      {m.username.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div className="member-meta">
+                                      <strong>
+                                        {m.username} {m.id === user.id && <span style={{ color: '#527c5f', fontSize: '10px' }}>(You)</span>}
+                                      </strong>
+                                      <small>
+                                        {Math.floor(mTotalMinutes / 60)}h {mTotalMinutes % 60}m logged · {mHabitsDone}/6 habits
+                                      </small>
+                                    </div>
+                                    {m.is_studying ? (
+                                      <span className="studying-pill">
+                                        <span className="status-dot synced" style={{ width: '5px', height: '5px' }} />
+                                        Studying
+                                      </span>
+                                    ) : (
+                                      <span style={{ fontSize: '10px', color: '#97a098' }}>Idle</span>
+                                    )}
+                                  </div>
+                                );
+                              })
+                            ) : (
+                              <p className="muted" style={{ fontSize: '11px', margin: '4px 0' }}>
+                                {isActive ? 'Loading member activity...' : 'Select this pod to view live member performance'}
+                              </p>
+                            )}
+                          </div>
+
+                          <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            {isActive ? (
+                              <span style={{ fontSize: '11px', color: '#315b45', fontWeight: '700' }}>
+                                ✓ Active Pod
+                              </span>
+                            ) : (
+                              <button
+                                className="action-button"
+                                style={{ fontSize: '11px', padding: '6px 12px' }}
+                                onClick={() => {
+                                  setActiveGroupId(g.id);
+                                  localStorage.setItem('daymark-active-group', g.id);
+                                }}
+                              >
+                                Select as Active Pod
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        )}
+
         {view === 'Routine settings' && (
           <section className="panel settings-panel">
             <span className="eyebrow">ROUTINE CONFIGURATION</span>
@@ -1091,6 +1555,147 @@ function App() {
           <span>Progress over perfection.</span>
         </footer>
       </main>
+
+      {/* Auth Modal (Sign In / Register) */}
+      {authModalOpen && (
+        <div className="modal-overlay" onClick={() => setAuthModalOpen(false)}>
+          <div className="modal-card" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{authTab === 'login' ? 'Sign In to Your Pod' : 'Create an Account'}</h3>
+              <button className="modal-close" onClick={() => setAuthModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="auth-tabs">
+              <button
+                className={`auth-tab ${authTab === 'login' ? 'active' : ''}`}
+                onClick={() => {
+                  setAuthTab('login');
+                  setAuthError('');
+                }}
+              >
+                Sign In
+              </button>
+              <button
+                className={`auth-tab ${authTab === 'register' ? 'active' : ''}`}
+                onClick={() => {
+                  setAuthTab('register');
+                  setAuthError('');
+                }}
+              >
+                Create Account
+              </button>
+            </div>
+
+            {authError && <div className="form-error">{authError}</div>}
+
+            <form onSubmit={handleAuthSubmit}>
+              <div className="form-group">
+                <label>Username</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={authUsername}
+                  onChange={e => setAuthUsername(e.target.value)}
+                  placeholder="e.g. shantnu"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  className="form-input"
+                  value={authPassword}
+                  onChange={e => setAuthPassword(e.target.value)}
+                  placeholder="At least 6 characters"
+                  required
+                />
+              </div>
+
+              <button type="submit" className="form-submit-btn">
+                {authTab === 'login' ? 'Sign In' : 'Create Account & Start Pod'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Create Pod Modal */}
+      {createPodModalOpen && (
+        <div className="modal-overlay" onClick={() => setCreatePodModalOpen(false)}>
+          <div className="modal-card" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Create a Study Pod</h3>
+              <button className="modal-close" onClick={() => setCreatePodModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+            <p className="muted" style={{ fontSize: '12px', margin: '-8px 0 16px' }}>
+              Pods have a strict maximum limit of 5 members. You'll get an invite code to share with friends.
+            </p>
+
+            {podError && <div className="form-error">{podError}</div>}
+
+            <form onSubmit={handleCreatePod}>
+              <div className="form-group">
+                <label>Pod Name</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newPodName}
+                  onChange={e => setNewPodName(e.target.value)}
+                  placeholder="e.g. DSA & Dev Grind"
+                  required
+                />
+              </div>
+              <button type="submit" className="form-submit-btn">
+                Create Pod & Generate Invite Code
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Join Pod Modal */}
+      {joinPodModalOpen && (
+        <div className="modal-overlay" onClick={() => setJoinPodModalOpen(false)}>
+          <div className="modal-card" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Join a Study Pod</h3>
+              <button className="modal-close" onClick={() => setJoinPodModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+            <p className="muted" style={{ fontSize: '12px', margin: '-8px 0 16px' }}>
+              Enter the 6-character private invite code provided by your friend.
+            </p>
+
+            {podError && <div className="form-error">{podError}</div>}
+
+            <form onSubmit={handleJoinPod}>
+              <div className="form-group">
+                <label>Invite Code</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  style={{ textTransform: 'uppercase', letterSpacing: '2px', fontWeight: '700' }}
+                  value={joinInviteCode}
+                  onChange={e => setJoinInviteCode(e.target.value)}
+                  placeholder="e.g. 7X8K2M"
+                  maxLength={8}
+                  required
+                />
+              </div>
+              <button type="submit" className="form-submit-btn">
+                Join Pod
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {toast && (
         <div className="toast">
