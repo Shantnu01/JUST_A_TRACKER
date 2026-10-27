@@ -1,262 +1,30 @@
-// Daymark Autonomous Curriculum & Stage Roadmap Engine
+// Daymark Autonomous Curriculum & Stage Roadmap Engine (Format-First, No Auto-Seeded Stages)
 
-export const CHATGPT_ROADMAP_PROMPT_TEMPLATE = `Generate a comprehensive, structured stage-by-stage learning roadmap for [SUBJECT NAME, e.g. Operating Systems / System Design / Computer Networks].
+export const CHATGPT_ROADMAP_PROMPT_TEMPLATE = `Generate a comprehensive, structured stage-by-stage learning roadmap for [SUBJECT NAME].
 Format it strictly as a clean numbered stage outline using this exact hierarchy:
 
 [SUBJECT NAME]
 │
 ├── STAGE 1 — [STAGE NAME IN CAPS]
-│   ├── 1.1 [First Topic / Checkpoint]
-│   │   ├── [Subtopic / detail]
-│   │   └── [Subtopic / detail]
-│   ├── 1.2 [Second Topic]
-│   └── 1.3 [Third Topic]
+│   ├── 1.1 [First Topic / Checkpoint Title]
+│   │   ├── [Subtopic detail]
+│   │   └── [Subtopic detail]
+│   ├── 1.2 [Second Topic Title]
+│   └── 1.3 [Third Topic Title]
 │
 ├── STAGE 2 — [STAGE NAME IN CAPS]
-│   ├── 2.1 [Topic]
-...
+│   ├── 2.1 [Topic Title]
+│   └── 2.2 [Topic Title]
+│
+└── STAGE 3 — [STAGE NAME IN CAPS]
+    ├── 3.1 [Topic Title]
+    └── 3.2 [Topic Title]
 
-Keep it strictly sequential from beginner fundamentals up to advanced production implementations and real-world practical projects.`;
-
-// Clean, simple 3-stage starter curriculum for NLP
-export const DEFAULT_NLP_CURRICULUM_RAW = `NLP Foundations
-│
-├── STAGE 1 — FUNDAMENTALS & TOKENS
-│   ├── 1.1 What is NLP? & Corpus Basics
-│   │   ├── Text as data
-│   │   ├── Corpus & Vocabulary
-│   │   └── Tokens
-│   ├── 1.2 Tokenization Methods
-│   │   ├── Word-level
-│   │   ├── Character-level
-│   │   └── Subword (BPE)
-│   └── 1.3 Token IDs & Sequence Prep
-│       ├── ID mapping
-│       ├── Padding & Truncation
-│       └── Attention masks
-│
-├── STAGE 2 — EMBEDDINGS & REPRESENTATION
-│   ├── 2.1 Classical Representations
-│   │   ├── One-Hot Encoding
-│   │   └── TF-IDF Scores
-│   ├── 2.2 Word2Vec (CBOW & Skip-Gram)
-│   │   ├── Distributional Hypothesis
-│   │   └── Negative Sampling
-│   └── 2.3 Dense Vector Embeddings
-│       ├── Embedding Space & Geometry
-│       ├── Cosine Similarity
-│       └── PyTorch nn.Embedding
-│
-└── STAGE 3 — ATTENTION & TRANSFORMERS 🚀
-    ├── 3.1 Sequential Models & Limitations
-    │   ├── RNN & LSTM Recap
-    │   └── Context Bottleneck
-    ├── 3.2 Self-Attention Mechanisms
-    │   ├── Query, Key, Value
-    │   └── Scaled Dot-Product
-    └── 3.3 Modern Pretrained LLMs
-        ├── Hugging Face Transformers
-        ├── AutoTokenizer & AutoModel
-        └── Semantic Search Project`;
-
-// Clean 3-stage starter curriculum for DSA
-export const DEFAULT_DSA_CURRICULUM_RAW = `DSA Mastery
-│
-├── STAGE 1 — FOUNDATIONS & CORE PATTERNS
-│   ├── 1.1 Two Pointers & Sliding Window
-│   │   ├── Array boundaries
-│   │   └── Subarray sums
-│   ├── 1.2 Hash Maps & Frequency Counting
-│   │   ├── Fast lookups O(1)
-│   │   └── Anagram & target pair patterns
-│   └── 1.3 Linked Lists & Fast/Slow Pointers
-│       ├── Reversal in-place
-│       └── Cycle detection
-│
-├── STAGE 2 — TREES, RECURSION & SEARCH
-│   ├── 2.1 Binary Trees & Invert / Max Depth
-│   │   ├── Depth First Search (DFS)
-│   │   └── Breadth First Search (BFS)
-│   ├── 2.2 Binary Search Trees & LCA
-│   │   ├── BST properties
-│   │   └── Lowest Common Ancestor
-│   └── 2.3 Binary Search on Sorted Arrays
-│       ├── Rotated arrays
-│       └── Search space reduction
-│
-└── STAGE 3 — ADVANCED ALGORITHMS & GRAPHS 🚀
-    ├── 3.1 Dynamic Programming (1D & 2D)
-    │   ├── State transitions
-    │   └── Memoization vs Tabulation
-    ├── 3.2 Graph Traversal (DFS/BFS)
-    │   ├── Island count patterns
-    │   └── Topological sort / Course schedule
-    └── 3.3 Complexity & Speed Verification
-        ├── Space & Time trade-offs
-        └── Edge case resilience`;
-
-// Clean 3-stage starter curriculum for System Design & Projects
-export const DEFAULT_PROJECT_DEV_CURRICULUM_RAW = `Project Development & Shipping
-│
-├── STAGE 1 — ARCHITECTURE & CORE API
-│   ├── 1.1 Data Model & Database Schemas
-│   │   ├── Relational tables & indexes
-│   │   └── Migration scripts & seeding
-│   ├── 1.2 REST Endpoints & Error Middleware
-│   │   ├── Request validation & payload guards
-│   │   └── Structured JSON responses
-│   └── 1.3 State Management & Client Foundations
-│       ├── Component hierarchy & styling
-│       └── Local persistence & offline fallback
-│
-├── STAGE 2 — INTEGRATION & HARDENING
-│   ├── 2.1 Authentication & Route Security
-│   │   ├── JWT tokens & bcrypt passwords
-│   │   └── Rate limiting & CORS policies
-│   ├── 2.2 Background Tasks & Timers
-│   │   ├── Scheduled tasks & worker queues
-│   │   └── Push notifications & alerts
-│   └── 2.3 Error Boundaries & Edge Cases
-│       ├── Graceful UI fallback states
-│       └── Network reconnection recovery
-│
-└── STAGE 3 — CLOUD DEPLOYMENT & OBSERVABILITY 🚀
-    ├── 3.1 Production Build & Code Splitting
-    │   ├── Asset compression & bundle size
-    │   └── Service worker & PWA manifest
-    ├── 3.2 Cloud Infrastructure (Render / Supabase)
-    │   ├── SSL enforcement & secret variables
-    │   └── Database connection pooling
-    └── 3.3 Health Monitoring & Uptime Pingers
-        ├── Status check endpoints
-        └── Error logging & diagnostics`;
-
-export const DEFAULT_REVISION_CURRICULUM_RAW = `Daily Revision & Active Recall
-│
-├── STAGE 1 — DAILY RECALL & SYNTHESIS
-│   ├── 1.1 First Principles Summary
-│   │   ├── Write core technical insights from memory
-│   │   └── Re-derive formulas or key algorithms
-│   ├── 1.2 Codebase & Bug Debrief
-│   │   ├── Review today's git commits & changes
-│   │   └── Document edge cases & fixes
-│   └── 1.3 Learning Journal Log
-│       ├── Tag patterns for spaced repetition
-│       └── Note open questions to clarify
-│
-├── STAGE 2 — SPACED REPETITION & TESTING
-│   ├── 2.1 Rapid Recall Quizzing
-│   │   ├── Core syntax & standard library methods
-│   │   └── Complexity bounds & trade-offs
-│   ├── 2.2 Cross-Domain Connection Mapping
-│   │   ├── Linking algorithms to real-world architectures
-│   │   └── Identifying weak conceptual links
-│   └── 2.3 Feynman Technique Walkthrough
-│       ├── Explain complex concepts aloud
-│       └── Whiteboard architecture without notes
-│
-└── STAGE 3 — LONG-TERM BENCHMARKING 🚀
-    ├── 3.1 Milestone Knowledge Audits
-    │   ├── Comprehensive checklist review
-    │   └── Identifying production-ready topics
-    ├── 3.2 Industry Code Comparison
-    │   ├── Compare with open source implementations
-    │   └── Refactor for maintainability & clean code
-    └── 3.3 Next Cycle Strategic Priming
-        ├── Lock in non-negotiable goals for tomorrow
-        └── Align priorities with circadian peak`;
-
-export const DEFAULT_SYSTEM_DESIGN_CURRICULUM_RAW = `System Design & Architecture
-│
-├── STAGE 1 — CORE ARCHITECTURE & APIS
-│   ├── 1.1 Client-Server Protocols & REST
-│   │   ├── Stateless HTTP & status codes
-│   │   └── WebSockets & Real-time
-│   ├── 1.2 Relational vs NoSQL Storage
-│   │   ├── ACID transactions & normalization
-│   │   └── Document stores & partitioning
-│   └── 1.3 In-Memory Caching (Redis)
-│       ├── Cache-aside pattern
-│       └── Eviction policies (LRU)
-│
-├── STAGE 2 — SCALABILITY & ASYNC FLOWS
-│   ├── 2.1 Load Balancing & Reverse Proxies
-│   │   ├── Round-robin & least-connections
-│   │   └── Nginx & SSL termination
-│   ├── 2.2 Event-Driven Message Queues
-│   │   ├── Kafka / RabbitMQ producer-consumer
-│   │   └── Idempotency & retries
-│   └── 2.3 Database Replication & Sharding
-│       ├── Leader-follower replication
-│       └── Consistent hashing
-│
-└── STAGE 3 — PRODUCTION RESILIENCE & OBSERVABILITY 🚀
-    ├── 3.1 Rate Limiting & DoS Protection
-    │   ├── Token bucket algorithm
-    │   └── API gateway enforcement
-    ├── 3.2 Logging, Tracing & Metrics
-    │   ├── Prometheus & Grafana
-    │   └── Distributed trace IDs
-    └── 3.3 CI/CD & Zero-Downtime Deployment
-        ├── Blue-green deployments
-        └── Automated rollbacks`;
-
-export function getStarterCurriculumRaw(subjectName = '') {
-  const clean = (subjectName || '').toLowerCase();
-  if (clean.includes('nlp') || clean.includes('natural language') || clean.includes('ai') || clean.includes('ml')) {
-    return DEFAULT_NLP_CURRICULUM_RAW;
-  }
-  if (clean.includes('dsa') || clean.includes('leetcode') || clean.includes('algo') || clean.includes('data structure')) {
-    return DEFAULT_DSA_CURRICULUM_RAW;
-  }
-  if (clean.includes('system design') || clean.includes('architecture')) {
-    return DEFAULT_SYSTEM_DESIGN_CURRICULUM_RAW;
-  }
-  if (clean.includes('project')) {
-    return DEFAULT_PROJECT_DEV_CURRICULUM_RAW;
-  }
-  if (clean.includes('revision') || clean.includes('review') || clean.includes('recall')) {
-    return DEFAULT_REVISION_CURRICULUM_RAW;
-  }
-  return `${subjectName || 'Subject'} Roadmap
-│
-├── STAGE 1 — CORE FUNDAMENTALS
-│   ├── 1.1 Core Principles & Terminology
-│   │   ├── Basic concepts
-│   │   └── Working environment setup
-│   ├── 1.2 Essential Workflows & Syntax
-│   │   ├── Standard conventions
-│   │   └── First practical examples
-│   └── 1.3 Foundation Exercises
-│       ├── Building blocks
-│       └── Initial verification
-│
-├── STAGE 2 — INTERMEDIATE DEEP DIVE
-│   ├── 2.1 Core Architectural Patterns
-│   │   ├── Structure & modularity
-│   │   └── Handling edge cases
-│   ├── 2.2 Problem Solving & Tooling
-│   │   ├── Debugging techniques
-│   │   └── Common pitfalls
-│   └── 2.3 Integrated Practice
-│       ├── Combining topics
-│       └── Real-world application
-│
-└── STAGE 3 — ADVANCED MASTERY & PROJECTS 🚀
-    ├── 3.1 Advanced Optimization
-    │   ├── Performance & efficiency
-    │   └── Production standards
-    ├── 3.2 Mini Capstone Implementation
-    │   ├── End-to-end execution
-    │   └── Deployment or demonstration
-    └── 3.3 Review & Active Recall
-        ├── Summary synthesis
-        └── Retention testing`;
-}
+Keep it strictly sequential from beginner fundamentals up to advanced production implementations.`;
 
 // Parse raw outline, markdown, or ASCII tree into structured stages and checkpoints
 export function parseCurriculumText(text) {
-  if (!text) return { title: 'Curriculum Roadmap', stages: [] };
+  if (!text || !text.trim()) return { title: 'Curriculum Roadmap', stages: [] };
 
   const lines = text.split(/\r?\n/);
   const stages = [];
@@ -292,7 +60,7 @@ export function parseCurriculumText(text) {
       continue;
     }
 
-    // Checkpoint Matcher (e.g. "1.1 What is NLP?", "16.10 Word vs Sentence Embeddings")
+    // Checkpoint Matcher (e.g. "1.1 What is NLP?", "2.3 In-Memory Caching")
     const isCheckpoint = /^\d+\.\d+/.test(clean);
 
     if (isCheckpoint) {
@@ -335,7 +103,7 @@ export function parseCurriculumText(text) {
   };
 }
 
-// Convert structured curriculum object back to clean raw text outline for easy editing
+// Convert structured curriculum object back to clean raw text outline for editing
 export function formatCurriculumToText(curriculum) {
   if (!curriculum || !curriculum.stages || curriculum.stages.length === 0) {
     return '';
@@ -373,13 +141,24 @@ export function formatCurriculumToText(curriculum) {
   return lines.join('\n');
 }
 
-// Generate normalized storage key
+// Generate normalized storage key (v2 key guarantees zero legacy default pre-seeds)
 export function getCurriculumKey(subjectName = '') {
   const clean = (subjectName || '').toLowerCase().replace(/[^a-z0-9]/g, '_').trim();
-  return `daymark-curriculum-${clean || 'general'}`;
+  return `daymark-roadmap-v2-${clean || 'general'}`;
 }
 
-// Load curriculum from localStorage (strictly returns user-saved roadmap, null if not created yet)
+// One-time purge of old legacy auto-seeded keys from previous versions
+if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+  try {
+    Object.keys(localStorage).forEach(k => {
+      if (k.startsWith('daymark-curriculum-')) {
+        localStorage.removeItem(k);
+      }
+    });
+  } catch {}
+}
+
+// Load curriculum from localStorage (STRICTLY returns user-saved roadmap, null if not created yet)
 export function loadSubjectCurriculum(subjectName = '') {
   if (!subjectName) return null;
   const key = getCurriculumKey(subjectName);
@@ -392,6 +171,7 @@ export function loadSubjectCurriculum(subjectName = '') {
       }
     }
   } catch {}
+  // NEVER auto-seed default stages!
   return null;
 }
 
@@ -447,7 +227,7 @@ export function calculateCurriculumProgress(curriculum) {
     });
   });
 
-  // Check if user manually set an active stage
+  // Respect manual active stage if set
   let activeStageIndex = -1;
   if (curriculum.manualActiveStageId) {
     const manualIdx = curriculum.stages.findIndex(st => st.id === curriculum.manualActiveStageId);
@@ -460,14 +240,14 @@ export function calculateCurriculumProgress(curriculum) {
     activeStageIndex = firstIncompleteStageIdx === -1 ? curriculum.stages.length - 1 : firstIncompleteStageIdx;
   }
 
-  // Collect next target checkpoints starting from the active stage
+  // Collect next target checkpoints from active stage first
   let nextCheckpoints = [];
   const activeStage = curriculum.stages[activeStageIndex];
   if (activeStage && stageIncompleteMap[activeStage.id]) {
     nextCheckpoints.push(...stageIncompleteMap[activeStage.id]);
   }
 
-  // If active stage is all done, gather from other stages
+  // If active stage is done, check other stages
   if (nextCheckpoints.length === 0) {
     curriculum.stages.forEach(st => {
       if (nextCheckpoints.length < 5 && stageIncompleteMap[st.id]) {
