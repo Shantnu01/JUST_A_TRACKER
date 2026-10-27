@@ -17,7 +17,6 @@ import {
   Coffee,
   Copy,
   Crown,
-  Database,
   Download,
   ExternalLink,
   Flame,
@@ -39,7 +38,6 @@ import {
   Save,
   Settings2,
   Share2,
-  Smartphone,
   Sparkles,
   Star,
   Sun,
@@ -466,8 +464,6 @@ function App() {
   const [alarms, setAlarms] = useState(() => readSavedAlarms(user ? user.id : null));
   const [activeAlarmModal, setActiveAlarmModal] = useState(null);
   const [lastTriggeredMinute, setLastTriggeredMinute] = useState('');
-  const [installModalOpen, setInstallModalOpen] = useState(false);
-  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState(null);
   const [toast, setToast] = useState('');
   const [view, setView] = useState('Today'); // 'Today' | 'Weekly report' | 'Study pods' | 'Routine settings'
   const [notes, setNotes] = useState('');
@@ -1188,16 +1184,6 @@ function App() {
     }
   }, [user?.id, day.alarms]);
 
-  // Capture beforeinstallprompt for PWA mobile install
-  useEffect(() => {
-    const handler = (e) => {
-      e.preventDefault();
-      setDeferredInstallPrompt(e);
-    };
-    window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
-  }, []);
-
   // Reliable Alarm Interval Loop (checked every second, immune to background throttling)
   useEffect(() => {
     if (!isToday) return;
@@ -1433,19 +1419,6 @@ function App() {
     setTimeout(() => setToast(''), 3500);
   };
 
-  const triggerPwaInstall = async () => {
-    if (deferredInstallPrompt) {
-      deferredInstallPrompt.prompt();
-      const choice = await deferredInstallPrompt.userChoice;
-      if (choice.outcome === 'accepted') {
-        setDeferredInstallPrompt(null);
-        setInstallModalOpen(false);
-      }
-    } else {
-      setInstallModalOpen(true);
-    }
-  };
-
   const shiftDate = (amount) => {
     const d = new Date(selectedDate);
     d.setDate(d.getDate() + amount);
@@ -1521,12 +1494,12 @@ function App() {
       });
       if (res.ok) {
         setDbStatus('connected');
-        setToast('Your personal routine timings were saved to database!');
+        setToast('Your routine timings have been saved!');
       } else {
-        setToast('Routine saved locally (syncing with database)');
+        setToast('Routine changes saved!');
       }
     } catch {
-      setToast('Routine saved locally in offline storage');
+      setToast('Routine saved successfully');
     }
     setTimeout(() => setToast(''), 3000);
   };
@@ -1747,17 +1720,6 @@ function App() {
           ))}
         </nav>
 
-        <div style={{ padding: '12px 12px 0' }}>
-          <button
-            type="button"
-            className="pwa-install-nav-btn"
-            onClick={() => setInstallModalOpen(true)}
-            title="Download Daymark app on your phone"
-          >
-            <Smartphone size={14} color="#315b45" />
-            <span>Install on Phone</span>
-          </button>
-        </div>
 
         {/* Daily Inspiring Quote (Changes Daily) */}
         <div className="sidebar-bottom">
@@ -1887,8 +1849,8 @@ function App() {
               className="sync-chip"
               title={
                 dbStatus === 'connected'
-                  ? 'Connected to PostgreSQL database'
-                  : 'Operating in local browser storage mode (ready for database link)'
+                  ? 'All changes synced'
+                  : 'Operating in offline mode'
               }
             >
               <span
@@ -1896,11 +1858,8 @@ function App() {
                   dbStatus === 'connected' ? 'synced' : dbStatus === 'checking' ? 'checking' : 'local'
                 }`}
               />
-              <span>{dbStatus === 'connected' ? 'Cloud Synced' : dbStatus === 'checking' ? 'Checking…' : 'Local Storage'}</span>
+              <span>{dbStatus === 'connected' ? 'Synced' : dbStatus === 'checking' ? 'Syncing…' : 'Offline'}</span>
             </div>
-            <button className="icon-button" title="Install Daymark app on phone" onClick={() => setInstallModalOpen(true)}>
-              <Smartphone size={16} />
-            </button>
             <button className="icon-button" title="Export progress as CSV" onClick={exportCsv}>
               <Download size={17} />
             </button>
@@ -3491,27 +3450,13 @@ function App() {
             <span className="eyebrow">ROUTINE CONFIGURATION</span>
             <h3>Edit Routine Timings & Blocks</h3>
             <p className="muted">
-              Customize the start time, end time, and titles of your daily schedule. Any changes made here are saved directly to your PostgreSQL database and will update your daily tracker instantly.
+              Customize the start time, end time, and titles of your daily schedule. Any changes made here update your daily tracker instantly.
             </p>
-
-            <div className="db-status-banner">
-              <Database size={20} color={dbStatus === 'connected' ? '#315b45' : '#8b6c4d'} />
-              <div>
-                <strong>
-                  Database Status: {dbStatus === 'connected' ? 'Connected (PostgreSQL Cloud)' : 'Local Browser Storage Fallback'}
-                </strong>
-                <p>
-                  {dbStatus === 'connected'
-                    ? 'Routine schedule updates are synchronized in real-time to the routine_settings table in PostgreSQL.'
-                    : 'The webapp is currently storing your custom schedule in local browser storage until PostgreSQL is connected.'}
-                </p>
-              </div>
-            </div>
 
             {/* Save & Reset Actions Bar */}
             <div className="settings-actions">
               <button className="save-schedule-btn" onClick={saveScheduleChanges}>
-                <Save size={15} /> Save Routine Changes to Database
+                <Save size={15} /> Save Routine Changes
               </button>
               <button className="reset-schedule-btn" onClick={resetScheduleToDefaults}>
                 <RotateCcw size={15} /> Reset to Default Schedule
@@ -4034,59 +3979,6 @@ function App() {
         </div>
       )}
 
-      {/* Install App on Phone Modal */}
-      {installModalOpen && (
-        <div className="modal-overlay" onClick={() => setInstallModalOpen(false)}>
-          <div className="modal-card" style={{ maxWidth: '480px' }} onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Smartphone size={20} color="#315b45" />
-                <h3 style={{ margin: 0 }}>Install Daymark on Your Phone</h3>
-              </div>
-              <button className="modal-close" onClick={() => setInstallModalOpen(false)}>
-                <X size={18} />
-              </button>
-            </div>
-
-            <p className="muted" style={{ fontSize: '13px', margin: '-4px 0 16px', lineHeight: '1.5' }}>
-              Daymark is built as a progressive web app (PWA). You can install it on your iPhone or Android home screen for full-screen view, instant access, and smooth performance.
-            </p>
-
-            <div className="install-tabs">
-              <div className="install-guide-card">
-                <h4>🍎 iPhone (Safari)</h4>
-                <ol>
-                  <li>Open this webapp in <strong>Safari</strong> on your iPhone.</li>
-                  <li>Tap the <strong>Share</strong> button (the square with an arrow pointing up at the bottom).</li>
-                  <li>Scroll down and tap <strong>"Add to Home Screen"</strong>.</li>
-                  <li>Tap <strong>Add</strong> in the top-right corner.</li>
-                </ol>
-              </div>
-
-              <div className="install-guide-card" style={{ marginTop: '12px' }}>
-                <h4>🤖 Android (Chrome / Brave / Edge)</h4>
-                <ol>
-                  <li>Open this webapp in <strong>Google Chrome</strong> on your phone.</li>
-                  <li>Tap the <strong>3 dots menu (⋮)</strong> in the top-right corner.</li>
-                  <li>Tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</li>
-                  <li>Tap <strong>Install</strong> to confirm.</li>
-                </ol>
-                {deferredInstallPrompt && (
-                  <button className="save-schedule-btn" style={{ width: '100%', marginTop: '10px', justifyContent: 'center' }} onClick={triggerPwaInstall}>
-                    <Download size={14} /> Install Now
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div style={{ marginTop: '18px', display: 'flex', justifyContent: 'flex-end' }}>
-              <button className="save-schedule-btn" onClick={() => setInstallModalOpen(false)}>
-                Got it
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {toast && (
         <div className="toast">
