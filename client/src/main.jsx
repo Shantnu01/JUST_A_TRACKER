@@ -2536,6 +2536,19 @@ function App() {
                 <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
               </svg>
             </div>
+            <div className="cyber-terminal-strip">
+              <div className="cyber-strip-left">
+                <span className="cyber-pulse-dot" />
+                <span>ARCHITECTURAL MATRIX // PROTOCOL EXECUTION</span>
+                <span className="cyber-strip-sep">/</span>
+                <span className="cyber-strip-date">{prettyDate(selectedDate).toUpperCase()}</span>
+              </div>
+              <div className="cyber-strip-right">
+                <span className="cyber-status-text">SYSTEM: ONLINE</span>
+                <span className="cyber-strip-sep">/</span>
+                <span className="cyber-clock-text">JST {jstTime || '00:15:33'}</span>
+              </div>
+            </div>
           </>
         )}
         {theme === 'tokyo-lofi' && (
@@ -2937,6 +2950,16 @@ function App() {
                   </div>
                 </div>
               )}
+              {theme === 'cyber-sakura' && (
+                <div className="cyber-telemetry-card">
+                  <div className="cyber-telemetry-status">
+                    <span className="cyber-pulse-dot" />
+                    <span>SYSTEM: ACTIVE</span>
+                  </div>
+                  <div className="cyber-telemetry-time">{jstTime || '00:15:33'} <small>JST</small></div>
+                  <div className="cyber-telemetry-sub">SYS_NODE // 2.6</div>
+                </div>
+              )}
             </section>
 
             {/* Morning Non-Negotiable Priority Banner */}
@@ -3035,6 +3058,8 @@ function App() {
                     <span className="eyebrow">
                       {theme === 'tokyo-lofi'
                         ? 'TIMETABLE // 今日の日程'
+                        : theme === 'cyber-sakura'
+                        ? "TODAY'S PROTOCOL // SYS_EXEC"
                         : isToday
                         ? 'YOUR PLAN'
                         : isPast
@@ -3044,6 +3069,8 @@ function App() {
                     <h3>
                       {theme === 'tokyo-lofi'
                         ? 'Shinkansen Departure Board'
+                        : theme === 'cyber-sakura'
+                        ? "Architectural Protocol // Sequence"
                         : isToday
                         ? "Today's schedule"
                         : `Schedule for ${prettyDate(selectedDate)}`}
@@ -3335,8 +3362,8 @@ function App() {
                 <section className={`panel habits-panel ${!isToday ? 'read-only' : ''}`}>
                   <div className="panel-heading">
                     <div>
-                      <span className="eyebrow">{theme === 'tokyo-lofi' ? 'DAILY RITUALS // 日課' : (isToday ? 'DAILY CHECK-IN' : 'ARCHIVED HABITS')}</span>
-                      <h3>{theme === 'tokyo-lofi' ? 'Washi Paper Notebook' : 'Keep yourself honest'}</h3>
+                      <span className="eyebrow">{theme === 'tokyo-lofi' ? 'DAILY RITUALS // 日課' : theme === 'cyber-sakura' ? 'DAILY COMMITMENTS // 誓約' : (isToday ? 'DAILY CHECK-IN' : 'ARCHIVED HABITS')}</span>
+                      <h3>{theme === 'tokyo-lofi' ? 'Washi Paper Notebook' : theme === 'cyber-sakura' ? 'Daily Commitments' : 'Keep yourself honest'}</h3>
                     </div>
                     <span className="count-badge">
                       {doneCount}/{habits.length}
@@ -5448,7 +5475,7 @@ function App() {
                 </div>
               </div>
 
-              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+              <label className="elastic-compress-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                 <input
                   type="checkbox"
                   checked={elasticCompressBreaks}
@@ -5735,7 +5762,7 @@ function App() {
                 />
               </div>
 
-              <div style={{ background: '#fffbeb', border: '1.5px solid #f59e0b', borderRadius: '10px', padding: '12px' }}>
+              <div className="closeout-priority-box" style={{ background: '#fffbeb', border: '1.5px solid #f59e0b', borderRadius: '10px', padding: '12px' }}>
                 <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 800, color: '#92400e', marginBottom: '6px' }}>
                   ★ 3. Tomorrow's Single Non-Negotiable Morning Priority:
                 </label>
