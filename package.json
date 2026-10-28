@@ -2,20 +2,38 @@
   "name": "routine-dashboard",
   "private": true,
   "version": "1.0.0",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix client",
     "start": "node server/src/index.js",
     "desktop": "electron electron/main.cjs",
     "desktop:dev": "electron electron/main.cjs",
+    "pack:exe": "npm --prefix client run build && electron-builder --win portable",
+    "pack:installer": "npm --prefix client run build && electron-builder --win nsis",
     "cap:sync": "npm --prefix client run build && npm --prefix client run cap:sync",
     "cap:open": "npm --prefix client run cap:open",
     "test": "npm run test --prefix server && npm run build --prefix client",
     "postinstall": "npm install --prefix client && npm install --prefix server",
     "install:all": "npm install && npm install --prefix client && npm install --prefix server"
   },
+  "build": {
+    "appId": "com.daymark.routine",
+    "productName": "Daymark Routine",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "portable"
+    },
+    "files": [
+      "electron/**/*",
+      "client/dist/**/*"
+    ]
+  },
   "devDependencies": {
     "concurrently": "^9.1.2",
-    "electron": "^45.1.0"
+    "electron": "^45.1.0",
+    "electron-builder": "^26.18.0"
   }
 }

@@ -10,6 +10,8 @@ server/.env
 
 dist/
 client/dist/
+release/
+builds/
 client/android/.gradle/
 client/android/build/
 client/android/app/build/
