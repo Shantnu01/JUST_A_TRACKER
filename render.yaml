@@ -11,5 +11,13 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 20
+      - key: NODE_ENV
+        value: production
+      - key: WEB_CONCURRENCY
+        value: "1"
       - key: DATABASE_URL
         value: postgresql://routine_db_ebzx_user:RBd3HMxgEATJP3GA5UCA1nmMzOLlx1k6@dpg-dbfvg88m7kps73au3uc0-a/routine_db_ebzx
+      - key: UPSTASH_REDIS_REST_URL
+        value: https://funny-poodle-199709.upstash.io
+      - key: UPSTASH_REDIS_REST_TOKEN
+        value: gQAAAAAAAwwdAAIgcDE2ZTVhMTM2ZTY2MDc0YmE2YTBhYmExNjFhMWIyMDhjMA

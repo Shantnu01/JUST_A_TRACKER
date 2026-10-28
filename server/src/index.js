@@ -25,7 +25,15 @@ export const isClusterEnabled = () => {
   if (process.env.CLUSTER_MODE === 'false') return false;
   if (process.env.WEB_CONCURRENCY === '1') return false;
   if (process.env.ENABLE_CLUSTER === 'true') return true;
-  if (process.env.NODE_ENV === 'production') return true;
+  if (process.env.NODE_ENV === 'production') {
+    // If running in a <=768MB container (e.g. Render Free/Starter 512MB) without explicit concurrency set,
+    // default to single-worker standalone to prevent Out-Of-Memory (OOM) crashes
+    const totalMemoryMB = Math.round(os.totalmem() / (1024 * 1024));
+    if (totalMemoryMB <= 768 && !process.env.WEB_CONCURRENCY && !process.env.MAX_WORKERS) {
+      return false;
+    }
+    return true;
+  }
   if (Number(process.env.WEB_CONCURRENCY) > 1) return true;
   return false;
 };
@@ -35,7 +43,11 @@ export const isClusterEnabled = () => {
 // ============================================================================
 if (cluster.isPrimary && isClusterEnabled()) {
   const totalCores = os.availableParallelism ? os.availableParallelism() : os.cpus().length;
-  let maxWorkers = 4;
+  const totalMemoryMB = Math.round(os.totalmem() / (1024 * 1024));
+  // Memory-safe limit: each Node worker takes ~75MB base RAM. Reserve 150MB for OS/buffers.
+  const ramSafeLimit = Math.max(1, Math.floor((totalMemoryMB - 150) / 75));
+
+  let maxWorkers = Math.min(4, ramSafeLimit);
   if (process.env.MAX_WORKERS === 'all' || process.env.MAX_WORKERS === 'max') {
     maxWorkers = totalCores;
   } else if (process.env.MAX_WORKERS) {
@@ -45,7 +57,7 @@ if (cluster.isPrimary && isClusterEnabled()) {
 
   console.log(`=================================================================`);
   console.log(`⚡ [Node.js Cluster Primary] Master PID ${process.pid} active`);
-  console.log(`⚡ Detected ${totalCores} logical CPU cores`);
+  console.log(`⚡ Detected ${totalCores} logical CPU cores · ${totalMemoryMB} MB RAM (RAM safety limit: ${ramSafeLimit} workers)`);
   console.log(`⚡ Spawning ${workerCount} worker processes to utilize multi-core parallelism...`);
   console.log(`=================================================================`);
 
