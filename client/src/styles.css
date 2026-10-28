@@ -6511,441 +6511,162 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
    THEME 6: CYBER SAKURA (Y2K / High-Fashion Cyberpunk / Hot Pink & Dark Violet)
    ========================================================================== */
 
-[data-theme="cyber-sakura"] {
-  background-color: #07000f !important;
-  color: #f0f4ff !important;
-  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
-  --ink: #f0f4ff;
-  --muted: #a78bfa;
-  --line: rgba(255, 45, 120, 0.22);
-  --green: #ff2d78;
-  --paper: #0f0020;
-}
 
-[data-theme="cyber-sakura"] .sidebar {
-  background: #0a0014 !important;
-  border-right: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .brand {
-  font-family: 'Space Grotesk', sans-serif !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.5px !important;
-  color: #f0f4ff !important;
-}
 
-[data-theme="cyber-sakura"] .brand-mark {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-  border-radius: 8px !important;
-  font-weight: 900 !important;
-  box-shadow: 0 0 12px rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .nav-item {
-  color: #a78bfa !important;
-  border-radius: 8px !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .nav-item:hover {
-  background: rgba(255, 45, 120, 0.08) !important;
-  color: #f0f4ff !important;
-}
 
-[data-theme="cyber-sakura"] .nav-item.selected {
-  background: rgba(255, 45, 120, 0.15) !important;
-  color: #ff2d78 !important;
-  font-weight: 800 !important;
-  border-left: 3px solid #ff2d78 !important;
-}
 
-[data-theme="cyber-sakura"] .nav-indicator {
-  background: #ff2d78 !important;
-}
+
+
+
+
+
+
+
+
 
 @media(max-width:640px){
-  [data-theme="cyber-sakura"] .sidebar {
-    background: #0a0014 !important;
-    border-top: 1px solid rgba(255, 45, 120, 0.25) !important;
-  }
+  
 }
 
 /* Eyebrow & Headers */
-[data-theme="cyber-sakura"] .eyebrow,
-[data-theme="cyber-sakura"] .side-label {
-  color: #ff2d78 !important;
-  letter-spacing: 2px !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .topbar h1,
-[data-theme="cyber-sakura"] .welcome-row h2,
-[data-theme="cyber-sakura"] .panel-heading h3 {
-  color: #f0f4ff !important;
-  font-family: 'Space Grotesk', sans-serif !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .muted,
-[data-theme="cyber-sakura"] .subhead {
-  color: #a78bfa !important;
-}
+
+
+
 
 /* Chips, Buttons & Badges */
-[data-theme="cyber-sakura"] .sync-chip,
-[data-theme="cyber-sakura"] .date-chip,
-[data-theme="cyber-sakura"] .pod-pill,
-[data-theme="cyber-sakura"] .theme-switcher-btn,
-[data-theme="cyber-sakura"] .icon-button,
-[data-theme="cyber-sakura"] .today-button {
-  background: #14002b !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-  color: #f0f4ff !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .theme-switcher-btn:hover,
-[data-theme="cyber-sakura"] .icon-button:hover,
-[data-theme="cyber-sakura"] .today-button:hover {
-  background: #20003b !important;
-  border-color: #ff2d78 !important;
-  color: #ff2d78 !important;
-}
 
-[data-theme="cyber-sakura"] .status-dot.synced {
-  background: #2dd4bf !important;
-  box-shadow: 0 0 8px #2dd4bf !important;
-}
+
+
+
 
 /* Panels & Cards */
-[data-theme="cyber-sakura"] .panel,
-[data-theme="cyber-sakura"] .metric-card,
-[data-theme="cyber-sakura"] .streak-card,
-[data-theme="cyber-sakura"] .note-panel,
-[data-theme="cyber-sakura"] .report-main,
-[data-theme="cyber-sakura"] .settings-panel,
-[data-theme="cyber-sakura"] .coding-top-banner,
-[data-theme="cyber-sakura"] .dsa-potd-card,
-[data-theme="cyber-sakura"] .coding-metric-panel,
-[data-theme="cyber-sakura"] .coding-sheet-panel,
-[data-theme="cyber-sakura"] .coding-contests-panel,
-[data-theme="cyber-sakura"] .coding-suggestions-panel {
-  background: #0f0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 45, 120, 0.05) !important;
-}
 
-[data-theme="cyber-sakura"] .metric-copy strong {
-  color: #f0f4ff !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .metric-copy span,
-[data-theme="cyber-sakura"] .metric-copy small {
-  color: #a78bfa !important;
-}
+
+
+
 
 /* Streak & Donut Ring */
-[data-theme="cyber-sakura"] .streak-card {
-  background: #15002b !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .streak-icon {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-  border-radius: 10px !important;
-}
 
-[data-theme="cyber-sakura"] .ring {
-  background: conic-gradient(#ff2d78 var(--progress), #2d004d 0) !important;
-}
 
-[data-theme="cyber-sakura"] .ring:before {
-  background: #15002b !important;
-}
+
+
+
+
 
 /* Action & Finish Buttons */
-[data-theme="cyber-sakura"] .finish-button {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-  border: none !important;
-  font-weight: 900 !important;
-}
 
-[data-theme="cyber-sakura"] .finish-button:hover {
-  background: #ff4d8d !important;
-  box-shadow: 0 0 14px rgba(255, 45, 120, 0.5) !important;
-}
 
-[data-theme="cyber-sakura"] .action-button {
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-  background: #190033 !important;
-  color: #f0f4ff !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .action-button.running {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-  border-color: #ff2d78 !important;
-  font-weight: 900 !important;
-  box-shadow: 0 0 14px rgba(255, 45, 120, 0.4) !important;
-}
+
+
+
+
 
 /* Progress Track */
-[data-theme="cyber-sakura"] .progress-track {
-  background: #1e0038 !important;
-}
 
-[data-theme="cyber-sakura"] .progress-track > div {
-  background: linear-gradient(90deg, #ff2d78, #c084fc) !important;
-}
+
+
 
 /* Habits Panel */
-[data-theme="cyber-sakura"] .habits-panel {
-  background: #0f0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-}
 
-[data-theme="cyber-sakura"] .count-badge {
-  background: #1f003a !important;
-  color: #ff2d78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row {
-  color: #f0f4ff !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row:hover {
-  background: #190033 !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row.checked {
-  color: #a78bfa !important;
-}
 
-[data-theme="cyber-sakura"] .check-box {
-  background: #140026 !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.4) !important;
-  border-radius: 5px !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row.checked .check-box {
-  background: #ff2d78 !important;
-  border-color: #ff2d78 !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 10px rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .habit-logged-pill {
-  background: #1f003a !important;
-  color: #ff2d78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-}
+
+
+
+
+
+
+
+
 
 /* Schedule Items & Timetable */
-[data-theme="cyber-sakura"] .schedule-item {
-  background: #120026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-  border-radius: 10px !important;
-}
 
-[data-theme="cyber-sakura"] .schedule-item:hover {
-  border-color: rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .schedule-item.active-session {
-  background: #1a0038 !important;
-  border: 1.5px solid #ff2d78 !important;
-  box-shadow: 0 0 18px rgba(255, 45, 120, 0.25) !important;
-}
 
-[data-theme="cyber-sakura"] .time-col strong {
-  color: #f0f4ff !important;
-}
 
-[data-theme="cyber-sakura"] .time-col span {
-  color: #a78bfa !important;
-}
 
-[data-theme="cyber-sakura"] .event-icon {
-  background: #20003b !important;
-  color: #ff2d78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .event-title-row h4 {
-  color: #f0f4ff !important;
-}
 
-[data-theme="cyber-sakura"] .duration-pill {
-  background: #20003b !important;
-  color: #c084fc !important;
-  border: 1px solid rgba(192, 132, 252, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .event-body p {
-  color: #a78bfa !important;
-}
 
-[data-theme="cyber-sakura"] .logged-label {
-  color: #ff2d78 !important;
-}
+
+
+
+
+
+
+
+
+
+
 
 /* Timetable Checkpoint Capsule */
-[data-theme="cyber-sakura"] .timetable-checkpoint-capsule {
-  background: #16002e !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-icon {
-  color: #ff2d78 !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-stage-pill {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-checkpoint-text {
-  color: #f0f4ff !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-checkbox {
-  background: #0f0020 !important;
-  border: 1.5px solid #ff2d78 !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-checkbox:checked {
-  background: #ff2d78 !important;
-  border-color: #ff2d78 !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-nav-btn {
-  background: #20003b !important;
-  color: #ff2d78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
+
+
+
+
+
+
+
 
 /* Chief of Staff & Elastic Buttons */
-[data-theme="cyber-sakura"] .chief-audit-btn,
-[data-theme="cyber-sakura"] .elastic-btn {
-  background: #140028 !important;
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-  color: #f0f4ff !important;
-}
 
-[data-theme="cyber-sakura"] .chief-audit-btn:hover,
-[data-theme="cyber-sakura"] .elastic-btn:hover {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-  border-color: #ff2d78 !important;
-  box-shadow: 0 0 14px rgba(255, 45, 120, 0.4) !important;
-}
+
+
 
 /* Stage Roadmaps (STRICT: HIGH CONTRAST) */
-[data-theme="cyber-sakura"] .roadmap-hub-header {
-  background: #120026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-hub-icon-wrap {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-hub-title,
-[data-theme="cyber-sakura"] .command-subject-name,
-[data-theme="cyber-sakura"] .stage-focus-title,
-[data-theme="cyber-sakura"] .checkpoint-headline {
-  color: #f0f4ff !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-hub-subtitle {
-  color: #c084fc !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-header-btn.secondary {
-  background: #190033 !important;
-  color: #f0f4ff !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-header-btn.secondary:hover {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-header-btn.primary {
-  background: #ff2d78 !important;
-  color: #ffffff !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-subject-pill {
-  background: #14002b !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.25) !important;
-  color: #e2e8f0 !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-subject-pill:hover {
-  background: #1f003a !important;
-  border-color: #ff2d78 !important;
-  color: #ffffff !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-subject-pill.active {
-  background: #ff2d78 !important;
-  border-color: #ff2d78 !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 16px rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-pill-percent {
-  background: #20003b !important;
-  color: #ff2d78 !important;
-}
 
-[data-theme="cyber-sakura"] .single-stage-focused-card,
-[data-theme="cyber-sakura"] .roadmap-command-center,
-[data-theme="cyber-sakura"] .creator-option-box {
-  background: #0f0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-}
 
-[data-theme="cyber-sakura"] .stage-focus-header,
-[data-theme="cyber-sakura"] .stage-focus-add-checkpoint-row,
-[data-theme="cyber-sakura"] .stage-footer-nav {
-  background: #140028 !important;
-  border-color: rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .single-checkpoint-row {
-  background: #16002e !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-  color: #f0f4ff !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-format-guide-box {
-  background: #140028 !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.25) !important;
-}
 
-[data-theme="cyber-sakura"] .format-guide-head {
-  color: #ff2d78 !important;
-}
 
-[data-theme="cyber-sakura"] .format-guide-code {
-  background: #0a0014 !important;
-  color: #f0f4ff !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* ==========================================================================
@@ -8466,15 +8187,7 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
    ========================================================================== */
 
 /* 1. Base Atmosphere, 48px Grid & Ambient Disc */
-[data-theme="cyber-sakura"] {
-  background-color: #07000F !important;
-  background-image: 
-    linear-gradient(to right, rgba(255, 45, 120, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 45, 120, 0.04) 1px, transparent 1px) !important;
-  background-size: 48px 48px !important;
-  color: #D4C6E8 !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-}
+
 
 /* Ambient glow disc rotating behind content */
 .ambient-glow-disc {
@@ -8496,36 +8209,14 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 }
 
 /* 2. Hero Display Header Gradient Text */
-[data-theme="cyber-sakura"] .welcome-row h2 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  font-size: clamp(28px, 3.8vw, 42px) !important;
-  font-weight: 900 !important;
-  letter-spacing: -0.04em !important;
-  line-height: 1.1 !important;
-  color: transparent !important;
-  background: linear-gradient(135deg, #FF2D78 0%, #C084FC 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-}
 
-[data-theme="cyber-sakura"] .welcome-row h2 span {
-  color: #C084FC !important;
-  -webkit-text-fill-color: #C084FC !important;
-}
+
+
 
 /* 3. Sidebar with Glitch Monogram */
-[data-theme="cyber-sakura"] .sidebar {
-  background: #0A0014 !important;
-  border-right: 1px solid rgba(255, 45, 120, 0.15) !important;
-}
 
-[data-theme="cyber-sakura"] .brand-mark {
-  background: #FF2D78 !important;
-  color: #FFFFFF !important;
-  border-radius: 8px !important;
-  box-shadow: 0 0 16px rgba(255, 45, 120, 0.5) !important;
-  animation: skMonogramGlitch 10s infinite !important;
-}
+
+
 
 @keyframes skMonogramGlitch {
   0%, 98%, 100% {
@@ -8545,164 +8236,48 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   }
 }
 
-[data-theme="cyber-sakura"] .nav-item {
-  color: #9D84BA !important;
-  font-weight: 600 !important;
-  font-size: 13px !important;
-  border-radius: 8px !important;
-  border-left: 3px solid transparent !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
 
-[data-theme="cyber-sakura"] .nav-item:hover {
-  background: rgba(255, 45, 120, 0.08) !important;
-  color: #F0F4FF !important;
-  transform: translateX(2px) !important;
-}
 
-[data-theme="cyber-sakura"] .nav-item.selected {
-  background: rgba(255, 45, 120, 0.12) !important;
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-  border-left: 3px solid #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .nav-indicator {
-  background: #FF2D78 !important;
-  box-shadow: 0 0 8px #FF2D78 !important;
-}
+
+
+
+
 
 /* 4. Panels & Cards in Cyber Sakura */
-[data-theme="cyber-sakura"] .panel,
-[data-theme="cyber-sakura"] .metric-card,
-[data-theme="cyber-sakura"] .streak-card,
-[data-theme="cyber-sakura"] .habits-panel,
-[data-theme="cyber-sakura"] .note-panel,
-[data-theme="cyber-sakura"] .report-main,
-[data-theme="cyber-sakura"] .settings-panel,
-[data-theme="cyber-sakura"] .coding-top-banner,
-[data-theme="cyber-sakura"] .dsa-potd-card,
-[data-theme="cyber-sakura"] .coding-metric-panel,
-[data-theme="cyber-sakura"] .coding-sheet-panel,
-[data-theme="cyber-sakura"] .coding-contests-panel,
-[data-theme="cyber-sakura"] .coding-suggestions-panel {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.15) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7) !important;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
-}
 
-[data-theme="cyber-sakura"] .panel:hover,
-[data-theme="cyber-sakura"] .metric-card:hover {
-  border-color: rgba(255, 45, 120, 0.40) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 12px 32px -10px rgba(255, 45, 120, 0.12) !important;
-}
+
+
 
 /* 5. Timetable / Schedule Items: Protocol Design */
-[data-theme="cyber-sakura"] .schedule-item {
-  background: #0d001a !important;
-  border: 1px solid rgba(255, 45, 120, 0.12) !important;
-  border-left: 3px solid #2D1F40 !important;
-  border-radius: 10px !important;
-  padding: 14px 16px !important;
-  margin-bottom: 10px !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
 
-[data-theme="cyber-sakura"] .schedule-item:hover {
-  border-color: rgba(255, 45, 120, 0.35) !important;
-  background: #140026 !important;
-  transform: translateX(2px) !important;
-}
 
-[data-theme="cyber-sakura"] .schedule-item.active-session {
-  background: rgba(255, 45, 120, 0.08) !important;
-  border: 1px solid rgba(255, 45, 120, 0.45) !important;
-  border-left: 3px solid #FF2D78 !important;
-  box-shadow: 0 0 24px rgba(255, 45, 120, 0.2) !important;
-  position: relative !important;
-}
 
-[data-theme="cyber-sakura"] .time-col strong {
-  font-family: 'JetBrains Mono', Consolas, monospace !important;
-  font-size: 15px !important;
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .time-col span {
-  color: #9D84BA !important;
-  font-family: 'JetBrains Mono', Consolas, monospace !important;
-  font-size: 11px !important;
-}
 
-[data-theme="cyber-sakura"] .duration-pill {
-  background: rgba(192, 132, 252, 0.15) !important;
-  color: #C084FC !important;
-  border: 1px solid rgba(192, 132, 252, 0.3) !important;
-  font-family: 'JetBrains Mono', Consolas, monospace !important;
-  font-size: 11px !important;
-  padding: 3px 10px !important;
-  border-radius: 20px !important;
-}
 
-[data-theme="cyber-sakura"] .event-title-row h4 {
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .event-icon {
-  background: rgba(255, 45, 120, 0.12) !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
+
+
+
+
+
+
+
+
 
 /* 6. Habits / Daily Commitments: Sonar Ping & Checkboxes */
-[data-theme="cyber-sakura"] .habits-panel {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.15) !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row {
-  background: #120024 !important;
-  border: 1px solid rgba(255, 45, 120, 0.12) !important;
-  border-radius: 8px !important;
-  padding: 12px 14px !important;
-  margin-bottom: 8px !important;
-  color: #F0F4FF !important;
-  transition: all 0.2s ease !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row:hover {
-  background: #190033 !important;
-  border-color: rgba(255, 45, 120, 0.35) !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row.checked {
-  background: rgba(255, 45, 120, 0.04) !important;
-  color: #9D84BA !important;
-  border-color: rgba(255, 45, 120, 0.1) !important;
-}
 
-[data-theme="cyber-sakura"] .check-box {
-  width: 20px !important;
-  height: 20px !important;
-  background: #0A0014 !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.35) !important;
-  border-radius: 4px !important;
-  transition: all 0.15s ease !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row.checked .check-box {
-  background: #FF2D78 !important;
-  border-color: #FF2D78 !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 0 14px rgba(255, 45, 120, 0.6) !important;
-  animation: sonarPing 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-}
+
+
+
+
+
+
 
 @keyframes sonarPing {
   0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 120, 0.9); }
@@ -8711,44 +8286,17 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 120, 0); }
 }
 
-[data-theme="cyber-sakura"] .habit-logged-pill {
-  background: rgba(192, 132, 252, 0.15) !important;
-  color: #C084FC !important;
-  border: 1px solid rgba(192, 132, 252, 0.25) !important;
-  font-family: 'JetBrains Mono', Consolas, monospace !important;
-}
+
 
 /* 7. Donut Ring in Cyber Sakura (Hot Pink to Teal) */
-[data-theme="cyber-sakura"] .ring {
-  background: conic-gradient(#FF2D78 var(--progress), #2DD4BF 0) !important;
-}
 
-[data-theme="cyber-sakura"] .ring:before {
-  background: #0F0020 !important;
-}
+
+
 
 /* 8. Input Boxes & Textareas in Cyber Sakura */
-[data-theme="cyber-sakura"] input[type="text"],
-[data-theme="cyber-sakura"] input[type="number"],
-[data-theme="cyber-sakura"] input[type="search"],
-[data-theme="cyber-sakura"] textarea,
-[data-theme="cyber-sakura"] select,
-[data-theme="cyber-sakura"] .creator-paste-area,
-[data-theme="cyber-sakura"] .stage-add-input,
-[data-theme="cyber-sakura"] .editor-textarea {
-  background: #120026 !important;
-  color: #F0F4FF !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.3) !important;
-  border-radius: 8px !important;
-}
 
-[data-theme="cyber-sakura"] input:focus,
-[data-theme="cyber-sakura"] textarea:focus,
-[data-theme="cyber-sakura"] select:focus {
-  border-color: #FF2D78 !important;
-  box-shadow: 0 0 12px rgba(255, 45, 120, 0.35) !important;
-  outline: none !important;
-}
+
+
 
 
 /* ==========================================================================
@@ -10205,539 +9753,162 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 /* ==========================================================================
    2. CYBER SAKURA (Architectural Tech-Noir & Neon Sakura Aesthetic)
    ========================================================================== */
-[data-theme="cyber-sakura"] {
-  --ink: #F0F4FF;
-  --muted: #9D84BA;
-  --line: rgba(255, 45, 120, 0.22);
-  --paper: #0F0020;
-  --green: #FF2D78;
-}
+
 
 /* 2.1 Base & Dropdown Menus */
-[data-theme="cyber-sakura"] .theme-dropdown-menu,
-[data-theme="cyber-sakura"] .pod-dropdown-menu {
-  background: #0A0014 !important;
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(255, 45, 120, 0.15) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .theme-dropdown-item,
-[data-theme="cyber-sakura"] .pod-dropdown-item {
-  color: #D4C6E8 !important;
-  background: transparent !important;
-}
 
-[data-theme="cyber-sakura"] .theme-dropdown-item:hover,
-[data-theme="cyber-sakura"] .pod-dropdown-item:hover {
-  background: rgba(255, 45, 120, 0.14) !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .theme-dropdown-item.active,
-[data-theme="cyber-sakura"] .pod-dropdown-item.active {
-  background: rgba(255, 45, 120, 0.22) !important;
-  color: #FF2D78 !important;
-  border-left: 2px solid #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .theme-name {
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .theme-desc {
-  color: #8B70A8 !important;
-}
 
-[data-theme="cyber-sakura"] .theme-dropdown-badge {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-  color: #FF2D78 !important;
-}
+
+
+
+
+
+
+
 
 /* 2.2 Modals, Dialogs & Backdrop */
-[data-theme="cyber-sakura"] .modal-backdrop {
-  background: rgba(7, 0, 15, 0.85) !important;
-  backdrop-filter: blur(10px) !important;
-}
 
-[data-theme="cyber-sakura"] .modal-box,
-[data-theme="cyber-sakura"] .modal-card,
-[data-theme="cyber-sakura"] .industrial-modal-box,
-[data-theme="cyber-sakura"] .roadmap-modal-card,
-[data-theme="cyber-sakura"] .alarm-ringing-modal,
-[data-theme="cyber-sakura"] .evening-closeout-modal,
-[data-theme="cyber-sakura"] .closeout-content,
-[data-theme="cyber-sakura"] .recap-modal {
-  background: #0D001A !important;
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-  color: #F0F4FF !important;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.88), 0 0 35px rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .modal-header,
-[data-theme="cyber-sakura"] .modal-footer {
-  border-color: rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .modal-field label,
-[data-theme="cyber-sakura"] .modal-card label {
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .modal-btn-secondary,
-[data-theme="cyber-sakura"] .curriculum-btn-secondary {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .modal-btn-secondary:hover,
-[data-theme="cyber-sakura"] .curriculum-btn-secondary:hover {
-  background: rgba(255, 45, 120, 0.18) !important;
-  color: #FF2D78 !important;
-}
+
+
+
+
+
+
 
 /* 2.3 Form Controls, Inputs & Textareas */
-[data-theme="cyber-sakura"] .modal-field input,
-[data-theme="cyber-sakura"] .modal-field textarea,
-[data-theme="cyber-sakura"] .modal-card-input,
-[data-theme="cyber-sakura"] .form-input,
-[data-theme="cyber-sakura"] .unblock-textarea,
-[data-theme="cyber-sakura"] .alarm-time-group input[type="time"],
-[data-theme="cyber-sakura"] .alarm-label-input,
-[data-theme="cyber-sakura"] .creator-paste-textarea,
-[data-theme="cyber-sakura"] .roadmap-editor-textarea,
-[data-theme="cyber-sakura"] .add-stage-input,
-[data-theme="cyber-sakura"] .add-checkpoint-input,
-[data-theme="cyber-sakura"] input[type="text"],
-[data-theme="cyber-sakura"] input[type="time"],
-[data-theme="cyber-sakura"] input[type="date"],
-[data-theme="cyber-sakura"] input[type="number"],
-[data-theme="cyber-sakura"] input[type="search"],
-[data-theme="cyber-sakura"] input[type="email"],
-[data-theme="cyber-sakura"] input[type="password"],
-[data-theme="cyber-sakura"] textarea,
-[data-theme="cyber-sakura"] select {
-  background: #140026 !important;
-  color: #F0F4FF !important;
-  border: 1px solid rgba(255, 45, 120, 0.28) !important;
-}
 
-[data-theme="cyber-sakura"] input:focus,
-[data-theme="cyber-sakura"] textarea:focus,
-[data-theme="cyber-sakura"] select:focus {
-  border-color: #FF2D78 !important;
-  outline: none !important;
-  box-shadow: 0 0 0 2px rgba(255, 45, 120, 0.3) !important;
-}
+
+
 
 /* Closeout priority box & Elastic compress label */
-[data-theme="cyber-sakura"] .closeout-priority-box,
-[data-theme="cyber-sakura"] .evening-closeout-modal div[style*="fffbeb"] {
-  background: rgba(255, 45, 120, 0.1) !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.4) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .closeout-priority-box label,
-[data-theme="cyber-sakura"] .evening-closeout-modal div[style*="fffbeb"] label {
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .elastic-compress-label,
-[data-theme="cyber-sakura"] .modal-card label[style*="f8fafc"] {
-  background: #140026 !important;
-  border-color: rgba(255, 45, 120, 0.25) !important;
-}
 
-[data-theme="cyber-sakura"] .elastic-compress-label span,
-[data-theme="cyber-sakura"] .modal-card label[style*="f8fafc"] span {
-  color: #D4C6E8 !important;
-}
+
+
+
+
 
 /* 2.4 Interceptor / Unblock Tiles */
-[data-theme="cyber-sakura"] .interceptor-tile {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-}
 
-[data-theme="cyber-sakura"] .interceptor-tile:hover {
-  background: #1A0033 !important;
-  border-color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .interceptor-tile-icon {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .interceptor-tile-title {
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .interceptor-tile-desc {
-  color: #9D84BA !important;
-}
+
+
+
+
+
 
 /* 2.5 Habit Logged Pill & Habit Rows */
-[data-theme="cyber-sakura"] .habit-logged-pill {
-  background: rgba(255, 45, 120, 0.15) !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row.locked-goal {
-  background: #140026 !important;
-  border-color: rgba(255, 45, 120, 0.18) !important;
-  color: #8B70A8 !important;
-}
 
-[data-theme="cyber-sakura"] .habit-row.locked-goal .check-box {
-  background: #1A0033 !important;
-  border-color: rgba(255, 45, 120, 0.25) !important;
-}
+
+
+
 
 /* 2.6 Timetable Checkpoint Capsule */
-[data-theme="cyber-sakura"] .timetable-checkpoint-capsule {
-  background: #120026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .timetable-checkpoint-capsule:hover {
-  border-color: rgba(255, 45, 120, 0.45) !important;
-  background: #190033 !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-checkbox {
-  background: #140026 !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-checkbox:checked {
-  background: #FF2D78 !important;
-  border-color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-nav-btn {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .capsule-nav-btn:hover {
-  background: rgba(255, 45, 120, 0.2) !important;
-  color: #FF2D78 !important;
-}
+
+
+
+
+
+
 
 /* 2.7 Banners & Strip Cards */
-[data-theme="cyber-sakura"] .circadian-strip {
-  background: #110022 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-}
 
-[data-theme="cyber-sakura"] .circadian-badge {
-  background: rgba(255, 45, 120, 0.15) !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .circadian-note {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .morning-priority-card {
-  background: #0F0020 !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.4) !important;
-  box-shadow: 0 4px 20px rgba(255, 45, 120, 0.15) !important;
-}
 
-[data-theme="cyber-sakura"] .burnout-warning-card {
-  background: #0F0020 !important;
-  border: 1.5px solid rgba(192, 132, 252, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .deload-active-banner {
-  background: #110022 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .healed-plan-today-banner {
-  background: #110022 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .date-lock-banner {
-  background: #110022 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  color: #D4C6E8 !important;
-}
+
+
+
+
+
+
+
+
 
 /* 2.8 Topbar Buttons & Chips */
-[data-theme="cyber-sakura"] .date-chip,
-[data-theme="cyber-sakura"] .sync-chip,
-[data-theme="cyber-sakura"] .pod-pill,
-[data-theme="cyber-sakura"] .today-button,
-[data-theme="cyber-sakura"] .jump-today-btn,
-[data-theme="cyber-sakura"] .export-button,
-[data-theme="cyber-sakura"] .icon-button,
-[data-theme="cyber-sakura"] .reset-schedule-btn,
-[data-theme="cyber-sakura"] .chief-audit-btn,
-[data-theme="cyber-sakura"] .elastic-btn {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .today-button:hover,
-[data-theme="cyber-sakura"] .jump-today-btn:hover,
-[data-theme="cyber-sakura"] .export-button:hover,
-[data-theme="cyber-sakura"] .icon-button:hover,
-[data-theme="cyber-sakura"] .chief-audit-btn:hover,
-[data-theme="cyber-sakura"] .elastic-btn:hover {
-  background: #1A0033 !important;
-  border-color: #FF2D78 !important;
-  color: #FF2D78 !important;
-}
+
+
 
 /* 2.9 Roadmaps Hub Elements */
-[data-theme="cyber-sakura"] .roadmap-blank-creator-card,
-[data-theme="cyber-sakura"] .creator-option-box,
-[data-theme="cyber-sakura"] .roadmap-command-center,
-[data-theme="cyber-sakura"] .single-stage-focused-card,
-[data-theme="cyber-sakura"] .stage-focus-header,
-[data-theme="cyber-sakura"] .empty-checkpoints-prompt,
-[data-theme="cyber-sakura"] .single-checkpoint-row,
-[data-theme="cyber-sakura"] .single-checkpoint-box,
-[data-theme="cyber-sakura"] .stage-focus-add-checkpoint-row,
-[data-theme="cyber-sakura"] .stage-footer-nav,
-[data-theme="cyber-sakura"] .roadmap-outline-editor-card,
-[data-theme="cyber-sakura"] .editor-card-header,
-[data-theme="cyber-sakura"] .editor-card-footer,
-[data-theme="cyber-sakura"] .routine-stage-box,
-[data-theme="cyber-sakura"] .curriculum-stage-card,
-[data-theme="cyber-sakura"] .curriculum-header-stats {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-format-guide-box,
-[data-theme="cyber-sakura"] .format-guide-code,
-[data-theme="cyber-sakura"] .editor-subtext code,
-[data-theme="cyber-sakura"] .editor-hint code {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .command-tool-btn,
-[data-theme="cyber-sakura"] .stage-init-btn,
-[data-theme="cyber-sakura"] .stage-nav-arrow-btn,
-[data-theme="cyber-sakura"] .single-stage-tab-btn,
-[data-theme="cyber-sakura"] .add-stage-trigger-btn,
-[data-theme="cyber-sakura"] .pin-timetable-btn {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .command-tool-btn:hover,
-[data-theme="cyber-sakura"] .single-stage-tab-btn:hover,
-[data-theme="cyber-sakura"] .stage-nav-arrow-btn:not(:disabled):hover {
-  background: rgba(255, 45, 120, 0.2) !important;
-  border-color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .command-tool-btn.danger,
-[data-theme="cyber-sakura"] .delete-subject-btn,
-[data-theme="cyber-sakura"] .delete-stage-btn {
-  background: rgba(255, 45, 120, 0.15) !important;
-  border: 1px solid #FF2D78 !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-pill-empty {
-  background: #140026 !important;
-  color: #8B70A8 !important;
-  border: 1px dashed rgba(255, 45, 120, 0.25) !important;
-}
+
+
+
+
+
+
 
 /* 2.10 Study Pods & Coding Hub */
-[data-theme="cyber-sakura"] .pod-switcher-bar,
-[data-theme="cyber-sakura"] .pod-card,
-[data-theme="cyber-sakura"] .leaderboard-row,
-[data-theme="cyber-sakura"] .nudge-btn,
-[data-theme="cyber-sakura"] .coding-top-banner,
-[data-theme="cyber-sakura"] .dsa-potd-card,
-[data-theme="cyber-sakura"] .coding-metric-panel,
-[data-theme="cyber-sakura"] .coding-sheet-panel,
-[data-theme="cyber-sakura"] .coding-contests-panel,
-[data-theme="cyber-sakura"] .coding-suggestions-panel,
-[data-theme="cyber-sakura"] .contest-card,
-[data-theme="cyber-sakura"] .suggestion-card,
-[data-theme="cyber-sakura"] .commit-stat-box,
-[data-theme="cyber-sakura"] .snippet-card,
-[data-theme="cyber-sakura"] .company-chip,
-[data-theme="cyber-sakura"] .gh-repo-chip,
-[data-theme="cyber-sakura"] .pattern-item-row,
-[data-theme="cyber-sakura"] .verification-msg-box.warn,
-[data-theme="cyber-sakura"] .verification-msg-box.success {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.18) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .pod-switcher-pill,
-[data-theme="cyber-sakura"] .coding-subtab-btn {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .pod-switcher-pill.active,
-[data-theme="cyber-sakura"] .coding-subtab-btn.active {
-  background: rgba(255, 45, 120, 0.22) !important;
-  border-color: #FF2D78 !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-check-box {
-  background: #140026 !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.38) !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-check-box:checked {
-  background: #FF2D78 !important;
-  border-color: #FF2D78 !important;
-}
+
+
+
+
+
 
 /* 2.11 Alarms & Sound Controls */
-[data-theme="cyber-sakura"] .alarm-panel,
-[data-theme="cyber-sakura"] .alarm-row {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .alarm-row.active {
-  background: rgba(255, 45, 120, 0.1) !important;
-  border-color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .sound-btn,
-[data-theme="cyber-sakura"] .test-sound-btn,
-[data-theme="cyber-sakura"] .add-alarm-btn,
-[data-theme="cyber-sakura"] .alarm-snooze-btn {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .sound-btn.active {
-  background: #FF2D78 !important;
-  color: #07000F !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .note-panel textarea {
-  background: #140026 !important;
-  color: #F0F4FF !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-}
 
-[data-theme="cyber-sakura"] .toggle span {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-}
+
+
+
+
+
+
 
 /* 2.12 Cyber Sakura Telemetry Strip & Card */
-.cyber-terminal-strip {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 18px;
-  background: rgba(15, 0, 32, 0.85);
-  border: 1px solid rgba(255, 45, 120, 0.2);
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: #9D84BA;
-  backdrop-filter: blur(8px);
-}
 
-.cyber-strip-left, .cyber-strip-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.cyber-pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: #2DD4BF;
-  box-shadow: 0 0 8px #2DD4BF;
-  animation: cyberPulse 2s infinite ease-in-out;
-}
+.cyber-strip-left, 
 
-@keyframes cyberPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.6; }
-}
 
-.cyber-strip-sep {
-  color: #6B21A8;
-}
 
-.cyber-strip-date {
-  color: #F0F4FF;
-  font-weight: 600;
-}
 
-.cyber-status-text {
-  color: #2DD4BF;
-  font-weight: 600;
-}
 
-.cyber-clock-text {
-  color: #F0F4FF;
-  font-weight: 600;
-}
 
-.cyber-telemetry-card {
-  padding: 12px 18px;
-  background: #0F0020;
-  border: 1px solid rgba(255, 45, 120, 0.25);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
-}
 
-.cyber-telemetry-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  color: #2DD4BF;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-}
 
-.cyber-telemetry-time {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 26px;
-  font-weight: 600;
-  color: #F0F4FF;
-  line-height: 1.1;
-}
+
+
+
+
+
+
+
+
+
+
 
 .cyber-telemetry-time small {
   font-size: 11px;
@@ -10745,13 +9916,7 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   margin-left: 4px;
 }
 
-.cyber-telemetry-sub {
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #FF2D78;
-  font-weight: 700;
-}
+
 
 /* ==========================================================================
    TOKYO LOFI & CYBER SAKURA — BESPOKE HIGH-CONTRAST REWORK
@@ -11509,745 +10674,292 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
    -------------------------------------------------------------------------- */
 
 /* 2.A STAGE ROADMAPS HUB (Cyber Sakura) */
-[data-theme="cyber-sakura"] .stage-roadmaps-hub {
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-hub-header {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 45, 120, 0.1) !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-hub-title {
-  color: #F0F4FF !important;
-  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-hub-subtitle {
-  color: #C084FC !important;
-  font-size: 13px !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-hub-icon-wrap {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
+
+
+
+
+
 
 /* Subject Tabs Bar */
-[data-theme="cyber-sakura"] .roadmap-subjects-tabs {
-  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-subject-pill {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  color: #D4C6E8 !important;
-  font-weight: 600 !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-subject-pill:hover {
-  background: #1A0033 !important;
-  color: #F0F4FF !important;
-  border-color: rgba(255, 45, 120, 0.45) !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-subject-pill.active {
-  background: rgba(255, 45, 120, 0.22) !important;
-  border: 1.5px solid #FF2D78 !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-pill-percent {
-  background: #140026 !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-subject-pill.active .roadmap-pill-percent {
-  background: #FF2D78 !important;
-  color: #07000F !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-add-subject-btn {
-  background: #0F0020 !important;
-  border: 1px dashed rgba(255, 45, 120, 0.35) !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .roadmap-add-subject-btn:hover {
-  background: #1A0033 !important;
-  border-color: #FF2D78 !important;
-  color: #F0F4FF !important;
-}
+
+
+
+
+
+
+
+
 
 /* Stage Navigation Tabs */
-[data-theme="cyber-sakura"] .stage-tabs-navigation-bar {
-  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
-}
 
-[data-theme="cyber-sakura"] .stage-nav-label {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .single-stage-tab-btn {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .single-stage-tab-btn:hover {
-  background: #1A0033 !important;
-  color: #F0F4FF !important;
-  border-color: rgba(255, 45, 120, 0.45) !important;
-}
 
-[data-theme="cyber-sakura"] .single-stage-tab-btn.viewing {
-  background: rgba(255, 45, 120, 0.2) !important;
-  border: 1.5px solid #FF2D78 !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .stage-tab-num {
-  color: #FF2D78 !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .stage-tab-ratio {
-  background: #140026 !important;
-  color: #D4C6E8 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
+
+
+
+
+
+
+
 
 /* Single Stage Focused Card */
-[data-theme="cyber-sakura"] .single-stage-focused-card {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 45, 120, 0.12) !important;
-}
 
-[data-theme="cyber-sakura"] .stage-focus-header {
-  background: #0A0014 !important;
-  border-bottom: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .stage-focus-title {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .stage-focus-number-badge {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .stage-focus-counter {
-  background: #140026 !important;
-  color: #D4C6E8 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .pin-timetable-btn {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.4) !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .pin-timetable-btn:hover {
-  background: rgba(255, 45, 120, 0.25) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .pinned-badge-active {
-  background: rgba(255, 45, 120, 0.2) !important;
-  border: 1px solid #FF2D78 !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .delete-stage-btn {
-  background: rgba(255, 45, 120, 0.15) !important;
-  border: 1px solid #FF2D78 !important;
-  color: #FF2D78 !important;
-}
+
+
+
+
+
+
+
+
+
 
 /* Checkpoint Rows */
-[data-theme="cyber-sakura"] .single-checkpoint-row {
-  background: #0A0014 !important;
-  border: 1px solid rgba(255, 45, 120, 0.16) !important;
-}
 
-[data-theme="cyber-sakura"] .single-checkpoint-row:hover {
-  background: #150029 !important;
-  border-color: rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .single-checkpoint-row.completed {
-  background: rgba(10, 0, 20, 0.6) !important;
-  border-color: rgba(255, 255, 255, 0.05) !important;
-  opacity: 0.7 !important;
-}
 
-[data-theme="cyber-sakura"] .checkpoint-headline {
-  color: #F0F4FF !important;
-  font-weight: 600 !important;
-}
 
-[data-theme="cyber-sakura"] .checkpoint-headline.strikethrough {
-  color: #8B70A8 !important;
-}
 
-[data-theme="cyber-sakura"] .checkpoint-sub-pill {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #C084FC !important;
-}
 
-[data-theme="cyber-sakura"] .single-checkpoint-box {
-  background: #140026 !important;
-  border: 1.5px solid rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .single-checkpoint-box:checked {
-  background: #FF2D78 !important;
-  border-color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .single-checkpoint-box:checked::before {
-  color: #07000F !important;
-}
 
-[data-theme="cyber-sakura"] .stage-focus-add-checkpoint-row {
-  background: #0A0014 !important;
-  border-top: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .add-checkpoint-input {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.28) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .add-checkpoint-submit-btn,
-[data-theme="cyber-sakura"] .add-stage-save-btn {
-  background: #FF2D78 !important;
-  color: #07000F !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .empty-checkpoints-prompt {
-  background: #0A0014 !important;
-  border: 1.5px dashed rgba(255, 45, 120, 0.3) !important;
-  color: #D4C6E8 !important;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Blank Creator Card & Command Center */
-[data-theme="cyber-sakura"] .blank-creator-header {
-  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
-}
 
-[data-theme="cyber-sakura"] .blank-creator-title {
-  color: #F0F4FF !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .blank-creator-desc {
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .blank-creator-badge {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-}
 
-[data-theme="cyber-sakura"] .creator-option-box {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-}
 
-[data-theme="cyber-sakura"] .creator-option-box:hover {
-  background: #180033 !important;
-  border-color: rgba(255, 45, 120, 0.45) !important;
-}
 
-[data-theme="cyber-sakura"] .option-title {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .option-desc {
-  color: #D4C6E8 !important;
-  line-height: 1.55 !important;
-}
 
-[data-theme="cyber-sakura"] .option-icon-box {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-}
 
-[data-theme="cyber-sakura"] .paste-label,
-[data-theme="cyber-sakura"] .format-guide-head {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .format-guide-code {
-  background: #140026 !important;
-  color: #2DD4BF !important;
-  border: 1px solid rgba(255, 45, 120, 0.28) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .command-subject-name {
-  color: #F0F4FF !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .command-progress-badge {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .stage-footer-nav {
-  background: #0A0014 !important;
-  border-top: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .stage-nav-counter {
-  color: #D4C6E8 !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* 2.B CODING PERFORMANCE HUB (Cyber Sakura) */
-[data-theme="cyber-sakura"] .coding-top-banner {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 45, 120, 0.1) !important;
-}
 
-[data-theme="cyber-sakura"] .coding-top-banner h3 {
-  color: #F0F4FF !important;
-  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .coding-top-banner p {
-  color: #D4C6E8 !important;
-  font-size: 13px !important;
-}
+
+
+
 
 /* Coding Subtabs */
-[data-theme="cyber-sakura"] .coding-subtab-btn {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .coding-subtab-btn:hover {
-  background: #1A0033 !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .coding-subtab-btn.active {
-  background: rgba(255, 45, 120, 0.25) !important;
-  border: 1.5px solid #FF2D78 !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .coding-subtab-btn .count-pill {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .coding-subtab-btn.active .count-pill {
-  background: #FF2D78 !important;
-  color: #07000F !important;
-  font-weight: 800 !important;
-}
+
+
+
+
+
 
 /* POTD Card */
-[data-theme="cyber-sakura"] .dsa-potd-card {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
-}
 
-[data-theme="cyber-sakura"] .potd-body h4 {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .potd-body p {
-  color: #D4C6E8 !important;
-  line-height: 1.6 !important;
-}
 
-[data-theme="cyber-sakura"] .potd-chip {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.35) !important;
-}
 
-[data-theme="cyber-sakura"] .topic-pill {
-  background: #140026 !important;
-  color: #C084FC !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-}
 
-[data-theme="cyber-sakura"] .potd-solve-btn {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .potd-solve-btn:hover {
-  background: rgba(255, 45, 120, 0.2) !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .potd-check-btn {
-  background: #FF2D78 !important;
-  border: 1px solid #FF2D78 !important;
-  color: #07000F !important;
-  font-weight: 800 !important;
-}
+
+
+
+
+
+
+
+
 
 /* Metric Panels (LeetCode & GitHub) */
-[data-theme="cyber-sakura"] .coding-metric-panel {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
-}
 
-[data-theme="cyber-sakura"] .coding-panel-header strong {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .coding-panel-header small {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .lc-total-num strong {
-  color: #F0F4FF !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .lc-total-num small {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .lc-total-row {
-  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
-}
 
-[data-theme="cyber-sakura"] .lc-diff-label {
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .lc-diff-label strong {
-  color: #F0F4FF !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .lc-diff-label em {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .lc-track {
-  background: #140026 !important;
-}
 
-[data-theme="cyber-sakura"] .gh-meta strong {
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .gh-meta p {
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .gh-counts {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .gh-chart-container {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .gh-chart-title {
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .gh-repo-chip {
-  background: #0A0014 !important;
-  border: 1px solid rgba(255, 45, 120, 0.18) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .gh-repo-chip:hover {
-  background: #1A0033 !important;
-  border-color: rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .gh-repo-name {
-  color: #F0F4FF !important;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* DSA Sheet Panel & Patterns */
-[data-theme="cyber-sakura"] .coding-sheet-panel {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
-}
 
-[data-theme="cyber-sakura"] .sheet-header h3 {
-  color: #F0F4FF !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .sheet-progress-box {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-group-header {
-  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-group-header h4 {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-count {
-  color: #C084FC !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-item-row {
-  background: #0A0014 !important;
-  border: 1px solid rgba(255, 45, 120, 0.16) !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-item-row:hover {
-  background: #150029 !important;
-  border-color: rgba(255, 45, 120, 0.4) !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-title {
-  color: #F0F4FF !important;
-  font-weight: 600 !important;
-}
 
-[data-theme="cyber-sakura"] .pattern-item-row.solved .pattern-title {
-  color: #8B70A8 !important;
-}
+
+
+
+
+
+
+
+
+
+
 
 /* Contests & Suggestions */
-[data-theme="cyber-sakura"] .coding-contests-panel,
-[data-theme="cyber-sakura"] .coding-suggestions-panel {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
-}
 
-[data-theme="cyber-sakura"] .contest-card {
-  background: #0A0014 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .contest-card h4 {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .contest-time {
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .platform-tag {
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .duration-tag {
-  background: #140026 !important;
-  color: #C084FC !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-}
 
-[data-theme="cyber-sakura"] .contest-link-btn {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .contest-link-btn:hover {
-  background: rgba(255, 45, 120, 0.2) !important;
-  color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .suggestion-card {
-  background: #0A0014 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .suggestion-card h4 {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .suggestion-card p {
-  color: #D4C6E8 !important;
-}
+
+
+
+
+
+
+
+
+
+
+
 
 /* Smart Commit & Snippets */
-[data-theme="cyber-sakura"] .smart-commit-panel {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .commit-stat-box small {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .commit-stat-box strong {
-  color: #F0F4FF !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .company-label {
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .company-chip {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .company-chip.active {
-  background: #FF2D78 !important;
-  color: #07000F !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .snippet-card {
-  background: #0A0014 !important;
-  border: 1px solid rgba(255, 45, 120, 0.2) !important;
-}
 
-[data-theme="cyber-sakura"] .snippet-header strong {
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .snippet-header small {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .snippet-notes-box {
-  background: #140026 !important;
-  color: #D4C6E8 !important;
-  border-left: 3px solid #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .snippet-code-box {
-  background: #05000A !important;
-  color: #F0F4FF !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-}
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* 2.C ROUTINE SETTINGS TAB (Cyber Sakura) */
-[data-theme="cyber-sakura"] .settings-panel {
-  background: #0F0020 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
-}
 
-[data-theme="cyber-sakura"] .settings-note {
-  background: #0D001A !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .save-schedule-btn {
-  background: #FF2D78 !important;
-  color: #07000F !important;
-  border: 1px solid #FF2D78 !important;
-  font-weight: 800 !important;
-}
 
-[data-theme="cyber-sakura"] .reset-schedule-btn {
-  background: #1A0033 !important;
-  border: 1px solid rgba(255, 45, 120, 0.25) !important;
-  color: #F0F4FF !important;
-}
 
-[data-theme="cyber-sakura"] .schedule-edit-card {
-  background: #0D001A !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
-}
 
-[data-theme="cyber-sakura"] .edit-title-input {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-}
 
-[data-theme="cyber-sakura"] .edit-title-input:focus {
-  border-color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .edit-sub-input {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.22) !important;
-  color: #D4C6E8 !important;
-}
 
-[data-theme="cyber-sakura"] .edit-sub-input:focus {
-  border-color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .edit-times input[type="time"] {
-  background: #140026 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-  color: #F0F4FF !important;
-  font-weight: 700 !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
 
-[data-theme="cyber-sakura"] .edit-times input[type="time"]:focus {
-  border-color: #FF2D78 !important;
-}
 
-[data-theme="cyber-sakura"] .edit-times span {
-  color: #9D84BA !important;
-}
 
-[data-theme="cyber-sakura"] .edit-duration-badge {
-  background: #1A0033 !important;
-  color: #FF2D78 !important;
-  border: 1px solid rgba(255, 45, 120, 0.3) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Targeted High-Contrast Overrides for newly classed elements in Coding & Settings */
 [data-theme="tokyo-lofi"] .smart-commit-title,
@@ -12268,40 +10980,32 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   font-weight: 700 !important;
 }
 
-[data-theme="cyber-sakura"] .smart-commit-title,
-[data-theme="cyber-sakura"] .webhook-title,
-[data-theme="cyber-sakura"] .cf-org-name,
-[data-theme="cyber-sakura"] .peer-review-title,
-[data-theme="cyber-sakura"] .snippet-reply-item strong {
-  color: #F0F4FF !important;
-}
-
-[data-theme="cyber-sakura"] .cf-org-info,
-[data-theme="cyber-sakura"] .snippet-reply-item {
-  color: #D4C6E8 !important;
-}
-
-[data-theme="cyber-sakura"] .leaderboard-you-tag {
-  color: #FF2D78 !important;
-  font-weight: 700 !important;
-}
-
 /* ==========================================================================
-   TOKYO LOFI MASTER TYPOGRAPHY & ZERO-OLIVE ERADICATION SYSTEM
-   Completely replaces all dark olive / sage colors with high-contrast text:
-   - Headings & Strong: #FAF8FF (Crisp White)
-   - Body & Descriptions: #D4CEEB (Warm Cream)
-   - Accents & Badges: #F59E0B (Amber Neon) / #F472B6 (Tokyo Pink)
-   - Muted & Secondary: #A39BBF (Bright Lavender)
+   TOKYO LOFI MASTER HIGH-CONTRAST ZERO-OLIVE SYSTEM
+   Strict Japanese Late-Night Studio Aesthetic:
+   - Surface / Panels: #1C1928 with warm amber border rgba(255, 140, 0, 0.16)
+   - Background: #12111A
+   - Text Primary (Headings / Strong / Badges): #FAF8FF (100% Crisp White)
+   - Text Secondary (Body / Descriptions / Rows): #D4CEEB (Warm Cream Lavender)
+   - Text Tertiary (Subheads / Timestamps / Muted): #A39BBF (Bright Lavender)
+   - Accents / Pills / Codes / Highlights: #F59E0B (Tokyo Warm Amber) / #F472B6 (Tokyo Neon Pink)
+   - Zero olive / green / dark slate colors anywhere on this theme.
    ========================================================================== */
 
-/* 1. Global Reset for Tokyo Lofi typography */
+:root[data-theme="tokyo-lofi"],
+html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"],
-[data-theme="tokyo-lofi"] body,
-[data-theme="tokyo-lofi"] .main-content {
+.app-shell[data-theme="tokyo-lofi"] {
+  --ink: #FAF8FF !important;
+  --paper: #12111A !important;
+  --line: rgba(255, 140, 0, 0.16) !important;
+  --green: #F59E0B !important;
+  --muted: #A39BBF !important;
   color: #D4CEEB !important;
+  background-color: #12111A !important;
 }
 
+/* All Headings & Strong typography */
 [data-theme="tokyo-lofi"] h1,
 [data-theme="tokyo-lofi"] h2,
 [data-theme="tokyo-lofi"] h3,
@@ -12309,38 +11013,29 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 [data-theme="tokyo-lofi"] h5,
 [data-theme="tokyo-lofi"] h6,
 [data-theme="tokyo-lofi"] strong,
-[data-theme="tokyo-lofi"] b {
-  color: #FAF8FF !important;
-}
-
-[data-theme="tokyo-lofi"] p,
-[data-theme="tokyo-lofi"] span,
-[data-theme="tokyo-lofi"] li,
-[data-theme="tokyo-lofi"] td {
-  color: #D4CEEB !important;
-}
-
-[data-theme="tokyo-lofi"] .muted,
-[data-theme="tokyo-lofi"] .subhead,
-[data-theme="tokyo-lofi"] small,
-[data-theme="tokyo-lofi"] time {
-  color: #A39BBF !important;
-}
-
-[data-theme="tokyo-lofi"] .eyebrow,
-[data-theme="tokyo-lofi"] .side-label {
-  color: #F59E0B !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-weight: 700 !important;
-  letter-spacing: 1.5px !important;
-}
-
-/* 2. STAGE ROADMAPS HUB — ZERO-OLIVE HIGH CONTRAST */
-[data-theme="tokyo-lofi"] .stage-roadmaps-hub,
-[data-theme="tokyo-lofi"] .stage-roadmaps-hub * {
-  /* Prevent any olive inheritance */
-}
-
+[data-theme="tokyo-lofi"] b,
+[data-theme="tokyo-lofi"] th,
+[data-theme="tokyo-lofi"] .brand,
+[data-theme="tokyo-lofi"] .brand strong,
+[data-theme="tokyo-lofi"] .topbar h1,
+[data-theme="tokyo-lofi"] .welcome-row h2,
+[data-theme="tokyo-lofi"] .streak-card strong,
+[data-theme="tokyo-lofi"] .metric-copy strong,
+[data-theme="tokyo-lofi"] .coding-top-banner h3,
+[data-theme="tokyo-lofi"] .potd-body h4,
+[data-theme="tokyo-lofi"] .coding-panel-header strong,
+[data-theme="tokyo-lofi"] .gh-meta strong,
+[data-theme="tokyo-lofi"] .gh-counts strong,
+[data-theme="tokyo-lofi"] .gh-chart-title,
+[data-theme="tokyo-lofi"] .gh-repo-name,
+[data-theme="tokyo-lofi"] .sheet-header h3,
+[data-theme="tokyo-lofi"] .pattern-group-header h4,
+[data-theme="tokyo-lofi"] .pattern-title,
+[data-theme="tokyo-lofi"] .contest-card h4,
+[data-theme="tokyo-lofi"] .suggestion-card h4,
+[data-theme="tokyo-lofi"] .snippet-header strong,
+[data-theme="tokyo-lofi"] .settings-panel h3,
+[data-theme="tokyo-lofi"] .alarm-ringing-time,
 [data-theme="tokyo-lofi"] .roadmap-hub-title,
 [data-theme="tokyo-lofi"] .stage-focus-title,
 [data-theme="tokyo-lofi"] .checkpoint-headline,
@@ -12351,123 +11046,34 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 [data-theme="tokyo-lofi"] .paste-label,
 [data-theme="tokyo-lofi"] .modal-card-title,
 [data-theme="tokyo-lofi"] .curriculum-stage-head strong,
-[data-theme="tokyo-lofi"] .stage-card-header strong {
-  color: #FAF8FF !important;
-  font-weight: 700 !important;
-}
-
-[data-theme="tokyo-lofi"] .roadmap-hub-subtitle,
-[data-theme="tokyo-lofi"] .option-desc,
-[data-theme="tokyo-lofi"] .blank-creator-desc,
-[data-theme="tokyo-lofi"] .editor-subtext,
-[data-theme="tokyo-lofi"] .empty-checkpoints-prompt,
-[data-theme="tokyo-lofi"] .checkpoint-sub-pill,
-[data-theme="tokyo-lofi"] .detail-pill-tag,
-[data-theme="tokyo-lofi"] .curriculum-detail-tag,
-[data-theme="tokyo-lofi"] .modal-card-sub,
-[data-theme="tokyo-lofi"] .stage-counter-pill,
-[data-theme="tokyo-lofi"] .stage-checkpoint-item,
-[data-theme="tokyo-lofi"] .stage-focus-counter,
-[data-theme="tokyo-lofi"] .stage-tab-ratio {
-  color: #D4CEEB !important;
-}
-
-[data-theme="tokyo-lofi"] .stage-tab-num,
-[data-theme="tokyo-lofi"] .roadmap-pill-percent,
-[data-theme="tokyo-lofi"] .stage-focus-number-badge,
-[data-theme="tokyo-lofi"] .command-progress-badge,
-[data-theme="tokyo-lofi"] .blank-creator-badge,
-[data-theme="tokyo-lofi"] .format-guide-code,
-[data-theme="tokyo-lofi"] .pin-timetable-btn,
-[data-theme="tokyo-lofi"] .pinned-badge-active {
-  color: #F59E0B !important;
-}
-
-[data-theme="tokyo-lofi"] .roadmap-subject-pill {
-  color: #D4CEEB !important;
-  background: #1C1928 !important;
-  border: 1px solid rgba(255, 140, 0, 0.18) !important;
-}
-
-[data-theme="tokyo-lofi"] .roadmap-subject-pill:hover {
-  color: #FAF8FF !important;
-  background: #241E30 !important;
-}
-
-[data-theme="tokyo-lofi"] .roadmap-subject-pill.active {
-  color: #FAF8FF !important;
-  background: rgba(245, 158, 11, 0.18) !important;
-  border-color: #F59E0B !important;
-}
-
-[data-theme="tokyo-lofi"] .single-stage-tab-btn {
-  color: #D4CEEB !important;
-  background: #1C1928 !important;
-  border: 1px solid rgba(255, 140, 0, 0.18) !important;
-}
-
-[data-theme="tokyo-lofi"] .single-stage-tab-btn:hover {
-  color: #FAF8FF !important;
-  background: #241E30 !important;
-}
-
-[data-theme="tokyo-lofi"] .single-stage-tab-btn.viewing {
-  color: #FAF8FF !important;
-  background: rgba(245, 158, 11, 0.18) !important;
-  border-color: #F59E0B !important;
-}
-
-[data-theme="tokyo-lofi"] .single-checkpoint-row {
-  background: #161322 !important;
-  border: 1px solid rgba(255, 140, 0, 0.15) !important;
-  color: #FAF8FF !important;
-}
-
-[data-theme="tokyo-lofi"] .single-checkpoint-row:hover {
-  background: #201C2E !important;
-  border-color: rgba(245, 158, 11, 0.4) !important;
-}
-
-[data-theme="tokyo-lofi"] .checkpoint-headline.strikethrough {
-  color: #8B83A8 !important;
-  text-decoration: line-through !important;
-}
-
-[data-theme="tokyo-lofi"] .add-checkpoint-input {
-  color: #FAF8FF !important;
-  background: #14111D !important;
-  border: 1px solid rgba(255, 140, 0, 0.25) !important;
-}
-
-/* 3. CODING HUB — ZERO-OLIVE HIGH CONTRAST */
-[data-theme="tokyo-lofi"] .coding-top-banner h3,
-[data-theme="tokyo-lofi"] .potd-body h4,
-[data-theme="tokyo-lofi"] .coding-panel-header strong,
+[data-theme="tokyo-lofi"] .stage-card-header strong,
+[data-theme="tokyo-lofi"] .smart-commit-title,
+[data-theme="tokyo-lofi"] .webhook-title,
+[data-theme="tokyo-lofi"] .cf-org-name,
+[data-theme="tokyo-lofi"] .peer-review-title,
+[data-theme="tokyo-lofi"] .mock-problem-name,
+[data-theme="tokyo-lofi"] .leaderboard-user-info strong,
 [data-theme="tokyo-lofi"] .lc-total-num strong,
 [data-theme="tokyo-lofi"] .lc-diff-label strong,
-[data-theme="tokyo-lofi"] .gh-meta strong,
-[data-theme="tokyo-lofi"] .gh-counts strong,
-[data-theme="tokyo-lofi"] .gh-chart-title,
-[data-theme="tokyo-lofi"] .gh-repo-name,
-[data-theme="tokyo-lofi"] .sheet-header h3,
-[data-theme="tokyo-lofi"] .pattern-group-header h4,
-[data-theme="tokyo-lofi"] .pattern-title,
-[data-theme="tokyo-lofi"] .contest-card h4,
-[data-theme="tokyo-lofi"] .suggestion-card h4,
-[data-theme="tokyo-lofi"] .smart-commit-title,
 [data-theme="tokyo-lofi"] .commit-stat-box strong,
-[data-theme="tokyo-lofi"] .webhook-title,
-[data-theme="tokyo-lofi"] .company-label,
-[data-theme="tokyo-lofi"] .snippet-header strong,
-[data-theme="tokyo-lofi"] .snippet-reply-item strong,
-[data-theme="tokyo-lofi"] .peer-review-title,
-[data-theme="tokyo-lofi"] .cf-org-name,
-[data-theme="tokyo-lofi"] .mock-problem-name,
-[data-theme="tokyo-lofi"] .leaderboard-user-info strong {
+[data-theme="tokyo-lofi"] .project-logged-stat,
+[data-theme="tokyo-lofi"] .pod-cutoff-stat,
+[data-theme="tokyo-lofi"] .chief-modal-title,
+[data-theme="tokyo-lofi"] .modal-field-label,
+[data-theme="tokyo-lofi"] .preflight-item-title,
+[data-theme="tokyo-lofi"] .edit-title-input,
+[data-theme="tokyo-lofi"] .session-clock,
+[data-theme="tokyo-lofi"] .schedule-item .event-title-row h4 {
   color: #FAF8FF !important;
   font-weight: 700 !important;
 }
 
+/* All Body, Descriptions, Cells, Subtext */
+[data-theme="tokyo-lofi"] p,
+[data-theme="tokyo-lofi"] span,
+[data-theme="tokyo-lofi"] label,
+[data-theme="tokyo-lofi"] li,
+[data-theme="tokyo-lofi"] td,
 [data-theme="tokyo-lofi"] .coding-top-banner p,
 [data-theme="tokyo-lofi"] .potd-body p,
 [data-theme="tokyo-lofi"] .lc-diff-label,
@@ -12485,20 +11091,66 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 [data-theme="tokyo-lofi"] .coding-subtab-btn,
 [data-theme="tokyo-lofi"] .leaderboard-table th,
 [data-theme="tokyo-lofi"] .leaderboard-table td,
-[data-theme="tokyo-lofi"] .empty-prompt p {
+[data-theme="tokyo-lofi"] .empty-prompt p,
+[data-theme="tokyo-lofi"] .roadmap-hub-subtitle,
+[data-theme="tokyo-lofi"] .option-desc,
+[data-theme="tokyo-lofi"] .blank-creator-desc,
+[data-theme="tokyo-lofi"] .editor-subtext,
+[data-theme="tokyo-lofi"] .empty-checkpoints-prompt,
+[data-theme="tokyo-lofi"] .checkpoint-sub-pill,
+[data-theme="tokyo-lofi"] .detail-pill-tag,
+[data-theme="tokyo-lofi"] .curriculum-detail-tag,
+[data-theme="tokyo-lofi"] .modal-card-sub,
+[data-theme="tokyo-lofi"] .stage-counter-pill,
+[data-theme="tokyo-lofi"] .stage-checkpoint-item,
+[data-theme="tokyo-lofi"] .stage-focus-counter,
+[data-theme="tokyo-lofi"] .stage-tab-ratio,
+[data-theme="tokyo-lofi"] .settings-panel p,
+[data-theme="tokyo-lofi"] .settings-note,
+[data-theme="tokyo-lofi"] .settings-note span,
+[data-theme="tokyo-lofi"] .edit-sub-input,
+[data-theme="tokyo-lofi"] .schedule-item .event-body p,
+[data-theme="tokyo-lofi"] .habit-row,
+[data-theme="tokyo-lofi"] .duration-pill,
+[data-theme="tokyo-lofi"] .shipped-notes-text,
+[data-theme="tokyo-lofi"] .chief-modal-narrative,
+[data-theme="tokyo-lofi"] .modal-field-subtext,
+[data-theme="tokyo-lofi"] .preflight-item-time,
+[data-theme="tokyo-lofi"] .interceptor-desc,
+[data-theme="tokyo-lofi"] .modal-desc,
+[data-theme="tokyo-lofi"] .chief-healed-title,
+[data-theme="tokyo-lofi"] .chief-healed-time,
+[data-theme="tokyo-lofi"] .sidebar-bottom p,
+[data-theme="tokyo-lofi"] .profile strong {
   color: #D4CEEB !important;
 }
 
+/* All Muted, Secondary, Timestamps */
+[data-theme="tokyo-lofi"] small,
+[data-theme="tokyo-lofi"] time,
+[data-theme="tokyo-lofi"] .muted,
+[data-theme="tokyo-lofi"] .subhead,
+[data-theme="tokyo-lofi"] .session-time,
 [data-theme="tokyo-lofi"] .coding-panel-header small,
 [data-theme="tokyo-lofi"] .lc-total-num small,
 [data-theme="tokyo-lofi"] .lc-diff-label em,
 [data-theme="tokyo-lofi"] .gh-counts,
 [data-theme="tokyo-lofi"] .commit-stat-box small,
 [data-theme="tokyo-lofi"] .snippet-header small,
-[data-theme="tokyo-lofi"] .duration-tag {
+[data-theme="tokyo-lofi"] .duration-tag,
+[data-theme="tokyo-lofi"] .edit-times span,
+[data-theme="tokyo-lofi"] .schedule-item .time-col span,
+[data-theme="tokyo-lofi"] .footer,
+[data-theme="tokyo-lofi"] .footer span,
+[data-theme="tokyo-lofi"] .stage-nav-counter,
+[data-theme="tokyo-lofi"] .sidebar-bottom span,
+[data-theme="tokyo-lofi"] .profile small {
   color: #A39BBF !important;
 }
 
+/* Tokyo Amber Accents, Badges, Pills & Code */
+[data-theme="tokyo-lofi"] .eyebrow,
+[data-theme="tokyo-lofi"] .side-label,
 [data-theme="tokyo-lofi"] .pattern-count,
 [data-theme="tokyo-lofi"] .potd-chip,
 [data-theme="tokyo-lofi"] .platform-tag,
@@ -12508,123 +11160,131 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 [data-theme="tokyo-lofi"] .mock-timer-clock,
 [data-theme="tokyo-lofi"] .leaderboard-you-tag,
 [data-theme="tokyo-lofi"] .webhook-box code,
-[data-theme="tokyo-lofi"] .count-pill {
-  color: #F59E0B !important;
-}
-
-[data-theme="tokyo-lofi"] .coding-subtab-btn:hover {
-  color: #FAF8FF !important;
-  background: #241E30 !important;
-}
-
-[data-theme="tokyo-lofi"] .coding-subtab-btn.active {
-  color: #FAF8FF !important;
-  background: rgba(245, 158, 11, 0.2) !important;
-  border-color: #F59E0B !important;
-}
-
-[data-theme="tokyo-lofi"] .company-chip:hover {
-  color: #FAF8FF !important;
-  background: #241E30 !important;
-}
-
-[data-theme="tokyo-lofi"] .company-chip.active {
-  color: #12111A !important;
-  background: #F59E0B !important;
-  font-weight: 800 !important;
-}
-
-[data-theme="tokyo-lofi"] .potd-solve-btn,
-[data-theme="tokyo-lofi"] .contest-link-btn,
-[data-theme="tokyo-lofi"] .like-btn,
-[data-theme="tokyo-lofi"] .webhook-toggle-btn {
-  color: #FAF8FF !important;
-  background: #241E30 !important;
-  border: 1px solid rgba(255, 140, 0, 0.25) !important;
-}
-
-[data-theme="tokyo-lofi"] .potd-solve-btn:hover,
-[data-theme="tokyo-lofi"] .contest-link-btn:hover,
-[data-theme="tokyo-lofi"] .like-btn:hover,
-[data-theme="tokyo-lofi"] .webhook-toggle-btn:hover {
-  background: rgba(245, 158, 11, 0.2) !important;
-  color: #F59E0B !important;
-}
-
-[data-theme="tokyo-lofi"] .potd-check-btn {
-  background: #F59E0B !important;
-  color: #12111A !important;
-  font-weight: 800 !important;
-}
-
-/* 4. ROUTINE SETTINGS & TODAY SCHEDULE — ZERO-OLIVE HIGH CONTRAST */
-[data-theme="tokyo-lofi"] .settings-panel h3,
-[data-theme="tokyo-lofi"] .edit-title-input,
-[data-theme="tokyo-lofi"] .edit-times input[type="time"],
-[data-theme="tokyo-lofi"] .schedule-item .event-title-row h4,
-[data-theme="tokyo-lofi"] .session-clock,
-[data-theme="tokyo-lofi"] .session-clock span {
-  color: #FAF8FF !important;
-  font-weight: 700 !important;
-}
-
-[data-theme="tokyo-lofi"] .settings-panel p,
-[data-theme="tokyo-lofi"] .settings-note,
-[data-theme="tokyo-lofi"] .settings-note span,
-[data-theme="tokyo-lofi"] .edit-sub-input,
-[data-theme="tokyo-lofi"] .schedule-item .event-body p,
-[data-theme="tokyo-lofi"] .habit-row,
-[data-theme="tokyo-lofi"] .duration-pill {
-  color: #D4CEEB !important;
-}
-
-[data-theme="tokyo-lofi"] .edit-times span,
-[data-theme="tokyo-lofi"] .schedule-item .time-col span,
-[data-theme="tokyo-lofi"] .footer,
-[data-theme="tokyo-lofi"] .footer span {
-  color: #A39BBF !important;
-}
-
+[data-theme="tokyo-lofi"] .count-pill,
+[data-theme="tokyo-lofi"] .stage-tab-num,
+[data-theme="tokyo-lofi"] .roadmap-pill-percent,
+[data-theme="tokyo-lofi"] .stage-focus-number-badge,
+[data-theme="tokyo-lofi"] .command-progress-badge,
+[data-theme="tokyo-lofi"] .blank-creator-badge,
+[data-theme="tokyo-lofi"] .format-guide-code,
+[data-theme="tokyo-lofi"] .pin-timetable-btn,
+[data-theme="tokyo-lofi"] .pinned-badge-active,
 [data-theme="tokyo-lofi"] .edit-duration-badge,
 [data-theme="tokyo-lofi"] .schedule-item .time-col strong,
 [data-theme="tokyo-lofi"] .logged-label,
 [data-theme="tokyo-lofi"] .settings-note svg,
-[data-theme="tokyo-lofi"] .session-clock svg {
+[data-theme="tokyo-lofi"] .session-clock svg,
+[data-theme="tokyo-lofi"] .pod-pill-count,
+[data-theme="tokyo-lofi"] .timetable-pinned-badge {
   color: #F59E0B !important;
 }
 
-[data-theme="tokyo-lofi"] .schedule-edit-card {
-  background: #161322 !important;
-  border: 1px solid rgba(255, 140, 0, 0.2) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+/* SVG Lucide Icons Stroke Override */
+[data-theme="tokyo-lofi"] svg:not([class*="lucide-sun"]):not([class*="lucide-moon"]) {
+  stroke: currentColor !important;
 }
 
-[data-theme="tokyo-lofi"] .edit-title-input,
-[data-theme="tokyo-lofi"] .edit-sub-input,
-[data-theme="tokyo-lofi"] .edit-times input[type="time"] {
-  background: #14111D !important;
-  border: 1px solid rgba(255, 140, 0, 0.22) !important;
-  color: #FAF8FF !important;
+/* Cards & Containers in Tokyo Lofi */
+[data-theme="tokyo-lofi"] .panel,
+[data-theme="tokyo-lofi"] .coding-top-banner,
+[data-theme="tokyo-lofi"] .dsa-potd-card,
+[data-theme="tokyo-lofi"] .coding-metric-panel,
+[data-theme="tokyo-lofi"] .coding-sheet-panel,
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel,
+[data-theme="tokyo-lofi"] .stage-roadmaps-hub,
+[data-theme="tokyo-lofi"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"] .schedule-edit-card,
+[data-theme="tokyo-lofi"] .metric-card,
+[data-theme="tokyo-lofi"] .streak-card,
+[data-theme="tokyo-lofi"] .modal-card,
+[data-theme="tokyo-lofi"] .modal-box,
+[data-theme="tokyo-lofi"] .settings-panel,
+[data-theme="tokyo-lofi"] .pod-card,
+[data-theme="tokyo-lofi"] .report-card,
+[data-theme="tokyo-lofi"] .notes-quote-card,
+[data-theme="tokyo-lofi"] .chief-strategy-col,
+[data-theme="tokyo-lofi"] .breathing-box,
+[data-theme="tokyo-lofi"] .creator-option-box {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
 }
 
-[data-theme="tokyo-lofi"] .edit-duration-badge {
-  background: #241E30 !important;
-  border: 1px solid rgba(255, 140, 0, 0.25) !important;
-}
-
-[data-theme="tokyo-lofi"] .save-schedule-btn {
+/* Primary Action Buttons */
+[data-theme="tokyo-lofi"] .save-schedule-btn,
+[data-theme="tokyo-lofi"] .potd-check-btn,
+[data-theme="tokyo-lofi"] .form-submit-btn,
+[data-theme="tokyo-lofi"] .auth-btn,
+[data-theme="tokyo-lofi"] .add-stage-save-btn,
+[data-theme="tokyo-lofi"] .add-checkpoint-submit-btn,
+[data-theme="tokyo-lofi"] .primary-button {
   background: #F59E0B !important;
   color: #12111A !important;
   font-weight: 800 !important;
+  border: none !important;
 }
 
-[data-theme="tokyo-lofi"] .reset-schedule-btn {
-  background: #241E30 !important;
+[data-theme="tokyo-lofi"] .save-schedule-btn:hover,
+[data-theme="tokyo-lofi"] .potd-check-btn:hover,
+[data-theme="tokyo-lofi"] .form-submit-btn:hover,
+[data-theme="tokyo-lofi"] .auth-btn:hover,
+[data-theme="tokyo-lofi"] .add-stage-save-btn:hover,
+[data-theme="tokyo-lofi"] .primary-button:hover {
+  background: #FFB347 !important;
+  color: #12111A !important;
+}
+
+/* Secondary & Interactive Buttons */
+[data-theme="tokyo-lofi"] .reset-schedule-btn,
+[data-theme="tokyo-lofi"] .potd-solve-btn,
+[data-theme="tokyo-lofi"] .contest-link-btn,
+[data-theme="tokyo-lofi"] .like-btn,
+[data-theme="tokyo-lofi"] .webhook-toggle-btn,
+[data-theme="tokyo-lofi"] .command-tool-btn,
+[data-theme="tokyo-lofi"] .roadmap-header-btn.secondary,
+[data-theme="tokyo-lofi"] .single-stage-tab-btn,
+[data-theme="tokyo-lofi"] .roadmap-subject-pill,
+[data-theme="tokyo-lofi"] .coding-subtab-btn,
+[data-theme="tokyo-lofi"] .icon-button,
+[data-theme="tokyo-lofi"] .date-chip,
+[data-theme="tokyo-lofi"] .jump-today-btn,
+[data-theme="tokyo-lofi"] .quick-link-btn,
+[data-theme="tokyo-lofi"] .secondary-button,
+[data-theme="tokyo-lofi"] .option-action-btn.secondary {
+  background: #1C1928 !important;
   border: 1px solid rgba(255, 140, 0, 0.25) !important;
   color: #FAF8FF !important;
 }
 
-[data-theme="tokyo-lofi"] .reset-schedule-btn:hover {
-  background: rgba(245, 158, 11, 0.2) !important;
-  color: #F59E0B !important;
+[data-theme="tokyo-lofi"] .single-stage-tab-btn.viewing,
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active,
+[data-theme="tokyo-lofi"] .coding-subtab-btn.active,
+[data-theme="tokyo-lofi"] .nav-item.selected {
+  background: rgba(245, 158, 11, 0.22) !important;
+  border-color: #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+/* Inputs & Textareas */
+[data-theme="tokyo-lofi"] input[type="text"],
+[data-theme="tokyo-lofi"] input[type="time"],
+[data-theme="tokyo-lofi"] input[type="number"],
+[data-theme="tokyo-lofi"] input[type="email"],
+[data-theme="tokyo-lofi"] input[type="password"],
+[data-theme="tokyo-lofi"] textarea,
+[data-theme="tokyo-lofi"] .edit-title-input,
+[data-theme="tokyo-lofi"] .edit-sub-input,
+[data-theme="tokyo-lofi"] .add-checkpoint-input,
+[data-theme="tokyo-lofi"] .unblock-textarea,
+[data-theme="tokyo-lofi"] .modal-field-input {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] input:focus,
+[data-theme="tokyo-lofi"] textarea:focus {
+  border-color: #F59E0B !important;
+  outline: none !important;
 }

@@ -530,7 +530,11 @@ function App() {
   const [chiefDismissUntil, setChiefDismissUntil] = useState(0);
 
   // Theme State
-  const [theme, setTheme] = useState(() => localStorage.getItem('daymark-theme') || 'default');
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('daymark-theme');
+    if (saved === 'cyber-sakura') return 'tokyo-lofi';
+    return saved || 'default';
+  });
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
 
   // Tokyo Lofi Live JST Clock & Ambient Web Audio Generator
@@ -2571,7 +2575,7 @@ function App() {
                   }}
                   title="Switch or manage study pods"
                 >
-                  <Users size={14} color="#315b45" />
+                  <Users size={14} className="pod-header-icon" />
                   <span>{activeGroup ? activeGroup.name : 'No Pod Selected'}</span>
                   {activeGroup && <span className="pod-pill-count">{activeGroup.member_count}/5</span>}
                   <ChevronDown size={13} />
@@ -3216,7 +3220,7 @@ function App() {
                       </div>
                       {focusSoundType !== 'off' && (
                         <div className="volume-wrap">
-                          <Volume2 size={12} color="#556658" />
+                          <Volume2 size={12} className="volume-icon" />
                           <input 
                             type="range" 
                             min="0.05" 
@@ -3334,13 +3338,11 @@ function App() {
                           <span style={{ flex: 1, textAlign: 'left' }}>{h.label}</span>
                           {h.assignedMinutes > 0 && isToday && (
                             <span
-                              className="habit-logged-pill"
+                              className={`habit-logged-pill ${isChecked ? 'checked' : isEligible ? 'eligible' : 'pending'}`}
                               style={{
                                 fontSize: '10px',
                                 padding: '2px 7px',
                                 borderRadius: '10px',
-                                background: isChecked ? '#eaf7eb' : (isEligible ? '#ecfdf5' : '#f3f4f6'),
-                                color: isChecked ? '#15803d' : (isEligible ? '#059669' : '#6b7280'),
                                 fontWeight: '600',
                                 marginLeft: '8px',
                                 whiteSpace: 'nowrap'
@@ -3595,7 +3597,7 @@ function App() {
           <section style={{ maxWidth: '1000px', margin: '0 auto', paddingTop: '10px' }}>
             {!user ? (
               <div className="panel" style={{ padding: '36px', textAlign: 'center' }}>
-                <Users size={40} color="#315b45" style={{ marginBottom: '12px' }} />
+                <Users size={40} className="pod-promo-icon" style={{ marginBottom: '12px' }} />
                 <h3 style={{ font: '700 20px Manrope', margin: '0 0 8px' }}>Join or Create a Study Pod</h3>
                 <p className="muted" style={{ maxWidth: '480px', margin: '0 auto 20px', fontSize: '13px', lineHeight: '1.6' }}>
                   Study pods are tight-knit accountability rooms (max 5 members). Sign in or create an account to compete on daily focus hours, habits, and streak rankings.
@@ -3695,7 +3697,7 @@ function App() {
                     </div>
                     <div className="pod-summary-stat">
                       <small>Reset & Champion Cutoff</small>
-                      <strong style={{ fontSize: '18px', color: '#44664e' }}>1:00 AM Daily</strong>
+                      <strong className="pod-cutoff-stat" style={{ fontSize: '18px' }}>1:00 AM Daily</strong>
                     </div>
                   </div>
                 )}
@@ -3729,7 +3731,7 @@ function App() {
                             </div>
                             <div className="leaderboard-user-info">
                               <strong>
-                                {member.username} {isSelf && <span style={{ color: '#527c5f', fontSize: '11px' }}>(You)</span>}
+                                {member.username} {isSelf && <span className="leaderboard-you-tag" style={{ fontSize: '11px' }}>(You)</span>}
                                 {member.rank === 1 && member.points > 0 && (
                                   <span style={{ fontSize: '10px', color: '#b45309', fontWeight: '800' }}>👑 POD LEADER</span>
                                 )}
@@ -4080,7 +4082,7 @@ function App() {
                         </div>
                         <div className="commit-stat-box">
                           <small>Logged Focus</small>
-                          <strong style={{ color: '#2e7d32' }}>{projectLoggedMins}m ({projectPercent}%)</strong>
+                          <strong className="project-logged-stat">{projectLoggedMins}m ({projectPercent}%)</strong>
                         </div>
                       </div>
 
@@ -4877,7 +4879,7 @@ function App() {
                 {recapData.members.map(m => (
                   <div className="notes-quote-card" key={m.id}>
                     <strong>{m.username} shipped:</strong>
-                    <p style={{ margin: 0, fontStyle: m.notes ? 'normal' : 'italic', color: m.notes ? '#334437' : '#99a39a' }}>
+                    <p className="shipped-notes-text" style={{ margin: 0, fontStyle: m.notes ? 'normal' : 'italic' }}>
                       {m.notes || 'No end-of-day notes submitted.'}
                     </p>
                   </div>
@@ -5306,7 +5308,7 @@ function App() {
               <button className="modal-close" onClick={() => setChiefOfStaffModalOpen(false)}>×</button>
             </div>
 
-            <div style={{ padding: '16px 0', fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.5 }}>
+            <div className="chief-modal-narrative" style={{ padding: '16px 0', fontSize: '0.88rem', lineHeight: 1.5 }}>
               <p style={{ margin: '0 0 12px 0' }}>
                 {chiefOfStaffAlert.narrative}
               </p>
@@ -5340,13 +5342,13 @@ function App() {
                 </div>
 
                 <div className="chief-strategy-col healed">
-                  <div className="chief-col-title" style={{ color: '#16a34a' }}>
+                  <div className="chief-col-title">
                     ✨ AI Healed Plan
                   </div>
                   {(chiefOfStaffAlert.proposedSchedule || []).slice(0, 6).map((item, i) => (
                     <div key={item.id || i} className="chief-item-row">
-                      <span style={{ fontWeight: 600, color: '#15803d' }}>{item.title}</span>
-                      <span style={{ fontFamily: 'monospace', color: '#15803d', fontWeight: 600 }}>{item.start} - {item.end}</span>
+                      <span className="chief-healed-title">{item.title}</span>
+                      <span className="chief-healed-time">{item.start} - {item.end}</span>
                     </div>
                   ))}
                 </div>
@@ -5381,13 +5383,13 @@ function App() {
               <button className="modal-close" onClick={() => setElasticModalOpen(false)}>×</button>
             </div>
 
-            <div style={{ padding: '16px 0', fontSize: '0.88rem', color: '#4b5563', lineHeight: 1.5 }}>
+            <div className="modal-field-subtext" style={{ padding: '16px 0', fontSize: '0.88rem', lineHeight: 1.5 }}>
               <p style={{ margin: '0 0 16px 0' }}>
                 Running late? Shift your remaining schedule forward smoothly without breaking deep focus durations.
               </p>
 
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontWeight: 600, color: '#1e293b', marginBottom: '8px' }}>
+                <label className="modal-field-label" style={{ display: 'block', fontWeight: 600, marginBottom: '8px' }}>
                   Shift Remaining Blocks By:
                 </label>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -5420,7 +5422,7 @@ function App() {
                   onChange={e => setElasticCompressBreaks(e.target.checked)}
                   style={{ accentColor: '#2563eb' }}
                 />
-                <span style={{ fontSize: '0.82rem', color: '#334155' }}>
+                <span className="modal-field-subtext" style={{ fontSize: '0.82rem' }}>
                   <strong>Compress remaining breaks by 35%</strong> to recover time for evening shutdown
                 </span>
               </label>
@@ -5548,7 +5550,7 @@ function App() {
               {curriculumEditMode && (
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '0.86rem', fontWeight: 600, color: '#1e293b' }}>
+                    <span className="modal-field-label" style={{ fontSize: '0.86rem', fontWeight: 600 }}>
                       Paste ASCII Tree or Outline for {curriculumSubject}:
                     </span>
                     <button className="curriculum-btn-secondary" onClick={handleCopyChatGPTTemplate} style={{ padding: '4px 8px', fontSize: '0.75rem' }}>
@@ -5637,8 +5639,8 @@ function App() {
                   return (
                     <div key={item.id || i} className="preflight-timeline-row">
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#475569' }}>{item.start} - {item.end}</span>
-                        <span style={{ fontWeight: 600, color: '#1e293b' }}>{item.title}</span>
+                        <span className="preflight-item-time">{item.start} - {item.end}</span>
+                        <span className="preflight-item-title">{item.title}</span>
                       </div>
                       <span className="preflight-tier-tag" style={{ background: `${color}18`, color }}>
                         {tier.toUpperCase()}
@@ -5675,7 +5677,7 @@ function App() {
 
             <form onSubmit={handleSaveCloseout} style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                <label className="modal-field-label" style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, marginBottom: '6px' }}>
                   1. What moved the needle today? (Daily Highlights / Wins)
                 </label>
                 <textarea
@@ -5688,7 +5690,7 @@ function App() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                <label className="modal-field-label" style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, marginBottom: '6px' }}>
                   2. What caused friction or context-switching?
                 </label>
                 <textarea
@@ -5762,7 +5764,7 @@ function App() {
 
               {interceptorTab === 'triage' && (
                 <>
-                  <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.5, margin: '0 0 14px 0' }}>
+                  <p className="modal-field-subtext" style={{ fontSize: '0.86rem', lineHeight: 1.5, margin: '0 0 14px 0' }}>
                     You scheduled <strong>{interceptTask.scheduledMins} minutes</strong> for deep work, but only completed <strong>{interceptTask.elapsedMins} minutes</strong>. What resistance are you experiencing?
                   </p>
 
@@ -5802,7 +5804,7 @@ function App() {
 
               {interceptorTab === 'unblock' && (
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#1e293b', marginBottom: '8px' }}>
+                  <div className="modal-field-label" style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px' }}>
                     Break down the blocker into 2-3 tiny 5-minute micro-actions:
                   </div>
                   <textarea
@@ -5853,7 +5855,7 @@ function App() {
 
               {interceptorTab === 'early_proof' && (
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#1e293b', marginBottom: '8px' }}>
+                  <div className="modal-field-label" style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px' }}>
                     What did you complete or ship ahead of time?
                   </div>
                   <input
@@ -5914,12 +5916,12 @@ function App() {
             </div>
 
             <form onSubmit={handleArtifactSubmit} style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: '#4b5563' }}>
+              <p className="modal-field-subtext" style={{ margin: 0, fontSize: '0.85rem' }}>
                 Great work! You logged <strong>{closingTask.loggedMins || 0} minutes</strong>. Take 15 seconds to anchor what you shipped or accomplished:
               </p>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                <label className="modal-field-label" style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '6px' }}>
                   What did you complete or ship? *
                 </label>
                 <textarea
@@ -5934,7 +5936,7 @@ function App() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                <label className="modal-field-label" style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '6px' }}>
                   Deliverable / Artifact Link (Optional):
                 </label>
                 <input

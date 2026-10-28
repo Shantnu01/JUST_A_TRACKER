@@ -349,7 +349,7 @@ export default function StageRoadmapsView({
       <div className="roadmap-hub-header">
         <div className="roadmap-hub-title-group">
           <div className="roadmap-hub-icon-wrap">
-            <Milestone size={26} color="#312e81" />
+            <Milestone size={26} />
           </div>
           <div>
             <h2 className="roadmap-hub-title">Stage Roadmaps & Checkpoint Hub</h2>
@@ -466,7 +466,7 @@ export default function StageRoadmapsView({
           {/* Format Explanation Box */}
           <div className="roadmap-format-guide-box">
             <div className="format-guide-head">
-              <HelpCircle size={15} color="#312e81" />
+              <HelpCircle size={15} />
               <strong>Expected Stage Format:</strong>
             </div>
             <pre className="format-guide-code">
@@ -485,7 +485,7 @@ STAGE 3 — [STAGE NAME]
             {/* Option 1: AI Prompt Generator */}
             <div className="creator-option-box">
               <div className="option-icon-box">
-                <Sparkles size={22} color="#047857" />
+                <Sparkles size={22} />
               </div>
               <h4 className="option-title">1. Generate with ChatGPT / Claude</h4>
               <p className="option-desc">
@@ -504,7 +504,7 @@ STAGE 3 — [STAGE NAME]
             {/* Option 2: Upload File */}
             <div className="creator-option-box">
               <div className="option-icon-box">
-                <Upload size={22} color="#312e81" />
+                <Upload size={22} />
               </div>
               <h4 className="option-title">2. Or Upload File (.txt / .md)</h4>
               <p className="option-desc">
@@ -578,7 +578,7 @@ STAGE 3 — [STAGE NAME]
                   {progress.completedCheckpoints} of {progress.totalCheckpoints} Done ({progress.percent}%)
                 </span>
                 <span className="timetable-pinned-badge">
-                  <Flame size={12} color="#b45309" />
+                  <Flame size={12} />
                   <span>Timetable Active: STAGE {progress.activeStageIndex + 1}</span>
                 </span>
               </div>
