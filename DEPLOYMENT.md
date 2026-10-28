@@ -37,7 +37,25 @@ flowchart LR
 
 ---
 
-## ⚙️ 2. Production Host Setup (Render)
+## ⚡ 2. Multi-Core CPU Clustering & High Availability
+
+By default, Node.js runs on a single event loop thread, utilizing only 1 CPU core and leaving the rest idle.
+
+To maximize throughput and ensure zero-downtime resilience, the server implements **Node.js Native Clustering (`node:cluster`)**:
+* **Parallel Core Utilization**: Automatically detects available CPU cores (`os.availableParallelism()`) and spawns dedicated worker processes.
+* **Kernel Round-Robin Load Balancing**: Incoming HTTP requests are distributed across all workers with zero performance overhead.
+* **Self-Healing Process Supervisor**: If a worker crashes, the primary master process catches `cluster.on('exit')` and automatically spawns a fresh replacement worker with zero downtime.
+* **Single Background Loop Guarantee**: Scheduled background push alarms only run on Worker #1 to prevent duplicate notifications.
+* **Telemetry in Health Check**: Visit `/api/health` to inspect the serving `workerId`, `pid`, `coresAvailable`, and `memoryUsageMB`.
+
+Configure via Environment Variables:
+* `WEB_CONCURRENCY`: Explicit number of workers (e.g. `2` or `4`).
+* `MAX_WORKERS`: Safety cap on worker count (default: `4` to protect free-tier RAM limits).
+* `CLUSTER_MODE`: Set to `false` to disable clustering and run in single-core mode.
+
+---
+
+## ⚙️ 3. Production Host Setup (Render)
 
 The project includes [`render.yaml`](./render.yaml) for a single-service fullstack deployment where Express serves both the REST API and the compiled Vite React frontend.
 

@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import cluster from 'node:cluster';
+import os from 'node:os';
 import express from 'express';
 import cors from 'cors';
 import pg from 'pg';
@@ -8,6 +10,55 @@ import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import webpush from 'web-push';
+
+// Determine if clustering should be active
+export const isClusterEnabled = () => {
+  if (process.env.CLUSTER_MODE === 'false') return false;
+  if (process.env.WEB_CONCURRENCY === '1') return false;
+  if (process.env.ENABLE_CLUSTER === 'true') return true;
+  if (process.env.NODE_ENV === 'production') return true;
+  if (Number(process.env.WEB_CONCURRENCY) > 1) return true;
+  return false;
+};
+
+// ============================================================================
+// ⚡ MULTI-CORE CLUSTERING: Primary Process Supervisor & Load Balancer
+// ============================================================================
+if (cluster.isPrimary && isClusterEnabled()) {
+  const totalCores = os.availableParallelism ? os.availableParallelism() : os.cpus().length;
+  const maxWorkers = Number(process.env.MAX_WORKERS || 4);
+  const workerCount = Number(process.env.WEB_CONCURRENCY) || Math.min(totalCores, maxWorkers);
+
+  console.log(`=================================================================`);
+  console.log(`⚡ [Node.js Cluster Primary] Master PID ${process.pid} active`);
+  console.log(`⚡ Detected ${totalCores} logical CPU cores`);
+  console.log(`⚡ Spawning ${workerCount} worker processes to utilize multi-core parallelism...`);
+  console.log(`=================================================================`);
+
+  for (let i = 0; i < workerCount; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('online', (worker) => {
+    console.log(`[Cluster Online] Worker #${worker.id} (PID ${worker.process.pid}) ready for traffic.`);
+  });
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.warn(`[Cluster Failover] Worker #${worker.id} (PID ${worker.process.pid}) exited (${signal || code}). Respawning replacement worker...`);
+    cluster.fork();
+  });
+
+  const shutdown = (sig) => {
+    console.log(`[Cluster Primary] Received ${sig}. Gracefully shutting down worker processes...`);
+    for (const id in cluster.workers) {
+      cluster.workers[id]?.process.kill(sig);
+    }
+    process.exit(0);
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,9 +105,12 @@ function initPool() {
     ? { rejectUnauthorized: false }
     : false;
 
+  const maxConnections = Number(process.env.PG_MAX_POOL) || (cluster.isWorker ? 5 : 10);
+
   const newPool = new Pool({
     connectionString,
     ssl: sslSetting,
+    max: maxConnections,
     connectionTimeoutMillis: 5000
   });
 
@@ -67,7 +121,10 @@ function initPool() {
   return newPool;
 }
 
-pool = initPool();
+// Only worker processes (or standalone instance) open database connection pools
+if (!cluster.isPrimary || !isClusterEnabled()) {
+  pool = initPool();
+}
 
 async function ensureTable() {
   if (!pool || dbInitialized) return;
@@ -237,22 +294,41 @@ function generateInviteCode() {
   return code;
 }
 
-// Health Check
+// Health Check with Multi-Core Cluster Diagnostics
 app.get('/api/health', async (_req, res) => {
+  const workerDiagnostics = {
+    mode: cluster.isWorker ? 'cluster' : 'standalone',
+    workerId: cluster.worker ? cluster.worker.id : 1,
+    pid: process.pid,
+    uptimeSeconds: Math.round(process.uptime()),
+    coresAvailable: os.availableParallelism ? os.availableParallelism() : os.cpus().length,
+    memoryUsageMB: Math.round(process.memoryUsage().rss / (1024 * 1024))
+  };
+
   if (!pool) {
     return res.json({
       status: 'ok',
       database: 'not_configured',
+      worker: workerDiagnostics,
       message: 'Running in browser-storage fallback mode until DATABASE_URL is provided.'
     });
   }
   try {
     await ensureTable();
     await pool.query('SELECT 1');
-    return res.json({ status: 'ok', database: 'connected' });
+    return res.json({ 
+      status: 'ok', 
+      database: 'connected',
+      worker: workerDiagnostics
+    });
   } catch (error) {
     console.error('Database health check failed:', error.message);
-    return res.status(503).json({ status: 'degraded', database: 'unavailable', error: error.message });
+    return res.status(503).json({ 
+      status: 'degraded', 
+      database: 'unavailable', 
+      worker: workerDiagnostics,
+      error: error.message 
+    });
   }
 });
 
@@ -1665,92 +1741,95 @@ app.post('/api/push/test', optionalAuth, async (req, res) => {
 });
 
 // 4. Background Alarm Scheduler Loop (Checked every 30s)
-const sentAlarmsCache = new Set();
-setInterval(async () => {
-  if (!pool) return;
-  try {
-    const subsRes = await pool.query(
-      `SELECT ps.id as sub_id, ps.user_id, ps.endpoint, ps.p256dh, ps.auth, ps.user_timezone
-       FROM push_subscriptions ps`
-    );
-    if (!subsRes.rows || subsRes.rows.length === 0) return;
+// In multi-core cluster mode, only Worker #1 runs this loop to avoid duplicate push notifications.
+if (!cluster.isWorker || cluster.worker?.id === 1) {
+  const sentAlarmsCache = new Set();
+  setInterval(async () => {
+    if (!pool) return;
+    try {
+      const subsRes = await pool.query(
+        `SELECT ps.id as sub_id, ps.user_id, ps.endpoint, ps.p256dh, ps.auth, ps.user_timezone
+         FROM push_subscriptions ps`
+      );
+      if (!subsRes.rows || subsRes.rows.length === 0) return;
 
-    for (const sub of subsRes.rows) {
-      const tz = sub.user_timezone || 'Asia/Kolkata';
-      let nowTime = '';
-      let todayDate = '';
-      try {
-        const now = new Date();
-        nowTime = now.toLocaleTimeString('en-US', {
-          timeZone: tz,
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-        todayDate = now.toLocaleDateString('en-CA', { timeZone: tz });
-      } catch {
-        continue;
-      }
-
-      let alarmsList = [];
-      if (sub.user_id) {
-        const dayRes = await pool.query(
-          `SELECT alarms FROM user_routine_days WHERE user_id = $1 AND day_date = $2`,
-          [sub.user_id, todayDate]
-        );
-        alarmsList = dayRes.rows[0]?.alarms || [];
-      } else {
-        const dayRes = await pool.query(
-          `SELECT alarms FROM routine_days WHERE day_date = $1`,
-          [todayDate]
-        );
-        alarmsList = dayRes.rows[0]?.alarms || [];
-      }
-
-      if (!Array.isArray(alarmsList) || alarmsList.length === 0) continue;
-
-      for (const alarm of alarmsList) {
-        if (!alarm.enabled || !alarm.time) continue;
-        if (alarm.time === nowTime) {
-          const cacheKey = `${sub.sub_id}:${todayDate}:${alarm.id}:${alarm.time}`;
-          if (sentAlarmsCache.has(cacheKey)) continue;
-
-          sentAlarmsCache.add(cacheKey);
-          if (sentAlarmsCache.size > 2000) {
-            sentAlarmsCache.clear();
-            sentAlarmsCache.add(cacheKey);
-          }
-
-          const pushConfig = {
-            endpoint: sub.endpoint,
-            keys: {
-              p256dh: sub.p256dh,
-              auth: sub.auth
-            }
-          };
-
-          const payload = {
-            title: `⏰ Alarm: ${alarm.label || 'Routine Block'}`,
-            body: `Scheduled alarm for ${alarm.time}. Time to focus!`,
-            icon: '/favicon.svg',
-            badge: '/favicon.svg',
-            tag: `alarm-${alarm.id}`,
-            data: { url: '/' },
-            requireInteraction: true
-          };
-
-          webpush.sendNotification(pushConfig, JSON.stringify(payload)).catch(err => {
-            if (err.statusCode === 404 || err.statusCode === 410) {
-              pool.query(`DELETE FROM push_subscriptions WHERE endpoint = $1`, [sub.endpoint]).catch(() => {});
-            }
+      for (const sub of subsRes.rows) {
+        const tz = sub.user_timezone || 'Asia/Kolkata';
+        let nowTime = '';
+        let todayDate = '';
+        try {
+          const now = new Date();
+          nowTime = now.toLocaleTimeString('en-US', {
+            timeZone: tz,
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit'
           });
+          todayDate = now.toLocaleDateString('en-CA', { timeZone: tz });
+        } catch {
+          continue;
+        }
+
+        let alarmsList = [];
+        if (sub.user_id) {
+          const dayRes = await pool.query(
+            `SELECT alarms FROM user_routine_days WHERE user_id = $1 AND day_date = $2`,
+            [sub.user_id, todayDate]
+          );
+          alarmsList = dayRes.rows[0]?.alarms || [];
+        } else {
+          const dayRes = await pool.query(
+            `SELECT alarms FROM routine_days WHERE day_date = $1`,
+            [todayDate]
+          );
+          alarmsList = dayRes.rows[0]?.alarms || [];
+        }
+
+        if (!Array.isArray(alarmsList) || alarmsList.length === 0) continue;
+
+        for (const alarm of alarmsList) {
+          if (!alarm.enabled || !alarm.time) continue;
+          if (alarm.time === nowTime) {
+            const cacheKey = `${sub.sub_id}:${todayDate}:${alarm.id}:${alarm.time}`;
+            if (sentAlarmsCache.has(cacheKey)) continue;
+
+            sentAlarmsCache.add(cacheKey);
+            if (sentAlarmsCache.size > 2000) {
+              sentAlarmsCache.clear();
+              sentAlarmsCache.add(cacheKey);
+            }
+
+            const pushConfig = {
+              endpoint: sub.endpoint,
+              keys: {
+                p256dh: sub.p256dh,
+                auth: sub.auth
+              }
+            };
+
+            const payload = {
+              title: `⏰ Alarm: ${alarm.label || 'Routine Block'}`,
+              body: `Scheduled alarm for ${alarm.time}. Time to focus!`,
+              icon: '/favicon.svg',
+              badge: '/favicon.svg',
+              tag: `alarm-${alarm.id}`,
+              data: { url: '/' },
+              requireInteraction: true
+            };
+
+            webpush.sendNotification(pushConfig, JSON.stringify(payload)).catch(err => {
+              if (err.statusCode === 404 || err.statusCode === 410) {
+                pool.query(`DELETE FROM push_subscriptions WHERE endpoint = $1`, [sub.endpoint]).catch(() => {});
+              }
+            });
+          }
         }
       }
+    } catch (err) {
+      // Background alarm check suppressed
     }
-  } catch (err) {
-    // Background alarm check suppressed
-  }
-}, 30000);
+  }, 30000);
+}
 
 // Serve frontend build in production / single-service deployment
 app.use(express.static(clientDistPath));
@@ -1765,16 +1844,23 @@ app.get('*', (req, res, next) => {
 
 async function start() {
   app.listen(port, () => {
-    console.log(`Routine API & WebApp listening on http://localhost:${port}`);
+    const workerInfo = cluster.isWorker 
+      ? ` [Cluster Worker #${cluster.worker.id} · PID ${process.pid}]` 
+      : ` [Standalone · PID ${process.pid}]`;
+    console.log(`Routine API & WebApp listening on http://localhost:${port}${workerInfo}`);
   });
-  if (pool) {
+
+  if (pool && (!cluster.isWorker || cluster.worker?.id === 1)) {
     ensureTable().catch(err => {
       console.warn('[Database] Initial connection attempt deferred:', err.message);
     });
   }
 }
 
-start().catch(error => {
-  console.error('Server startup failed:', error.message);
-  process.exit(1);
-});
+// Start HTTP server in worker processes or standalone development mode
+if (!cluster.isPrimary || !isClusterEnabled()) {
+  start().catch(error => {
+    console.error('Server startup failed:', error.message);
+    process.exit(1);
+  });
+}

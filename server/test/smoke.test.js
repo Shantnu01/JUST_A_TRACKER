@@ -22,3 +22,15 @@ test('Production Readiness: Health Check Configuration', () => {
   const port = process.env.PORT || 4000;
   assert.ok(Number(port) > 0, 'Port must be a valid positive integer');
 });
+
+test('Production Readiness: Multi-Core Cluster Parallelism Capability', async () => {
+  const cluster = await import('node:cluster');
+  const os = await import('node:os');
+  
+  assert.ok(cluster.default, 'node:cluster module must be available');
+  assert.ok(os.default, 'node:os module must be available');
+  
+  const cores = os.default.availableParallelism ? os.default.availableParallelism() : os.default.cpus().length;
+  assert.ok(cores >= 1, 'System should detect at least 1 CPU core');
+  console.log(`ℹ Detected ${cores} logical CPU core(s) available for clustering.`);
+});
