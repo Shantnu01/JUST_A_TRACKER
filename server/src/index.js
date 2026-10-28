@@ -18,15 +18,19 @@ const app = express();
 const port = Number(process.env.PORT || 4000);
 const JWT_SECRET = process.env.JWT_SECRET || 'daymark-super-pod-secret-2026';
 
-const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || 'BFwc377QGxvjG5osnK0EUqYwTGhppYUmz7XfKVopVlS8bjuHlk_zuM5Co6U_VErhTorjdVeNK5lzvxGoywEEfOk';
-const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || 'TlEm_0ug8x-Vpj5G1LSQNZ_rDNLUx6X2D6yA2SYU4jM';
+const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY;
+const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 const VAPID_EMAIL = process.env.VAPID_EMAIL || 'mailto:tracker@daymark.app';
 
-try {
-  webpush.setVapidDetails(VAPID_EMAIL, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
-  console.log('[WebPush] VAPID configured successfully.');
-} catch (err) {
-  console.warn('[WebPush] Initialization warning:', err.message);
+if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
+  try {
+    webpush.setVapidDetails(VAPID_EMAIL, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+    console.log('[WebPush] VAPID configured successfully.');
+  } catch (err) {
+    console.warn('[WebPush] Initialization warning:', err.message);
+  }
+} else {
+  console.log('[WebPush] VAPID keys not configured in environment; push notifications disabled.');
 }
 
 app.use(cors({
@@ -1594,6 +1598,9 @@ async function sendPushToUser(userId, payload) {
 
 // 1. Get VAPID Public Key for client subscription
 app.get('/api/push/public-key', (req, res) => {
+  if (!VAPID_PUBLIC_KEY) {
+    return res.status(503).json({ error: 'WebPush VAPID key not configured' });
+  }
   return res.json({ publicKey: VAPID_PUBLIC_KEY });
 });
 
