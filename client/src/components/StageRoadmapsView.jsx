@@ -94,7 +94,9 @@ export default function StageRoadmapsView({
   const [newStageInputTitle, setNewStageInputTitle] = useState('');
   const [showAddStageInput, setShowAddStageInput] = useState(false);
 
-  const fileInputRef = useRef(null);
+  // Format guide collapse state
+  const [showFormatGuide, setShowFormatGuide] = useState(false);
+
 
   // Sync selectedSubject prop
   useEffect(() => {
@@ -808,7 +810,7 @@ STAGE 3 — [STAGE NAME]
                         onClick={() => handleDeleteCheckpoint(currentStage.id, cp.id)}
                         title="Delete checkpoint"
                       >
-                        ×
+                        <Trash2 size={13} />
                       </button>
                     </div>
                   ))
