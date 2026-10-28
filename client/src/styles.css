@@ -11677,7 +11677,6 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"] .coding-sheet-panel,
 [data-theme="tokyo-lofi"] .coding-contests-panel,
 [data-theme="tokyo-lofi"] .coding-suggestions-panel,
-[data-theme="tokyo-lofi"] .stage-roadmaps-hub,
 [data-theme="tokyo-lofi"] .single-stage-focused-card,
 [data-theme="tokyo-lofi"] .schedule-edit-card,
 [data-theme="tokyo-lofi"] .metric-card,
@@ -12107,6 +12106,9 @@ html[data-theme="tokyo-lofi"],
 
 /* 1. Hub Container */
 [data-theme="tokyo-lofi"] .stage-roadmaps-hub {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   color: #D4CEEB !important;
   max-width: 1200px !important;
   margin: 0 auto !important;
