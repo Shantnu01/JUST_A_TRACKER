@@ -10,7 +10,7 @@ import TimetableCurrentCheckpoint from './components/TimetableCurrentCheckpoint'
 import StageRoadmapsView from './components/StageRoadmapsView';
 import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
 import DynamicVideoModal, { extractYouTubeId } from './components/DynamicVideoModal';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   AlarmClock,
@@ -2367,183 +2367,77 @@ function App() {
     }
   };
 
-  const copyInviteCode = (code) => {
-    navigator.clipboard.writeText(code);
-    setToast(`Invite code ${code} copied to clipboard!`);
-    setTimeout(() => setToast(''), 2500);
+
+  // Tokyo Lofi Typewriter & 3-Minute Quote of the Day
+  const TOKYO_QUOTES = useMemo(() => [
+    'Focus on the process, not the outcome.',
+    'Quiet the mind. Deepen the craft.',
+    'One block at a time. The progress adds up.',
+    'Small daily disciplines compound into mastery.',
+    'Silence the noise. Build with intention.',
+    'Patience with results, urgency with actions.',
+    'Show up, do the work, let momentum carry you.'
+  ], []);
+
+  const getTokyoGreeting = useCallback(() => {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good Morning.';
+    if (h < 17) return 'Good Afternoon.';
+    return 'Good Evening.';
+  }, []);
+
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [typewriterText, setTypewriterText] = useState(() => getTokyoGreeting());
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const targetPhrase = useMemo(() => {
+    if (phraseIndex % 2 === 0) return getTokyoGreeting();
+    const qIndex = Math.floor(phraseIndex / 2) % TOKYO_QUOTES.length;
+    return TOKYO_QUOTES[qIndex];
+  }, [phraseIndex, getTokyoGreeting, TOKYO_QUOTES]);
+
+  // 3-minute interval to switch between Greeting and Quote of the Day
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPhraseIndex(idx => idx + 1);
+    }, 180000); // 3 minutes = 180,000 ms
+    return () => clearInterval(timer);
+  }, []);
+
+  // When phrase changes, trigger smooth backspace
+  useEffect(() => {
+    if (typewriterText !== targetPhrase) {
+      setIsDeleting(true);
+    }
+  }, [phraseIndex, targetPhrase]);
+
+  // Typewriter tick engine
+  useEffect(() => {
+    let tickTimer;
+    if (isDeleting) {
+      if (typewriterText.length > 0) {
+        tickTimer = setTimeout(() => {
+          setTypewriterText(prev => prev.slice(0, -1));
+        }, 22);
+      } else {
+        setIsDeleting(false);
+      }
+    } else {
+      if (typewriterText.length < targetPhrase.length) {
+        tickTimer = setTimeout(() => {
+          setTypewriterText(targetPhrase.slice(0, typewriterText.length + 1));
+        }, 40);
+      }
+    }
+    return () => clearTimeout(tickTimer);
+  }, [typewriterText, isDeleting, targetPhrase]);
+
+  const cycleTypewriter = () => {
+    setPhraseIndex(idx => idx + 1);
   };
 
-  return (
-    <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme} data-column-style={columnStyle}>
-      <aside className="sidebar">
-        <div className="brand">
-          <div className="brand-mark">
-            {theme === 'tokyo-lofi' ? (
-              <span className="tokyo-kanji-seal">京</span>
-            ) : (
-              <Leaf size={19} />
-            )}
-          </div>
-          <span>
-            {theme === 'tokyo-lofi' ? (
-              <>TOKYO <span className="brand-dot" style={{ color: '#F59E0B' }}>LOFI</span></>
-            ) : (
-              <>daymark<span className="brand-dot">.</span></>
-            )}
-          </span>
-        </div>
-        <div className="side-label">WORKSPACE</div>
-        <nav>
-          {[
-            ['Today', Sun, 'Today'],
-            ['Stage Roadmaps', Milestone, 'Roadmaps'],
-            ['Weekly report', TrendingUp, 'Reports'],
-            ['Study pods', Users, 'Pods'],
-            ['Coding', Code2, 'Coding'],
-            ['Routine settings', Settings2, 'Settings']
-          ].map(([label, Icon, shortLabel]) => (
-            <button
-              key={label}
-              className={`nav-item ${view === label ? 'selected' : ''}`}
-              onClick={() => setView(label)}
-            >
-              <Icon size={17} />
-              <span className="nav-item-full">{label}</span>
-              <span className="nav-item-short">{shortLabel}</span>
-              {label === 'Today' && <span className="nav-indicator" />}
-              {label === 'Stage Roadmaps' && (
-                <span className="nav-indicator" style={{ background: '#818cf8' }} />
-              )}
-              {label === 'Study pods' && groups.length > 0 && (
-                <span className="nav-indicator" style={{ background: '#3b82f6' }} />
-              )}
-              {label === 'Coding' && (
-                <span className="nav-indicator" style={{ background: '#10b981' }} />
-              )}
-            </button>
-          ))}
-        </nav>
-
-
-        {/* Daily Inspiring Quote (Changes Daily) */}
-        <div className="sidebar-bottom">
-          <div className="quote-mark">“</div>
-          <p>{todayQuote.quote}</p>
-          <span>{todayQuote.author.toUpperCase()}</span>
-        </div>
-
-        {/* User Account / Profile Area */}
-        <div className="profile">
-          <div
-            className="avatar"
-            style={{
-              background: user ? user.avatar_color : '#dbe6db',
-              color: user ? '#fff' : '#365a43'
-            }}
-          >
-            {user ? user.username.charAt(0).toUpperCase() : '?'}
-          </div>
-          <div>
-            <strong>{user ? user.username : 'Guest Mode'}</strong>
-            <small>{activeGroup ? activeGroup.name : 'Personal Routine'}</small>
-          </div>
-          {user ? (
-            <button className="logout-btn" onClick={handleLogout} title="Log out">
-              <LogOut size={16} />
-            </button>
-          ) : (
-            <button className="auth-btn" onClick={() => setAuthModalOpen(true)}>
-              <LogIn size={13} /> Sign In
-            </button>
-          )}
-        </div>
-      </aside>
-
-            <main className="main-content" style={{ position: 'relative' }}>
-        {theme === 'dynamic-video' && (
-          <div className="dynamic-video-bg-container">
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${dynamicVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${dynamicVideoId}&cc_load_policy=0&iv_load_policy=3&vq=hd1080&playsinline=1&rel=0&showinfo=0&modestbranding=1&enablejsapi=1`}
-              title="Dynamic YouTube Background"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-            <div
-              className="dynamic-video-overlay"
-              style={{ opacity: isZenMode ? 0.1 : dynamicDim }}
-            />
-          </div>
-        )}
-        {theme === 'spider-verse' && (
-          <div className="spidey-swing-anchor" title="THWIP! Miles Morales on duty!">
-            <div className="spidey-web-line" />
-            <svg className="spidey-figure-body" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="50" y1="0" x2="50" y2="20" stroke="#00f0ff" strokeWidth="3" strokeDasharray="4 2" />
-              <path d="M50 20 L50 35 L42 42" stroke="#e11d48" strokeWidth="7" strokeLinecap="round" />
-              <path d="M50 20 L58 35 L62 42" stroke="#e11d48" strokeWidth="7" strokeLinecap="round" />
-              <path d="M38 40 Q50 35 62 40 L58 70 Q50 75 42 70 Z" fill="#1e1b4b" stroke="#0f172a" strokeWidth="2" />
-              <path d="M43 40 Q50 36 57 40 L55 65 Q50 68 45 65 Z" fill="#e11d48" />
-              <path d="M48 50 L52 50 L50 54 Z" fill="#000" />
-              <path d="M48 50 L42 46 M52 50 L58 46 M48 53 L40 56 M52 53 L60 56 M49 54 L44 62 M51 54 L56 62" stroke="#000" strokeWidth="1.5" />
-              <ellipse cx="50" cy="85" rx="16" ry="19" fill="#e11d48" stroke="#be123c" strokeWidth="2" />
-              <line x1="50" y1="66" x2="50" y2="104" stroke="#881337" strokeWidth="1.2" />
-              <line x1="34" y1="85" x2="66" y2="85" stroke="#881337" strokeWidth="1.2" />
-              <ellipse cx="50" cy="85" rx="9" ry="11" stroke="#881337" strokeWidth="1" fill="none" />
-              <path d="M40 82 Q46 80 48 87 Q45 92 39 88 Z" fill="#ffffff" stroke="#000" strokeWidth="2.5" />
-              <path d="M60 82 Q54 80 52 87 Q55 92 61 88 Z" fill="#ffffff" stroke="#000" strokeWidth="2.5" />
-              <path d="M40 68 L24 55 L16 68" stroke="#1e1b4b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M16 68 L10 65" stroke="#e11d48" strokeWidth="8" strokeLinecap="round" />
-              <path d="M60 68 L76 55 L84 68" stroke="#1e1b4b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M84 68 L90 65" stroke="#e11d48" strokeWidth="8" strokeLinecap="round" />
-            </svg>
-          </div>
-        )}
-
-        {theme === 'tokyo-lofi' && (
-          <>
-            <div className="film-grain" aria-hidden="true" />
-            <div className="single-scanline" aria-hidden="true" />
-            <div className="tokyo-terminal-strip">
-              <div className="tokyo-strip-left">
-                <span className="tokyo-strip-dot" />
-                <span>TOKYO TERMINAL // METROPOLITAN LINE</span>
-                <span className="tokyo-strip-sep">/</span>
-                <span className="tokyo-strip-date">{prettyDate(selectedDate).toUpperCase()}</span>
-              </div>
-              <div className="tokyo-strip-right">
-                <svg className="tokyo-weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                </svg>
-                <span>TOKYO WEATHER: 18°C CLOUDY</span>
-              </div>
-            </div>
-          </>
-        )}
-        <header className="topbar">
-          {!(theme === 'tokyo-lofi' && view === 'Today') && (
-            <div>
-              <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
-            <h1>
-              {view === 'Today'
-                ? isToday
-                  ? 'A calmer way to make progress'
-                  : isPast
-                  ? 'Archived Performance Record'
-                  : 'Upcoming Routine Plan'
-                : view === 'Stage Roadmaps'
-                ? 'Stage Roadmaps & Checkpoint Hub'
-                : view === 'Weekly report'
-                ? 'Your progress, at a glance'
-                : view === 'Study pods'
-                ? 'Competitive Study Pod'
-                : view === 'Coding'
-                ? 'Developer & DSA Performance Hub'
-                : 'Customize your routine schedule'}
-            </h1>
-            </div>
-          )}
-          <div className="top-actions">
+  const renderTopActions = () => (
+<div className="top-actions">
             {/* Active Study Pod Selector Pill */}
             {user && (
               <div className="pod-selector-wrapper" style={{ position: 'relative' }}>
@@ -2848,7 +2742,186 @@ function App() {
               {prettyDate(selectedDate)}
             </div>
           </div>
+  );
+
+  const copyInviteCode = (code) => {
+    navigator.clipboard.writeText(code);
+    setToast(`Invite code ${code} copied to clipboard!`);
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  return (
+    <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme} data-column-style={columnStyle}>
+      <aside className="sidebar">
+        <div className="brand">
+          <div className="brand-mark">
+            {theme === 'tokyo-lofi' ? (
+              <span className="tokyo-kanji-seal">京</span>
+            ) : (
+              <Leaf size={19} />
+            )}
+          </div>
+          <span>
+            {theme === 'tokyo-lofi' ? (
+              <>TOKYO <span className="brand-dot" style={{ color: '#F59E0B' }}>LOFI</span></>
+            ) : (
+              <>daymark<span className="brand-dot">.</span></>
+            )}
+          </span>
+        </div>
+        <div className="side-label">WORKSPACE</div>
+        <nav>
+          {[
+            ['Today', Sun, 'Today'],
+            ['Stage Roadmaps', Milestone, 'Roadmaps'],
+            ['Weekly report', TrendingUp, 'Reports'],
+            ['Study pods', Users, 'Pods'],
+            ['Coding', Code2, 'Coding'],
+            ['Routine settings', Settings2, 'Settings']
+          ].map(([label, Icon, shortLabel]) => (
+            <button
+              key={label}
+              className={`nav-item ${view === label ? 'selected' : ''}`}
+              onClick={() => setView(label)}
+            >
+              <Icon size={17} />
+              <span className="nav-item-full">{label}</span>
+              <span className="nav-item-short">{shortLabel}</span>
+              {label === 'Today' && <span className="nav-indicator" />}
+              {label === 'Stage Roadmaps' && (
+                <span className="nav-indicator" style={{ background: '#818cf8' }} />
+              )}
+              {label === 'Study pods' && groups.length > 0 && (
+                <span className="nav-indicator" style={{ background: '#3b82f6' }} />
+              )}
+              {label === 'Coding' && (
+                <span className="nav-indicator" style={{ background: '#10b981' }} />
+              )}
+            </button>
+          ))}
+        </nav>
+
+
+        {/* Daily Inspiring Quote (Changes Daily) */}
+        <div className="sidebar-bottom">
+          <div className="quote-mark">“</div>
+          <p>{todayQuote.quote}</p>
+          <span>{todayQuote.author.toUpperCase()}</span>
+        </div>
+
+        {/* User Account / Profile Area */}
+        <div className="profile">
+          <div
+            className="avatar"
+            style={{
+              background: user ? user.avatar_color : '#dbe6db',
+              color: user ? '#fff' : '#365a43'
+            }}
+          >
+            {user ? user.username.charAt(0).toUpperCase() : '?'}
+          </div>
+          <div>
+            <strong>{user ? user.username : 'Guest Mode'}</strong>
+            <small>{activeGroup ? activeGroup.name : 'Personal Routine'}</small>
+          </div>
+          {user ? (
+            <button className="logout-btn" onClick={handleLogout} title="Log out">
+              <LogOut size={16} />
+            </button>
+          ) : (
+            <button className="auth-btn" onClick={() => setAuthModalOpen(true)}>
+              <LogIn size={13} /> Sign In
+            </button>
+          )}
+        </div>
+      </aside>
+
+            <main className="main-content" style={{ position: 'relative' }}>
+        {theme === 'dynamic-video' && (
+          <div className="dynamic-video-bg-container">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${dynamicVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${dynamicVideoId}&cc_load_policy=0&iv_load_policy=3&vq=hd1080&playsinline=1&rel=0&showinfo=0&modestbranding=1&enablejsapi=1`}
+              title="Dynamic YouTube Background"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+            <div
+              className="dynamic-video-overlay"
+              style={{ opacity: isZenMode ? 0.1 : dynamicDim }}
+            />
+          </div>
+        )}
+        {theme === 'spider-verse' && (
+          <div className="spidey-swing-anchor" title="THWIP! Miles Morales on duty!">
+            <div className="spidey-web-line" />
+            <svg className="spidey-figure-body" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="50" y1="0" x2="50" y2="20" stroke="#00f0ff" strokeWidth="3" strokeDasharray="4 2" />
+              <path d="M50 20 L50 35 L42 42" stroke="#e11d48" strokeWidth="7" strokeLinecap="round" />
+              <path d="M50 20 L58 35 L62 42" stroke="#e11d48" strokeWidth="7" strokeLinecap="round" />
+              <path d="M38 40 Q50 35 62 40 L58 70 Q50 75 42 70 Z" fill="#1e1b4b" stroke="#0f172a" strokeWidth="2" />
+              <path d="M43 40 Q50 36 57 40 L55 65 Q50 68 45 65 Z" fill="#e11d48" />
+              <path d="M48 50 L52 50 L50 54 Z" fill="#000" />
+              <path d="M48 50 L42 46 M52 50 L58 46 M48 53 L40 56 M52 53 L60 56 M49 54 L44 62 M51 54 L56 62" stroke="#000" strokeWidth="1.5" />
+              <ellipse cx="50" cy="85" rx="16" ry="19" fill="#e11d48" stroke="#be123c" strokeWidth="2" />
+              <line x1="50" y1="66" x2="50" y2="104" stroke="#881337" strokeWidth="1.2" />
+              <line x1="34" y1="85" x2="66" y2="85" stroke="#881337" strokeWidth="1.2" />
+              <ellipse cx="50" cy="85" rx="9" ry="11" stroke="#881337" strokeWidth="1" fill="none" />
+              <path d="M40 82 Q46 80 48 87 Q45 92 39 88 Z" fill="#ffffff" stroke="#000" strokeWidth="2.5" />
+              <path d="M60 82 Q54 80 52 87 Q55 92 61 88 Z" fill="#ffffff" stroke="#000" strokeWidth="2.5" />
+              <path d="M40 68 L24 55 L16 68" stroke="#1e1b4b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M16 68 L10 65" stroke="#e11d48" strokeWidth="8" strokeLinecap="round" />
+              <path d="M60 68 L76 55 L84 68" stroke="#1e1b4b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M84 68 L90 65" stroke="#e11d48" strokeWidth="8" strokeLinecap="round" />
+            </svg>
+          </div>
+        )}
+
+        {theme === 'tokyo-lofi' && (
+          <>
+            <div className="film-grain" aria-hidden="true" />
+            <div className="single-scanline" aria-hidden="true" />
+            <div className="tokyo-terminal-strip">
+              <div className="tokyo-strip-left">
+                <span className="tokyo-strip-dot" />
+                <span>TOKYO TERMINAL // METROPOLITAN LINE</span>
+                <span className="tokyo-strip-sep">/</span>
+                <span className="tokyo-strip-date">{prettyDate(selectedDate).toUpperCase()}</span>
+              </div>
+              <div className="tokyo-strip-right">
+                <svg className="tokyo-weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
+                <span>TOKYO WEATHER: 18°C CLOUDY</span>
+              </div>
+            </div>
+          </>
+        )}
+        {!(theme === 'tokyo-lofi' && view === 'Today') && (
+        <header className="topbar">
+          <div>
+            <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
+            <h1>
+              {view === 'Today'
+                ? isToday
+                  ? 'A calmer way to make progress'
+                  : isPast
+                  ? 'Archived Performance Record'
+                  : 'Upcoming Routine Plan'
+                : view === 'Stage Roadmaps'
+                ? 'Stage Roadmaps & Checkpoint Hub'
+                : view === 'Weekly report'
+                ? 'Your progress, at a glance'
+                : view === 'Study pods'
+                ? 'Competitive Study Pod'
+                : view === 'Coding'
+                ? 'Developer & DSA Performance Hub'
+                : 'Customize your routine schedule'}
+            </h1>
+          </div>
+          {renderTopActions()}
         </header>
+      )}
 
         {view === 'Today' && (
           <>
@@ -2870,16 +2943,15 @@ function App() {
             <section className="welcome-row">
               <div>
                 {theme !== 'tokyo-lofi' && <p className="muted">{prettyDate(selectedDate)}</p>}
-                <h2>
+                <h2
+                  onClick={theme === 'tokyo-lofi' && isToday ? cycleTypewriter : undefined}
+                  style={theme === 'tokyo-lofi' && isToday ? { cursor: 'pointer', userSelect: 'none' } : undefined}
+                  title={theme === 'tokyo-lofi' && isToday ? 'Click to cycle quote / greeting (auto-changes every 3 mins)' : undefined}
+                >
                   {theme === 'tokyo-lofi' ? (
                     isToday ? (
                       <>
-                        {new Date().getHours() < 12
-                          ? 'Good Morning'
-                          : new Date().getHours() < 17
-                          ? 'Good Afternoon'
-                          : 'Good Evening'}
-                        <span>.</span>
+                        <span>{typewriterText}</span>
                         <span className="typewriter-cursor" />
                       </>
                     ) : isPast ? (
@@ -2905,11 +2977,12 @@ function App() {
                     </>
                   )}
                 </h2>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '10px' }}>
+                <div className="welcome-tools-row">
                   <button className="evening-closeout-pill" onClick={() => setCloseoutModalOpen(true)} title="Complete your 3-minute evening shutdown ritual">
                     <Moon size={13} />
                     <span>Evening Closeout</span>
                   </button>
+                  {theme === 'tokyo-lofi' && isToday && renderTopActions()}
                 </div>
                 {theme !== 'tokyo-lofi' && (
                   <p className="subhead">
