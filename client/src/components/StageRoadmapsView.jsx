@@ -96,6 +96,7 @@ export default function StageRoadmapsView({
 
   // Format guide collapse state
   const [showFormatGuide, setShowFormatGuide] = useState(false);
+  const fileInputRef = useRef(null);
 
 
   // Sync selectedSubject prop
