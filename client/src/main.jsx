@@ -2511,8 +2511,9 @@ function App() {
           </>
         )}
         <header className="topbar">
-          <div>
-            <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
+          {!(theme === 'tokyo-lofi' && view === 'Today') && (
+            <div>
+              <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
             <h1>
               {view === 'Today'
                 ? isToday
@@ -2530,7 +2531,8 @@ function App() {
                 ? 'Developer & DSA Performance Hub'
                 : 'Customize your routine schedule'}
             </h1>
-          </div>
+            </div>
+          )}
           <div className="top-actions">
             {/* Active Study Pod Selector Pill */}
             {user && (
@@ -2857,9 +2859,29 @@ function App() {
 
             <section className="welcome-row">
               <div>
-                <p className="muted">{prettyDate(selectedDate)}</p>
+                {theme !== 'tokyo-lofi' && <p className="muted">{prettyDate(selectedDate)}</p>}
                 <h2>
-                  {isToday ? (
+                  {theme === 'tokyo-lofi' ? (
+                    isToday ? (
+                      <>
+                        {new Date().getHours() < 12
+                          ? 'Good Morning'
+                          : new Date().getHours() < 17
+                          ? 'Good Afternoon'
+                          : 'Good Evening'}
+                        <span>.</span>
+                        <span className="typewriter-cursor" />
+                      </>
+                    ) : isPast ? (
+                      <>
+                        Archive<span>.</span>
+                      </>
+                    ) : (
+                      <>
+                        Upcoming routine<span>.</span>
+                      </>
+                    )
+                  ) : isToday ? (
                     <>
                       One day at a time<span>.</span>
                     </>
@@ -2879,38 +2901,42 @@ function App() {
                     <span>Evening Closeout</span>
                   </button>
                 </div>
-                <p className="subhead">
-                  {isToday
-                    ? 'Show up, focus on the next block, and let the progress add up.'
-                    : isPast
-                    ? 'Review what you accomplished on this date.'
-                    : 'Plan ahead and stay prepared for this routine.'}
-                </p>
+                {theme !== 'tokyo-lofi' && (
+                  <p className="subhead">
+                    {isToday
+                      ? 'Show up, focus on the next block, and let the progress add up.'
+                      : isPast
+                      ? 'Review what you accomplished on this date.'
+                      : 'Plan ahead and stay prepared for this routine.'}
+                  </p>
+                )}
               </div>
-              <div className="streak-card">
-                <div className="streak-icon">
-                  <Target size={19} />
-                </div>
-                <div>
-                  <small>{isToday ? 'DAILY COMPLETION' : isPast ? 'RECORDED SCORE' : 'PLANNED'}</small>
-                  <strong>{completion}%</strong>
-                </div>
-                <div className="ring" style={{ '--progress': `${completion * 3.6}deg` }}>
-                  <span>
-                    {doneCount}
-                    <small>/{habits.length}</small>
-                  </span>
-                </div>
-              </div>
-              {theme === 'tokyo-lofi' && (
-                <div className="tokyo-clock-card">
-                  <div className="tokyo-clock-time">{jstTime || '21:42:08'}</div>
-                  <div className="tokyo-clock-label">
-                    <span className="tokyo-clock-dot" />
-                    <span>TOKYO · JST (UTC+9)</span>
+              <div className="welcome-right-widgets">
+                <div className="streak-card">
+                  <div className="streak-icon">
+                    <Target size={19} />
+                  </div>
+                  <div>
+                    <small>{isToday ? 'DAILY COMPLETION' : isPast ? 'RECORDED SCORE' : 'PLANNED'}</small>
+                    <strong>{completion}%</strong>
+                  </div>
+                  <div className="ring" style={{ '--progress': `${completion * 3.6}deg` }}>
+                    <span>
+                      {doneCount}
+                      <small>/{habits.length}</small>
+                    </span>
                   </div>
                 </div>
-              )}
+                {theme === 'tokyo-lofi' && (
+                  <div className="tokyo-clock-card">
+                    <div className="tokyo-clock-time">{jstTime || '21:42:08'}</div>
+                    <div className="tokyo-clock-label">
+                      <span className="tokyo-clock-dot" />
+                      <span>TOKYO · JST (UTC+9)</span>
+                    </div>
+                  </div>
+                )}
+              </div>
 
             </section>
 
