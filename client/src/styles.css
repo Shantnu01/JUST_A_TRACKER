@@ -10752,3 +10752,1536 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   color: #FF2D78;
   font-weight: 700;
 }
+
+/* ==========================================================================
+   TOKYO LOFI & CYBER SAKURA — BESPOKE HIGH-CONTRAST REWORK
+   Stage Roadmaps, Coding Performance Hub, Routine Schedule & Settings
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKYO LOFI — REWORK FOR STAGE, CODING & ROUTINE
+   -------------------------------------------------------------------------- */
+
+/* 1.A STAGE ROADMAPS HUB (Tokyo Lofi) */
+[data-theme="tokyo-lofi"] .stage-roadmaps-hub {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-header {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-title {
+  color: #FAF8FF !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-subtitle {
+  color: #D4CEEB !important;
+  font-size: 13px !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-icon-wrap {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+}
+
+/* Subject Tabs Bar */
+[data-theme="tokyo-lofi"] .roadmap-subjects-tabs {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #D4CEEB !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill:hover {
+  background: #241E30 !important;
+  color: #FAF8FF !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active {
+  background: rgba(245, 158, 11, 0.18) !important;
+  border: 1.5px solid #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-pill-percent {
+  background: #14111D !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active .roadmap-pill-percent {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-add-subject-btn {
+  background: #1C1928 !important;
+  border: 1px dashed rgba(255, 140, 0, 0.3) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-add-subject-btn:hover {
+  background: #241E30 !important;
+  border-color: #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+/* Stage Navigation Tabs */
+[data-theme="tokyo-lofi"] .stage-tabs-navigation-bar {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-nav-label {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn:hover {
+  background: #241E30 !important;
+  color: #FAF8FF !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn.viewing {
+  background: rgba(245, 158, 11, 0.16) !important;
+  border: 1.5px solid #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-tab-num {
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-tab-ratio {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Single Stage Focused Card */
+[data-theme="tokyo-lofi"] .single-stage-focused-card {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-header {
+  background: #161322 !important;
+  border-bottom: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-title {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-number-badge {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-counter {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .pin-timetable-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .pin-timetable-btn:hover {
+  background: rgba(245, 158, 11, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .pinned-badge-active {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border: 1px solid #F59E0B !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .delete-stage-btn {
+  background: rgba(244, 63, 94, 0.12) !important;
+  border: 1px solid rgba(244, 63, 94, 0.3) !important;
+  color: #F472B6 !important;
+}
+
+/* Checkpoint Rows */
+[data-theme="tokyo-lofi"] .single-checkpoint-row {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-row:hover {
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-row.completed {
+  background: rgba(20, 17, 29, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  opacity: 0.7 !important;
+}
+
+[data-theme="tokyo-lofi"] .checkpoint-headline {
+  color: #FAF8FF !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="tokyo-lofi"] .checkpoint-headline.strikethrough {
+  color: #7A7294 !important;
+}
+
+[data-theme="tokyo-lofi"] .checkpoint-sub-pill {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-box {
+  background: #14111D !important;
+  border: 1.5px solid rgba(255, 140, 0, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-box:checked {
+  background: #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-box:checked::before {
+  color: #12111A !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-add-checkpoint-row {
+  background: #161322 !important;
+  border-top: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .add-checkpoint-input {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .add-checkpoint-submit-btn,
+[data-theme="tokyo-lofi"] .add-stage-save-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .empty-checkpoints-prompt {
+  background: #161322 !important;
+  border: 1.5px dashed rgba(255, 140, 0, 0.25) !important;
+  color: #D4CEEB !important;
+}
+
+/* Blank Creator Card & Command Center */
+[data-theme="tokyo-lofi"] .blank-creator-header {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .blank-creator-title {
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .blank-creator-desc {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .blank-creator-badge {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+}
+
+[data-theme="tokyo-lofi"] .creator-option-box {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .creator-option-box:hover {
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .option-title {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .option-desc {
+  color: #D4CEEB !important;
+  line-height: 1.55 !important;
+}
+
+[data-theme="tokyo-lofi"] .option-icon-box {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .paste-label,
+[data-theme="tokyo-lofi"] .format-guide-head {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .format-guide-code {
+  background: #14111D !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .command-subject-name {
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .command-progress-badge {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-footer-nav {
+  background: #161322 !important;
+  border-top: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-nav-counter {
+  color: #D4CEEB !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+
+/* 1.B CODING PERFORMANCE HUB (Tokyo Lofi) */
+[data-theme="tokyo-lofi"] .coding-top-banner {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-top-banner h3 {
+  color: #FAF8FF !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-top-banner p {
+  color: #D4CEEB !important;
+  font-size: 13px !important;
+}
+
+/* Coding Subtabs */
+[data-theme="tokyo-lofi"] .coding-subtab-btn {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn:hover {
+  background: #241E30 !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn.active {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border: 1.5px solid #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn .count-pill {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn.active .count-pill {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+/* POTD Card */
+[data-theme="tokyo-lofi"] .dsa-potd-card {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-body h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-body p {
+  color: #D4CEEB !important;
+  line-height: 1.6 !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-chip {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+}
+
+[data-theme="tokyo-lofi"] .topic-pill {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-solve-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-solve-btn:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-check-btn {
+  background: #F59E0B !important;
+  border: 1px solid #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+/* Metric Panels (LeetCode & GitHub) */
+[data-theme="tokyo-lofi"] .coding-metric-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-panel-header strong {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-panel-header small {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-total-num strong {
+  color: #FAF8FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-total-num small {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-total-row {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-diff-label {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-diff-label strong {
+  color: #FAF8FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-diff-label em {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-track {
+  background: #14111D !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-meta strong {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-meta p {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-counts {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-chart-container {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-chart-title {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-repo-chip {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-repo-chip:hover {
+  background: #241E30 !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-repo-name {
+  color: #FAF8FF !important;
+}
+
+/* DSA Sheet Panel & Patterns */
+[data-theme="tokyo-lofi"] .coding-sheet-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .sheet-header h3 {
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .sheet-progress-box {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-group-header {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-group-header h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-count {
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-item-row {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-item-row:hover {
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-title {
+  color: #FAF8FF !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-item-row.solved .pattern-title {
+  color: #7A7294 !important;
+}
+
+/* Contests & Suggestions */
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-card h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-time {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .platform-tag {
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .duration-tag {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-link-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-link-btn:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .suggestion-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .suggestion-card h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .suggestion-card p {
+  color: #D4CEEB !important;
+}
+
+/* Smart Commit & Snippets */
+[data-theme="tokyo-lofi"] .smart-commit-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .commit-stat-box small {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .commit-stat-box strong {
+  color: #FAF8FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .company-label {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .company-chip {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .company-chip.active {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-header strong {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-header small {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-notes-box {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border-left: 3px solid #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-code-box {
+  background: #0D0B12 !important;
+  color: #FAF8FF !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+}
+
+
+/* 1.C ROUTINE SETTINGS TAB (Tokyo Lofi) */
+[data-theme="tokyo-lofi"] .settings-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-note {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .save-schedule-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  border: 1px solid #F59E0B !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .reset-schedule-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-edit-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input:focus {
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input:focus {
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times input[type="time"] {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times input[type="time"]:focus {
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times span {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-duration-badge {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. CYBER SAKURA — REWORK FOR STAGE, CODING & ROUTINE
+   -------------------------------------------------------------------------- */
+
+/* 2.A STAGE ROADMAPS HUB (Cyber Sakura) */
+[data-theme="cyber-sakura"] .stage-roadmaps-hub {
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-hub-header {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 45, 120, 0.1) !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-hub-title {
+  color: #F0F4FF !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-hub-subtitle {
+  color: #C084FC !important;
+  font-size: 13px !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-hub-icon-wrap {
+  background: #1A0033 !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+/* Subject Tabs Bar */
+[data-theme="cyber-sakura"] .roadmap-subjects-tabs {
+  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-subject-pill {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+  color: #D4C6E8 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-subject-pill:hover {
+  background: #1A0033 !important;
+  color: #F0F4FF !important;
+  border-color: rgba(255, 45, 120, 0.45) !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-subject-pill.active {
+  background: rgba(255, 45, 120, 0.22) !important;
+  border: 1.5px solid #FF2D78 !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-pill-percent {
+  background: #140026 !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-subject-pill.active .roadmap-pill-percent {
+  background: #FF2D78 !important;
+  color: #07000F !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-add-subject-btn {
+  background: #0F0020 !important;
+  border: 1px dashed rgba(255, 45, 120, 0.35) !important;
+  color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .roadmap-add-subject-btn:hover {
+  background: #1A0033 !important;
+  border-color: #FF2D78 !important;
+  color: #F0F4FF !important;
+}
+
+/* Stage Navigation Tabs */
+[data-theme="cyber-sakura"] .stage-tabs-navigation-bar {
+  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
+}
+
+[data-theme="cyber-sakura"] .stage-nav-label {
+  color: #9D84BA !important;
+}
+
+[data-theme="cyber-sakura"] .single-stage-tab-btn {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .single-stage-tab-btn:hover {
+  background: #1A0033 !important;
+  color: #F0F4FF !important;
+  border-color: rgba(255, 45, 120, 0.45) !important;
+}
+
+[data-theme="cyber-sakura"] .single-stage-tab-btn.viewing {
+  background: rgba(255, 45, 120, 0.2) !important;
+  border: 1.5px solid #FF2D78 !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .stage-tab-num {
+  color: #FF2D78 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .stage-tab-ratio {
+  background: #140026 !important;
+  color: #D4C6E8 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Single Stage Focused Card */
+[data-theme="cyber-sakura"] .single-stage-focused-card {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 45, 120, 0.12) !important;
+}
+
+[data-theme="cyber-sakura"] .stage-focus-header {
+  background: #0A0014 !important;
+  border-bottom: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .stage-focus-title {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .stage-focus-number-badge {
+  background: #1A0033 !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.35) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .stage-focus-counter {
+  background: #140026 !important;
+  color: #D4C6E8 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .pin-timetable-btn {
+  background: #1A0033 !important;
+  border: 1px solid rgba(255, 45, 120, 0.4) !important;
+  color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .pin-timetable-btn:hover {
+  background: rgba(255, 45, 120, 0.25) !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .pinned-badge-active {
+  background: rgba(255, 45, 120, 0.2) !important;
+  border: 1px solid #FF2D78 !important;
+  color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .delete-stage-btn {
+  background: rgba(255, 45, 120, 0.15) !important;
+  border: 1px solid #FF2D78 !important;
+  color: #FF2D78 !important;
+}
+
+/* Checkpoint Rows */
+[data-theme="cyber-sakura"] .single-checkpoint-row {
+  background: #0A0014 !important;
+  border: 1px solid rgba(255, 45, 120, 0.16) !important;
+}
+
+[data-theme="cyber-sakura"] .single-checkpoint-row:hover {
+  background: #150029 !important;
+  border-color: rgba(255, 45, 120, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .single-checkpoint-row.completed {
+  background: rgba(10, 0, 20, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  opacity: 0.7 !important;
+}
+
+[data-theme="cyber-sakura"] .checkpoint-headline {
+  color: #F0F4FF !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="cyber-sakura"] .checkpoint-headline.strikethrough {
+  color: #8B70A8 !important;
+}
+
+[data-theme="cyber-sakura"] .checkpoint-sub-pill {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  color: #C084FC !important;
+}
+
+[data-theme="cyber-sakura"] .single-checkpoint-box {
+  background: #140026 !important;
+  border: 1.5px solid rgba(255, 45, 120, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .single-checkpoint-box:checked {
+  background: #FF2D78 !important;
+  border-color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .single-checkpoint-box:checked::before {
+  color: #07000F !important;
+}
+
+[data-theme="cyber-sakura"] .stage-focus-add-checkpoint-row {
+  background: #0A0014 !important;
+  border-top: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .add-checkpoint-input {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.28) !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .add-checkpoint-submit-btn,
+[data-theme="cyber-sakura"] .add-stage-save-btn {
+  background: #FF2D78 !important;
+  color: #07000F !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .empty-checkpoints-prompt {
+  background: #0A0014 !important;
+  border: 1.5px dashed rgba(255, 45, 120, 0.3) !important;
+  color: #D4C6E8 !important;
+}
+
+/* Blank Creator Card & Command Center */
+[data-theme="cyber-sakura"] .blank-creator-header {
+  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
+}
+
+[data-theme="cyber-sakura"] .blank-creator-title {
+  color: #F0F4FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .blank-creator-desc {
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .blank-creator-badge {
+  background: #1A0033 !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.35) !important;
+}
+
+[data-theme="cyber-sakura"] .creator-option-box {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+}
+
+[data-theme="cyber-sakura"] .creator-option-box:hover {
+  background: #180033 !important;
+  border-color: rgba(255, 45, 120, 0.45) !important;
+}
+
+[data-theme="cyber-sakura"] .option-title {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .option-desc {
+  color: #D4C6E8 !important;
+  line-height: 1.55 !important;
+}
+
+[data-theme="cyber-sakura"] .option-icon-box {
+  background: #1A0033 !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+}
+
+[data-theme="cyber-sakura"] .paste-label,
+[data-theme="cyber-sakura"] .format-guide-head {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .format-guide-code {
+  background: #140026 !important;
+  color: #2DD4BF !important;
+  border: 1px solid rgba(255, 45, 120, 0.28) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .command-subject-name {
+  color: #F0F4FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .command-progress-badge {
+  background: #1A0033 !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .stage-footer-nav {
+  background: #0A0014 !important;
+  border-top: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .stage-nav-counter {
+  color: #D4C6E8 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+
+/* 2.B CODING PERFORMANCE HUB (Cyber Sakura) */
+[data-theme="cyber-sakura"] .coding-top-banner {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 45, 120, 0.1) !important;
+}
+
+[data-theme="cyber-sakura"] .coding-top-banner h3 {
+  color: #F0F4FF !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .coding-top-banner p {
+  color: #D4C6E8 !important;
+  font-size: 13px !important;
+}
+
+/* Coding Subtabs */
+[data-theme="cyber-sakura"] .coding-subtab-btn {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .coding-subtab-btn:hover {
+  background: #1A0033 !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .coding-subtab-btn.active {
+  background: rgba(255, 45, 120, 0.25) !important;
+  border: 1.5px solid #FF2D78 !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .coding-subtab-btn .count-pill {
+  background: #1A0033 !important;
+  color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .coding-subtab-btn.active .count-pill {
+  background: #FF2D78 !important;
+  color: #07000F !important;
+  font-weight: 800 !important;
+}
+
+/* POTD Card */
+[data-theme="cyber-sakura"] .dsa-potd-card {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="cyber-sakura"] .potd-body h4 {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .potd-body p {
+  color: #D4C6E8 !important;
+  line-height: 1.6 !important;
+}
+
+[data-theme="cyber-sakura"] .potd-chip {
+  background: #1A0033 !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.35) !important;
+}
+
+[data-theme="cyber-sakura"] .topic-pill {
+  background: #140026 !important;
+  color: #C084FC !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+}
+
+[data-theme="cyber-sakura"] .potd-solve-btn {
+  background: #1A0033 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .potd-solve-btn:hover {
+  background: rgba(255, 45, 120, 0.2) !important;
+  color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .potd-check-btn {
+  background: #FF2D78 !important;
+  border: 1px solid #FF2D78 !important;
+  color: #07000F !important;
+  font-weight: 800 !important;
+}
+
+/* Metric Panels (LeetCode & GitHub) */
+[data-theme="cyber-sakura"] .coding-metric-panel {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="cyber-sakura"] .coding-panel-header strong {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .coding-panel-header small {
+  color: #9D84BA !important;
+}
+
+[data-theme="cyber-sakura"] .lc-total-num strong {
+  color: #F0F4FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .lc-total-num small {
+  color: #9D84BA !important;
+}
+
+[data-theme="cyber-sakura"] .lc-total-row {
+  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
+}
+
+[data-theme="cyber-sakura"] .lc-diff-label {
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .lc-diff-label strong {
+  color: #F0F4FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .lc-diff-label em {
+  color: #9D84BA !important;
+}
+
+[data-theme="cyber-sakura"] .lc-track {
+  background: #140026 !important;
+}
+
+[data-theme="cyber-sakura"] .gh-meta strong {
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .gh-meta p {
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .gh-counts {
+  color: #9D84BA !important;
+}
+
+[data-theme="cyber-sakura"] .gh-chart-container {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .gh-chart-title {
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .gh-repo-chip {
+  background: #0A0014 !important;
+  border: 1px solid rgba(255, 45, 120, 0.18) !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .gh-repo-chip:hover {
+  background: #1A0033 !important;
+  border-color: rgba(255, 45, 120, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .gh-repo-name {
+  color: #F0F4FF !important;
+}
+
+/* DSA Sheet Panel & Patterns */
+[data-theme="cyber-sakura"] .coding-sheet-panel {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="cyber-sakura"] .sheet-header h3 {
+  color: #F0F4FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .sheet-progress-box {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .pattern-group-header {
+  border-bottom: 1px solid rgba(255, 45, 120, 0.18) !important;
+}
+
+[data-theme="cyber-sakura"] .pattern-group-header h4 {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .pattern-count {
+  color: #C084FC !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .pattern-item-row {
+  background: #0A0014 !important;
+  border: 1px solid rgba(255, 45, 120, 0.16) !important;
+}
+
+[data-theme="cyber-sakura"] .pattern-item-row:hover {
+  background: #150029 !important;
+  border-color: rgba(255, 45, 120, 0.4) !important;
+}
+
+[data-theme="cyber-sakura"] .pattern-title {
+  color: #F0F4FF !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="cyber-sakura"] .pattern-item-row.solved .pattern-title {
+  color: #8B70A8 !important;
+}
+
+/* Contests & Suggestions */
+[data-theme="cyber-sakura"] .coding-contests-panel,
+[data-theme="cyber-sakura"] .coding-suggestions-panel {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="cyber-sakura"] .contest-card {
+  background: #0A0014 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .contest-card h4 {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .contest-time {
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .platform-tag {
+  color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .duration-tag {
+  background: #140026 !important;
+  color: #C084FC !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+}
+
+[data-theme="cyber-sakura"] .contest-link-btn {
+  background: #1A0033 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .contest-link-btn:hover {
+  background: rgba(255, 45, 120, 0.2) !important;
+  color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .suggestion-card {
+  background: #0A0014 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .suggestion-card h4 {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .suggestion-card p {
+  color: #D4C6E8 !important;
+}
+
+/* Smart Commit & Snippets */
+[data-theme="cyber-sakura"] .smart-commit-panel {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .commit-stat-box small {
+  color: #9D84BA !important;
+}
+
+[data-theme="cyber-sakura"] .commit-stat-box strong {
+  color: #F0F4FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .company-label {
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .company-chip {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .company-chip.active {
+  background: #FF2D78 !important;
+  color: #07000F !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .snippet-card {
+  background: #0A0014 !important;
+  border: 1px solid rgba(255, 45, 120, 0.2) !important;
+}
+
+[data-theme="cyber-sakura"] .snippet-header strong {
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .snippet-header small {
+  color: #9D84BA !important;
+}
+
+[data-theme="cyber-sakura"] .snippet-notes-box {
+  background: #140026 !important;
+  color: #D4C6E8 !important;
+  border-left: 3px solid #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .snippet-code-box {
+  background: #05000A !important;
+  color: #F0F4FF !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+}
+
+
+/* 2.C ROUTINE SETTINGS TAB (Cyber Sakura) */
+[data-theme="cyber-sakura"] .settings-panel {
+  background: #0F0020 !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="cyber-sakura"] .settings-note {
+  background: #0D001A !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .save-schedule-btn {
+  background: #FF2D78 !important;
+  color: #07000F !important;
+  border: 1px solid #FF2D78 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="cyber-sakura"] .reset-schedule-btn {
+  background: #1A0033 !important;
+  border: 1px solid rgba(255, 45, 120, 0.25) !important;
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .schedule-edit-card {
+  background: #0D001A !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="cyber-sakura"] .edit-title-input {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .edit-title-input:focus {
+  border-color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .edit-sub-input {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.22) !important;
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .edit-sub-input:focus {
+  border-color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .edit-times input[type="time"] {
+  background: #140026 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+  color: #F0F4FF !important;
+  font-weight: 700 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="cyber-sakura"] .edit-times input[type="time"]:focus {
+  border-color: #FF2D78 !important;
+}
+
+[data-theme="cyber-sakura"] .edit-times span {
+  color: #9D84BA !important;
+}
+
+[data-theme="cyber-sakura"] .edit-duration-badge {
+  background: #1A0033 !important;
+  color: #FF2D78 !important;
+  border: 1px solid rgba(255, 45, 120, 0.3) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Targeted High-Contrast Overrides for newly classed elements in Coding & Settings */
+[data-theme="tokyo-lofi"] .smart-commit-title,
+[data-theme="tokyo-lofi"] .webhook-title,
+[data-theme="tokyo-lofi"] .cf-org-name,
+[data-theme="tokyo-lofi"] .peer-review-title,
+[data-theme="tokyo-lofi"] .snippet-reply-item strong {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .cf-org-info,
+[data-theme="tokyo-lofi"] .snippet-reply-item {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .leaderboard-you-tag {
+  color: #F59E0B !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="cyber-sakura"] .smart-commit-title,
+[data-theme="cyber-sakura"] .webhook-title,
+[data-theme="cyber-sakura"] .cf-org-name,
+[data-theme="cyber-sakura"] .peer-review-title,
+[data-theme="cyber-sakura"] .snippet-reply-item strong {
+  color: #F0F4FF !important;
+}
+
+[data-theme="cyber-sakura"] .cf-org-info,
+[data-theme="cyber-sakura"] .snippet-reply-item {
+  color: #D4C6E8 !important;
+}
+
+[data-theme="cyber-sakura"] .leaderboard-you-tag {
+  color: #FF2D78 !important;
+  font-weight: 700 !important;
+}

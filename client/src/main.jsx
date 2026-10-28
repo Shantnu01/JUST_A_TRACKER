@@ -4118,7 +4118,7 @@ function App() {
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                             <span className="live-pulse-dot" />
-                            <strong style={{ fontSize: '13px', color: '#1f3325' }}>Project Habit Auto-Verification</strong>
+                            <strong className="smart-commit-title" style={{ fontSize: '13px' }}>Project Habit Auto-Verification</strong>
                           </div>
                           <p className="muted" style={{ fontSize: '11px', margin: '3px 0 0' }}>
                             Pushes to GitHub automatically verify your Project focus block today.
@@ -4179,7 +4179,7 @@ function App() {
                         {webhookExpanded && (
                           <div className="webhook-box coding-anim-1">
                             <div style={{ flex: 1, minWidth: 0 }}>
-                              <small style={{ fontWeight: '700', color: '#4b5563', display: 'block' }}>
+                              <small className="webhook-title" style={{ fontWeight: '700', display: 'block' }}>
                                 Dedicated Webhook URL:
                               </small>
                               <code style={{ fontSize: '11px', wordBreak: 'break-all' }}>
@@ -4421,8 +4421,8 @@ function App() {
                               alt={codeforcesData.handle}
                               style={{ width: '38px', height: '38px', borderRadius: '8px', border: `2px solid ${codeforcesData.rankColor}` }}
                             />
-                            <div style={{ fontSize: '11px', color: '#64748b' }}>
-                              <span style={{ display: 'block', fontWeight: '700', color: '#1e293b' }}>
+                            <div className="cf-org-info" style={{ fontSize: '11px' }}>
+                              <span className="cf-org-name" style={{ display: 'block', fontWeight: '700' }}>
                                 {codeforcesData.organization || 'Independent'}
                               </span>
                               <span>Contribution: {codeforcesData.contribution > 0 ? `+${codeforcesData.contribution}` : codeforcesData.contribution}</span>
@@ -4654,7 +4654,7 @@ function App() {
                         {/* Reply Thread */}
                         {snippet.replies && snippet.replies.length > 0 && (
                           <div className="snippet-replies-list">
-                            <strong style={{ fontSize: '11px', color: '#64748b' }}>Peer Reviews ({snippet.replies.length}):</strong>
+                            <strong className="peer-review-title" style={{ fontSize: '11px' }}>Peer Reviews ({snippet.replies.length}):</strong>
                             {snippet.replies.map(rep => (
                               <div className="snippet-reply-item" key={rep.id}>
                                 <strong>{rep.username}:</strong> {rep.comment}
@@ -4714,7 +4714,7 @@ function App() {
                         </div>
                         <div className="leaderboard-user-info">
                           <strong>
-                            {m.username} {m.id === user.id && <span style={{ color: '#527c5f', fontSize: '11px' }}>(You)</span>}
+                            {m.username} {m.id === user.id && <span className="leaderboard-you-tag" style={{ fontSize: '11px' }}>(You)</span>}
                             {idx === 0 && m.rating > 0 && (
                               <span style={{ fontSize: '10px', color: '#b45309', fontWeight: '800' }}>👑 CP CHAMPION</span>
                             )}
