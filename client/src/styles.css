@@ -14175,32 +14175,539 @@ html[data-theme="tokyo-lofi"],
     color: #ffffff !important;
   }
 
-  /* --- THEME 2: TOKYO LOFI (tokyo-lofi) --- */
-  [data-theme="tokyo-lofi"] .sidebar {
-    background: #100f17 !important;
-    border-top: 1px solid rgba(245, 158, 11, 0.25) !important;
-    box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.7) !important;
+  /* --- THEME 2: TOKYO LOFI (tokyo-lofi) BESPOKE MOBILE OPTIMIZATION --- */
+  [data-theme="tokyo-lofi"] .main-content {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 12px 10px 84px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
-  [data-theme="tokyo-lofi"] .nav-item.selected {
-    background: rgba(244, 114, 182, 0.1) !important;
-    color: #F472B6 !important;
-    border-top: 2px solid #F472B6 !important;
+
+  [data-theme="tokyo-lofi"] .content-grid,
+  [data-theme="tokyo-lofi"] .right-column {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
   }
+
+  /* Single Scanline & Film Grain on Mobile (Hardware Friendly) */
+  [data-theme="tokyo-lofi"] .single-scanline,
+  [data-theme="tokyo-lofi"] .film-grain {
+    pointer-events: none !important;
+  }
+
+  /* Tokyo Terminal Strip on Mobile */
+  [data-theme="tokyo-lofi"] .tokyo-terminal-strip {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    font-size: 9.5px !important;
+    letter-spacing: 0.8px !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
+    gap: 6px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-strip-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-subline {
+    display: none !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-strip-date {
+    font-size: 9px !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-strip-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    flex-shrink: 0 !important;
+    font-size: 9px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Tokyo Welcome Hero & Typewriter */
+  [data-theme="tokyo-lofi"] .welcome-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 4px 0 14px 0 !important;
+    margin-bottom: 14px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  [data-theme="tokyo-lofi"] .welcome-row h2 {
+    font-size: clamp(20px, 5.2vw, 26px) !important;
+    font-weight: 300 !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    min-height: 1.25em !important;
+    margin-bottom: 6px !important;
+    word-break: break-word !important;
+    color: #FAF8FF !important;
+  }
+
+  [data-theme="tokyo-lofi"] .typewriter-cursor {
+    width: 2px !important;
+    height: 0.85em !important;
+    margin-left: 4px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .welcome-tools-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .welcome-tools-row .top-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Right Widgets in Hero (Completion Donut & Live JST Clock) */
+  [data-theme="tokyo-lofi"] .welcome-right-widgets {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 4px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .welcome-right-widgets .streak-card,
+  [data-theme="tokyo-lofi"] .welcome-right-widgets .tokyo-clock-card {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding: 10px 12px !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-clock-time {
+    font-size: 20px !important;
+    letter-spacing: 1px !important;
+    line-height: 1.1 !important;
+    margin-bottom: 2px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-clock-label {
+    font-size: 9px !important;
+    letter-spacing: 1.2px !important;
+    gap: 5px !important;
+    justify-content: flex-end !important;
+    white-space: nowrap !important;
+  }
+
+  [data-theme="tokyo-lofi"] .streak-card .ring {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+  }
+
+  /* Metrics 2-Column Mobile Display */
+  [data-theme="tokyo-lofi"] .metrics-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-bottom: 14px !important;
+    width: 100% !important;
+  }
+
+  [data-theme="tokyo-lofi"] .metrics-grid .metric-card:last-child {
+    grid-column: span 2 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .metric-card {
+    padding: 12px 14px !important;
+    border-radius: 10px !important;
+    gap: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* Shinkansen Schedule Board on Mobile */
+  [data-theme="tokyo-lofi"] .schedule-panel {
+    padding: 16px 12px !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-panel::after {
+    font-size: 125px !important;
+    right: -10px !important;
+    bottom: -20px !important;
+    opacity: 0.025 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-panel .panel-heading {
+    padding-bottom: 12px !important;
+    margin-bottom: 8px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-panel .panel-heading h3 {
+    font-size: 17px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-panel .eyebrow {
+    font-size: 10.5px !important;
+    letter-spacing: 2px !important;
+  }
+
+  /* Schedule Items on Mobile: Vertical Stacked Flow */
+  [data-theme="tokyo-lofi"] .schedule-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 12px 10px !important;
+    margin-bottom: 8px !important;
+    border-radius: 8px !important;
+    background: rgba(31, 26, 44, 0.45) !important;
+    border: 1px solid rgba(245, 158, 11, 0.12) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
   [data-theme="tokyo-lofi"] .schedule-item.active-session {
     border-left: 3px solid #F59E0B !important;
-    background: rgba(245, 158, 11, 0.08) !important;
-    box-shadow: 0 0 14px rgba(245, 158, 11, 0.12) !important;
+    background: rgba(245, 158, 11, 0.09) !important;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.16) !important;
+    margin: 6px 0 !important;
   }
-  [data-theme="tokyo-lofi"] .action-button {
+
+  /* Time Row on Mobile */
+  [data-theme="tokyo-lofi"] .schedule-item .time-col {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: baseline !important;
+    justify-content: space-between !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .time-col strong {
+    font-size: 22px !important;
+    font-weight: 400 !important;
+    color: #F59E0B !important;
+    letter-spacing: 0px !important;
+    line-height: 1 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item.active-session .time-col strong {
+    font-size: 24px !important;
+    color: #FBBF24 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .time-col span {
+    font-size: 11px !important;
+    color: #9B8EA8 !important;
+    margin-top: 0 !important;
+  }
+
+  /* Hide desktop icon divider line on mobile */
+  [data-theme="tokyo-lofi"] .schedule-item .event-icon {
+    display: none !important;
+  }
+
+  /* Body & Content */
+  [data-theme="tokyo-lofi"] .schedule-item .event-body {
+    width: 100% !important;
+    padding-right: 0 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .event-title-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .event-title-row h4 {
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    color: #FAF8FF !important;
+    line-height: 1.3 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .duration-pill {
+    font-size: 11px !important;
+    padding: 2px 7px !important;
+    flex-shrink: 0 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .event-body p {
+    font-size: 11.5px !important;
+    color: #9B8EA8 !important;
+    margin-top: 2px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Checkpoint capsule inside schedule item */
+  [data-theme="tokyo-lofi"] .schedule-item .timetable-checkpoint-capsule {
+    width: 100% !important;
+    margin-top: 6px !important;
+    padding: 6px 8px !important;
+    box-sizing: border-box !important;
+    border-radius: 6px !important;
+    font-size: 11px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .capsule-checkpoint-text {
+    font-size: 11px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+
+  /* Action button row on mobile */
+  [data-theme="tokyo-lofi"] .schedule-item .event-action {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 4px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .action-button {
+    flex: 1 1 auto !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
     background: #F59E0B !important;
     color: #12111A !important;
     border: none !important;
     box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3) !important;
   }
-  [data-theme="tokyo-lofi"] .finish-button {
+
+  [data-theme="tokyo-lofi"] .schedule-item .action-button.running {
+    background: #F59E0B !important;
+    color: #12111A !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .finish-button {
+    flex: 1 1 auto !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
     background: rgba(244, 114, 182, 0.2) !important;
     color: #F472B6 !important;
     border: 1px solid rgba(244, 114, 182, 0.4) !important;
+  }
+
+  [data-theme="tokyo-lofi"] .schedule-item .read-only-badge {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 6px !important;
+    font-size: 11px !important;
+    justify-content: center !important;
+  }
+
+  /* Board Footer */
+  [data-theme="tokyo-lofi"] .tokyo-board-footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    font-size: 11px !important;
+    padding-top: 12px !important;
+    margin-top: 14px !important;
+  }
+
+  /* Washi Paper Habits Panel */
+  [data-theme="tokyo-lofi"] .habits-panel {
+    padding: 16px 12px !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  [data-theme="tokyo-lofi"] .habits-panel::after {
+    font-size: 115px !important;
+    right: -8px !important;
+    bottom: -15px !important;
+    opacity: 0.025 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .habits-panel .panel-heading {
+    padding-bottom: 12px !important;
+    margin-bottom: 8px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .habits-panel .panel-heading h3 {
+    font-size: 17px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .habit-row {
+    min-height: 46px !important;
+    height: auto !important;
+    padding: 10px 8px !important;
+    gap: 12px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    box-sizing: border-box !important;
+  }
+
+  [data-theme="tokyo-lofi"] .check-box {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    border-radius: 4px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .habit-row span {
+    font-size: 13.5px !important;
+    line-height: 1.35 !important;
+    word-break: break-word !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-habits-footer {
+    font-size: 11px !important;
+    padding-top: 10px !important;
+    margin-top: 12px !important;
+  }
+
+  /* Tokyo Soundscape Player */
+  [data-theme="tokyo-lofi"] .tokyo-ambient-player-container {
+    margin-bottom: 12px !important;
+    width: 100% !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-ambient-player {
+    padding: 12px 14px !important;
+    border-radius: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-audio-toggle-btn {
+    width: 36px !important;
+    height: 36px !important;
+    flex-shrink: 0 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-player-title {
+    font-size: 12.5px !important;
+    line-height: 1.25 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-player-sub {
+    font-size: 9.5px !important;
+    letter-spacing: 0.4px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .tokyo-sound-dropdown {
+    position: absolute !important;
+    top: calc(100% + 4px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 2500 !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  /* Bottom Navigation Bar on Mobile */
+  [data-theme="tokyo-lofi"] .sidebar {
+    background: #100f17 !important;
+    border-top: 1px solid rgba(245, 158, 11, 0.25) !important;
+    box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.7) !important;
+  }
+
+  [data-theme="tokyo-lofi"] .nav-item {
+    color: #6B6484 !important;
+    font-size: 10px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .nav-item:hover {
+    color: #FAF8FF !important;
+    background: rgba(245, 158, 11, 0.08) !important;
+  }
+
+  [data-theme="tokyo-lofi"] .nav-item.selected {
+    background: rgba(245, 158, 11, 0.14) !important;
+    color: #F59E0B !important;
+    border-top: 2.5px solid #F59E0B !important;
+    border-left: none !important;
+    font-weight: 700 !important;
+  }
+
+  [data-theme="tokyo-lofi"] .sidebar .profile {
+    border-left: 1px solid rgba(245, 158, 11, 0.2) !important;
+    padding-left: 6px !important;
+  }
+
+  /* Stage Roadmaps & Developer Hub in Tokyo Lofi on Mobile */
+  [data-theme="tokyo-lofi"] .roadmap-hub-header {
+    padding: 14px 12px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .roadmap-subject-pill {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .single-stage-focused-card,
+  [data-theme="tokyo-lofi"] .roadmap-command-center {
+    padding: 14px 12px !important;
+    border-radius: 10px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .single-checkpoint-row {
+    padding: 10px 8px !important;
+    font-size: 12px !important;
+    gap: 8px !important;
+  }
+
+  [data-theme="tokyo-lofi"] .dsa-potd-card,
+  [data-theme="tokyo-lofi"] .coding-top-banner,
+  [data-theme="tokyo-lofi"] .coding-metric-panel,
+  [data-theme="tokyo-lofi"] .coding-sheet-panel,
+  [data-theme="tokyo-lofi"] .coding-contests-panel,
+  [data-theme="tokyo-lofi"] .coding-suggestions-panel {
+    padding: 14px 12px !important;
+    border-radius: 10px !important;
   }
 
   /* --- THEME 3: DYNAMIC VIDEO (dynamic-video) --- */

@@ -2891,7 +2891,7 @@ function App() {
             <div className="tokyo-terminal-strip">
               <div className="tokyo-strip-left">
                 <span className="tokyo-strip-dot" />
-                <span>TOKYO TERMINAL // METROPOLITAN LINE</span>
+                <span>TOKYO TERMINAL <span className="tokyo-subline">// METROPOLITAN LINE</span></span>
                 <span className="tokyo-strip-sep">/</span>
                 <span className="tokyo-strip-date">{prettyDate(selectedDate).toUpperCase()}</span>
               </div>
