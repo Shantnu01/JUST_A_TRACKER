@@ -6633,13 +6633,4991 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 
 
 
+/* Stage Roadmaps (STRICT: HIGH CONTRAST) */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 /* ==========================================================================
-   TOKYO LOFI THEME — BESPOKE STAGE ROADMAPS & CHECKPOINTS ARCHITECTURE
-   Artisan Washi Paper & Station Departure Board Aesthetics
-   Reference: media_1793152696702_590a3ecb.png
+   THEME 7: TOKYO LOFI (Midnight Japanese Slate / Warm Amber Station Board)
+   ========================================================================== */
+
+[data-theme="tokyo-lofi"] {
+  background-color: #12111a !important;
+  color: #faf8ff !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  --ink: #faf8ff;
+  --muted: #9b8ea8;
+  --line: rgba(245, 158, 11, 0.18);
+  --green: #f59e0b;
+  --paper: #1c1928;
+}
+
+[data-theme="tokyo-lofi"] .sidebar {
+  background: #100f17 !important;
+  border-right: 1px solid rgba(245, 158, 11, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .brand {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .brand-mark {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border-radius: 8px !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item {
+  color: #9b8ea8 !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item:hover {
+  background: rgba(245, 158, 11, 0.08) !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item.selected {
+  background: rgba(245, 158, 11, 0.14) !important;
+  color: #f59e0b !important;
+  font-weight: 800 !important;
+  border-left: 3px solid #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-indicator {
+  background: #f59e0b !important;
+}
+
+@media(max-width:640px){
+  [data-theme="tokyo-lofi"] .sidebar {
+    background: #100f17 !important;
+    border-top: 1px solid rgba(245, 158, 11, 0.2) !important;
+  }
+}
+
+/* Eyebrow & Headers */
+[data-theme="tokyo-lofi"] .eyebrow,
+[data-theme="tokyo-lofi"] .side-label {
+  color: #f59e0b !important;
+  letter-spacing: 2px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .topbar h1,
+[data-theme="tokyo-lofi"] .welcome-row h2,
+[data-theme="tokyo-lofi"] .panel-heading h3 {
+  color: #faf8ff !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .muted,
+[data-theme="tokyo-lofi"] .subhead {
+  color: #9b8ea8 !important;
+}
+
+/* Chips, Buttons & Badges */
+[data-theme="tokyo-lofi"] .sync-chip,
+[data-theme="tokyo-lofi"] .date-chip,
+[data-theme="tokyo-lofi"] .pod-pill,
+[data-theme="tokyo-lofi"] .theme-switcher-btn,
+[data-theme="tokyo-lofi"] .icon-button,
+[data-theme="tokyo-lofi"] .today-button {
+  background: #242033 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  color: #faf8ff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .theme-switcher-btn:hover,
+[data-theme="tokyo-lofi"] .icon-button:hover,
+[data-theme="tokyo-lofi"] .today-button:hover {
+  background: #2f2a42 !important;
+  border-color: #f59e0b !important;
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .status-dot.synced {
+  background: #4ecdc4 !important;
+  box-shadow: 0 0 8px #4ecdc4 !important;
+}
+
+/* Panels & Cards */
+[data-theme="tokyo-lofi"] .panel,
+[data-theme="tokyo-lofi"] .metric-card,
+[data-theme="tokyo-lofi"] .streak-card,
+[data-theme="tokyo-lofi"] .note-panel,
+[data-theme="tokyo-lofi"] .report-main,
+[data-theme="tokyo-lofi"] .settings-panel,
+[data-theme="tokyo-lofi"] .coding-top-banner,
+[data-theme="tokyo-lofi"] .dsa-potd-card,
+[data-theme="tokyo-lofi"] .coding-metric-panel,
+[data-theme="tokyo-lofi"] .coding-sheet-panel,
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel {
+  background: #1c1928 !important;
+  border: 1px solid rgba(245, 158, 11, 0.16) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(245, 158, 11, 0.04) !important;
+}
+
+[data-theme="tokyo-lofi"] .metric-copy strong {
+  color: #faf8ff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .metric-copy span,
+[data-theme="tokyo-lofi"] .metric-copy small {
+  color: #9b8ea8 !important;
+}
+
+/* Streak & Donut Ring */
+[data-theme="tokyo-lofi"] .streak-card {
+  background: #221d30 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .streak-icon {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="tokyo-lofi"] .ring {
+  background: conic-gradient(#f59e0b var(--progress), #2d2640 0) !important;
+}
+
+[data-theme="tokyo-lofi"] .ring:before {
+  background: #221d30 !important;
+}
+
+/* Action & Finish Buttons */
+[data-theme="tokyo-lofi"] .finish-button {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border: none !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="tokyo-lofi"] .finish-button:hover {
+  background: #fbbf24 !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .action-button {
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  background: #262136 !important;
+  color: #faf8ff !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .action-button.running {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border-color: #f59e0b !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35) !important;
+}
+
+/* Progress Track */
+[data-theme="tokyo-lofi"] .progress-track {
+  background: #282238 !important;
+}
+
+[data-theme="tokyo-lofi"] .progress-track > div {
+  background: linear-gradient(90deg, #f59e0b, #f472b6) !important;
+}
+
+/* Habits Panel */
+[data-theme="tokyo-lofi"] .habits-panel {
+  background: #1c1928 !important;
+  border: 1px solid rgba(245, 158, 11, 0.16) !important;
+}
+
+[data-theme="tokyo-lofi"] .count-badge {
+  background: #282238 !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row {
+  color: #faf8ff !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row:hover {
+  background: #252036 !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked {
+  color: #9b8ea8 !important;
+}
+
+[data-theme="tokyo-lofi"] .check-box {
+  background: #1e192c !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked .check-box {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: #12111a !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-logged-pill {
+  background: #282238 !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Schedule Items & Timetable */
+[data-theme="tokyo-lofi"] .schedule-item {
+  background: #1f1a2c !important;
+  border: 1px solid rgba(245, 158, 11, 0.15) !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item:hover {
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item.active-session {
+  background: #272138 !important;
+  border: 1.5px solid #f59e0b !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .time-col strong {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .time-col span {
+  color: #9b8ea8 !important;
+}
+
+[data-theme="tokyo-lofi"] .event-icon {
+  background: #2a233b !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .event-title-row h4 {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .duration-pill {
+  background: #282138 !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .event-body p {
+  color: #9b8ea8 !important;
+}
+
+[data-theme="tokyo-lofi"] .logged-label {
+  color: #f59e0b !important;
+}
+
+/* Timetable Checkpoint Capsule */
+[data-theme="tokyo-lofi"] .timetable-checkpoint-capsule {
+  background: #231d33 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-icon {
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-stage-pill {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-checkpoint-text {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-checkbox {
+  background: #181424 !important;
+  border: 1.5px solid #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-checkbox:checked {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-nav-btn {
+  background: #2a233b !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Chief of Staff & Elastic Buttons */
+[data-theme="tokyo-lofi"] .chief-audit-btn,
+[data-theme="tokyo-lofi"] .elastic-btn {
+  background: #242033 !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-audit-btn:hover,
+[data-theme="tokyo-lofi"] .elastic-btn:hover {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35) !important;
+}
+
+/* Stage Roadmaps (STRICT: HIGH CONTRAST) */
+[data-theme="tokyo-lofi"] .roadmap-hub-header {
+  background: #1a1726 !important;
+  border: 1px solid rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-icon-wrap {
+  background: #f59e0b !important;
+  color: #12111a !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-title,
+[data-theme="tokyo-lofi"] .command-subject-name,
+[data-theme="tokyo-lofi"] .stage-focus-title,
+[data-theme="tokyo-lofi"] .checkpoint-headline {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-subtitle {
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-header-btn.secondary {
+  background: #252036 !important;
+  color: #faf8ff !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-header-btn.secondary:hover {
+  background: #f59e0b !important;
+  color: #12111a !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-header-btn.primary {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill {
+  background: #221d30 !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.2) !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill:hover {
+  background: #2a233b !important;
+  border-color: #f59e0b !important;
+  color: #ffffff !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: #12111a !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-pill-percent {
+  background: #2c253d !important;
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"] .roadmap-command-center,
+[data-theme="tokyo-lofi"] .creator-option-box {
+  background: #1c1928 !important;
+  border: 1px solid rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-header,
+[data-theme="tokyo-lofi"] .stage-focus-add-checkpoint-row,
+[data-theme="tokyo-lofi"] .stage-footer-nav {
+  background: #221d30 !important;
+  border-color: rgba(245, 158, 11, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-row {
+  background: #252036 !important;
+  border: 1px solid rgba(245, 158, 11, 0.18) !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-format-guide-box {
+  background: #221d30 !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.22) !important;
+}
+
+[data-theme="tokyo-lofi"] .format-guide-head {
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .format-guide-code {
+  background: #141120 !important;
+  color: #faf8ff !important;
+  border: 1px solid rgba(245, 158, 11, 0.18) !important;
+}
+
+
+/* ==========================================================================
+   THEME 8: SUNLIT STUDIO (Light / Airy Studio / Saffron Accent / Ultra-Clean)
+   ========================================================================== */
+
+[data-theme="sunlit-studio"] {
+  background-color: #fefef9 !important;
+  color: #1a1a1a !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif !important;
+  --ink: #1a1a1a;
+  --muted: #525252;
+  --line: #ebebeb;
+  --green: #e59400;
+  --paper: #ffffff;
+}
+
+[data-theme="sunlit-studio"] .sidebar {
+  background: #fafaf5 !important;
+  border-right: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .brand {
+  font-weight: 700 !important;
+  letter-spacing: -0.3px !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .brand-mark {
+  background: #e59400 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="sunlit-studio"] .nav-item {
+  color: #525252 !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="sunlit-studio"] .nav-item:hover {
+  background: rgba(229, 148, 0, 0.06) !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .nav-item.selected {
+  background: rgba(229, 148, 0, 0.09) !important;
+  color: #c47d00 !important;
+  font-weight: 700 !important;
+  border-left: 3px solid #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .nav-indicator {
+  background: #e59400 !important;
+}
+
+@media(max-width:640px){
+  [data-theme="sunlit-studio"] .sidebar {
+    background: #fafaf5 !important;
+    border-top: 1px solid #ebebeb !important;
+  }
+}
+
+/* Eyebrow & Headers (STRICT: DARK TEXT) */
+[data-theme="sunlit-studio"] .eyebrow,
+[data-theme="sunlit-studio"] .side-label {
+  color: #c47d00 !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .topbar h1,
+[data-theme="sunlit-studio"] .welcome-row h2,
+[data-theme="sunlit-studio"] .panel-heading h3 {
+  color: #1a1a1a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .muted,
+[data-theme="sunlit-studio"] .subhead {
+  color: #737373 !important;
+}
+
+/* Chips, Buttons & Badges */
+[data-theme="sunlit-studio"] .sync-chip,
+[data-theme="sunlit-studio"] .date-chip,
+[data-theme="sunlit-studio"] .pod-pill,
+[data-theme="sunlit-studio"] .theme-switcher-btn,
+[data-theme="sunlit-studio"] .icon-button,
+[data-theme="sunlit-studio"] .today-button {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-theme="sunlit-studio"] .theme-switcher-btn:hover,
+[data-theme="sunlit-studio"] .icon-button:hover,
+[data-theme="sunlit-studio"] .today-button:hover {
+  background: #fafaf5 !important;
+  border-color: #e59400 !important;
+  color: #c47d00 !important;
+}
+
+[data-theme="sunlit-studio"] .status-dot.synced {
+  background: #16a34a !important;
+}
+
+/* Panels & Cards */
+[data-theme="sunlit-studio"] .panel,
+[data-theme="sunlit-studio"] .metric-card,
+[data-theme="sunlit-studio"] .streak-card,
+[data-theme="sunlit-studio"] .note-panel,
+[data-theme="sunlit-studio"] .report-main,
+[data-theme="sunlit-studio"] .settings-panel,
+[data-theme="sunlit-studio"] .coding-top-banner,
+[data-theme="sunlit-studio"] .dsa-potd-card,
+[data-theme="sunlit-studio"] .coding-metric-panel,
+[data-theme="sunlit-studio"] .coding-sheet-panel,
+[data-theme="sunlit-studio"] .coding-contests-panel,
+[data-theme="sunlit-studio"] .coding-suggestions-panel {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="sunlit-studio"] .metric-copy strong {
+  color: #1a1a1a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .metric-copy span,
+[data-theme="sunlit-studio"] .metric-copy small {
+  color: #737373 !important;
+}
+
+/* Streak & Donut Ring */
+[data-theme="sunlit-studio"] .streak-card {
+  background: #fffbf2 !important;
+  border: 1px solid #fde68a !important;
+}
+
+[data-theme="sunlit-studio"] .streak-icon {
+  background: #fef3c7 !important;
+  color: #d97706 !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="sunlit-studio"] .ring {
+  background: conic-gradient(#e59400 var(--progress), #fef3c7 0) !important;
+}
+
+[data-theme="sunlit-studio"] .ring:before {
+  background: #fffbf2 !important;
+}
+
+/* Action & Finish Buttons */
+[data-theme="sunlit-studio"] .finish-button {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .finish-button:hover {
+  background: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .action-button {
+  border: 1px solid #d4d4d4 !important;
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="sunlit-studio"] .action-button.running {
+  background: rgba(229, 148, 0, 0.1) !important;
+  color: #c47d00 !important;
+  border-color: #e59400 !important;
+  font-weight: 700 !important;
+}
+
+/* Progress Track */
+[data-theme="sunlit-studio"] .progress-track {
+  background: #f5f5f5 !important;
+}
+
+[data-theme="sunlit-studio"] .progress-track > div {
+  background: #e59400 !important;
+}
+
+/* Habits Panel */
+[data-theme="sunlit-studio"] .habits-panel {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .count-badge {
+  background: #fafaf5 !important;
+  color: #c47d00 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .habit-row {
+  color: #1a1a1a !important;
+  border-top: 1px solid #f5f5f5 !important;
+}
+
+[data-theme="sunlit-studio"] .habit-row:hover {
+  background: #fafaf5 !important;
+}
+
+[data-theme="sunlit-studio"] .habit-row.checked {
+  color: #737373 !important;
+}
+
+[data-theme="sunlit-studio"] .check-box {
+  background: #ffffff !important;
+  border: 1.5px solid #d4d4d4 !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="sunlit-studio"] .habit-row.checked .check-box {
+  background: #e59400 !important;
+  border-color: #e59400 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="sunlit-studio"] .habit-logged-pill {
+  background: #fafaf5 !important;
+  color: #c47d00 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+/* Schedule Items & Timetable */
+[data-theme="sunlit-studio"] .schedule-item {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+  border-radius: 10px !important;
+}
+
+[data-theme="sunlit-studio"] .schedule-item:hover {
+  border-color: #d4d4d4 !important;
+}
+
+[data-theme="sunlit-studio"] .schedule-item.active-session {
+  background: rgba(229, 148, 0, 0.04) !important;
+  border: 1.5px solid #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .time-col strong {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .time-col span {
+  color: #737373 !important;
+}
+
+[data-theme="sunlit-studio"] .event-icon {
+  background: #fafaf5 !important;
+  color: #e59400 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .event-title-row h4 {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .duration-pill {
+  background: #fafaf5 !important;
+  color: #525252 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .event-body p {
+  color: #737373 !important;
+}
+
+[data-theme="sunlit-studio"] .logged-label {
+  color: #c47d00 !important;
+}
+
+/* Timetable Checkpoint Capsule */
+[data-theme="sunlit-studio"] .timetable-checkpoint-capsule {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-icon {
+  color: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-stage-pill {
+  background: #e59400 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-checkpoint-text {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-checkbox {
+  background: #ffffff !important;
+  border: 1.5px solid #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-checkbox:checked {
+  background: #e59400 !important;
+  border-color: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .capsule-nav-btn {
+  background: #fafaf5 !important;
+  color: #c47d00 !important;
+  border: 1px solid #ebebeb !important;
+}
+
+/* Chief of Staff & Elastic Buttons */
+[data-theme="sunlit-studio"] .chief-audit-btn,
+[data-theme="sunlit-studio"] .elastic-btn {
+  background: #ffffff !important;
+  border: 1px solid #d4d4d4 !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .chief-audit-btn:hover,
+[data-theme="sunlit-studio"] .elastic-btn:hover {
+  background: #fafaf5 !important;
+  border-color: #e59400 !important;
+  color: #c47d00 !important;
+}
+
+/* Stage Roadmaps (STRICT: DARK TEXT, HIGH CONTRAST) */
+[data-theme="sunlit-studio"] .roadmap-hub-header {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-hub-icon-wrap {
+  background: #e59400 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-hub-title,
+[data-theme="sunlit-studio"] .command-subject-name,
+[data-theme="sunlit-studio"] .stage-focus-title,
+[data-theme="sunlit-studio"] .checkpoint-headline {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-hub-subtitle {
+  color: #525252 !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-header-btn.secondary {
+  background: #fafaf5 !important;
+  color: #1a1a1a !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-header-btn.secondary:hover {
+  background: #f5f5f0 !important;
+  border-color: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-header-btn.primary {
+  background: #e59400 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-subject-pill {
+  background: #fafaf5 !important;
+  border: 1.5px solid #ebebeb !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-subject-pill:hover {
+  background: #f5f5f0 !important;
+  border-color: #e59400 !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-subject-pill.active {
+  background: #e59400 !important;
+  border-color: #e59400 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-pill-percent {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .single-stage-focused-card,
+[data-theme="sunlit-studio"] .roadmap-command-center,
+[data-theme="sunlit-studio"] .creator-option-box {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .stage-focus-header,
+[data-theme="sunlit-studio"] .stage-focus-add-checkpoint-row,
+[data-theme="sunlit-studio"] .stage-footer-nav {
+  background: #fafaf5 !important;
+  border-color: #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .single-checkpoint-row {
+  background: #ffffff !important;
+  border: 1px solid #ebebeb !important;
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .roadmap-format-guide-box {
+  background: #fafaf5 !important;
+  border: 1.5px solid #ebebeb !important;
+}
+
+[data-theme="sunlit-studio"] .format-guide-head {
+  color: #1a1a1a !important;
+}
+
+[data-theme="sunlit-studio"] .format-guide-code {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+  border: 1px solid #ebebeb !important;
+}
+
+
+/* ==========================================================================
+   THEME 9: WARM PARCHMENT (Editorial Light / Georgia Serif / Amber Ink)
+   ========================================================================== */
+
+[data-theme="warm-parchment"] {
+  background-color: #faf7f0 !important;
+  color: #1a1612 !important;
+  font-family: 'Newsreader', Georgia, serif !important;
+  --ink: #1a1612;
+  --muted: #5c4f3d;
+  --line: #e8e0d0;
+  --green: #b45309;
+  --paper: #ffffff;
+}
+
+[data-theme="warm-parchment"] .sidebar {
+  background: #f0eae0 !important;
+  border-right: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .brand {
+  font-family: Georgia, serif !important;
+  font-weight: 600 !important;
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .brand-mark {
+  background: #b45309 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .nav-item {
+  color: #5c4f3d !important;
+  font-family: -apple-system, sans-serif !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="warm-parchment"] .nav-item:hover {
+  background: rgba(180, 83, 9, 0.06) !important;
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .nav-item.selected {
+  background: rgba(180, 83, 9, 0.09) !important;
+  color: #92400e !important;
+  font-weight: 700 !important;
+  border-left: 2px solid #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .nav-indicator {
+  background: #b45309 !important;
+}
+
+@media(max-width:640px){
+  [data-theme="warm-parchment"] .sidebar {
+    background: #f0eae0 !important;
+    border-top: 1px solid #e8e0d0 !important;
+  }
+}
+
+/* Eyebrow & Headers (STRICT: DARK INK, NO WHITE TEXT) */
+[data-theme="warm-parchment"] .eyebrow,
+[data-theme="warm-parchment"] .side-label {
+  color: #b45309 !important;
+  font-family: -apple-system, sans-serif !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .topbar h1,
+[data-theme="warm-parchment"] .welcome-row h2,
+[data-theme="warm-parchment"] .panel-heading h3 {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="warm-parchment"] .muted,
+[data-theme="warm-parchment"] .subhead {
+  color: #796e62 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+/* Chips, Buttons & Badges */
+[data-theme="warm-parchment"] .sync-chip,
+[data-theme="warm-parchment"] .date-chip,
+[data-theme="warm-parchment"] .pod-pill,
+[data-theme="warm-parchment"] .theme-switcher-btn,
+[data-theme="warm-parchment"] .icon-button,
+[data-theme="warm-parchment"] .today-button {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .theme-switcher-btn:hover,
+[data-theme="warm-parchment"] .icon-button:hover,
+[data-theme="warm-parchment"] .today-button:hover {
+  background: #f5f0e8 !important;
+  border-color: #b45309 !important;
+  color: #92400e !important;
+}
+
+[data-theme="warm-parchment"] .status-dot.synced {
+  background: #166534 !important;
+}
+
+/* Panels & Cards */
+[data-theme="warm-parchment"] .panel,
+[data-theme="warm-parchment"] .metric-card,
+[data-theme="warm-parchment"] .streak-card,
+[data-theme="warm-parchment"] .note-panel,
+[data-theme="warm-parchment"] .report-main,
+[data-theme="warm-parchment"] .settings-panel,
+[data-theme="warm-parchment"] .coding-top-banner,
+[data-theme="warm-parchment"] .dsa-potd-card,
+[data-theme="warm-parchment"] .coding-metric-panel,
+[data-theme="warm-parchment"] .coding-sheet-panel,
+[data-theme="warm-parchment"] .coding-contests-panel,
+[data-theme="warm-parchment"] .coding-suggestions-panel {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="warm-parchment"] .metric-copy strong {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="warm-parchment"] .metric-copy span,
+[data-theme="warm-parchment"] .metric-copy small {
+  color: #796e62 !important;
+}
+
+/* Streak & Donut Ring */
+[data-theme="warm-parchment"] .streak-card {
+  background: #faf4e8 !important;
+  border: 1px solid #e5d7be !important;
+}
+
+[data-theme="warm-parchment"] .streak-icon {
+  background: #f0e2cc !important;
+  color: #b45309 !important;
+  border-radius: 8px !important;
+}
+
+[data-theme="warm-parchment"] .ring {
+  background: conic-gradient(#b45309 var(--progress), #edd9c2 0) !important;
+}
+
+[data-theme="warm-parchment"] .ring:before {
+  background: #faf4e8 !important;
+}
+
+/* Action & Finish Buttons */
+[data-theme="warm-parchment"] .finish-button {
+  background: #1a1612 !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-family: -apple-system, sans-serif !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .finish-button:hover {
+  background: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .action-button {
+  border: 1px solid #c8b89a !important;
+  background: #ffffff !important;
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="warm-parchment"] .action-button.running {
+  background: rgba(180, 83, 9, 0.08) !important;
+  color: #92400e !important;
+  border-color: #b45309 !important;
+  font-weight: 700 !important;
+}
+
+/* Progress Track */
+[data-theme="warm-parchment"] .progress-track {
+  background: #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .progress-track > div {
+  background: #b45309 !important;
+}
+
+/* Habits Panel */
+[data-theme="warm-parchment"] .habits-panel {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .count-badge {
+  background: #f5f0e8 !important;
+  color: #b45309 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .habit-row {
+  color: #1a1612 !important;
+  border-top: 1px solid #f0eae0 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .habit-row:hover {
+  background: #f8f4ed !important;
+}
+
+[data-theme="warm-parchment"] .habit-row.checked {
+  color: #8c7e6e !important;
+}
+
+[data-theme="warm-parchment"] .check-box {
+  background: #ffffff !important;
+  border: 1.5px solid #c8b89a !important;
+  border-radius: 3px !important;
+}
+
+[data-theme="warm-parchment"] .habit-row.checked .check-box {
+  background: #b45309 !important;
+  border-color: #b45309 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="warm-parchment"] .habit-logged-pill {
+  background: #f5f0e8 !important;
+  color: #b45309 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+/* Schedule Items & Timetable */
+[data-theme="warm-parchment"] .schedule-item {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+  border-radius: 8px !important;
+}
+
+[data-theme="warm-parchment"] .schedule-item:hover {
+  border-color: #c8b89a !important;
+}
+
+[data-theme="warm-parchment"] .schedule-item.active-session {
+  background: rgba(180, 83, 9, 0.04) !important;
+  border: 1.5px solid #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .time-col strong {
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .time-col span {
+  color: #796e62 !important;
+}
+
+[data-theme="warm-parchment"] .event-icon {
+  background: #f5f0e8 !important;
+  color: #b45309 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .event-title-row h4 {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+}
+
+[data-theme="warm-parchment"] .duration-pill {
+  background: #f5f0e8 !important;
+  color: #5c4f3d !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .event-body p {
+  color: #796e62 !important;
+}
+
+[data-theme="warm-parchment"] .logged-label {
+  color: #92400e !important;
+}
+
+/* Timetable Checkpoint Capsule */
+[data-theme="warm-parchment"] .timetable-checkpoint-capsule {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-icon {
+  color: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-stage-pill {
+  background: #b45309 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-checkpoint-text {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+}
+
+[data-theme="warm-parchment"] .capsule-checkbox {
+  background: #ffffff !important;
+  border: 1.5px solid #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-checkbox:checked {
+  background: #b45309 !important;
+  border-color: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .capsule-nav-btn {
+  background: #f5f0e8 !important;
+  color: #92400e !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+/* Chief of Staff & Elastic Buttons */
+[data-theme="warm-parchment"] .chief-audit-btn,
+[data-theme="warm-parchment"] .elastic-btn {
+  background: #ffffff !important;
+  border: 1px solid #c8b89a !important;
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .chief-audit-btn:hover,
+[data-theme="warm-parchment"] .elastic-btn:hover {
+  background: #f5f0e8 !important;
+  border-color: #b45309 !important;
+  color: #92400e !important;
+}
+
+/* Stage Roadmaps (STRICT: DARK INK, NO WHITE TEXT) */
+[data-theme="warm-parchment"] .roadmap-hub-header {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-hub-icon-wrap {
+  background: #b45309 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-hub-title,
+[data-theme="warm-parchment"] .command-subject-name,
+[data-theme="warm-parchment"] .stage-focus-title,
+[data-theme="warm-parchment"] .checkpoint-headline {
+  color: #1a1612 !important;
+  font-family: Georgia, serif !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-hub-subtitle {
+  color: #5c4f3d !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-header-btn.secondary {
+  background: #f5f0e8 !important;
+  color: #1a1612 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-header-btn.secondary:hover {
+  background: #eee8dc !important;
+  border-color: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-header-btn.primary {
+  background: #b45309 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-subject-pill {
+  background: #f0eae0 !important;
+  border: 1.5px solid #e8e0d0 !important;
+  color: #1a1612 !important;
+  font-family: -apple-system, sans-serif !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-subject-pill:hover {
+  background: #eee8dc !important;
+  border-color: #b45309 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-subject-pill.active {
+  background: #b45309 !important;
+  border-color: #b45309 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-pill-percent {
+  background: #ffffff !important;
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .single-stage-focused-card,
+[data-theme="warm-parchment"] .roadmap-command-center,
+[data-theme="warm-parchment"] .creator-option-box {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .stage-focus-header,
+[data-theme="warm-parchment"] .stage-focus-add-checkpoint-row,
+[data-theme="warm-parchment"] .stage-footer-nav {
+  background: #f5f0e8 !important;
+  border-color: #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .single-checkpoint-row {
+  background: #ffffff !important;
+  border: 1px solid #e8e0d0 !important;
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .roadmap-format-guide-box {
+  background: #f5f0e8 !important;
+  border: 1.5px solid #e8e0d0 !important;
+}
+
+[data-theme="warm-parchment"] .format-guide-head {
+  color: #1a1612 !important;
+}
+
+[data-theme="warm-parchment"] .format-guide-code {
+  background: #ffffff !important;
+  color: #1a1612 !important;
+  border: 1px solid #e8e0d0 !important;
+}
+
+
+/* ==========================================================================
+   SPIDER-VERSE OVERHAUL: ELIMINATE ALL WHITE BOXES & FIX HABITS PANEL
+   ========================================================================== */
+
+/* 1. Habits Panel & Rows in Spider-Verse (Comic Book Multi-Verse Style) */
+[data-theme="spider-verse"] .habits-panel {
+  background: #140e2b !important;
+  border: 2.5px solid #ffe600 !important;
+  border-radius: 8px !important;
+  box-shadow: 5px 5px 0 #ff0055 !important;
+}
+
+[data-theme="spider-verse"] .habits-panel .panel-heading h3 {
+  font-family: 'Bangers', cursive !important;
+  letter-spacing: 2px !important;
+  color: #ffe600 !important;
+  text-shadow: 2px 2px 0 #ff0055 !important;
+}
+
+[data-theme="spider-verse"] .habits-panel .count-badge {
+  background: #ff0055 !important;
+  color: #ffe600 !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 2px 2px 0 #00f0ff !important;
+  font-family: 'Bangers', cursive !important;
+  font-size: 14px !important;
+  letter-spacing: 1px !important;
+  padding: 4px 10px !important;
+}
+
+[data-theme="spider-verse"] .habit-row {
+  background: #1a1336 !important;
+  border: 2px solid #00f0ff !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  box-shadow: 2px 2px 0 #ff0055 !important;
+  margin-bottom: 8px !important;
+  font-weight: 700 !important;
+  padding: 10px 14px !important;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease !important;
+}
+
+[data-theme="spider-verse"] .habit-row:hover {
+  background: #251b4d !important;
+  border-color: #ffe600 !important;
+  color: #ffe600 !important;
+  transform: translate(-1px, -1px) !important;
+  box-shadow: 3px 3px 0 #ff0055 !important;
+}
+
+[data-theme="spider-verse"] .habit-row.checked {
+  background: #140e2b !important;
+  color: #c7d2fe !important;
+  border-color: rgba(0, 240, 255, 0.45) !important;
+  box-shadow: 1px 1px 0 #ff0055 !important;
+}
+
+[data-theme="spider-verse"] .habit-row.locked-goal {
+  background: #100b24 !important;
+  border-color: rgba(255, 0, 85, 0.4) !important;
+  color: #818cf8 !important;
+}
+
+[data-theme="spider-verse"] .check-box {
+  background: #0c0919 !important;
+  border: 2px solid #00f0ff !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="spider-verse"] .habit-row.checked .check-box {
+  background: #22c55e !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+  box-shadow: 2px 2px 0 #ffe600 !important;
+}
+
+[data-theme="spider-verse"] .habit-logged-pill {
+  background: #221a44 !important;
+  color: #00f0ff !important;
+  border: 1.5px solid #00f0ff !important;
+  border-radius: 6px !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="spider-verse"] .alarm-panel,
+[data-theme="spider-verse"] .note-panel {
+  background: #140e2b !important;
+  border: 2.5px solid #ffe600 !important;
+  box-shadow: 5px 5px 0 #ff0055 !important;
+}
+
+/* 2. ALL Inputs, Textareas, Selects & Creator Boxes in Spider-Verse (NO MORE WHITE BOXES!) */
+[data-theme="spider-verse"] input[type="text"],
+[data-theme="spider-verse"] input[type="number"],
+[data-theme="spider-verse"] input[type="search"],
+[data-theme="spider-verse"] input[type="date"],
+[data-theme="spider-verse"] input[type="time"],
+[data-theme="spider-verse"] textarea,
+[data-theme="spider-verse"] select,
+[data-theme="spider-verse"] .creator-paste-area,
+[data-theme="spider-verse"] .stage-add-input,
+[data-theme="spider-verse"] .editor-textarea,
+[data-theme="spider-verse"] .blank-input,
+[data-theme="spider-verse"] .roadmap-format-guide-box,
+[data-theme="spider-verse"] .format-guide-code,
+[data-theme="spider-verse"] .note-panel textarea {
+  background: #181233 !important;
+  color: #ffffff !important;
+  border: 2px solid #00f0ff !important;
+  border-radius: 6px !important;
+  box-shadow: 2px 2px 0 #ff0055 !important;
+  font-size: 13px !important;
+}
+
+[data-theme="spider-verse"] input:focus,
+[data-theme="spider-verse"] textarea:focus,
+[data-theme="spider-verse"] select:focus,
+[data-theme="spider-verse"] .creator-paste-area:focus,
+[data-theme="spider-verse"] .stage-add-input:focus,
+[data-theme="spider-verse"] .editor-textarea:focus {
+  border-color: #ffe600 !important;
+  box-shadow: 3px 3px 0 #00f0ff !important;
+  outline: none !important;
+  color: #ffffff !important;
+}
+
+[data-theme="spider-verse"] input::placeholder,
+[data-theme="spider-verse"] textarea::placeholder {
+  color: #a5b4fc !important;
+  opacity: 0.8 !important;
+}
+
+/* 3. Spider-Verse Schedule Cards */
+[data-theme="spider-verse"] .schedule-item {
+  background: #140e2b !important;
+  border: 2px solid #00f0ff !important;
+  box-shadow: 3px 3px 0 #ff0055 !important;
+  border-radius: 8px !important;
+  margin-bottom: 10px !important;
+}
+
+[data-theme="spider-verse"] .schedule-item:hover {
+  border-color: #ffe600 !important;
+  transform: translate(-1px, -1px);
+}
+
+[data-theme="spider-verse"] .schedule-item.active-session {
+  background: #1c1538 !important;
+  border: 2.5px solid #ffe600 !important;
+  box-shadow: 4px 4px 0 #00f0ff !important;
+}
+
+[data-theme="spider-verse"] .time-col strong {
+  color: #ffe600 !important;
+  font-family: 'Bangers', cursive !important;
+  font-size: 16px !important;
+  letter-spacing: 1px !important;
+}
+
+[data-theme="spider-verse"] .time-col span {
+  color: #a5b4fc !important;
+}
+
+[data-theme="spider-verse"] .event-icon {
+  background: #ff0055 !important;
+  color: #ffe600 !important;
+  border: 1.5px solid #000 !important;
+}
+
+[data-theme="spider-verse"] .event-title-row h4 {
+  color: #ffffff !important;
+}
+
+[data-theme="spider-verse"] .duration-pill {
+  background: #241a45 !important;
+  color: #00f0ff !important;
+  border: 1.5px solid #00f0ff !important;
+  font-family: 'Bangers', cursive !important;
+  font-size: 13px !important;
+  letter-spacing: 0.5px !important;
+}
+
+[data-theme="spider-verse"] .timetable-checkpoint-capsule {
+  background: #181233 !important;
+  border: 2px solid #ff0055 !important;
+  box-shadow: 2px 2px 0 #ffe600 !important;
+}
+
+[data-theme="spider-verse"] .capsule-stage-pill {
+  background: #ff0055 !important;
+  color: #ffe600 !important;
+  border: 1px solid #000 !important;
+}
+
+[data-theme="spider-verse"] .capsule-checkpoint-text {
+  color: #ffffff !important;
+}
+
+
+/* ==========================================================================
+   CYBER SAKURA PREMIUM OVERHAUL: DITO SAME AS EXAMPLE (theme5_cyber_sakura.html)
+   ========================================================================== */
+
+/* 1. Base Atmosphere, 48px Grid & Ambient Disc */
+
+
+/* Ambient glow disc rotating behind content */
+.ambient-glow-disc {
+  position: fixed;
+  top: -80px;
+  right: -80px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 45, 120, 0.045) 0%, rgba(192, 132, 252, 0.02) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  animation: slowAmbientSpin 45s linear infinite;
+}
+
+@keyframes slowAmbientSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 2. Hero Display Header Gradient Text */
+
+
+
+
+/* 3. Sidebar with Glitch Monogram */
+
+
+
+
+@keyframes skMonogramGlitch {
+  0%, 98%, 100% {
+    transform: translate(0, 0);
+    filter: none;
+    opacity: 1;
+  }
+  98.6% {
+    transform: translate(-1px, 1px) skewX(-2deg);
+    filter: drop-shadow(1px 0 #FF2D78);
+    opacity: 0.92;
+  }
+  99.2% {
+    transform: translate(1px, -0.5px) skewX(2deg);
+    filter: drop-shadow(-1px 0 #2DD4BF);
+    opacity: 0.95;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* 4. Panels & Cards in Cyber Sakura */
+
+
+
+
+/* 5. Timetable / Schedule Items: Protocol Design */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 6. Habits / Daily Commitments: Sonar Ping & Checkboxes */
+
+
+
+
+
+
+
+
+
+
+
+
+@keyframes sonarPing {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 120, 0.9); }
+  35% { transform: scale(0.82); }
+  70% { transform: scale(1.06); box-shadow: 0 0 0 12px rgba(255, 45, 120, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 120, 0); }
+}
+
+
+
+/* 7. Donut Ring in Cyber Sakura (Hot Pink to Teal) */
+
+
+
+
+/* 8. Input Boxes & Textareas in Cyber Sakura */
+
+
+
+
+
+/* ==========================================================================
+   TOKYO LOFI PREMIUM OVERHAUL: DITO SAME AS EXAMPLE (theme3_tokyo_lofi.html)
+   ========================================================================== */
+
+/* 1. Base Atmosphere, Film Grain & Dark Warm Slate */
+[data-theme="tokyo-lofi"] {
+  background-color: #12111A !important;
+  color: #D4CEEB !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Film Grain Noise Overlay */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 80;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* 2. Welcome Greeting with Blinking Typewriter Cursor */
+[data-theme="tokyo-lofi"] .welcome-row h2 {
+  color: #FAF8FF !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.02em !important;
+  position: relative !important;
+}
+
+[data-theme="tokyo-lofi"] .welcome-row h2 span::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  background-color: #F59E0B;
+  margin-left: 6px;
+  vertical-align: -0.05em;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+[data-theme="tokyo-lofi"] .eyebrow,
+[data-theme="tokyo-lofi"] .side-label {
+  color: #F59E0B !important;
+  letter-spacing: 3px !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+}
+
+/* 3. Sidebar */
+[data-theme="tokyo-lofi"] .sidebar {
+  background: #100F17 !important;
+  border-right: 1px solid rgba(255, 140, 0, 0.12) !important;
+}
+
+[data-theme="tokyo-lofi"] .brand-mark {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  border-radius: 8px !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item {
+  color: #9B8EA8 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  border-radius: 6px !important;
+  border-left: 3px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item:hover {
+  background: rgba(245, 158, 11, 0.07) !important;
+  color: #FAF8FF !important;
+  transform: translateX(2px) !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item.selected {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #F59E0B !important;
+  font-weight: 700 !important;
+  border-left: 3px solid #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-indicator {
+  background: #F472B6 !important;
+  box-shadow: 0 0 6px #F472B6 !important;
+}
+
+/* 4. Panels & Cards with Subtle Gradient Surfaces */
+[data-theme="tokyo-lofi"] .panel,
+[data-theme="tokyo-lofi"] .metric-card,
+[data-theme="tokyo-lofi"] .streak-card,
+[data-theme="tokyo-lofi"] .habits-panel,
+[data-theme="tokyo-lofi"] .note-panel,
+[data-theme="tokyo-lofi"] .report-main,
+[data-theme="tokyo-lofi"] .settings-panel,
+[data-theme="tokyo-lofi"] .coding-top-banner,
+[data-theme="tokyo-lofi"] .dsa-potd-card,
+[data-theme="tokyo-lofi"] .coding-metric-panel,
+[data-theme="tokyo-lofi"] .coding-sheet-panel,
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel {
+  background: linear-gradient(180deg, #1C1928 0%, #191625 100%) !important;
+  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+  position: relative !important;
+  transition: border-color 0.25s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .panel:hover,
+[data-theme="tokyo-lofi"] .metric-card:hover {
+  border-color: rgba(245, 158, 11, 0.28) !important;
+}
+
+/* 5. Schedule Items: Shinkansen Station Departure Board */
+[data-theme="tokyo-lofi"] .schedule-item {
+  background: #171422 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-left: 3px solid rgba(255, 140, 0, 0.15) !important;
+  border-radius: 8px !important;
+  padding: 14px 16px !important;
+  margin-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item:hover {
+  background: #1e1a2c !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  transform: translateX(2px) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item.active-session {
+  background: rgba(245, 158, 11, 0.07) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
+  border-left: 3px solid #F59E0B !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.14) !important;
+}
+
+[data-theme="tokyo-lofi"] .time-col strong {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace !important;
+  font-size: 16px !important;
+  color: #F59E0B !important; /* HERO AMBER TIME NUMERALS */
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .time-col span {
+  color: #9B8EA8 !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+}
+
+[data-theme="tokyo-lofi"] .duration-pill {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+}
+
+[data-theme="tokyo-lofi"] .event-title-row h4 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .event-icon {
+  background: rgba(245, 158, 11, 0.1) !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+/* 6. Habits: Washi Paper Checklist Aesthetic */
+[data-theme="tokyo-lofi"] .habits-panel {
+  background: linear-gradient(180deg, #1C1928 0%, #191625 100%) !important;
+  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row {
+  background: #191626 !important;
+  border: 1px solid rgba(255, 140, 0, 0.08) !important;
+  border-radius: 6px !important;
+  padding: 12px 14px !important;
+  margin-bottom: 6px !important;
+  color: #D4CEEB !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row:hover {
+  background: #221D33 !important;
+  border-color: rgba(255, 140, 0, 0.22) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked {
+  background: rgba(245, 158, 11, 0.03) !important;
+  color: #6B6484 !important;
+}
+
+[data-theme="tokyo-lofi"] .check-box {
+  width: 18px !important;
+  height: 18px !important;
+  background: #12111A !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.25) !important;
+  border-radius: 4px !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked .check-box {
+  background: linear-gradient(135deg, #F59E0B, #F472B6) !important;
+  border-color: #F59E0B !important;
+  color: #12111A !important;
+  box-shadow: 0 0 10px rgba(244, 114, 182, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-logged-pill {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+}
+
+/* 7. Donut Ring in Tokyo Lofi */
+[data-theme="tokyo-lofi"] .ring {
+  background: conic-gradient(#F59E0B var(--progress), #241E30 0) !important;
+}
+
+[data-theme="tokyo-lofi"] .ring:before {
+  background: #191625 !important;
+}
+
+/* 8. Input Boxes & Textareas in Tokyo Lofi */
+[data-theme="tokyo-lofi"] input[type="text"],
+[data-theme="tokyo-lofi"] input[type="number"],
+[data-theme="tokyo-lofi"] input[type="search"],
+[data-theme="tokyo-lofi"] textarea,
+[data-theme="tokyo-lofi"] select,
+[data-theme="tokyo-lofi"] .creator-paste-area,
+[data-theme="tokyo-lofi"] .stage-add-input,
+[data-theme="tokyo-lofi"] .editor-textarea {
+  background: #1A1626 !important;
+  color: #FAF8FF !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.25) !important;
+  border-radius: 6px !important;
+}
+
+[data-theme="tokyo-lofi"] input:focus,
+[data-theme="tokyo-lofi"] textarea:focus,
+[data-theme="tokyo-lofi"] select:focus {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3) !important;
+  outline: none !important;
+}
+
+
+/* ==========================================================================
+   TOKYO LOFI DITTO UI: EXACT COLOR PALETTE, BOXES & REPRESENTATION
+   Directly matching theme3_tokyo_lofi.html
+   ========================================================================== */
+
+/* 1. Base Variables & Typography for Tokyo Lofi */
+[data-theme="tokyo-lofi"] {
+  background-color: #12111A !important;
+  color: #D4CEEB !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif !important;
+  --bg-base: #12111A;
+  --card-start: #1C1928;
+  --card-end: #191625;
+  --border-amber: rgba(255, 140, 0, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --amber-primary: #F59E0B;
+  --amber-muted: #D97706;
+  --pink-accent: #F472B6;
+  --text-muted: #6B6484;
+  --text-cream: #D4CEEB;
+  --text-heading: #FAF8FF;
+}
+
+/* Atmospheric Film Grain Overlay */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 80;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Single Atmospheric Sweep Scanline */
+.single-scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(245, 158, 11, 0.4) 25%, rgba(244, 114, 182, 0.5) 50%, rgba(245, 158, 11, 0.4) 75%, transparent 100%);
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 90;
+  animation: sweepLine 8s linear infinite;
+}
+
+@keyframes sweepLine {
+  0% { transform: translateY(-5px); }
+  100% { transform: translateY(100vh); }
+}
+
+/* 2. Tokyo Terminal Strip (Metropolitan Line + Weather) */
+.tokyo-terminal-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #6B6484;
+}
+
+.tokyo-strip-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tokyo-strip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #F59E0B;
+  display: inline-block;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.tokyo-strip-sep {
+  color: #3B364C;
+}
+
+.tokyo-strip-date {
+  color: #8E86AB;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.tokyo-strip-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8E86AB;
+  font-weight: 400;
+}
+
+.tokyo-weather-icon {
+  width: 14px;
+  height: 14px;
+  color: #F59E0B;
+}
+
+/* 3. Sidebar: Sleek Zen Seal & Japanese Aesthetics */
+[data-theme="tokyo-lofi"] .sidebar {
+  background: #12111A !important;
+  border-right: 1px solid #1C1928 !important;
+}
+
+[data-theme="tokyo-lofi"] .brand {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.5px !important;
+  color: #FAF8FF !important;
+}
+
+.tokyo-kanji-seal {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #F59E0B;
+  display: grid;
+  place-items: center;
+  letter-spacing: 1px;
+}
+
+[data-theme="tokyo-lofi"] .brand-mark {
+  background: rgba(245, 158, 11, 0.08) !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .brand-mark:hover {
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  transform: scale(1.05);
+}
+
+[data-theme="tokyo-lofi"] .nav-item {
+  color: #6B6484 !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item:hover {
+  color: #FAF8FF !important;
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-item.selected {
+  color: #F472B6 !important;
+  background-color: rgba(244, 114, 182, 0.06) !important;
+  border-left: 3px solid #F472B6 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="tokyo-lofi"] .nav-indicator {
+  background: #F472B6 !important;
+  box-shadow: 0 0 6px #F472B6 !important;
+}
+
+/* 4. Welcome Row & Live JST Station Clock */
+[data-theme="tokyo-lofi"] .welcome-row h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: clamp(34px, 4.5vw, 56px) !important;
+  font-weight: 200 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.1 !important;
+  color: #FAF8FF !important;
+  margin-bottom: 6px !important;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  background-color: #F59E0B;
+  margin-left: 6px;
+  vertical-align: -0.05em;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+[data-theme="tokyo-lofi"] .welcome-row .subhead {
+  color: #6B6484 !important;
+  font-size: 13px !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  font-weight: 300 !important;
+}
+
+/* JST Live Clock Station Card */
+.tokyo-clock-card {
+  background: rgba(28, 25, 40, 0.5);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: 12px;
+  padding: 14px 22px;
+  backdrop-filter: blur(8px);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.tokyo-clock-time {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  font-size: 32px;
+  font-weight: 300;
+  color: #FAF8FF;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.tokyo-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: #6B6484;
+  font-weight: 600;
+}
+
+.tokyo-clock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.7);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* 5. BOXES / CARDS: Ditto Editorial Surface from Example */
+[data-theme="tokyo-lofi"] .panel,
+[data-theme="tokyo-lofi"] .metric-card,
+[data-theme="tokyo-lofi"] .streak-card,
+[data-theme="tokyo-lofi"] .habits-panel,
+[data-theme="tokyo-lofi"] .schedule-panel,
+[data-theme="tokyo-lofi"] .note-panel,
+[data-theme="tokyo-lofi"] .alarm-panel,
+[data-theme="tokyo-lofi"] .report-main,
+[data-theme="tokyo-lofi"] .settings-panel,
+[data-theme="tokyo-lofi"] .coding-top-banner,
+[data-theme="tokyo-lofi"] .dsa-potd-card,
+[data-theme="tokyo-lofi"] .coding-metric-panel,
+[data-theme="tokyo-lofi"] .coding-sheet-panel,
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel {
+  background: linear-gradient(180deg, #1C1928 0%, #191625 100%) !important;
+  border: 1px solid rgba(255, 140, 0, 0.12) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+  position: relative !important;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .panel:hover,
+[data-theme="tokyo-lofi"] .metric-card:hover {
+  border-color: rgba(245, 158, 11, 0.22) !important;
+}
+
+/* 6. SHINKANSEN DEPARTURE BOARD: Exact Table Representation from Example */
+[data-theme="tokyo-lofi"] .schedule-panel {
+  padding: 28px !important;
+  overflow: hidden !important;
+}
+
+/* Kanji Ghost Watermark 刻 (Time/Tick) */
+[data-theme="tokyo-lofi"] .schedule-panel::after {
+  content: "刻";
+  position: absolute;
+  right: -15px;
+  bottom: -35px;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 210px;
+  line-height: 1;
+  color: #F59E0B;
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+[data-theme="tokyo-lofi"] .schedule-panel .panel-heading {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 8px !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-panel .panel-heading h3 {
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  color: #FAF8FF !important;
+  letter-spacing: -0.01em !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-panel .eyebrow {
+  color: #6B6484 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+}
+
+/* Departure Rows (Exact Table Alignment) */
+[data-theme="tokyo-lofi"] .schedule-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-radius: 6px !important;
+  padding: 18px 12px !important;
+  margin-bottom: 0 !important;
+  position: relative !important;
+  transition: background-color 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item:hover {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  transform: none !important;
+}
+
+/* Active Row in Station Board */
+[data-theme="tokyo-lofi"] .schedule-item.active-session {
+  background: rgba(245, 158, 11, 0.055) !important;
+  border-left: 2.5px solid #F59E0B !important;
+  border-radius: 4px !important;
+  margin: 4px 0 !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Huge Monospace Departure Time (36px) */
+[data-theme="tokyo-lofi"] .schedule-item .time-col {
+  width: 105px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item .time-col strong {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace !important;
+  font-size: 34px !important;
+  font-weight: 300 !important;
+  color: rgba(245, 158, 11, 0.75) !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1 !important;
+  transition: color 0.18s ease, text-shadow 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item:hover .time-col strong {
+  color: #FBBF24 !important;
+  text-shadow: 0 0 12px rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item.active-session .time-col strong {
+  font-size: 38px !important;
+  color: #F59E0B !important;
+  text-shadow: 0 0 16px rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item .time-col span {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  color: #6B6484 !important;
+  margin-top: 4px !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* 2px Amber Vertical Divider Bar */
+[data-theme="tokyo-lofi"] .schedule-item .event-icon {
+  width: 2px !important;
+  height: 40px !important;
+  min-width: 2px !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+  border: none !important;
+  border-radius: 1px !important;
+  margin: 0 20px 0 10px !important;
+  padding: 0 !important;
+  display: block !important;
+  transition: background-color 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item .event-icon svg {
+  display: none !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item:hover .event-icon {
+  background: rgba(245, 158, 11, 0.45) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item.active-session .event-icon {
+  background: #F59E0B !important;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6) !important;
+}
+
+/* Subject & Location Details */
+[data-theme="tokyo-lofi"] .schedule-item .event-body {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  padding-right: 16px !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item .event-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item .event-title-row h4 {
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: #D4CEEB !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.01em !important;
+  transition: color 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item:hover .event-title-row h4,
+[data-theme="tokyo-lofi"] .schedule-item.active-session .event-title-row h4 {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item .event-body p {
+  font-size: 12px !important;
+  color: #6B6484 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin-top: 3px !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-item.active-session .event-body p {
+  color: rgba(245, 158, 11, 0.8) !important;
+}
+
+/* Monospace Duration Pill */
+[data-theme="tokyo-lofi"] .schedule-item .duration-pill {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 3px 9px !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Board Footer */
+.tokyo-board-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #6B6484;
+}
+
+.tokyo-board-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tokyo-board-footer-right {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #8E86AB;
+}
+
+/* 7. WASHI PAPER NOTEBOOK: Habits Panel */
+[data-theme="tokyo-lofi"] .habits-panel {
+  padding: 28px !important;
+  overflow: hidden !important;
+}
+
+/* Kanji Ghost Watermark 習 (Habits/Practice) */
+[data-theme="tokyo-lofi"] .habits-panel::after {
+  content: "習";
+  position: absolute;
+  right: -10px;
+  bottom: -25px;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 190px;
+  line-height: 1;
+  color: #F472B6;
+  opacity: 0.038;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+[data-theme="tokyo-lofi"] .habits-panel .panel-heading {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 8px !important;
+}
+
+[data-theme="tokyo-lofi"] .habits-panel .panel-heading h3 {
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  color: #FAF8FF !important;
+  letter-spacing: -0.01em !important;
+}
+
+[data-theme="tokyo-lofi"] .habits-panel .count-badge {
+  background: #12111A !important;
+  border: 1px solid rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+}
+
+/* Clean 48px Washi Habit Rows */
+[data-theme="tokyo-lofi"] .habit-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row {
+  height: 48px !important;
+  min-height: 48px !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-radius: 0 !important;
+  padding: 0 8px !important;
+  margin-bottom: 0 !important;
+  color: #D4CEEB !important;
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  box-shadow: none !important;
+  transition: all 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row:hover {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  color: #FAF8FF !important;
+  transform: none !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked {
+  background: transparent !important;
+  color: #6B6484 !important;
+}
+
+/* Washi Square Checkbox */
+[data-theme="tokyo-lofi"] .check-box {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 3px !important;
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row:hover .check-box {
+  border-color: rgba(244, 114, 182, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked .check-box {
+  background: linear-gradient(135deg, #F59E0B 0%, #F472B6 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 1px 4px rgba(244, 114, 182, 0.25) !important;
+  color: #FFFFFF !important;
+}
+
+.tokyo-habits-footer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #6B6484;
+}
+
+.tokyo-autosave-badge {
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(245, 158, 11, 0.7);
+  letter-spacing: 1px;
+}
+
+/* 8. AMBIENT SHIBUYA RAIN & TAPE HUM PLAYER */
+.tokyo-ambient-player {
+  background: linear-gradient(180deg, #1C1928 0%, #191625 100%);
+  border: 1px solid rgba(255, 140, 0, 0.12);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.tokyo-player-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tokyo-audio-toggle-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  display: grid;
+  place-items: center;
+  color: #F59E0B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tokyo-audio-toggle-btn:hover {
+  background: rgba(245, 158, 11, 0.25);
+  transform: scale(1.05);
+}
+
+.tokyo-player-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #D4CEEB;
+}
+
+.tokyo-player-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #6B6484;
+  letter-spacing: 0.5px;
+}
+
+/* Animated Equalizer Wave Bars */
+.tokyo-visualizer {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+
+.wave-bar {
+  width: 2px;
+  height: 3px;
+  background-color: #F472B6;
+  border-radius: 1px;
+  transition: height 0.2s ease;
+}
+
+.tokyo-visualizer.playing .wave-bar:nth-child(1) { animation: tokyoWave 1.1s ease-in-out infinite alternate; }
+.tokyo-visualizer.playing .wave-bar:nth-child(2) { animation: tokyoWave 0.8s ease-in-out 0.15s infinite alternate; }
+.tokyo-visualizer.playing .wave-bar:nth-child(3) { animation: tokyoWave 1.3s ease-in-out 0.3s infinite alternate; }
+.tokyo-visualizer.playing .wave-bar:nth-child(4) { animation: tokyoWave 0.9s ease-in-out 0.2s infinite alternate; }
+
+@keyframes tokyoWave {
+  0% { height: 3px; opacity: 0.4; }
+  100% { height: 16px; opacity: 1; }
+}
+
+/* 9. Metrics & Donut Ring in Tokyo Lofi */
+[data-theme="tokyo-lofi"] .metric-copy strong {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 38px !important;
+  font-weight: 300 !important;
+  color: #F59E0B !important;
+  line-height: 1 !important;
+  letter-spacing: -0.02em !important;
+}
+
+[data-theme="tokyo-lofi"] .streak-card strong {
+  font-family: 'JetBrains Mono', Consolas, monospace !important;
+  font-size: 32px !important;
+  font-weight: 300 !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .ring {
+  background: conic-gradient(#F59E0B var(--progress), #F472B6 var(--progress), #241E30 0) !important;
+}
+
+[data-theme="tokyo-lofi"] .ring:before {
+  background: #1C1928 !important;
+}
+
+[data-theme="tokyo-lofi"] .ring span {
+  font-family: 'JetBrains Mono', monospace !important;
+  color: #FAF8FF !important;
+}
+
+/* ==========================================================================
+   TOKYO LOFI & CYBER SAKURA — COMPLETE ZERO-WHITE-BOX ARCHITECTURE
+   Eliminates all un-themed white/light boxes, inputs, dropdowns, and modals
+   ========================================================================== */
+
+/* ==========================================================================
+   1. TOKYO LOFI (Warm Late-Night Shibuya / Train Board Aesthetic)
+   ========================================================================== */
+[data-theme="tokyo-lofi"] {
+  --ink: #FAF8FF;
+  --muted: #A39BBF;
+  --line: rgba(255, 140, 0, 0.16);
+  --paper: #1C1928;
+  --green: #F59E0B;
+}
+
+/* 1.1 Base & Dropdown Menus */
+[data-theme="tokyo-lofi"] .theme-dropdown-menu,
+[data-theme="tokyo-lofi"] .pod-dropdown-menu {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.28) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .theme-dropdown-item,
+[data-theme="tokyo-lofi"] .pod-dropdown-item {
+  color: #D4CEEB !important;
+  background: transparent !important;
+}
+
+[data-theme="tokyo-lofi"] .theme-dropdown-item:hover,
+[data-theme="tokyo-lofi"] .pod-dropdown-item:hover {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .theme-dropdown-item.active,
+[data-theme="tokyo-lofi"] .pod-dropdown-item.active {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+  border-left: 2px solid #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .theme-name {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .theme-desc {
+  color: #7A7294 !important;
+}
+
+[data-theme="tokyo-lofi"] .theme-dropdown-badge {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #F59E0B !important;
+}
+
+/* 1.2 Modals, Dialogs & Backdrop */
+[data-theme="tokyo-lofi"] .modal-backdrop {
+  background: rgba(10, 8, 16, 0.82) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+[data-theme="tokyo-lofi"] .modal-box,
+[data-theme="tokyo-lofi"] .modal-card,
+[data-theme="tokyo-lofi"] .industrial-modal-box,
+[data-theme="tokyo-lofi"] .roadmap-modal-card,
+[data-theme="tokyo-lofi"] .alarm-ringing-modal,
+[data-theme="tokyo-lofi"] .evening-closeout-modal,
+[data-theme="tokyo-lofi"] .closeout-content,
+[data-theme="tokyo-lofi"] .recap-modal {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.28) !important;
+  color: #FAF8FF !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85) !important;
+}
+
+[data-theme="tokyo-lofi"] .modal-header,
+[data-theme="tokyo-lofi"] .modal-footer {
+  border-color: rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .modal-field label,
+[data-theme="tokyo-lofi"] .modal-card label {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .modal-btn-secondary,
+[data-theme="tokyo-lofi"] .curriculum-btn-secondary {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .modal-btn-secondary:hover,
+[data-theme="tokyo-lofi"] .curriculum-btn-secondary:hover {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #F59E0B !important;
+}
+
+/* 1.3 Form Controls, Inputs & Textareas */
+[data-theme="tokyo-lofi"] .modal-field input,
+[data-theme="tokyo-lofi"] .modal-field textarea,
+[data-theme="tokyo-lofi"] .modal-card-input,
+[data-theme="tokyo-lofi"] .form-input,
+[data-theme="tokyo-lofi"] .unblock-textarea,
+[data-theme="tokyo-lofi"] .alarm-time-group input[type="time"],
+[data-theme="tokyo-lofi"] .alarm-label-input,
+[data-theme="tokyo-lofi"] .creator-paste-textarea,
+[data-theme="tokyo-lofi"] .roadmap-editor-textarea,
+[data-theme="tokyo-lofi"] .add-stage-input,
+[data-theme="tokyo-lofi"] .add-checkpoint-input,
+[data-theme="tokyo-lofi"] input[type="text"],
+[data-theme="tokyo-lofi"] input[type="time"],
+[data-theme="tokyo-lofi"] input[type="date"],
+[data-theme="tokyo-lofi"] input[type="number"],
+[data-theme="tokyo-lofi"] input[type="search"],
+[data-theme="tokyo-lofi"] input[type="email"],
+[data-theme="tokyo-lofi"] input[type="password"],
+[data-theme="tokyo-lofi"] textarea,
+[data-theme="tokyo-lofi"] select {
+  background: #14111D !important;
+  color: #FAF8FF !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+}
+
+[data-theme="tokyo-lofi"] input:focus,
+[data-theme="tokyo-lofi"] textarea:focus,
+[data-theme="tokyo-lofi"] select:focus {
+  border-color: #F59E0B !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Closeout priority box & Elastic compress label */
+[data-theme="tokyo-lofi"] .closeout-priority-box,
+[data-theme="tokyo-lofi"] .evening-closeout-modal div[style*="fffbeb"] {
+  background: rgba(245, 158, 11, 0.08) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .closeout-priority-box label,
+[data-theme="tokyo-lofi"] .evening-closeout-modal div[style*="fffbeb"] label {
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .elastic-compress-label,
+[data-theme="tokyo-lofi"] .modal-card label[style*="f8fafc"] {
+  background: #14111D !important;
+  border-color: rgba(255, 140, 0, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .elastic-compress-label span,
+[data-theme="tokyo-lofi"] .modal-card label[style*="f8fafc"] span {
+  color: #D4CEEB !important;
+}
+
+/* 1.4 Interceptor / Unblock Tiles */
+[data-theme="tokyo-lofi"] .interceptor-tile {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .interceptor-tile:hover {
+  background: #241E30 !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .interceptor-tile-icon {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .interceptor-tile-title {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .interceptor-tile-desc {
+  color: #A39BBF !important;
+}
+
+/* 1.5 Habit Logged Pill & Habit Rows */
+[data-theme="tokyo-lofi"] .habit-logged-pill {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.locked-goal {
+  background: #14111D !important;
+  border-color: rgba(255, 140, 0, 0.15) !important;
+  color: #7A7294 !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.locked-goal .check-box {
+  background: #191526 !important;
+  border-color: rgba(255, 140, 0, 0.2) !important;
+}
+
+/* 1.6 Timetable Checkpoint Capsule */
+[data-theme="tokyo-lofi"] .timetable-checkpoint-capsule {
+  background: #191526 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .timetable-checkpoint-capsule:hover {
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  background: #201A30 !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-checkbox {
+  background: #14111D !important;
+  border: 1.5px solid rgba(255, 140, 0, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-checkbox:checked {
+  background: #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-nav-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .capsule-nav-btn:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+}
+
+/* 1.7 Banners & Strip Cards */
+[data-theme="tokyo-lofi"] .circadian-strip {
+  background: #191526 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .circadian-badge {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .circadian-note {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .morning-priority-card {
+  background: #1C1928 !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .burnout-warning-card {
+  background: #1C1928 !important;
+  border: 1.5px solid rgba(244, 114, 182, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .deload-active-banner {
+  background: #191526 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .healed-plan-today-banner {
+  background: #191526 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .date-lock-banner {
+  background: #191526 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #D4CEEB !important;
+}
+
+/* 1.8 Topbar Buttons & Chips */
+[data-theme="tokyo-lofi"] .date-chip,
+[data-theme="tokyo-lofi"] .sync-chip,
+[data-theme="tokyo-lofi"] .pod-pill,
+[data-theme="tokyo-lofi"] .today-button,
+[data-theme="tokyo-lofi"] .jump-today-btn,
+[data-theme="tokyo-lofi"] .export-button,
+[data-theme="tokyo-lofi"] .icon-button,
+[data-theme="tokyo-lofi"] .reset-schedule-btn,
+[data-theme="tokyo-lofi"] .chief-audit-btn,
+[data-theme="tokyo-lofi"] .elastic-btn {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .today-button:hover,
+[data-theme="tokyo-lofi"] .jump-today-btn:hover,
+[data-theme="tokyo-lofi"] .export-button:hover,
+[data-theme="tokyo-lofi"] .icon-button:hover,
+[data-theme="tokyo-lofi"] .chief-audit-btn:hover,
+[data-theme="tokyo-lofi"] .elastic-btn:hover {
+  background: #241E30 !important;
+  border-color: #F59E0B !important;
+  color: #F59E0B !important;
+}
+
+/* 1.9 Roadmaps Hub Elements */
+[data-theme="tokyo-lofi"] .roadmap-blank-creator-card,
+[data-theme="tokyo-lofi"] .creator-option-box,
+[data-theme="tokyo-lofi"] .roadmap-command-center,
+[data-theme="tokyo-lofi"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"] .stage-focus-header,
+[data-theme="tokyo-lofi"] .empty-checkpoints-prompt,
+[data-theme="tokyo-lofi"] .single-checkpoint-row,
+[data-theme="tokyo-lofi"] .single-checkpoint-box,
+[data-theme="tokyo-lofi"] .stage-focus-add-checkpoint-row,
+[data-theme="tokyo-lofi"] .stage-footer-nav,
+[data-theme="tokyo-lofi"] .roadmap-outline-editor-card,
+[data-theme="tokyo-lofi"] .editor-card-header,
+[data-theme="tokyo-lofi"] .editor-card-footer,
+[data-theme="tokyo-lofi"] .routine-stage-box,
+[data-theme="tokyo-lofi"] .curriculum-stage-card,
+[data-theme="tokyo-lofi"] .curriculum-header-stats {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-format-guide-box,
+[data-theme="tokyo-lofi"] .format-guide-code,
+[data-theme="tokyo-lofi"] .editor-subtext code,
+[data-theme="tokyo-lofi"] .editor-hint code {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .command-tool-btn,
+[data-theme="tokyo-lofi"] .stage-init-btn,
+[data-theme="tokyo-lofi"] .stage-nav-arrow-btn,
+[data-theme="tokyo-lofi"] .single-stage-tab-btn,
+[data-theme="tokyo-lofi"] .add-stage-trigger-btn,
+[data-theme="tokyo-lofi"] .pin-timetable-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .command-tool-btn:hover,
+[data-theme="tokyo-lofi"] .single-stage-tab-btn:hover,
+[data-theme="tokyo-lofi"] .stage-nav-arrow-btn:not(:disabled):hover {
+  background: rgba(245, 158, 11, 0.18) !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .command-tool-btn.danger,
+[data-theme="tokyo-lofi"] .delete-subject-btn,
+[data-theme="tokyo-lofi"] .delete-stage-btn {
+  background: rgba(244, 63, 94, 0.12) !important;
+  border: 1px solid rgba(244, 63, 94, 0.35) !important;
+  color: #F472B6 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-pill-empty {
+  background: #14111D !important;
+  color: #7A7294 !important;
+  border: 1px dashed rgba(255, 140, 0, 0.2) !important;
+}
+
+/* 1.10 Study Pods & Coding Hub */
+[data-theme="tokyo-lofi"] .pod-switcher-bar,
+[data-theme="tokyo-lofi"] .pod-card,
+[data-theme="tokyo-lofi"] .leaderboard-row,
+[data-theme="tokyo-lofi"] .nudge-btn,
+[data-theme="tokyo-lofi"] .coding-top-banner,
+[data-theme="tokyo-lofi"] .dsa-potd-card,
+[data-theme="tokyo-lofi"] .coding-metric-panel,
+[data-theme="tokyo-lofi"] .coding-sheet-panel,
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel,
+[data-theme="tokyo-lofi"] .contest-card,
+[data-theme="tokyo-lofi"] .suggestion-card,
+[data-theme="tokyo-lofi"] .commit-stat-box,
+[data-theme="tokyo-lofi"] .snippet-card,
+[data-theme="tokyo-lofi"] .company-chip,
+[data-theme="tokyo-lofi"] .gh-repo-chip,
+[data-theme="tokyo-lofi"] .pattern-item-row,
+[data-theme="tokyo-lofi"] .verification-msg-box.warn,
+[data-theme="tokyo-lofi"] .verification-msg-box.success {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .pod-switcher-pill,
+[data-theme="tokyo-lofi"] .coding-subtab-btn {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .pod-switcher-pill.active,
+[data-theme="tokyo-lofi"] .coding-subtab-btn.active {
+  background: rgba(245, 158, 11, 0.18) !important;
+  border-color: #F59E0B !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-check-box {
+  background: #14111D !important;
+  border: 1.5px solid rgba(255, 140, 0, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-check-box:checked {
+  background: #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+/* 1.11 Alarms & Sound Controls */
+[data-theme="tokyo-lofi"] .alarm-panel,
+[data-theme="tokyo-lofi"] .alarm-row {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+}
+
+[data-theme="tokyo-lofi"] .alarm-row.active {
+  background: rgba(245, 158, 11, 0.08) !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .sound-btn,
+[data-theme="tokyo-lofi"] .test-sound-btn,
+[data-theme="tokyo-lofi"] .add-alarm-btn,
+[data-theme="tokyo-lofi"] .alarm-snooze-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .sound-btn.active {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .note-panel textarea {
+  background: #14111D !important;
+  color: #FAF8FF !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .toggle span {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+}
+
+
+/* ==========================================================================
+   2. CYBER SAKURA (Architectural Tech-Noir & Neon Sakura Aesthetic)
+   ========================================================================== */
+
+
+/* 2.1 Base & Dropdown Menus */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 2.2 Modals, Dialogs & Backdrop */
+
+
+
+
+
+
+
+
+
+
+
+
+/* 2.3 Form Controls, Inputs & Textareas */
+
+
+
+
+/* Closeout priority box & Elastic compress label */
+
+
+
+
+
+
+
+
+/* 2.4 Interceptor / Unblock Tiles */
+
+
+
+
+
+
+
+
+
+
+/* 2.5 Habit Logged Pill & Habit Rows */
+
+
+
+
+
+
+/* 2.6 Timetable Checkpoint Capsule */
+
+
+
+
+
+
+
+
+
+
+
+
+/* 2.7 Banners & Strip Cards */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 2.8 Topbar Buttons & Chips */
+
+
+
+
+/* 2.9 Roadmaps Hub Elements */
+
+
+
+
+
+
+
+
+
+
+
+
+/* 2.10 Study Pods & Coding Hub */
+
+
+
+
+
+
+
+
+
+
+/* 2.11 Alarms & Sound Controls */
+
+
+
+
+
+
+
+
+
+
+
+
+/* 2.12 Cyber Sakura Telemetry Strip & Card */
+
+
+.cyber-strip-left, 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.cyber-telemetry-time small {
+  font-size: 11px;
+  color: #9D84BA;
+  margin-left: 4px;
+}
+
+
+
+/* ==========================================================================
+   TOKYO LOFI & CYBER SAKURA — BESPOKE HIGH-CONTRAST REWORK
+   Stage Roadmaps, Coding Performance Hub, Routine Schedule & Settings
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKYO LOFI — REWORK FOR STAGE, CODING & ROUTINE
+   -------------------------------------------------------------------------- */
+
+/* 1.A STAGE ROADMAPS HUB (Tokyo Lofi) */
+[data-theme="tokyo-lofi"] .stage-roadmaps-hub {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-header {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-title {
+  color: #FAF8FF !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-subtitle {
+  color: #D4CEEB !important;
+  font-size: 13px !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-icon-wrap {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+}
+
+/* Subject Tabs Bar */
+[data-theme="tokyo-lofi"] .roadmap-subjects-tabs {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #D4CEEB !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill:hover {
+  background: #241E30 !important;
+  color: #FAF8FF !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active {
+  background: rgba(245, 158, 11, 0.18) !important;
+  border: 1.5px solid #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-pill-percent {
+  background: #14111D !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active .roadmap-pill-percent {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-add-subject-btn {
+  background: #1C1928 !important;
+  border: 1px dashed rgba(255, 140, 0, 0.3) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-add-subject-btn:hover {
+  background: #241E30 !important;
+  border-color: #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+/* Stage Navigation Tabs */
+[data-theme="tokyo-lofi"] .stage-tabs-navigation-bar {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-nav-label {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn:hover {
+  background: #241E30 !important;
+  color: #FAF8FF !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn.viewing {
+  background: rgba(245, 158, 11, 0.16) !important;
+  border: 1.5px solid #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-tab-num {
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-tab-ratio {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Single Stage Focused Card */
+[data-theme="tokyo-lofi"] .single-stage-focused-card {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-header {
+  background: #161322 !important;
+  border-bottom: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-title {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-number-badge {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-counter {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .pin-timetable-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .pin-timetable-btn:hover {
+  background: rgba(245, 158, 11, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .pinned-badge-active {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border: 1px solid #F59E0B !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .delete-stage-btn {
+  background: rgba(244, 63, 94, 0.12) !important;
+  border: 1px solid rgba(244, 63, 94, 0.3) !important;
+  color: #F472B6 !important;
+}
+
+/* Checkpoint Rows */
+[data-theme="tokyo-lofi"] .single-checkpoint-row {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-row:hover {
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-row.completed {
+  background: rgba(20, 17, 29, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  opacity: 0.7 !important;
+}
+
+[data-theme="tokyo-lofi"] .checkpoint-headline {
+  color: #FAF8FF !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="tokyo-lofi"] .checkpoint-headline.strikethrough {
+  color: #7A7294 !important;
+}
+
+[data-theme="tokyo-lofi"] .checkpoint-sub-pill {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-box {
+  background: #14111D !important;
+  border: 1.5px solid rgba(255, 140, 0, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-box:checked {
+  background: #F59E0B !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-box:checked::before {
+  color: #12111A !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-focus-add-checkpoint-row {
+  background: #161322 !important;
+  border-top: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .add-checkpoint-input {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .add-checkpoint-submit-btn,
+[data-theme="tokyo-lofi"] .add-stage-save-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .empty-checkpoints-prompt {
+  background: #161322 !important;
+  border: 1.5px dashed rgba(255, 140, 0, 0.25) !important;
+  color: #D4CEEB !important;
+}
+
+/* Blank Creator Card & Command Center */
+[data-theme="tokyo-lofi"] .blank-creator-header {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .blank-creator-title {
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .blank-creator-desc {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .blank-creator-badge {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+}
+
+[data-theme="tokyo-lofi"] .creator-option-box {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .creator-option-box:hover {
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .option-title {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .option-desc {
+  color: #D4CEEB !important;
+  line-height: 1.55 !important;
+}
+
+[data-theme="tokyo-lofi"] .option-icon-box {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .paste-label,
+[data-theme="tokyo-lofi"] .format-guide-head {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .format-guide-code {
+  background: #14111D !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .command-subject-name {
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .command-progress-badge {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-footer-nav {
+  background: #161322 !important;
+  border-top: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-nav-counter {
+  color: #D4CEEB !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+
+/* 1.B CODING PERFORMANCE HUB (Tokyo Lofi) */
+[data-theme="tokyo-lofi"] .coding-top-banner {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-top-banner h3 {
+  color: #FAF8FF !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-top-banner p {
+  color: #D4CEEB !important;
+  font-size: 13px !important;
+}
+
+/* Coding Subtabs */
+[data-theme="tokyo-lofi"] .coding-subtab-btn {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn:hover {
+  background: #241E30 !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn.active {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border: 1.5px solid #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn .count-pill {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn.active .count-pill {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+/* POTD Card */
+[data-theme="tokyo-lofi"] .dsa-potd-card {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-body h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-body p {
+  color: #D4CEEB !important;
+  line-height: 1.6 !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-chip {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.3) !important;
+}
+
+[data-theme="tokyo-lofi"] .topic-pill {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-solve-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-solve-btn:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-check-btn {
+  background: #F59E0B !important;
+  border: 1px solid #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+/* Metric Panels (LeetCode & GitHub) */
+[data-theme="tokyo-lofi"] .coding-metric-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-panel-header strong {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-panel-header small {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-total-num strong {
+  color: #FAF8FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-total-num small {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-total-row {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-diff-label {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-diff-label strong {
+  color: #FAF8FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-diff-label em {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .lc-track {
+  background: #14111D !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-meta strong {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-meta p {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-counts {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-chart-container {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-chart-title {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-repo-chip {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-repo-chip:hover {
+  background: #241E30 !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .gh-repo-name {
+  color: #FAF8FF !important;
+}
+
+/* DSA Sheet Panel & Patterns */
+[data-theme="tokyo-lofi"] .coding-sheet-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .sheet-header h3 {
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .sheet-progress-box {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-group-header {
+  border-bottom: 1px solid rgba(255, 140, 0, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-group-header h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-count {
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-item-row {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-item-row:hover {
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-title {
+  color: #FAF8FF !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-item-row.solved .pattern-title {
+  color: #7A7294 !important;
+}
+
+/* Contests & Suggestions */
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-card h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-time {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .platform-tag {
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .duration-tag {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-link-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .contest-link-btn:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .suggestion-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .suggestion-card h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .suggestion-card p {
+  color: #D4CEEB !important;
+}
+
+/* Smart Commit & Snippets */
+[data-theme="tokyo-lofi"] .smart-commit-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .commit-stat-box small {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .commit-stat-box strong {
+  color: #FAF8FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .company-label {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .company-chip {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .company-chip.active {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-header strong {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-header small {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-notes-box {
+  background: #14111D !important;
+  color: #D4CEEB !important;
+  border-left: 3px solid #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .snippet-code-box {
+  background: #0D0B12 !important;
+  color: #FAF8FF !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+}
+
+
+/* 1.C ROUTINE SETTINGS TAB (Tokyo Lofi) */
+[data-theme="tokyo-lofi"] .settings-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-note {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .save-schedule-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  border: 1px solid #F59E0B !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .reset-schedule-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-edit-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input:focus {
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input:focus {
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times input[type="time"] {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times input[type="time"]:focus {
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times span {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-duration-badge {
+  background: #241E30 !important;
+  color: #F59E0B !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. CYBER SAKURA — REWORK FOR STAGE, CODING & ROUTINE
+   -------------------------------------------------------------------------- */
+
+/* 2.A STAGE ROADMAPS HUB (Cyber Sakura) */
+
+
+
+
+
+
+
+
+
+
+/* Subject Tabs Bar */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Stage Navigation Tabs */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Single Stage Focused Card */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Checkpoint Rows */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Blank Creator Card & Command Center */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 2.B CODING PERFORMANCE HUB (Cyber Sakura) */
+
+
+
+
+
+
+/* Coding Subtabs */
+
+
+
+
+
+
+
+
+
+
+/* POTD Card */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Metric Panels (LeetCode & GitHub) */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* DSA Sheet Panel & Patterns */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Contests & Suggestions */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Smart Commit & Snippets */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 2.C ROUTINE SETTINGS TAB (Cyber Sakura) */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Targeted High-Contrast Overrides for newly classed elements in Coding & Settings */
+[data-theme="tokyo-lofi"] .smart-commit-title,
+[data-theme="tokyo-lofi"] .webhook-title,
+[data-theme="tokyo-lofi"] .cf-org-name,
+[data-theme="tokyo-lofi"] .peer-review-title,
+[data-theme="tokyo-lofi"] .snippet-reply-item strong {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .cf-org-info,
+[data-theme="tokyo-lofi"] .snippet-reply-item {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .leaderboard-you-tag {
+  color: #F59E0B !important;
+  font-weight: 700 !important;
+}
+
+/* ==========================================================================
+   TOKYO LOFI MASTER HIGH-CONTRAST ZERO-OLIVE SYSTEM
+   Strict Japanese Late-Night Studio Aesthetic:
+   - Surface / Panels: #1C1928 with warm amber border rgba(255, 140, 0, 0.16)
+   - Background: #12111A
+   - Text Primary (Headings / Strong / Badges): #FAF8FF (100% Crisp White)
+   - Text Secondary (Body / Descriptions / Rows): #D4CEEB (Warm Cream Lavender)
+   - Text Tertiary (Subheads / Timestamps / Muted): #A39BBF (Bright Lavender)
+   - Accents / Pills / Codes / Highlights: #F59E0B (Tokyo Warm Amber) / #F472B6 (Tokyo Neon Pink)
+   - Zero olive / green / dark slate colors anywhere on this theme.
+   ========================================================================== */
+
+:root[data-theme="tokyo-lofi"],
+html[data-theme="tokyo-lofi"],
+[data-theme="tokyo-lofi"],
+.app-shell[data-theme="tokyo-lofi"] {
+  --ink: #FAF8FF !important;
+  --paper: #12111A !important;
+  --line: rgba(255, 140, 0, 0.16) !important;
+  --green: #F59E0B !important;
+  --muted: #A39BBF !important;
+  color: #D4CEEB !important;
+  background-color: #12111A !important;
+}
+
+/* All Headings & Strong typography */
+[data-theme="tokyo-lofi"] h1,
+[data-theme="tokyo-lofi"] h2,
+[data-theme="tokyo-lofi"] h3,
+[data-theme="tokyo-lofi"] h4,
+[data-theme="tokyo-lofi"] h5,
+[data-theme="tokyo-lofi"] h6,
+[data-theme="tokyo-lofi"] strong,
+[data-theme="tokyo-lofi"] b,
+[data-theme="tokyo-lofi"] th,
+[data-theme="tokyo-lofi"] .brand,
+[data-theme="tokyo-lofi"] .brand strong,
+[data-theme="tokyo-lofi"] .topbar h1,
+[data-theme="tokyo-lofi"] .welcome-row h2,
+[data-theme="tokyo-lofi"] .streak-card strong,
+[data-theme="tokyo-lofi"] .metric-copy strong,
+[data-theme="tokyo-lofi"] .coding-top-banner h3,
+[data-theme="tokyo-lofi"] .potd-body h4,
+[data-theme="tokyo-lofi"] .coding-panel-header strong,
+[data-theme="tokyo-lofi"] .gh-meta strong,
+[data-theme="tokyo-lofi"] .gh-counts strong,
+[data-theme="tokyo-lofi"] .gh-chart-title,
+[data-theme="tokyo-lofi"] .gh-repo-name,
+[data-theme="tokyo-lofi"] .sheet-header h3,
+[data-theme="tokyo-lofi"] .pattern-group-header h4,
+[data-theme="tokyo-lofi"] .pattern-title,
+[data-theme="tokyo-lofi"] .contest-card h4,
+[data-theme="tokyo-lofi"] .suggestion-card h4,
+[data-theme="tokyo-lofi"] .snippet-header strong,
+[data-theme="tokyo-lofi"] .settings-panel h3,
+[data-theme="tokyo-lofi"] .alarm-ringing-time,
+[data-theme="tokyo-lofi"] .roadmap-hub-title,
+[data-theme="tokyo-lofi"] .stage-focus-title,
+[data-theme="tokyo-lofi"] .checkpoint-headline,
+[data-theme="tokyo-lofi"] .blank-creator-title,
+[data-theme="tokyo-lofi"] .option-title,
+[data-theme="tokyo-lofi"] .command-subject-name,
+[data-theme="tokyo-lofi"] .format-guide-head,
+[data-theme="tokyo-lofi"] .paste-label,
+[data-theme="tokyo-lofi"] .modal-card-title,
+[data-theme="tokyo-lofi"] .curriculum-stage-head strong,
+[data-theme="tokyo-lofi"] .stage-card-header strong,
+[data-theme="tokyo-lofi"] .smart-commit-title,
+[data-theme="tokyo-lofi"] .webhook-title,
+[data-theme="tokyo-lofi"] .cf-org-name,
+[data-theme="tokyo-lofi"] .peer-review-title,
+[data-theme="tokyo-lofi"] .mock-problem-name,
+[data-theme="tokyo-lofi"] .leaderboard-user-info strong,
+[data-theme="tokyo-lofi"] .lc-total-num strong,
+[data-theme="tokyo-lofi"] .lc-diff-label strong,
+[data-theme="tokyo-lofi"] .commit-stat-box strong,
+[data-theme="tokyo-lofi"] .project-logged-stat,
+[data-theme="tokyo-lofi"] .pod-cutoff-stat,
+[data-theme="tokyo-lofi"] .chief-modal-title,
+[data-theme="tokyo-lofi"] .modal-field-label,
+[data-theme="tokyo-lofi"] .preflight-item-title,
+[data-theme="tokyo-lofi"] .edit-title-input,
+[data-theme="tokyo-lofi"] .session-clock,
+[data-theme="tokyo-lofi"] .schedule-item .event-title-row h4 {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+/* All Body, Descriptions, Cells, Subtext */
+[data-theme="tokyo-lofi"] p,
+[data-theme="tokyo-lofi"] span,
+[data-theme="tokyo-lofi"] label,
+[data-theme="tokyo-lofi"] li,
+[data-theme="tokyo-lofi"] td,
+[data-theme="tokyo-lofi"] .coding-top-banner p,
+[data-theme="tokyo-lofi"] .potd-body p,
+[data-theme="tokyo-lofi"] .lc-diff-label,
+[data-theme="tokyo-lofi"] .gh-meta p,
+[data-theme="tokyo-lofi"] .gh-counts span,
+[data-theme="tokyo-lofi"] .sheet-header p,
+[data-theme="tokyo-lofi"] .sheet-progress-box,
+[data-theme="tokyo-lofi"] .progress-caption,
+[data-theme="tokyo-lofi"] .contest-time,
+[data-theme="tokyo-lofi"] .suggestion-card p,
+[data-theme="tokyo-lofi"] .company-chip,
+[data-theme="tokyo-lofi"] .snippet-notes-box,
+[data-theme="tokyo-lofi"] .snippet-reply-item,
+[data-theme="tokyo-lofi"] .cf-org-info,
+[data-theme="tokyo-lofi"] .coding-subtab-btn,
+[data-theme="tokyo-lofi"] .leaderboard-table th,
+[data-theme="tokyo-lofi"] .leaderboard-table td,
+[data-theme="tokyo-lofi"] .empty-prompt p,
+[data-theme="tokyo-lofi"] .roadmap-hub-subtitle,
+[data-theme="tokyo-lofi"] .option-desc,
+[data-theme="tokyo-lofi"] .blank-creator-desc,
+[data-theme="tokyo-lofi"] .editor-subtext,
+[data-theme="tokyo-lofi"] .empty-checkpoints-prompt,
+[data-theme="tokyo-lofi"] .checkpoint-sub-pill,
+[data-theme="tokyo-lofi"] .detail-pill-tag,
+[data-theme="tokyo-lofi"] .curriculum-detail-tag,
+[data-theme="tokyo-lofi"] .modal-card-sub,
+[data-theme="tokyo-lofi"] .stage-counter-pill,
+[data-theme="tokyo-lofi"] .stage-checkpoint-item,
+[data-theme="tokyo-lofi"] .stage-focus-counter,
+[data-theme="tokyo-lofi"] .stage-tab-ratio,
+[data-theme="tokyo-lofi"] .settings-panel p,
+[data-theme="tokyo-lofi"] .settings-note,
+[data-theme="tokyo-lofi"] .settings-note span,
+[data-theme="tokyo-lofi"] .edit-sub-input,
+[data-theme="tokyo-lofi"] .schedule-item .event-body p,
+[data-theme="tokyo-lofi"] .habit-row,
+[data-theme="tokyo-lofi"] .duration-pill,
+[data-theme="tokyo-lofi"] .shipped-notes-text,
+[data-theme="tokyo-lofi"] .chief-modal-narrative,
+[data-theme="tokyo-lofi"] .modal-field-subtext,
+[data-theme="tokyo-lofi"] .preflight-item-time,
+[data-theme="tokyo-lofi"] .interceptor-desc,
+[data-theme="tokyo-lofi"] .modal-desc,
+[data-theme="tokyo-lofi"] .chief-healed-title,
+[data-theme="tokyo-lofi"] .chief-healed-time,
+[data-theme="tokyo-lofi"] .sidebar-bottom p,
+[data-theme="tokyo-lofi"] .profile strong {
+  color: #D4CEEB !important;
+}
+
+/* All Muted, Secondary, Timestamps */
+[data-theme="tokyo-lofi"] small,
+[data-theme="tokyo-lofi"] time,
+[data-theme="tokyo-lofi"] .muted,
+[data-theme="tokyo-lofi"] .subhead,
+[data-theme="tokyo-lofi"] .session-time,
+[data-theme="tokyo-lofi"] .coding-panel-header small,
+[data-theme="tokyo-lofi"] .lc-total-num small,
+[data-theme="tokyo-lofi"] .lc-diff-label em,
+[data-theme="tokyo-lofi"] .gh-counts,
+[data-theme="tokyo-lofi"] .commit-stat-box small,
+[data-theme="tokyo-lofi"] .snippet-header small,
+[data-theme="tokyo-lofi"] .duration-tag,
+[data-theme="tokyo-lofi"] .edit-times span,
+[data-theme="tokyo-lofi"] .schedule-item .time-col span,
+[data-theme="tokyo-lofi"] .footer,
+[data-theme="tokyo-lofi"] .footer span,
+[data-theme="tokyo-lofi"] .stage-nav-counter,
+[data-theme="tokyo-lofi"] .sidebar-bottom span,
+[data-theme="tokyo-lofi"] .profile small {
+  color: #A39BBF !important;
+}
+
+/* Tokyo Amber Accents, Badges, Pills & Code */
+[data-theme="tokyo-lofi"] .eyebrow,
+[data-theme="tokyo-lofi"] .side-label,
+[data-theme="tokyo-lofi"] .pattern-count,
+[data-theme="tokyo-lofi"] .potd-chip,
+[data-theme="tokyo-lofi"] .platform-tag,
+[data-theme="tokyo-lofi"] .suggestion-badge,
+[data-theme="tokyo-lofi"] .star-tag,
+[data-theme="tokyo-lofi"] .lang-tag,
+[data-theme="tokyo-lofi"] .mock-timer-clock,
+[data-theme="tokyo-lofi"] .leaderboard-you-tag,
+[data-theme="tokyo-lofi"] .webhook-box code,
+[data-theme="tokyo-lofi"] .count-pill,
+[data-theme="tokyo-lofi"] .stage-tab-num,
+[data-theme="tokyo-lofi"] .roadmap-pill-percent,
+[data-theme="tokyo-lofi"] .stage-focus-number-badge,
+[data-theme="tokyo-lofi"] .command-progress-badge,
+[data-theme="tokyo-lofi"] .blank-creator-badge,
+[data-theme="tokyo-lofi"] .format-guide-code,
+[data-theme="tokyo-lofi"] .pin-timetable-btn,
+[data-theme="tokyo-lofi"] .pinned-badge-active,
+[data-theme="tokyo-lofi"] .edit-duration-badge,
+[data-theme="tokyo-lofi"] .schedule-item .time-col strong,
+[data-theme="tokyo-lofi"] .logged-label,
+[data-theme="tokyo-lofi"] .settings-note svg,
+[data-theme="tokyo-lofi"] .session-clock svg,
+[data-theme="tokyo-lofi"] .pod-pill-count,
+[data-theme="tokyo-lofi"] .timetable-pinned-badge {
+  color: #F59E0B !important;
+}
+
+/* SVG Lucide Icons Stroke Override */
+[data-theme="tokyo-lofi"] svg:not([class*="lucide-sun"]):not([class*="lucide-moon"]) {
+  stroke: currentColor !important;
+}
+
+/* Cards & Containers in Tokyo Lofi */
+[data-theme="tokyo-lofi"] .panel,
+[data-theme="tokyo-lofi"] .coding-top-banner,
+[data-theme="tokyo-lofi"] .dsa-potd-card,
+[data-theme="tokyo-lofi"] .coding-metric-panel,
+[data-theme="tokyo-lofi"] .coding-sheet-panel,
+[data-theme="tokyo-lofi"] .coding-contests-panel,
+[data-theme="tokyo-lofi"] .coding-suggestions-panel,
+[data-theme="tokyo-lofi"] .stage-roadmaps-hub,
+[data-theme="tokyo-lofi"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"] .schedule-edit-card,
+[data-theme="tokyo-lofi"] .metric-card,
+[data-theme="tokyo-lofi"] .streak-card,
+[data-theme="tokyo-lofi"] .modal-card,
+[data-theme="tokyo-lofi"] .modal-box,
+[data-theme="tokyo-lofi"] .settings-panel,
+[data-theme="tokyo-lofi"] .pod-card,
+[data-theme="tokyo-lofi"] .report-card,
+[data-theme="tokyo-lofi"] .notes-quote-card,
+[data-theme="tokyo-lofi"] .chief-strategy-col,
+[data-theme="tokyo-lofi"] .breathing-box,
+[data-theme="tokyo-lofi"] .creator-option-box {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Primary Action Buttons */
+[data-theme="tokyo-lofi"] .save-schedule-btn,
+[data-theme="tokyo-lofi"] .potd-check-btn,
+[data-theme="tokyo-lofi"] .form-submit-btn,
+[data-theme="tokyo-lofi"] .auth-btn,
+[data-theme="tokyo-lofi"] .add-stage-save-btn,
+[data-theme="tokyo-lofi"] .add-checkpoint-submit-btn,
+[data-theme="tokyo-lofi"] .primary-button {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+  border: none !important;
+}
+
+[data-theme="tokyo-lofi"] .save-schedule-btn:hover,
+[data-theme="tokyo-lofi"] .potd-check-btn:hover,
+[data-theme="tokyo-lofi"] .form-submit-btn:hover,
+[data-theme="tokyo-lofi"] .auth-btn:hover,
+[data-theme="tokyo-lofi"] .add-stage-save-btn:hover,
+[data-theme="tokyo-lofi"] .primary-button:hover {
+  background: #FFB347 !important;
+  color: #12111A !important;
+}
+
+/* Secondary & Interactive Buttons */
+[data-theme="tokyo-lofi"] .reset-schedule-btn,
+[data-theme="tokyo-lofi"] .potd-solve-btn,
+[data-theme="tokyo-lofi"] .contest-link-btn,
+[data-theme="tokyo-lofi"] .like-btn,
+[data-theme="tokyo-lofi"] .webhook-toggle-btn,
+[data-theme="tokyo-lofi"] .command-tool-btn,
+[data-theme="tokyo-lofi"] .roadmap-header-btn.secondary,
+[data-theme="tokyo-lofi"] .single-stage-tab-btn,
+[data-theme="tokyo-lofi"] .roadmap-subject-pill,
+[data-theme="tokyo-lofi"] .coding-subtab-btn,
+[data-theme="tokyo-lofi"] .icon-button,
+[data-theme="tokyo-lofi"] .date-chip,
+[data-theme="tokyo-lofi"] .jump-today-btn,
+[data-theme="tokyo-lofi"] .quick-link-btn,
+[data-theme="tokyo-lofi"] .secondary-button,
+[data-theme="tokyo-lofi"] .option-action-btn.secondary {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn.viewing,
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active,
+[data-theme="tokyo-lofi"] .coding-subtab-btn.active,
+[data-theme="tokyo-lofi"] .nav-item.selected {
+  background: rgba(245, 158, 11, 0.22) !important;
+  border-color: #F59E0B !important;
+  color: #FAF8FF !important;
+}
+
+/* Inputs & Textareas */
+[data-theme="tokyo-lofi"] input[type="text"],
+[data-theme="tokyo-lofi"] input[type="time"],
+[data-theme="tokyo-lofi"] input[type="number"],
+[data-theme="tokyo-lofi"] input[type="email"],
+[data-theme="tokyo-lofi"] input[type="password"],
+[data-theme="tokyo-lofi"] textarea,
+[data-theme="tokyo-lofi"] .edit-title-input,
+[data-theme="tokyo-lofi"] .edit-sub-input,
+[data-theme="tokyo-lofi"] .add-checkpoint-input,
+[data-theme="tokyo-lofi"] .unblock-textarea,
+[data-theme="tokyo-lofi"] .modal-field-input {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] input:focus,
+[data-theme="tokyo-lofi"] textarea:focus {
+  border-color: #F59E0B !important;
+  outline: none !important;
+}
+
+/* ==========================================================================
+   TOKYO LOFI BESPOKE ROUTINE SETTINGS & SCHEDULE REDESIGN
+   Bespoke Washi Paper & Shinkansen Timetable Architecture
+   Zero white boxes - deep midnight purple, warm amber glow, capsule pills
+   ========================================================================== */
+
+[data-theme="tokyo-lofi"] .settings-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  border-radius: 16px !important;
+  padding: 32px clamp(18px, 3vw, 36px) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(245, 158, 11, 0.04) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Subtle Watermark Kanji (時 - Time/Schedule) matching the Washi Paper Notebook */
+[data-theme="tokyo-lofi"] .settings-panel::after {
+  content: '時' !important;
+  position: absolute !important;
+  right: 18px !important;
+  bottom: 8px !important;
+  font-size: 190px !important;
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif !important;
+  color: rgba(245, 158, 11, 0.032) !important;
+  pointer-events: none !important;
+  line-height: 1 !important;
+  z-index: 0 !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel .panel-heading {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  position: relative !important;
+  z-index: 1 !important;
+  margin-bottom: 16px !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel .eyebrow {
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+  font-weight: 700 !important;
+  display: block !important;
+  margin-bottom: 4px !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel h3 {
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
+  font-size: clamp(20px, 2.5vw, 26px) !important;
+  letter-spacing: -0.6px !important;
+  margin: 0 0 6px !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel p.muted {
+  color: #D4CEEB !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  max-width: 640px !important;
+  margin-bottom: 22px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Tokyo Pill Badge (e.g. 7 BLOCKS) */
+[data-theme="tokyo-lofi"] .settings-panel .count-badge {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
+  white-space: nowrap !important;
+}
+
+/* Actions Bar */
+[data-theme="tokyo-lofi"] .settings-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 24px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  flex-wrap: wrap !important;
+}
+
+[data-theme="tokyo-lofi"] .save-schedule-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  padding: 10px 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3) !important;
+  transition: all 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .save-schedule-btn:hover {
+  background: #FFB347 !important;
+  color: #12111A !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45) !important;
+}
+
+[data-theme="tokyo-lofi"] .reset-schedule-btn {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  color: #D4CEEB !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 10px 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: all 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .reset-schedule-btn:hover {
+  background: #241E30 !important;
+  border-color: #F59E0B !important;
+  color: #F59E0B !important;
+}
+
+/* Schedule Editor Grid */
+[data-theme="tokyo-lofi"] .schedule-editor-grid {
+  display: grid !important;
+  gap: 12px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Individual Block Card - 100% Zero-White, Bespoke Dark Purple & Warm Amber */
+[data-theme="tokyo-lofi"] .schedule-edit-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  border-left: 3.5px solid rgba(245, 158, 11, 0.45) !important;
+  border-radius: 10px !important;
+  padding: 14px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-edit-card:hover {
+  background: #1E1A2C !important;
+  border-color: rgba(245, 158, 11, 0.38) !important;
+  border-left-color: #F59E0B !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(245, 158, 11, 0.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Left Icon Box */
+[data-theme="tokyo-lofi"] .schedule-edit-card .edit-icon-box {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 8px !important;
+  background: #120F1D !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  color: #F59E0B !important;
+  display: grid !important;
+  place-items: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Time Inputs Wrapper */
+[data-theme="tokyo-lofi"] .edit-times {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times input[type="time"] {
+  background: #120F1D !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  border-radius: 6px !important;
+  padding: 7px 10px !important;
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #FAF8FF !important;
+  outline: none !important;
+  color-scheme: dark !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times input[type="time"]:focus {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25) !important;
+  background: #161224 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times span {
+  color: #A39BBF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Block Details (Title & Subtitle Inputs) */
+[data-theme="tokyo-lofi"] .edit-details {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input {
+  background: #120F1D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  border-radius: 6px !important;
+  padding: 7px 12px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #FAF8FF !important;
+  outline: none !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input:focus {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2) !important;
+  background: #161224 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input::placeholder {
+  color: #6B6484 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input {
+  background: #100D18 !important;
+  border: 1px solid rgba(255, 140, 0, 0.12) !important;
+  border-radius: 6px !important;
+  padding: 5px 12px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 12px !important;
+  color: #D4CEEB !important;
+  outline: none !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input:focus {
+  border-color: rgba(245, 158, 11, 0.6) !important;
+  background: #141020 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input::placeholder {
+  color: #554F6A !important;
+}
+
+/* Duration Capsule Pill - Matching 0h 0m (0%) Pill in Habit Screenshot */
+[data-theme="tokyo-lofi"] .edit-duration-badge {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #F59E0B !important;
+  border-radius: 20px !important;
+  padding: 4px 12px !important;
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Settings Tip Note */
+[data-theme="tokyo-lofi"] .settings-note {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  border-radius: 10px !important;
+  color: #D4CEEB !important;
+  padding: 14px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-note svg {
+  color: #F59E0B !important;
+  flex-shrink: 0 !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-note span {
+  color: #D4CEEB !important;
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+}
+
+@media (max-width: 768px) {
+  [data-theme="tokyo-lofi"] .schedule-edit-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  [data-theme="tokyo-lofi"] .edit-times {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+  [data-theme="tokyo-lofi"] .edit-duration-badge {
+    align-self: flex-start !important;
+  }
+}
+
+/* ==========================================================================
+   TOKYO LOFI BESPOKE STAGE & ROADMAP ARCHITECTURE
+   Handcrafted Shinkansen Route Architecture & Washi Checkpoints
+   Deep midnight slate/purple (#1C1928), warm amber neon (#F59E0B),
+   Japanese watermark kanji, capsule status pills, tactile checkpoint stamps.
+   Strictly for tokyo-lofi only — zero effect on any other theme.
    ========================================================================== */
 
 /* 1. Hub Container */
@@ -6647,17 +11625,16 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   color: #D4CEEB !important;
   max-width: 1200px !important;
   margin: 0 auto !important;
-  padding: 10px 0 35px !important;
-  position: relative !important;
+  padding: 10px 0 30px !important;
 }
 
 /* 2. Roadmap Hub Header */
 [data-theme="tokyo-lofi"] .roadmap-hub-header {
-  background: #191625 !important;
-  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
   border-radius: 16px !important;
-  padding: 26px 32px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 158, 11, 0.03) !important;
+  padding: 28px 32px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(245, 158, 11, 0.04) !important;
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
@@ -6666,23 +11643,6 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   position: relative !important;
   overflow: hidden !important;
   margin-bottom: 22px !important;
-}
-
-/* Ghost Kanji Watermark on Header: 道 (The Way / The Path) */
-[data-theme="tokyo-lofi"] .roadmap-hub-header::after {
-  content: "道" !important;
-  position: absolute !important;
-  right: 18px !important;
-  top: -15px !important;
-  font-size: 140px !important;
-  font-weight: 900 !important;
-  color: #FAF8FF !important;
-  opacity: 0.024 !important;
-  pointer-events: none !important;
-  line-height: 1 !important;
-  user-select: none !important;
-  font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif !important;
-  z-index: 0 !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-hub-title-group {
@@ -6706,214 +11666,193 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6) !important;
 }
 
-/* Japanese Eyebrow Masthead */
 [data-theme="tokyo-lofi"] .roadmap-hub-header .eyebrow {
   color: #F59E0B !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 11px !important;
   letter-spacing: 2.2px !important;
   font-weight: 700 !important;
   display: block !important;
   margin-bottom: 4px !important;
-  text-transform: uppercase !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-hub-title {
   color: #FAF8FF !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-  font-weight: 700 !important;
-  font-size: 22px !important;
-  letter-spacing: -0.01em !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+  font-size: clamp(20px, 2.5vw, 26px) !important;
+  letter-spacing: -0.6px !important;
   margin: 0 0 4px !important;
-  line-height: 1.25 !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-hub-subtitle {
-  color: #9B8EA8 !important;
+  color: #D4CEEB !important;
   font-size: 13px !important;
-  line-height: 1.5 !important;
+  line-height: 1.6 !important;
+  max-width: 580px !important;
   margin: 0 !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-hub-actions {
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
+  gap: 12px !important;
   position: relative !important;
   z-index: 1 !important;
+  flex-wrap: wrap !important;
 }
 
-/* Header Buttons */
 [data-theme="tokyo-lofi"] .roadmap-header-btn.primary {
   background: #F59E0B !important;
   color: #12111A !important;
-  border: 1px solid #F59E0B !important;
-  font-weight: 700 !important;
-  font-size: 13px !important;
+  border: none !important;
   border-radius: 8px !important;
-  padding: 9px 18px !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  padding: 10px 18px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
-  cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3) !important;
+  transition: all 0.18s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-header-btn.primary:hover {
-  background: #D97706 !important;
-  border-color: #D97706 !important;
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35) !important;
+  background: #FFB347 !important;
+  color: #12111A !important;
   transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45) !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-header-btn.secondary {
   background: #161322 !important;
-  color: #FAF8FF !important;
   border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  color: #FAF8FF !important;
+  border-radius: 8px !important;
   font-weight: 600 !important;
   font-size: 13px !important;
-  border-radius: 8px !important;
-  padding: 9px 16px !important;
+  padding: 10px 16px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
-  cursor: pointer !important;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.18s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-header-btn.secondary:hover {
-  background: #1E1A2C !important;
+  background: #241E30 !important;
   border-color: #F59E0B !important;
-  color: #FAF8FF !important;
-  transform: translateY(-1px) !important;
+  color: #F59E0B !important;
 }
 
-/* 3. Subject Tabs / Station Track Row */
+/* 3. Subject Tabs Navigation Bar */
 [data-theme="tokyo-lofi"] .roadmap-subjects-tabs {
-  border-bottom: 1px solid rgba(255, 140, 0, 0.12) !important;
-  padding-bottom: 12px !important;
+  border-bottom: 1px solid rgba(255, 140, 0, 0.14) !important;
+  padding: 0 0 18px !important;
   margin-bottom: 22px !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-tabs-scroll {
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 10px !important;
   overflow-x: auto !important;
-  padding: 2px 2px 8px !important;
+  padding-bottom: 4px !important;
 }
 
-/* Inactive Subject Pill */
 [data-theme="tokyo-lofi"] .roadmap-subject-pill {
   background: #161322 !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  border-radius: 8px !important;
-  padding: 8px 14px !important;
-  color: #A39BBF !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  border-radius: 24px !important;
+  padding: 8px 18px !important;
+  color: #D4CEEB !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 10px !important;
-  cursor: pointer !important;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  gap: 8px !important;
   white-space: nowrap !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-subject-pill:hover {
-  background: #1E1A2C !important;
-  border-color: rgba(245, 158, 11, 0.25) !important;
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
   color: #FAF8FF !important;
+  transform: translateY(-1px) !important;
 }
 
-/* Active Subject Pill (Station Beacon) */
 [data-theme="tokyo-lofi"] .roadmap-subject-pill.active {
-  background: #1E1A2C !important;
+  background: rgba(245, 158, 11, 0.18) !important;
   border: 1.5px solid #F59E0B !important;
   color: #FAF8FF !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 12px rgba(245, 158, 11, 0.1) !important;
-}
-
-[data-theme="tokyo-lofi"] .roadmap-subject-pill.active::before {
-  content: "" !important;
-  width: 6px !important;
-  height: 6px !important;
-  border-radius: 50% !important;
-  background: #F59E0B !important;
-  box-shadow: 0 0 6px #F59E0B !important;
-  display: inline-block !important;
-  margin-right: -2px !important;
-}
-
-/* Percentage Pill: Reference Style (0h 0m (0%)) */
-[data-theme="tokyo-lofi"] .roadmap-pill-percent {
-  background: rgba(245, 158, 11, 0.08) !important;
-  border: 1px solid rgba(245, 158, 11, 0.25) !important;
-  color: #F59E0B !important;
-  border-radius: 5px !important;
-  font-size: 11px !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.28) !important;
   font-weight: 700 !important;
-  padding: 2px 7px !important;
-  letter-spacing: 0.5px !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-pill-percent {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  padding: 2px 8px !important;
+  border-radius: 12px !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-subject-pill.active .roadmap-pill-percent {
-  background: rgba(245, 158, 11, 0.16) !important;
+  background: #F59E0B !important;
+  color: #12111A !important;
   border-color: #F59E0B !important;
-  color: #F59E0B !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-pill-empty {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: #857C9C !important;
-  border-radius: 5px !important;
-  font-size: 11px !important;
-  padding: 2px 6px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #A39BBF !important;
+  font-size: 10px !important;
+  padding: 2px 8px !important;
+  border-radius: 12px !important;
 }
 
-/* Add Subject Button */
 [data-theme="tokyo-lofi"] .roadmap-add-subject-btn {
-  background: transparent !important;
-  border: 1px dashed rgba(245, 158, 11, 0.35) !important;
-  border-radius: 8px !important;
-  padding: 8px 14px !important;
+  background: #161322 !important;
+  border: 1px dashed rgba(255, 140, 0, 0.3) !important;
+  border-radius: 24px !important;
   color: #F59E0B !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 8px 16px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  cursor: pointer !important;
-  transition: all 0.18s ease !important;
   white-space: nowrap !important;
+  transition: all 0.18s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-add-subject-btn:hover {
-  background: rgba(245, 158, 11, 0.08) !important;
+  background: #241E30 !important;
   border-color: #F59E0B !important;
   color: #FAF8FF !important;
 }
 
-/* 4. Command Strip & Stages Rail */
+/* 4. Command Center */
 [data-theme="tokyo-lofi"] .roadmap-command-center {
-  background: #191625 !important;
-  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
   border-radius: 16px !important;
-  padding: 22px 28px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+  padding: 24px 28px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
   margin-bottom: 22px !important;
-  position: relative !important;
 }
 
 [data-theme="tokyo-lofi"] .command-center-top {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  flex-wrap: wrap !important;
   gap: 16px !important;
-  margin-bottom: 16px !important;
+  flex-wrap: wrap !important;
 }
 
 [data-theme="tokyo-lofi"] .command-subject-row {
@@ -6925,32 +11864,33 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 
 [data-theme="tokyo-lofi"] .command-subject-name {
   color: #FAF8FF !important;
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 22px !important;
+  letter-spacing: -0.4px !important;
   margin: 0 !important;
 }
 
 [data-theme="tokyo-lofi"] .command-progress-badge {
-  background: rgba(245, 158, 11, 0.08) !important;
-  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
   color: #F59E0B !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  padding: 3px 10px !important;
-  border-radius: 6px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+  padding: 5px 14px !important;
+  border-radius: 20px !important;
 }
 
 [data-theme="tokyo-lofi"] .timetable-pinned-badge {
-  background: rgba(245, 158, 11, 0.14) !important;
-  border: 1px solid rgba(245, 158, 11, 0.35) !important;
-  color: #F59E0B !important;
+  background: rgba(244, 114, 182, 0.12) !important;
+  border: 1px solid rgba(244, 114, 182, 0.35) !important;
+  color: #F472B6 !important;
   font-size: 11px !important;
   font-weight: 700 !important;
-  letter-spacing: 0.5px !important;
-  padding: 3px 10px !important;
-  border-radius: 6px !important;
+  padding: 5px 12px !important;
+  border-radius: 20px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
@@ -6959,231 +11899,216 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 [data-theme="tokyo-lofi"] .command-center-actions {
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 10px !important;
 }
 
 [data-theme="tokyo-lofi"] .command-tool-btn {
-  background: #161322 !important;
-  border: 1px solid rgba(255, 140, 0, 0.2) !important;
-  color: #FAF8FF !important;
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  border-radius: 8px !important;
+  color: #D4CEEB !important;
   font-size: 12px !important;
   font-weight: 600 !important;
-  border-radius: 6px !important;
-  padding: 6px 12px !important;
+  padding: 7px 14px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  cursor: pointer !important;
-  transition: all 0.18s ease !important;
+  transition: all 0.15s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .command-tool-btn:hover {
-  background: #1E1A2C !important;
+  background: #201C2E !important;
   border-color: #F59E0B !important;
   color: #FAF8FF !important;
 }
 
 [data-theme="tokyo-lofi"] .command-tool-btn.danger {
-  background: rgba(239, 68, 68, 0.08) !important;
-  border: 1px solid rgba(239, 68, 68, 0.22) !important;
-  color: #FCA5A5 !important;
+  border-color: rgba(244, 63, 94, 0.25) !important;
+  color: #F472B6 !important;
 }
 
 [data-theme="tokyo-lofi"] .command-tool-btn.danger:hover {
-  background: rgba(239, 68, 68, 0.18) !important;
-  border-color: #EF4444 !important;
-  color: #FFFFFF !important;
+  background: rgba(244, 63, 94, 0.15) !important;
+  border-color: #F472B6 !important;
 }
 
-/* Railway Gauge Progress Line */
+/* Full Progress Track */
 [data-theme="tokyo-lofi"] .roadmap-full-progress-track {
-  width: 100% !important;
-  height: 4px !important;
   background: #120F1D !important;
-  border-radius: 999px !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  height: 6px !important;
+  border-radius: 10px !important;
+  margin: 18px 0 16px !important;
   overflow: hidden !important;
-  margin-bottom: 18px !important;
 }
 
 [data-theme="tokyo-lofi"] .roadmap-full-progress-fill {
+  background: linear-gradient(90deg, #F59E0B 0%, #F472B6 100%) !important;
   height: 100% !important;
-  background: #F59E0B !important;
-  border-radius: 999px !important;
-  box-shadow: 0 0 8px rgba(245, 158, 11, 0.45) !important;
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.5) !important;
+  transition: width 0.3s ease !important;
 }
 
-/* Stage Navigation Tabs / Station Track */
+/* Stage Tabs Bar */
 [data-theme="tokyo-lofi"] .stage-tabs-navigation-bar {
   display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  padding-top: 6px !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-nav-label {
   color: #A39BBF !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 11px !important;
-  letter-spacing: 1.5px !important;
-  text-transform: uppercase !important;
   font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-tabs-scroll {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  overflow-x: auto !important;
-  padding: 2px 2px 6px !important;
+  flex-wrap: wrap !important;
 }
 
-/* Single Stage Tab (Station Stop) */
 [data-theme="tokyo-lofi"] .single-stage-tab-btn {
-  background: #161322 !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
   border-radius: 8px !important;
   padding: 8px 14px !important;
-  color: #9B8EA8 !important;
+  color: #D4CEEB !important;
   font-size: 12px !important;
   font-weight: 600 !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
-  cursor: pointer !important;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  white-space: nowrap !important;
+  transition: all 0.18s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .single-stage-tab-btn:hover {
-  background: #1E1A2C !important;
-  border-color: rgba(245, 158, 11, 0.25) !important;
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
   color: #FAF8FF !important;
+  transform: translateY(-1px) !important;
 }
 
-/* Active Viewed Stage Tab */
 [data-theme="tokyo-lofi"] .single-stage-tab-btn.viewing {
-  background: rgba(245, 158, 11, 0.12) !important;
+  background: rgba(245, 158, 11, 0.2) !important;
   border: 1.5px solid #F59E0B !important;
   color: #FAF8FF !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
-}
-
-[data-theme="tokyo-lofi"] .stage-tab-num {
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3) !important;
   font-weight: 700 !important;
 }
 
+[data-theme="tokyo-lofi"] .stage-tab-num {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+}
+
 [data-theme="tokyo-lofi"] .stage-tab-ratio {
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 10px !important;
+  padding: 2px 7px !important;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 11px !important;
-  color: #857C9C !important;
+  color: #A39BBF !important;
 }
 
 [data-theme="tokyo-lofi"] .single-stage-tab-btn.viewing .stage-tab-ratio {
+  background: rgba(245, 158, 11, 0.28) !important;
   color: #F59E0B !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-tab-check {
-  color: #10B981 !important;
-  font-weight: 800 !important;
+  color: #F59E0B !important;
+  font-weight: 900 !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-tab-pinned-dot {
-  width: 6px !important;
-  height: 6px !important;
+  width: 7px !important;
+  height: 7px !important;
   border-radius: 50% !important;
-  background: #F59E0B !important;
-  box-shadow: 0 0 6px #F59E0B !important;
-  display: inline-block !important;
+  background: #F472B6 !important;
+  box-shadow: 0 0 8px #F472B6 !important;
 }
 
-/* Add Stage Trigger */
 [data-theme="tokyo-lofi"] .add-stage-trigger-btn {
-  background: transparent !important;
-  border: 1px dashed rgba(245, 140, 0, 0.3) !important;
+  background: #14111D !important;
+  border: 1px dashed rgba(255, 140, 0, 0.3) !important;
   border-radius: 8px !important;
-  padding: 8px 12px !important;
   color: #F59E0B !important;
+  padding: 8px 14px !important;
   font-size: 12px !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
-  cursor: pointer !important;
-  transition: all 0.18s ease !important;
-  white-space: nowrap !important;
+  gap: 5px !important;
 }
 
-[data-theme="tokyo-lofi"] .add-stage-trigger-btn:hover {
-  background: rgba(245, 158, 11, 0.08) !important;
-  border-color: #F59E0B !important;
-}
-
-/* 5. MAIN STAGE FOCUS CARD (Twin of User Reference) */
+/* 5. HERO Focused Stage Card */
 [data-theme="tokyo-lofi"] .single-stage-focused-card {
-  background: #191625 !important;
-  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
   border-radius: 16px !important;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(245, 158, 11, 0.03) !important;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.55), 0 0 24px rgba(245, 158, 11, 0.04) !important;
   position: relative !important;
   overflow: hidden !important;
-  margin-bottom: 24px !important;
 }
 
-/* Ghost Kanji Watermark on Stage Card: 階 (Stage / Step) */
+/* Ghost Watermark Kanji (道 - Way/Path) */
 [data-theme="tokyo-lofi"] .single-stage-focused-card::after {
-  content: "階" !important;
+  content: '道' !important;
   position: absolute !important;
-  right: 18px !important;
-  bottom: 8px !important;
-  font-size: 145px !important;
-  font-weight: 900 !important;
-  color: #FAF8FF !important;
-  opacity: 0.025 !important;
+  right: 22px !important;
+  bottom: 25px !important;
+  font-size: 210px !important;
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif !important;
+  color: rgba(245, 158, 11, 0.03) !important;
   pointer-events: none !important;
   line-height: 1 !important;
-  user-select: none !important;
-  font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif !important;
   z-index: 0 !important;
 }
 
-/* Stage Card Header */
+/* Stage Header Banner */
 [data-theme="tokyo-lofi"] .stage-focus-header {
-  padding: 24px 28px !important;
-  border-bottom: 1px solid rgba(255, 140, 0, 0.1) !important;
+  background: #161322 !important;
+  border-bottom: 1px solid rgba(255, 140, 0, 0.16) !important;
+  padding: 24px 30px !important;
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  flex-wrap: wrap !important;
-  gap: 16px !important;
-  background: #161322 !important;
   position: relative !important;
   z-index: 1 !important;
-}
-
-[data-theme="tokyo-lofi"] .stage-focus-left {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 6px !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-focus-number-badge {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
   color: #F59E0B !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 11px !important;
-  letter-spacing: 1.8px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
   display: inline-block !important;
+  margin-bottom: 6px !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-focus-title {
   color: #FAF8FF !important;
-  font-size: 22px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  font-weight: 800 !important;
+  font-size: clamp(20px, 2.2vw, 24px) !important;
+  letter-spacing: -0.4px !important;
   margin: 0 !important;
-  line-height: 1.25 !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-focus-right {
@@ -7193,229 +12118,211 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   flex-wrap: wrap !important;
 }
 
-/* Reference Matching Counter: (0h 0m (0%)) */
 [data-theme="tokyo-lofi"] .stage-focus-counter {
-  background: rgba(245, 158, 11, 0.08) !important;
-  border: 1px solid rgba(245, 158, 11, 0.25) !important;
-  color: #F59E0B !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  padding: 5px 12px !important;
-  border-radius: 6px !important;
-}
-
-/* Pin to Timetable Button */
-[data-theme="tokyo-lofi"] .pin-timetable-btn {
-  background: #161322 !important;
+  background: rgba(245, 158, 11, 0.1) !important;
   border: 1px solid rgba(245, 158, 11, 0.3) !important;
   color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 5px 14px !important;
+  border-radius: 20px !important;
+  white-space: nowrap !important;
+}
+
+[data-theme="tokyo-lofi"] .pin-timetable-btn {
+  background: #201C2E !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #F59E0B !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
   font-size: 12px !important;
-  font-weight: 600 !important;
-  border-radius: 6px !important;
-  padding: 5px 12px !important;
+  padding: 7px 14px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  cursor: pointer !important;
   transition: all 0.18s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .pin-timetable-btn:hover {
-  background: rgba(245, 158, 11, 0.12) !important;
-  border-color: #F59E0B !important;
+  background: rgba(245, 158, 11, 0.22) !important;
   color: #FAF8FF !important;
+  border-color: #F59E0B !important;
 }
 
 [data-theme="tokyo-lofi"] .pinned-badge-active {
-  background: rgba(245, 158, 11, 0.18) !important;
-  border: 1.5px solid #F59E0B !important;
-  color: #F59E0B !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+  border: 1px solid #F59E0B !important;
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
   font-size: 12px !important;
-  font-weight: 700 !important;
-  padding: 5px 12px !important;
-  border-radius: 6px !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
 }
 
 [data-theme="tokyo-lofi"] .delete-stage-btn {
-  background: #161322 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: #857C9C !important;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 6px !important;
-  display: grid !important;
-  place-items: center !important;
-  cursor: pointer !important;
-  transition: all 0.18s ease !important;
+  background: rgba(244, 63, 94, 0.12) !important;
+  border: 1px solid rgba(244, 63, 94, 0.25) !important;
+  color: #F472B6 !important;
+  border-radius: 8px !important;
+  padding: 7px 10px !important;
+  transition: all 0.15s ease !important;
 }
 
-[data-theme="tokyo-lofi"] .delete-stage-btn:hover {
-  background: rgba(239, 68, 68, 0.15) !important;
-  border-color: #EF4444 !important;
-  color: #FFFFFF !important;
-}
-
-/* Checkpoints List */
+/* 6. Checkpoints List */
 [data-theme="tokyo-lofi"] .stage-focus-checkpoints-list {
-  padding: 20px 28px !important;
+  padding: 24px 30px !important;
+  display: grid !important;
+  gap: 10px !important;
   position: relative !important;
   z-index: 1 !important;
 }
 
-/* Washi Departure Checkpoint Row */
 [data-theme="tokyo-lofi"] .single-checkpoint-row {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  border-left: 3.5px solid rgba(245, 158, 11, 0.45) !important;
+  border-radius: 10px !important;
+  padding: 14px 18px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  background: #161322 !important;
-  border: 1px solid rgba(255, 140, 0, 0.09) !important;
-  border-left: 3.5px solid rgba(245, 158, 11, 0.45) !important;
-  border-radius: 10px !important;
-  padding: 13px 18px !important;
-  margin-bottom: 8px !important;
+  gap: 14px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 [data-theme="tokyo-lofi"] .single-checkpoint-row:hover {
   background: #1E1A2C !important;
-  border-color: rgba(245, 158, 11, 0.35) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
   border-left-color: #F59E0B !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-  transform: translateX(2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(245, 158, 11, 0.08) !important;
+  transform: translateY(-1px) !important;
 }
 
-/* Completed Row */
 [data-theme="tokyo-lofi"] .single-checkpoint-row.completed {
-  background: rgba(22, 19, 34, 0.5) !important;
-  border-color: rgba(255, 255, 255, 0.04) !important;
-  border-left-color: rgba(245, 158, 11, 0.25) !important;
+  background: rgba(20, 17, 29, 0.55) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  border-left-color: rgba(245, 158, 11, 0.3) !important;
+  opacity: 0.8 !important;
 }
 
 [data-theme="tokyo-lofi"] .checkpoint-toggle-label {
   display: flex !important;
   align-items: center !important;
   gap: 14px !important;
-  cursor: pointer !important;
   flex: 1 !important;
+  cursor: pointer !important;
 }
 
-/* Custom Washi Square Stamp Checkbox */
+/* Custom Japanese Stamp Checkbox */
 [data-theme="tokyo-lofi"] .single-checkpoint-box {
   appearance: none !important;
   -webkit-appearance: none !important;
-  width: 18px !important;
-  height: 18px !important;
-  border-radius: 4px !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 6px !important;
   background: #120F1D !important;
-  border: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+  border: 1.5px solid rgba(255, 140, 0, 0.32) !important;
   cursor: pointer !important;
-  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
   flex-shrink: 0 !important;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: all 0.18s ease !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5) !important;
 }
 
 [data-theme="tokyo-lofi"] .single-checkpoint-box:hover {
   border-color: #F59E0B !important;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.2) !important;
 }
 
 [data-theme="tokyo-lofi"] .single-checkpoint-box:checked {
   background: #F59E0B !important;
   border-color: #F59E0B !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4) !important;
 }
 
 [data-theme="tokyo-lofi"] .single-checkpoint-box:checked::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 5px !important;
-  top: 2px !important;
-  width: 5px !important;
-  height: 9px !important;
-  border: solid #12111A !important;
-  border-width: 0 2.2px 2.2px 0 !important;
-  transform: rotate(45deg) !important;
+  content: '✓' !important;
+  color: #12111A !important;
+  font-weight: 900 !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
 }
 
 [data-theme="tokyo-lofi"] .checkpoint-label-body {
   display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  flex-wrap: wrap !important;
-  flex: 1 !important;
+  flex-direction: column !important;
+  gap: 4px !important;
 }
 
-/* High Contrast Crisp Headline (NEVER olive!) */
 [data-theme="tokyo-lofi"] .checkpoint-headline {
   color: #FAF8FF !important;
   font-size: 14px !important;
-  font-weight: 500 !important;
-  line-height: 1.4 !important;
-  transition: all 0.18s ease !important;
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
 }
 
 [data-theme="tokyo-lofi"] .checkpoint-headline.strikethrough {
-  color: #857C9C !important;
+  color: #7E7796 !important;
   text-decoration: line-through !important;
 }
 
 [data-theme="tokyo-lofi"] .checkpoint-sub-pill {
-  background: rgba(245, 158, 11, 0.08) !important;
-  border: 1px solid rgba(245, 158, 11, 0.2) !important;
-  color: #D4CEEB !important;
+  background: #120F1D !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  border-radius: 6px !important;
+  color: #A39BBF !important;
   font-size: 11px !important;
-  padding: 1px 7px !important;
-  border-radius: 4px !important;
+  padding: 2px 8px !important;
+  display: inline-block !important;
 }
 
-/* Subtle Trash Button on Checkpoint */
 [data-theme="tokyo-lofi"] .delete-checkpoint-btn {
   background: transparent !important;
   border: none !important;
-  color: #857C9C !important;
-  opacity: 0.35 !important;
+  color: #6B6484 !important;
+  font-size: 18px !important;
   cursor: pointer !important;
-  padding: 6px !important;
-  display: grid !important;
-  place-items: center !important;
-  border-radius: 4px !important;
-  transition: all 0.18s ease !important;
-}
-
-[data-theme="tokyo-lofi"] .single-checkpoint-row:hover .delete-checkpoint-btn {
-  opacity: 0.8 !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  transition: all 0.15s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .delete-checkpoint-btn:hover {
-  color: #EF4444 !important;
-  opacity: 1 !important;
-  background: rgba(239, 68, 68, 0.1) !important;
+  color: #F472B6 !important;
+  background: rgba(244, 63, 94, 0.12) !important;
 }
 
-/* Add Checkpoint Row */
+/* 7. Add Checkpoint Row */
 [data-theme="tokyo-lofi"] .stage-focus-add-checkpoint-row {
+  padding: 0 30px 24px !important;
   display: flex !important;
-  gap: 10px !important;
-  padding: 0 28px 24px !important;
+  gap: 12px !important;
   position: relative !important;
   z-index: 1 !important;
 }
 
 [data-theme="tokyo-lofi"] .add-checkpoint-input {
-  flex: 1 !important;
   background: #120F1D !important;
-  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
   border-radius: 8px !important;
-  padding: 10px 14px !important;
+  padding: 11px 16px !important;
   color: #FAF8FF !important;
   font-size: 13px !important;
+  flex: 1 !important;
+  outline: none !important;
   transition: all 0.18s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .add-checkpoint-input:focus {
-  outline: none !important;
   border-color: #F59E0B !important;
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25) !important;
+  background: #161224 !important;
 }
 
 [data-theme="tokyo-lofi"] .add-checkpoint-input::placeholder {
@@ -7425,29 +12332,30 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 [data-theme="tokyo-lofi"] .add-checkpoint-submit-btn {
   background: #F59E0B !important;
   color: #12111A !important;
-  border: 1px solid #F59E0B !important;
+  border: none !important;
   border-radius: 8px !important;
-  padding: 10px 16px !important;
+  font-weight: 800 !important;
   font-size: 13px !important;
-  font-weight: 700 !important;
+  padding: 10px 18px !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
+  gap: 7px !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3) !important;
   cursor: pointer !important;
+  white-space: nowrap !important;
   transition: all 0.18s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .add-checkpoint-submit-btn:hover {
-  background: #D97706 !important;
-  border-color: #D97706 !important;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.35) !important;
+  background: #FFB347 !important;
+  transform: translateY(-1px) !important;
 }
 
-/* Footer Navigation (Prev / Next Stage) */
+/* 8. Stage Footer Navigation */
 [data-theme="tokyo-lofi"] .stage-footer-nav {
-  padding: 16px 28px !important;
-  background: #161322 !important;
-  border-top: 1px solid rgba(255, 140, 0, 0.1) !important;
+  background: #14111D !important;
+  border-top: 1px solid rgba(255, 140, 0, 0.16) !important;
+  padding: 16px 30px !important;
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
@@ -7456,222 +12364,180 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 }
 
 [data-theme="tokyo-lofi"] .stage-nav-arrow-btn {
-  background: #191625 !important;
-  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
   border-radius: 8px !important;
-  padding: 7px 14px !important;
   color: #FAF8FF !important;
   font-size: 12px !important;
   font-weight: 600 !important;
+  padding: 8px 16px !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
-  cursor: pointer !important;
+  gap: 7px !important;
   transition: all 0.18s ease !important;
 }
 
-[data-theme="tokyo-lofi"] .stage-nav-arrow-btn:hover:not(:disabled) {
-  background: #1E1A2C !important;
+[data-theme="tokyo-lofi"] .stage-nav-arrow-btn:hover {
+  background: #241E30 !important;
   border-color: #F59E0B !important;
-  color: #FAF8FF !important;
+  color: #F59E0B !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-nav-arrow-btn:disabled {
   opacity: 0.35 !important;
   cursor: not-allowed !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #6B6484 !important;
 }
 
 [data-theme="tokyo-lofi"] .stage-nav-counter {
-  color: #D4CEEB !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  color: #A39BBF !important;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 12px !important;
   font-weight: 600 !important;
 }
 
-/* 6. Unconfigured Blank State (Zen Architecture) */
+/* 9. Blank Creator / AI Prompt Studio */
 [data-theme="tokyo-lofi"] .roadmap-blank-creator-card {
-  background: #191625 !important;
-  border: 1px solid rgba(255, 140, 0, 0.14) !important;
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
   border-radius: 16px !important;
   padding: 32px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-  margin-bottom: 24px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5) !important;
 }
 
 [data-theme="tokyo-lofi"] .blank-creator-badge {
-  background: rgba(245, 158, 11, 0.1) !important;
-  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  background: rgba(245, 158, 11, 0.14) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
   color: #F59E0B !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 11px !important;
+  font-weight: 800 !important;
   letter-spacing: 1.5px !important;
-  font-weight: 700 !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
   display: inline-block !important;
-  padding: 3px 10px !important;
-  border-radius: 6px !important;
-  margin-bottom: 10px !important;
+  margin-bottom: 8px !important;
 }
 
 [data-theme="tokyo-lofi"] .blank-creator-title {
   color: #FAF8FF !important;
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  margin: 0 0 6px !important;
-}
-
-[data-theme="tokyo-lofi"] .blank-creator-desc {
-  color: #9B8EA8 !important;
-  font-size: 13px !important;
-  margin: 0 0 20px !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
 }
 
 [data-theme="tokyo-lofi"] .creator-option-box {
   background: #161322 !important;
-  border: 1px solid rgba(255, 140, 0, 0.12) !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
   border-radius: 12px !important;
-  padding: 20px !important;
+  padding: 24px !important;
   transition: all 0.2s ease !important;
 }
 
 [data-theme="tokyo-lofi"] .creator-option-box:hover {
-  background: #1E1A2C !important;
-  border-color: rgba(245, 158, 11, 0.35) !important;
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
 }
 
-[data-theme="tokyo-lofi"] .option-title {
-  color: #FAF8FF !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  margin: 10px 0 6px !important;
-}
-
-[data-theme="tokyo-lofi"] .option-desc {
-  color: #9B8EA8 !important;
-  font-size: 12px !important;
-  line-height: 1.5 !important;
-  margin: 0 0 14px !important;
-}
-
-[data-theme="tokyo-lofi"] .option-action-btn.primary {
-  background: #F59E0B !important;
-  color: #12111A !important;
-  border: 1px solid #F59E0B !important;
-  font-weight: 700 !important;
-  border-radius: 6px !important;
-}
-
-[data-theme="tokyo-lofi"] .option-action-btn.secondary {
+[data-theme="tokyo-lofi"] .option-icon-box {
   background: #120F1D !important;
-  color: #FAF8FF !important;
   border: 1px solid rgba(255, 140, 0, 0.25) !important;
-  font-weight: 600 !important;
-  border-radius: 6px !important;
-}
-
-/* Format Guide Box */
-[data-theme="tokyo-lofi"] .roadmap-format-guide-box {
-  background: #120F1D !important;
-  border: 1px solid rgba(255, 140, 0, 0.14) !important;
-  border-radius: 10px !important;
-  padding: 16px !important;
-  margin-bottom: 20px !important;
-}
-
-[data-theme="tokyo-lofi"] .format-guide-head {
   color: #F59E0B !important;
-  font-size: 12px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin-bottom: 10px !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 10px !important;
+  display: grid !important;
+  place-items: center !important;
+  margin-bottom: 14px !important;
 }
 
 [data-theme="tokyo-lofi"] .format-guide-code {
-  background: #0E0C17 !important;
+  background: #100D18 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  border-radius: 8px !important;
   color: #F59E0B !important;
-  border: 1px solid rgba(255, 140, 0, 0.12) !important;
-  border-radius: 6px !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
-  font-size: 11px !important;
-  padding: 12px !important;
-  line-height: 1.6 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  padding: 14px 18px !important;
 }
 
-/* Textarea & Build Button */
 [data-theme="tokyo-lofi"] .creator-paste-textarea {
-  background: #120F1D !important;
-  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  background: #100D18 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
   border-radius: 8px !important;
   color: #FAF8FF !important;
+  font-family: 'JetBrains Mono', monospace !important;
   font-size: 13px !important;
   padding: 14px !important;
-  width: 100% !important;
+  outline: none !important;
 }
 
 [data-theme="tokyo-lofi"] .creator-paste-textarea:focus {
-  outline: none !important;
   border-color: #F59E0B !important;
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25) !important;
 }
 
 [data-theme="tokyo-lofi"] .build-roadmap-btn {
   background: #F59E0B !important;
   color: #12111A !important;
-  border: 1px solid #F59E0B !important;
+  border: none !important;
   border-radius: 8px !important;
-  padding: 10px 20px !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
+  padding: 12px 22px !important;
+  font-size: 14px !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3) !important;
   cursor: pointer !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
   transition: all 0.18s ease !important;
 }
 
-[data-theme="tokyo-lofi"] .build-roadmap-btn:hover:not(:disabled) {
-  background: #D97706 !important;
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35) !important;
+[data-theme="tokyo-lofi"] .build-roadmap-btn:hover {
+  background: #FFB347 !important;
 }
 
-/* 7. Modal & Outline Editor Drawer */
+/* 10. Modals & Drawers */
 [data-theme="tokyo-lofi"] .roadmap-modal-card,
 [data-theme="tokyo-lofi"] .roadmap-outline-editor-card {
-  background: #191625 !important;
+  background: #1C1928 !important;
   border: 1px solid rgba(255, 140, 0, 0.22) !important;
-  border-radius: 16px !important;
+  border-radius: 14px !important;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6) !important;
-  color: #FAF8FF !important;
 }
 
+[data-theme="tokyo-lofi"] .modal-card-input,
 [data-theme="tokyo-lofi"] .roadmap-editor-textarea {
   background: #120F1D !important;
-  border: 1px solid rgba(255, 140, 0, 0.18) !important;
-  border-radius: 8px !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
   color: #FAF8FF !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
-  font-size: 12px !important;
-  padding: 14px !important;
+  border-radius: 8px !important;
 }
 
-/* 8. Timetable Capsule Integration */
-[data-theme="tokyo-lofi"] .timetable-checkpoint-capsule {
-  background: #191526 !important;
-  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+[data-theme="tokyo-lofi"] .modal-card-btn.primary,
+[data-theme="tokyo-lofi"] .editor-save-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  border: none !important;
   border-radius: 8px !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  font-weight: 800 !important;
+}
+
+/* 11. Timetable Current Checkpoint Capsule in Today schedule */
+[data-theme="tokyo-lofi"] .timetable-checkpoint-capsule {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  border-radius: 8px !important;
 }
 
 [data-theme="tokyo-lofi"] .timetable-checkpoint-capsule.active {
-  border-color: rgba(245, 158, 11, 0.4) !important;
-  background: #1E1A2C !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  background: #161222 !important;
 }
 
 [data-theme="tokyo-lofi"] .timetable-checkpoint-capsule .capsule-stage-pill {
   background: rgba(245, 158, 11, 0.15) !important;
   color: #F59E0B !important;
   border: 1px solid rgba(245, 158, 11, 0.3) !important;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace !important;
-  font-weight: 700 !important;
 }
 
 [data-theme="tokyo-lofi"] .timetable-checkpoint-capsule .capsule-checkpoint-text {
