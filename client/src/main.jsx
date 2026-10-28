@@ -552,6 +552,16 @@ function App() {
   const [dynamicVideoModalOpen, setDynamicVideoModalOpen] = useState(false);
   const [isZenMode, setIsZenMode] = useState(false);
 
+  // Column Glass / Transparency Style: 'normal' | 'translucent' | 'transparent' | 'smoky'
+  const [columnStyle, setColumnStyle] = useState(() => {
+    return localStorage.getItem('daymark-column-style') || 'normal';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-column-style', columnStyle);
+    localStorage.setItem('daymark-column-style', columnStyle);
+  }, [columnStyle]);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isZenMode) {
@@ -2364,7 +2374,7 @@ function App() {
   };
 
   return (
-    <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme}>
+    <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme} data-column-style={columnStyle}>
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">
@@ -4757,6 +4767,82 @@ function App() {
                 ? 'Customize departure times, deep-work sessions, and rest windows. Changes sync directly to your Shinkansen train board.'
                 : 'Customize the start time, end time, and titles of your daily schedule. Any changes made here update your daily tracker instantly.'}
             </p>
+
+            {/* Column & Panel Glass Material Setting */}
+            <div className="column-style-setting-card">
+              <div className="column-style-header">
+                <div>
+                  <span className="eyebrow">
+                    {theme === 'tokyo-lofi' ? 'SURFACE MATERIAL // 透過度' : 'SURFACE MATERIAL'}
+                  </span>
+                  <h4>Dashboard Column & Panel Material</h4>
+                  <p className="muted" style={{ margin: '4px 0 0 0', fontSize: '13px' }}>
+                    Choose the glassmorphism and transparency level for schedule, habit, and dashboard columns across any theme:
+                  </p>
+                </div>
+                <span className="column-style-current-pill">
+                  ACTIVE: {columnStyle.toUpperCase()}
+                </span>
+              </div>
+
+              <div className="column-style-options-grid">
+                {[
+                  {
+                    id: 'normal',
+                    label: 'Normal',
+                    badge: 'Default Theme',
+                    desc: 'Original solid theme surfaces and card borders with standard opacity.',
+                    icon: Layers
+                  },
+                  {
+                    id: 'translucent',
+                    label: 'Translucent',
+                    badge: 'Frosted Glass',
+                    desc: 'Semi-transparent frosted glass with background blur. Balances backdrop with crisp readability.',
+                    icon: Sparkles
+                  },
+                  {
+                    id: 'transparent',
+                    label: 'Transparent',
+                    badge: 'Crystal Clear',
+                    desc: 'Ultra-thin transparent glass. Background videos, wallpapers, and atmospheric effects show clearly.',
+                    icon: Eye
+                  },
+                  {
+                    id: 'smoky',
+                    label: 'Smoky',
+                    badge: 'Obsidian Tint',
+                    desc: 'Deep dark smoked glass with rich atmospheric blur and maximum text contrast.',
+                    icon: Moon
+                  }
+                ].map(opt => {
+                  const isSelected = columnStyle === opt.id;
+                  const Icon = opt.icon;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      className={`column-style-option-btn ${isSelected ? 'selected' : ''}`}
+                      onClick={() => setColumnStyle(opt.id)}
+                    >
+                      <div className="col-opt-top">
+                        <div className="col-opt-icon">
+                          <Icon size={18} />
+                        </div>
+                        <span className="col-opt-badge">{opt.badge}</span>
+                        <div className={`col-opt-radio ${isSelected ? 'active' : ''}`}>
+                          {isSelected && <span className="col-opt-radio-dot" />}
+                        </div>
+                      </div>
+                      <div className="col-opt-content">
+                        <strong>{opt.label}</strong>
+                        <p>{opt.desc}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             {/* Save & Reset Actions Bar */}
             <div className="settings-actions">

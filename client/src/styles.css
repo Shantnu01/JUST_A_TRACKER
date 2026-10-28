@@ -13426,3 +13426,310 @@ html[data-theme="tokyo-lofi"],
   background: linear-gradient(135deg, #F59E0B 0%, #EC4899 50%, #8B5CF6 100%) !important;
   box-shadow: 0 0 8px rgba(245, 158, 11, 0.6) !important;
 }
+
+
+/* ==========================================================================
+   COLUMN SURFACE MATERIALS (Normal, Translucent, Transparent, Smoky)
+   ========================================================================== */
+
+/* Settings Card UI */
+.column-style-setting-card {
+  background: var(--surface-warm, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.1));
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin: 16px 0 24px 0;
+  transition: all 0.2s ease;
+}
+
+[data-theme="tokyo-lofi"] .column-style-setting-card {
+  background: rgba(28, 25, 40, 0.6) !important;
+  border-color: rgba(245, 158, 11, 0.18) !important;
+}
+
+.column-style-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.column-style-header h4 {
+  margin: 4px 0 0 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: inherit;
+}
+
+.column-style-current-pill {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(245, 158, 11, 0.12);
+  color: #F59E0B;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  flex-shrink: 0;
+}
+
+.column-style-options-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 1024px) {
+  .column-style-options-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .column-style-options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column-style-option-btn {
+  background: var(--surface, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  padding: 16px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: inherit;
+  position: relative;
+}
+
+.column-style-option-btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.column-style-option-btn.selected {
+  border-color: #F59E0B !important;
+  background: rgba(245, 158, 11, 0.08) !important;
+  box-shadow: 0 0 0 1px #F59E0B, 0 8px 24px rgba(245, 158, 11, 0.12) !important;
+}
+
+.col-opt-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.col-opt-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  color: #F59E0B;
+}
+
+.column-style-option-btn.selected .col-opt-icon {
+  background: #F59E0B;
+  color: #12111A;
+}
+
+.col-opt-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted, #8E86AB);
+}
+
+.col-opt-radio {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  display: grid;
+  place-items: center;
+}
+
+.col-opt-radio.active {
+  border-color: #F59E0B;
+}
+
+.col-opt-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #F59E0B;
+}
+
+.col-opt-content strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: inherit;
+}
+
+.col-opt-content p {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted, #8E86AB);
+  margin: 0;
+}
+
+/* ==========================================================================
+   SURFACE STYLES APPLIED TO DASHBOARD PANELS & COLUMNS
+   ========================================================================== */
+
+/* --- 1. TRANSLUCENT (Frosted Glass with Soft Blur) --- */
+[data-column-style="translucent"] .schedule-panel,
+[data-column-style="translucent"] .habits-panel,
+[data-column-style="translucent"] .right-column .panel,
+[data-column-style="translucent"] .panel,
+[data-column-style="translucent"] .metric-card,
+[data-column-style="translucent"] .streak-card,
+[data-column-style="translucent"] .tokyo-clock-card,
+[data-column-style="translucent"] .note-panel,
+[data-column-style="translucent"] .report-main,
+[data-column-style="translucent"] .settings-panel,
+[data-column-style="translucent"] .coding-metric-panel,
+[data-column-style="translucent"] .coding-sheet-panel,
+[data-column-style="translucent"] .coding-contests-panel,
+[data-column-style="translucent"] .coding-suggestions-panel,
+[data-column-style="translucent"] .roadmap-tree-panel,
+[data-column-style="translucent"] .roadmap-outline-panel,
+[data-column-style="translucent"] .dsa-potd-card,
+[data-column-style="translucent"] .tokyo-soundscape-card {
+  background: rgba(22, 20, 34, 0.58) !important;
+  backdrop-filter: blur(18px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28) !important;
+}
+
+/* Light themes translucent adaptation */
+[data-theme="default"][data-column-style="translucent"] .panel,
+[data-theme="default"][data-column-style="translucent"] .metric-card,
+[data-theme="default"][data-column-style="translucent"] .streak-card,
+[data-theme="sunlit-studio"][data-column-style="translucent"] .panel,
+[data-theme="sunlit-studio"][data-column-style="translucent"] .metric-card,
+[data-theme="sunlit-studio"][data-column-style="translucent"] .streak-card,
+[data-theme="warm-parchment"][data-column-style="translucent"] .panel,
+[data-theme="warm-parchment"][data-column-style="translucent"] .metric-card,
+[data-theme="warm-parchment"][data-column-style="translucent"] .streak-card {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
+}
+
+
+/* --- 2. TRANSPARENT (Crystal Clear Glass) --- */
+[data-column-style="transparent"] .schedule-panel,
+[data-column-style="transparent"] .habits-panel,
+[data-column-style="transparent"] .right-column .panel,
+[data-column-style="transparent"] .panel,
+[data-column-style="transparent"] .metric-card,
+[data-column-style="transparent"] .streak-card,
+[data-column-style="transparent"] .tokyo-clock-card,
+[data-column-style="transparent"] .note-panel,
+[data-column-style="transparent"] .report-main,
+[data-column-style="transparent"] .settings-panel,
+[data-column-style="transparent"] .coding-metric-panel,
+[data-column-style="transparent"] .coding-sheet-panel,
+[data-column-style="transparent"] .coding-contests-panel,
+[data-column-style="transparent"] .coding-suggestions-panel,
+[data-column-style="transparent"] .roadmap-tree-panel,
+[data-column-style="transparent"] .roadmap-outline-panel,
+[data-column-style="transparent"] .dsa-potd-card,
+[data-column-style="transparent"] .tokyo-soundscape-card {
+  background: rgba(12, 10, 22, 0.18) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Light themes transparent adaptation */
+[data-theme="default"][data-column-style="transparent"] .panel,
+[data-theme="default"][data-column-style="transparent"] .metric-card,
+[data-theme="default"][data-column-style="transparent"] .streak-card,
+[data-theme="sunlit-studio"][data-column-style="transparent"] .panel,
+[data-theme="sunlit-studio"][data-column-style="transparent"] .metric-card,
+[data-theme="sunlit-studio"][data-column-style="transparent"] .streak-card,
+[data-theme="warm-parchment"][data-column-style="transparent"] .panel,
+[data-theme="warm-parchment"][data-column-style="transparent"] .metric-card,
+[data-theme="warm-parchment"][data-column-style="transparent"] .streak-card {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+
+/* --- 3. SMOKY (Deep Obsidian Tinted Glass) --- */
+[data-column-style="smoky"] .schedule-panel,
+[data-column-style="smoky"] .habits-panel,
+[data-column-style="smoky"] .right-column .panel,
+[data-column-style="smoky"] .panel,
+[data-column-style="smoky"] .metric-card,
+[data-column-style="smoky"] .streak-card,
+[data-column-style="smoky"] .tokyo-clock-card,
+[data-column-style="smoky"] .note-panel,
+[data-column-style="smoky"] .report-main,
+[data-column-style="smoky"] .settings-panel,
+[data-column-style="smoky"] .coding-metric-panel,
+[data-column-style="smoky"] .coding-sheet-panel,
+[data-column-style="smoky"] .coding-contests-panel,
+[data-column-style="smoky"] .coding-suggestions-panel,
+[data-column-style="smoky"] .roadmap-tree-panel,
+[data-column-style="smoky"] .roadmap-outline-panel,
+[data-column-style="smoky"] .dsa-potd-card,
+[data-column-style="smoky"] .tokyo-soundscape-card {
+  background: rgba(8, 8, 14, 0.84) !important;
+  backdrop-filter: blur(28px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(120%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Light themes smoky adaptation */
+[data-theme="default"][data-column-style="smoky"] .panel,
+[data-theme="default"][data-column-style="smoky"] .metric-card,
+[data-theme="default"][data-column-style="smoky"] .streak-card,
+[data-theme="sunlit-studio"][data-column-style="smoky"] .panel,
+[data-theme="sunlit-studio"][data-column-style="smoky"] .metric-card,
+[data-theme="sunlit-studio"][data-column-style="smoky"] .streak-card,
+[data-theme="warm-parchment"][data-column-style="smoky"] .panel,
+[data-theme="warm-parchment"][data-column-style="smoky"] .metric-card,
+[data-theme="warm-parchment"][data-column-style="smoky"] .streak-card {
+  background: rgba(22, 24, 32, 0.84) !important;
+  color: #FAF8FF !important;
+  backdrop-filter: blur(28px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(120%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Inner rows transparency inside glass columns */
+[data-column-style="translucent"] .schedule-item,
+[data-column-style="transparent"] .schedule-item,
+[data-column-style="smoky"] .schedule-item {
+  background: transparent !important;
+}
+
+[data-column-style="translucent"] .habit-row,
+[data-column-style="transparent"] .habit-row,
+[data-column-style="smoky"] .habit-row {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
