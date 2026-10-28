@@ -3512,6 +3512,7 @@ function App() {
             onPlayChime={playChime}
             setToast={setToast}
             onJumpToToday={() => setView('Today')}
+            theme={theme}
           />
         )}
 

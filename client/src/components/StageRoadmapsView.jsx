@@ -40,7 +40,8 @@ export default function StageRoadmapsView({
   onSelectSubject,
   onPlayChime,
   setToast,
-  onJumpToToday
+  onJumpToToday,
+  theme = ''
 }) {
   // 1. Discover subjects strictly from routine focus items (no dummy/arbitrary subjects)
   const routineSubjects = useMemo(() => {
@@ -352,9 +353,14 @@ export default function StageRoadmapsView({
             <Milestone size={26} />
           </div>
           <div>
+            <span className="eyebrow">
+              {theme === 'tokyo-lofi' ? 'STAGE ROADMAPS // 段階別ロードマップ' : 'CURRICULUM ARCHITECTURE'}
+            </span>
             <h2 className="roadmap-hub-title">Stage Roadmaps & Checkpoint Hub</h2>
             <p className="roadmap-hub-subtitle">
-              Manage your stage plans for each subject. Provide your stages in the format below to generate interactive checkpoints.
+              {theme === 'tokyo-lofi'
+                ? 'Sequential milestone mastery. Select a stage to view its active checkpoints, pin focus blocks to your timetable, and track completion.'
+                : 'Manage your stage plans for each subject. Provide your stages in the format below to generate interactive checkpoints.'}
             </p>
           </div>
         </div>
@@ -710,49 +716,58 @@ STAGE 3 — [STAGE NAME]
           )}
 
           {/* 5. SINGLE STAGE DETAIL VIEW: ONLY SHOWS THIS PARTICULAR STAGE! */}
-          {!isEditingOutline && currentStage && (
-            <div className="single-stage-focused-card">
-              {/* Stage Header Banner */}
-              <div className="stage-focus-header">
-                <div className="stage-focus-left">
-                  <span className="stage-focus-number-badge">
-                    STAGE {activeStageIdx + 1} OF {curriculum.stages.length}
-                  </span>
-                  <h3 className="stage-focus-title">{currentStage.title}</h3>
-                </div>
+          {!isEditingOutline && currentStage && (() => {
+            const stageDone = (currentStage.checkpoints || []).filter(c => c.completed).length;
+            const stageTotal = (currentStage.checkpoints || []).length;
+            const stagePercent = stageTotal > 0 ? Math.round((stageDone / stageTotal) * 100) : 0;
 
-                <div className="stage-focus-right">
-                  <span className="stage-focus-counter">
-                    {(currentStage.checkpoints || []).filter(c => c.completed).length} of {(currentStage.checkpoints || []).length} Checkpoints Done
-                  </span>
+            return (
+              <div className="single-stage-focused-card">
+                {/* Stage Header Banner */}
+                <div className="stage-focus-header">
+                  <div className="stage-focus-left">
+                    <span className="stage-focus-number-badge">
+                      {theme === 'tokyo-lofi'
+                        ? `STAGE ${String(activeStageIdx + 1).padStart(2, '0')} // 第${activeStageIdx + 1}段階`
+                        : `STAGE ${activeStageIdx + 1} OF ${curriculum.stages.length}`}
+                    </span>
+                    <h3 className="stage-focus-title">{currentStage.title}</h3>
+                  </div>
 
-                  {/* Pin to Timetable Button */}
-                  {activeStageIdx !== progress.activeStageIndex ? (
+                  <div className="stage-focus-right">
+                    <span className="stage-focus-counter">
+                      {theme === 'tokyo-lofi'
+                        ? `${stageDone}/${stageTotal} Checkpoints (${stagePercent}%)`
+                        : `${stageDone} of ${stageTotal} Checkpoints Done`}
+                    </span>
+
+                    {/* Pin to Timetable Button */}
+                    {activeStageIdx !== progress.activeStageIndex ? (
+                      <button
+                        type="button"
+                        className="pin-timetable-btn"
+                        onClick={() => handleSetTimetableActiveStage(currentStage.id, currentStage.title)}
+                        title="Set this stage so its next checkpoint displays on your timetable"
+                      >
+                        <Flame size={12} />
+                        <span>Set as Active on Timetable</span>
+                      </button>
+                    ) : (
+                      <span className="pinned-badge-active">
+                        ★ Active on Timetable
+                      </span>
+                    )}
+
                     <button
                       type="button"
-                      className="pin-timetable-btn"
-                      onClick={() => handleSetTimetableActiveStage(currentStage.id, currentStage.title)}
-                      title="Set this stage so its next checkpoint displays on your timetable"
+                      className="delete-stage-btn"
+                      onClick={() => handleDeleteCurrentStage(currentStage.id)}
+                      title="Delete this stage"
                     >
-                      <Flame size={12} />
-                      <span>Set as Active on Timetable</span>
+                      <Trash2 size={13} />
                     </button>
-                  ) : (
-                    <span className="pinned-badge-active">
-                      ★ Active on Timetable
-                    </span>
-                  )}
-
-                  <button
-                    type="button"
-                    className="delete-stage-btn"
-                    onClick={() => handleDeleteCurrentStage(currentStage.id)}
-                    title="Delete this stage"
-                  >
-                    <Trash2 size={13} />
-                  </button>
+                  </div>
                 </div>
-              </div>
 
               {/* Checkpoints for THIS Stage Only */}
               <div className="stage-focus-checkpoints-list">
@@ -849,7 +864,8 @@ STAGE 3 — [STAGE NAME]
                 </button>
               </div>
             </div>
-          )}
+            );
+          })()}
         </>
       )}
     </div>
