@@ -363,6 +363,25 @@ app.get('/api/health', async (_req, res) => {
   }
 });
 
+// ================= APP VERSION & LIVE OTA UPDATE NOTIFICATIONS =================
+app.get('/api/app-version', (_req, res) => {
+  const latestVersion = process.env.APP_LATEST_VERSION || '1.0.1';
+  const apkUrl = process.env.APK_DOWNLOAD_URL || 'https://github.com/Shantnu01/JUST_A_TRACKER/releases/latest';
+  const exeUrl = process.env.EXE_DOWNLOAD_URL || 'https://github.com/Shantnu01/JUST_A_TRACKER/releases/latest';
+  const releaseNotes = process.env.APP_RELEASE_NOTES || 'New dedicated Mobile UI, live background alarms, and instant multi-platform updates.';
+
+  res.json({
+    latest_version: latestVersion,
+    min_supported_version: '1.0.0',
+    title: `Daymark Routine v${latestVersion}`,
+    notes: releaseNotes,
+    apk_url: apkUrl,
+    exe_url: exeUrl,
+    web_url: 'https://routine-tracker.onrender.com',
+    released_at: new Date().toISOString()
+  });
+});
+
 // ================= AUTH ENDPOINTS =================
 app.post('/api/auth/register', async (req, res) => {
   if (!pool) return res.status(503).json({ error: 'Database is not configured.' });

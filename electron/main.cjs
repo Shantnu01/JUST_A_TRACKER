@@ -1,8 +1,25 @@
-const { app, BrowserWindow, shell, ipcMain } = require('electron');
+const { app, BrowserWindow, shell, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
 let mainWindow = null;
+
+function getLocalDistPath() {
+  // In packaged app, files are at app.getAppPath()/client/dist/index.html
+  // or relative to __dirname
+  const candidates = [
+    path.join(app.getAppPath(), 'client/dist/index.html'),
+    path.join(__dirname, '../client/dist/index.html'),
+    path.join(__dirname, 'client/dist/index.html')
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return candidates[0];
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -17,29 +34,46 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      // CRITICAL: Disable background throttling so routine alarms and sounds ring on time even when minimized
+      // Disable background throttling so routine alarms and sounds ring on time even when minimized
       backgroundThrottling: false,
       sandbox: true
     }
   });
 
+  const isDev = !app.isPackaged && (process.env.NODE_ENV === 'development' || process.argv.includes('--dev'));
   const devUrl = process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173';
-  const distPath = path.join(__dirname, '../client/dist/index.html');
+  const distPath = getLocalDistPath();
 
-  // If in development or dev server is responding, load dev URL; otherwise load production build
-  if (process.env.NODE_ENV === 'development' || !fs.existsSync(distPath)) {
+  if (isDev) {
     mainWindow.loadURL(devUrl).catch(() => {
-      if (fs.existsSync(distPath)) {
-        mainWindow.loadFile(distPath);
-      }
+      mainWindow.loadFile(distPath).catch(err => {
+        console.error('Failed to load local HTML in dev fallback:', err);
+      });
     });
   } else {
-    mainWindow.loadFile(distPath);
+    // Packaged production app: load bundled client HTML directly
+    mainWindow.loadFile(distPath).catch(err => {
+      console.error('Failed to load bundled HTML file:', err, distPath);
+      // Fallback to live web URL if local load fails
+      mainWindow.loadURL('https://routine-tracker.onrender.com').catch(urlErr => {
+        dialog.showErrorBox(
+          'Daymark Loading Error',
+          `Could not load local application bundle at:\n${distPath}\n\nError: ${err.message}`
+        );
+      });
+    });
   }
 
+  // Ensure window is shown even if ready-to-show takes time
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
+
+  setTimeout(() => {
+    if (mainWindow && !mainWindow.isVisible()) {
+      mainWindow.show();
+    }
+  }, 2500);
 
   // Open external links (e.g. GitHub, external docs) in the system default browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {

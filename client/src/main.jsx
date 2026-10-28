@@ -88,6 +88,8 @@ import {
   Edit3
 } from 'lucide-react';
 import './styles.css';
+import MobileApp from './mobile/MobileApp';
+import { checkForAppUpdate, executeAppUpdate, CURRENT_APP_VERSION } from './utils/updater';
 import { playFocusSound, stopFocusSound, setSoundVolume } from './utils/soundEngine';
 import { calculateCircadianScore, getCircadianEnergyLevel, getCognitiveTier, calculateAutoShift, detectScheduleDrift, generateChiefOfStaffPlan, slotScheduleToCircadian } from './utils/circadianEngine';
 import { initNativeAlarms, syncNativeAlarms, triggerNativeHaptic, isNativeApp } from './utils/nativeAlarm';
@@ -670,6 +672,58 @@ function App() {
   const [pushSubscribed, setPushSubscribed] = useState(() => {
     return typeof Notification !== 'undefined' && Notification.permission === 'granted';
   });
+
+  // Live Update Notification State (Web, Android APK & Windows PC EXE)
+  const [availableUpdate, setAvailableUpdate] = useState(null);
+
+  // Dedicated Mobile UI auto-switch (Phone viewport or Capacitor Native APK)
+  const [forceDesktopView, setForceDesktopView] = useState(() => {
+    try {
+      return localStorage.getItem('daymark_force_desktop') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [isMobileScreen, setIsMobileScreen] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return isNativeApp() || window.innerWidth < 768;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(isNativeApp() || window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Check for updates on startup and every 10 minutes
+  useEffect(() => {
+    let mounted = true;
+    const checkUpdates = async () => {
+      const update = await checkForAppUpdate(API);
+      if (mounted && update) {
+        setAvailableUpdate(update);
+      }
+    };
+    checkUpdates();
+    const interval = setInterval(checkUpdates, 10 * 60 * 1000);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleToggleDesktopView = () => {
+    const next = !forceDesktopView;
+    setForceDesktopView(next);
+    try {
+      localStorage.setItem('daymark_force_desktop', String(next));
+    } catch {}
+    setToast(next ? 'Switched to Full Desktop View' : 'Switched to Dedicated Mobile View');
+    setTimeout(() => setToast(''), 2500);
+  };
 
   // Developer & Coding Hub State
   const [codingProfile, setCodingProfile] = useState(() => {
@@ -3019,8 +3073,161 @@ const handleNudge = async (toUserId, toUsername) => {
     setTimeout(() => setToast(''), 2500);
   };
 
+  if (isMobileScreen && !forceDesktopView) {
+    return (
+      <>
+        {availableUpdate && (
+          <div className="update-notice-banner">
+            <div className="update-notice-content">
+              <Sparkles size={15} />
+              <span>
+                <strong>Update {availableUpdate.latest_version}:</strong> {availableUpdate.notes || 'New improvements ready.'}
+              </span>
+            </div>
+            <div className="update-notice-actions">
+              <button type="button" className="update-now-btn" onClick={() => executeAppUpdate(availableUpdate)}>
+                Update
+              </button>
+              <button type="button" className="update-dismiss-btn" onClick={() => setAvailableUpdate(null)} aria-label="Dismiss update">
+                <X size={13} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        <MobileApp
+          user={user}
+          token={token}
+          setAuthModalOpen={setAuthModalOpen}
+          logout={handleLogout}
+          day={day}
+          habits={habits}
+          toggleHabit={toggleHabit}
+          schedule={schedule}
+          activeId={activeId}
+          seconds={seconds}
+          running={running}
+          startSession={startSession}
+          pauseSession={() => setRunning(false)}
+          finishSession={() => finishSession()}
+          current={current}
+          completion={completion}
+          doneCount={doneCount}
+          focusMinutes={focusMinutes}
+          totalPlannedFocusHours={totalPlannedFocusHours}
+          alarms={alarms}
+          toggleAlarm={toggleAlarm}
+          testAlarmSound={testAlarmSound}
+          activePod={activeGroup}
+          podLeaderboard={leaderboard}
+          podMembers={podMembers}
+          podRadar={podRadar}
+          sendNudge={() => {
+            const other = podMembers.find(m => user && m.id !== user.id);
+            if (other) handleNudge(other.id, other.username || other.name);
+            else setToast('No other members currently in pod to nudge');
+          }}
+          nudgeCooldownRemaining={user && nudgeCooldowns[user.id] ? nudgeCooldowns[user.id] : 0}
+          podNotice={activeGroup?.notice_text}
+          leavePod={() => activeGroup && handleLeavePod(activeGroup.id, activeGroup.name)}
+          deletePod={() => activeGroup && handleDeletePod(activeGroup.id, activeGroup.name)}
+          onSwitchToDesktop={handleToggleDesktopView}
+          dbStatus={dbStatus}
+        />
+
+        {authModalOpen && (
+          <div className="auth-backdrop" onClick={() => setAuthModalOpen(false)}>
+            <div className="auth-modal" onClick={e => e.stopPropagation()}>
+              <div className="auth-modal-header">
+                <h3>{authTab === 'login' ? 'Welcome Back' : 'Create Account'}</h3>
+                <button type="button" className="auth-close-btn" onClick={() => setAuthModalOpen(false)} aria-label="Close modal">
+                  <X size={17} />
+                </button>
+              </div>
+              <div className="auth-tabs">
+                <button type="button" className={`auth-tab-btn ${authTab === 'login' ? 'active' : ''}`} onClick={() => { setAuthTab('login'); setAuthError(''); }}>Log In</button>
+                <button type="button" className={`auth-tab-btn ${authTab === 'register' ? 'active' : ''}`} onClick={() => { setAuthTab('register'); setAuthError(''); }}>Register</button>
+              </div>
+              <form onSubmit={handleAuthSubmit} className="auth-form">
+                {authError && <div className="auth-error-banner">{authError}</div>}
+                <div className="auth-field">
+                  <label htmlFor="m-auth-user">Username</label>
+                  <input id="m-auth-user" type="text" value={authUsername} onChange={e => setAuthUsername(e.target.value)} placeholder="Enter username" autoFocus required />
+                </div>
+                <div className="auth-field">
+                  <label htmlFor="m-auth-pw">Password</label>
+                  <input id="m-auth-pw" type="password" value={authPassword} onChange={e => setAuthPassword(e.target.value)} placeholder="Enter password (min 6 chars)" required />
+                </div>
+                <button type="submit" className="auth-submit-btn" disabled={authLoading}>
+                  {authLoading ? 'Processing...' : (authTab === 'login' ? 'Sign In' : 'Create Account')}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {activeAlarmModal && (
+          <div className="alarm-ringing-backdrop">
+            <div className="alarm-ringing-modal">
+              <div className="alarm-ringing-icon-wrap">
+                <AlarmClock size={40} className="alarm-ringing-bell" color="#d97706" />
+              </div>
+              <span className="eyebrow" style={{ color: '#d97706', letterSpacing: '1px' }}>ROUTINE ALARM TRIGGERED</span>
+              <h2 className="alarm-ringing-time">{activeAlarmModal.time}</h2>
+              <p className="alarm-ringing-label">{activeAlarmModal.label || 'Time for your routine activity!'}</p>
+              <div className="alarm-ringing-actions">
+                <button className="alarm-dismiss-btn" onClick={dismissAlarm}>
+                  <Check size={16} /> Dismiss Alarm
+                </button>
+                <button className="alarm-snooze-btn" onClick={snoozeAlarm}>
+                  <Clock3 size={15} /> Snooze 5 Min
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {toast && (
+          <div className="toast">
+            <span>{toast}</span>
+            <button type="button" onClick={() => setToast('')} aria-label="Dismiss message">
+              <X size={14} />
+            </button>
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
-    <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme} data-column-style={columnStyle}>
+    <>
+      {availableUpdate && (
+        <div className="update-notice-banner">
+          <div className="update-notice-content">
+            <Sparkles size={16} />
+            <span>
+              <strong>New Update Available ({availableUpdate.latest_version}):</strong> {availableUpdate.notes || 'Improvements and fixes ready.'}
+            </span>
+          </div>
+          <div className="update-notice-actions">
+            <button type="button" className="update-now-btn" onClick={() => executeAppUpdate(availableUpdate)}>
+              Update Now
+            </button>
+            <button type="button" className="update-dismiss-btn" onClick={() => setAvailableUpdate(null)} aria-label="Dismiss update notification">
+              <X size={14} />
+            </button>
+          </div>
+        </div>
+      )}
+      {isMobileScreen && forceDesktopView && (
+        <div className="force-desktop-pill-bar">
+          <span>Viewing Desktop Layout</span>
+          <button type="button" onClick={handleToggleDesktopView}>
+            Switch to Mobile View
+          </button>
+        </div>
+      )}
+      <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme} data-column-style={columnStyle}>
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">
@@ -6607,6 +6814,7 @@ const handleNudge = async (toUserId, toUsername) => {
         </div>
       )}
     </div>
+    </>
   );
 }
 
