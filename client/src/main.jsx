@@ -504,6 +504,7 @@ function App() {
   const [authUsername, setAuthUsername] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
 
   // Groups / Study Pods State
   const [groups, setGroups] = useState([]);
@@ -530,10 +531,27 @@ function App() {
   const [preflightModalOpen, setPreflightModalOpen] = useState(false);
   const [preflightDismissed, setPreflightDismissed] = useState(false);
 
-  // Chief of Staff Agent States
+  // Chief of Staff Agent States (Persistent 20-min dismiss)
   const [chiefOfStaffAlert, setChiefOfStaffAlert] = useState(null);
   const [chiefOfStaffModalOpen, setChiefOfStaffModalOpen] = useState(false);
-  const [chiefDismissUntil, setChiefDismissUntil] = useState(0);
+  const [chiefDismissUntil, setChiefDismissUntil] = useState(() => {
+    try {
+      const saved = localStorage.getItem('daymark_chief_dismiss_until');
+      return saved ? Number(saved) : 0;
+    } catch {
+      return 0;
+    }
+  });
+
+  const dismissChiefOfStaff = useCallback((minutes = 20) => {
+    const until = Date.now() + minutes * 60 * 1000;
+    setChiefDismissUntil(until);
+    setChiefOfStaffAlert(null);
+    setChiefOfStaffModalOpen(false);
+    try {
+      localStorage.setItem('daymark_chief_dismiss_until', until.toString());
+    } catch (e) {}
+  }, []);
 
   // Theme State
   const [theme, setTheme] = useState(() => {
@@ -1985,7 +2003,18 @@ function App() {
     if (!isToday || !schedule || schedule.length === 0) return;
 
     const runDriftCheck = () => {
-      if (Date.now() < chiefDismissUntil) return;
+      let dismissUntil = chiefDismissUntil;
+      try {
+        const saved = localStorage.getItem('daymark_chief_dismiss_until');
+        if (saved && Number(saved) > dismissUntil) {
+          dismissUntil = Number(saved);
+        }
+      } catch (e) {}
+
+      if (Date.now() < dismissUntil) {
+        setChiefOfStaffAlert(null);
+        return;
+      }
       const completedIds = habits.filter(h => day.checks?.[h.id]).map(h => h.id);
       const report = detectScheduleDrift(schedule, completedIds, activeId);
       if (report && report.hasDrift) {
@@ -2009,8 +2038,7 @@ function App() {
     // Save as Day-Specific Override for today only (does NOT alter normal daily timetable!)
     saveDayScheduleOverride(key, updated);
 
-    setChiefOfStaffAlert(null);
-    setChiefOfStaffModalOpen(false);
+    dismissChiefOfStaff(20);
     setToast(`✨ AI Healed Plan applied for today only! Saved ${plan.savingsMinutes || 0}m. Normal timetable resumes at 4 AM.`);
     setTimeout(() => setToast(''), 3500);
   };
@@ -2228,16 +2256,18 @@ function App() {
   const handleAuthSubmit = async (e) => {
     e.preventDefault();
     setAuthError('');
+    setAuthLoading(true);
     const endpoint = authTab === 'login' ? '/auth/login' : '/auth/register';
     try {
       const res = await fetch(`${API}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: authUsername, password: authPassword })
+        body: JSON.stringify({ username: authUsername.trim(), password: authPassword })
       });
       const data = await res.json();
       if (!res.ok) {
         setAuthError(data.error || 'Authentication failed');
+        setAuthLoading(false);
         return;
       }
       setToken(data.token);
@@ -2251,6 +2281,8 @@ function App() {
       setTimeout(() => setToast(''), 3000);
     } catch {
       setAuthError('Server unreachable. Please check connection.');
+    } finally {
+      setAuthLoading(false);
     }
   };
 
@@ -5145,7 +5177,7 @@ function App() {
 
             {authError && <div className="form-error">{authError}</div>}
 
-            <form onSubmit={handleAuthSubmit}>
+            <form onSubmit={handleAuthSubmit} className="auth-form">
               <div className="form-group">
                 <label>Username</label>
                 <input
@@ -5154,6 +5186,8 @@ function App() {
                   value={authUsername}
                   onChange={e => setAuthUsername(e.target.value)}
                   placeholder="e.g. shantnu"
+                  autoComplete="username"
+                  autoFocus
                   required
                 />
               </div>
@@ -5166,12 +5200,13 @@ function App() {
                   value={authPassword}
                   onChange={e => setAuthPassword(e.target.value)}
                   placeholder="At least 6 characters"
+                  autoComplete={authTab === 'login' ? 'current-password' : 'new-password'}
                   required
                 />
               </div>
 
-              <button type="submit" className="form-submit-btn">
-                {authTab === 'login' ? 'Sign In' : 'Create Account & Start Pod'}
+              <button type="submit" className="form-submit-btn" disabled={authLoading}>
+                {authLoading ? 'Please wait...' : (authTab === 'login' ? 'Sign In' : 'Create Account & Start Pod')}
               </button>
             </form>
           </div>
@@ -5498,10 +5533,7 @@ function App() {
             </button>
             <button
               className="chief-dismiss-btn"
-              onClick={() => {
-                setChiefDismissUntil(Date.now() + 20 * 60 * 1000);
-                setChiefOfStaffAlert(null);
-              }}
+              onClick={() => dismissChiefOfStaff(20)}
             >
               Dismiss (20m)
             </button>
@@ -5511,14 +5543,14 @@ function App() {
 
       {/* 2. Chief of Staff: Detailed Strategy & Reconciliation Modal */}
       {chiefOfStaffModalOpen && chiefOfStaffAlert && (
-        <div className="modal-overlay" onClick={() => setChiefOfStaffModalOpen(false)}>
-          <div className="modal-content" style={{ maxWidth: '640px' }} onClick={e => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => dismissChiefOfStaff(20)}>
+          <div className="modal-content chief-modal-content" style={{ maxWidth: '640px' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ShieldCheck size={20} color="#2563eb" />
                 <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Chief of Staff: Schedule Re-sequencer</h3>
               </div>
-              <button className="modal-close" onClick={() => setChiefOfStaffModalOpen(false)}>×</button>
+              <button className="modal-close" onClick={() => dismissChiefOfStaff(20)} aria-label="Close and dismiss for 20 minutes">×</button>
             </div>
 
             <div className="chief-modal-narrative" style={{ padding: '16px 0', fontSize: '0.88rem', lineHeight: 1.5 }}>
@@ -5569,8 +5601,8 @@ function App() {
             </div>
 
             <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button className="secondary-button" onClick={() => setChiefOfStaffModalOpen(false)}>
-                Keep Current
+              <button className="secondary-button" onClick={() => dismissChiefOfStaff(20)}>
+                Keep Current (Dismiss 20m)
               </button>
               <button
                 className="primary-button"

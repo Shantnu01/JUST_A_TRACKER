@@ -15431,3 +15431,406 @@ html[data-theme="tokyo-lofi"],
   background: #FBBF24;
   transform: translateY(-1px);
 }
+
+
+/* ==========================================================================
+   PREMIUM MODAL CONTENT & DIALOG ARCHITECTURE
+   ========================================================================== */
+.modal-content {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 640px;
+  padding: 24px;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+  animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Chief of Staff AI Help Modal & Comparative Schedule Table */
+.chief-modal-content {
+  max-width: 660px !important;
+}
+
+.chief-modal-narrative {
+  padding: 16px 0 8px 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted, #4b5563);
+}
+
+.chief-stat-chips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 14px 0 18px 0;
+}
+
+.chief-stat-chip {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.chief-stat-chip-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.chief-stat-chip-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* 2-Column Schedule Comparison Table (Slipping vs AI Healed) */
+.chief-strategy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 14px 0;
+}
+
+.chief-strategy-col {
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chief-strategy-col.healed {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.chief-col-title {
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chief-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  gap: 8px;
+}
+
+.chief-strategy-col.healed .chief-item-row {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.chief-healed-title {
+  font-weight: 600;
+  color: #15803d;
+}
+
+.chief-healed-time {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-weight: 700;
+  color: #047857;
+  font-size: 11.5px;
+  background: rgba(16, 185, 129, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Auth Modal (Sign In / Register) Form Optimization */
+.auth-tabs {
+  display: flex;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+}
+
+.auth-tab {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-tab.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.auth-form .form-group {
+  margin-bottom: 15px;
+}
+
+.auth-form .form-group label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.auth-form .form-input {
+  width: 100%;
+  border: 1.5px solid #cbd5e1;
+  background: #f8fafc;
+  border-radius: 9px;
+  padding: 11px 13px;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.auth-form .form-input:focus {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.auth-form .form-submit-btn {
+  width: 100%;
+  background: #2563eb;
+  color: #ffffff;
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.auth-form .form-submit-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.auth-form .form-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Theme Dark Overrides for Auth Modal and AI Help Table */
+[data-theme="tokyo-lofi"] .modal-content,
+[data-theme="quantum-noir"] .modal-content,
+[data-theme="acid-runway"] .modal-content,
+[data-theme="spider-verse"] .modal-content,
+[data-theme="nord-executive"] .modal-content,
+[data-theme="dynamic-video"] .modal-content {
+  background: #1c1928 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  color: #faf8ff !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 158, 11, 0.08) !important;
+}
+
+[data-theme="tokyo-lofi"] .modal-card,
+[data-theme="quantum-noir"] .modal-card,
+[data-theme="acid-runway"] .modal-card,
+[data-theme="spider-verse"] .modal-card,
+[data-theme="nord-executive"] .modal-card,
+[data-theme="dynamic-video"] .modal-card {
+  background: #1c1928 !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  color: #faf8ff !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 158, 11, 0.08) !important;
+}
+
+[data-theme="tokyo-lofi"] .modal-header h3,
+[data-theme="dynamic-video"] .modal-header h3 {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .modal-close,
+[data-theme="dynamic-video"] .modal-close {
+  color: #9b8ea8 !important;
+}
+[data-theme="tokyo-lofi"] .modal-close:hover,
+[data-theme="dynamic-video"] .modal-close:hover {
+  color: #faf8ff !important;
+}
+
+/* Tokyo Lofi Auth Tabs & Inputs */
+[data-theme="tokyo-lofi"] .auth-tabs,
+[data-theme="dynamic-video"] .auth-tabs {
+  background: #14121e !important;
+  border: 1px solid rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .auth-tab,
+[data-theme="dynamic-video"] .auth-tab {
+  color: #9b8ea8 !important;
+}
+
+[data-theme="tokyo-lofi"] .auth-tab.active,
+[data-theme="dynamic-video"] .auth-tab.active {
+  background: #252036 !important;
+  color: #f59e0b !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="tokyo-lofi"] .auth-form .form-group label,
+[data-theme="dynamic-video"] .auth-form .form-group label {
+  color: #f59e0b !important;
+}
+
+[data-theme="tokyo-lofi"] .auth-form .form-input,
+[data-theme="dynamic-video"] .auth-form .form-input {
+  background: #231e33 !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .auth-form .form-input:focus,
+[data-theme="dynamic-video"] .auth-form .form-input:focus {
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .auth-form .form-submit-btn,
+[data-theme="dynamic-video"] .auth-form .form-submit-btn {
+  background: #f59e0b !important;
+  color: #12111a !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .auth-form .form-submit-btn:hover:not(:disabled),
+[data-theme="dynamic-video"] .auth-form .form-submit-btn:hover:not(:disabled) {
+  background: #fbbf24 !important;
+}
+
+/* Tokyo Lofi AI Help Strategy Table */
+[data-theme="tokyo-lofi"] .chief-strategy-col,
+[data-theme="dynamic-video"] .chief-strategy-col {
+  background: rgba(220, 38, 38, 0.12) !important;
+  border-color: rgba(220, 38, 38, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-strategy-col.healed,
+[data-theme="dynamic-video"] .chief-strategy-col.healed {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-item-row,
+[data-theme="dynamic-video"] .chief-item-row {
+  background: rgba(36, 30, 51, 0.8) !important;
+  color: #d4ceeb !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-healed-title,
+[data-theme="dynamic-video"] .chief-healed-title {
+  color: #34d399 !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-healed-time,
+[data-theme="dynamic-video"] .chief-healed-time {
+  color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.15) !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-stat-chip,
+[data-theme="dynamic-video"] .chief-stat-chip {
+  background: #231e33 !important;
+  border-color: rgba(245, 158, 11, 0.22) !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-stat-chip-label,
+[data-theme="dynamic-video"] .chief-stat-chip-label {
+  color: #9b8ea8 !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-stat-chip-value,
+[data-theme="dynamic-video"] .chief-stat-chip-value {
+  color: #faf8ff !important;
+}
+
+[data-theme="tokyo-lofi"] .chief-modal-narrative p,
+[data-theme="dynamic-video"] .chief-modal-narrative p {
+  color: #d4ceeb !important;
+}
+
+@media (max-width: 640px) {
+  .chief-strategy-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .chief-stat-chips {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .chief-stat-chip {
+    padding: 8px 6px !important;
+  }
+
+  .chief-stat-chip-label {
+    font-size: 9px !important;
+  }
+
+  .chief-stat-chip-value {
+    font-size: 16px !important;
+  }
+
+  .modal-card {
+    width: 100% !important;
+    max-width: calc(100vw - 20px) !important;
+    padding: 20px 16px !important;
+    border-radius: 14px !important;
+  }
+
+  .auth-form .form-input {
+    padding: 12px 14px !important;
+    font-size: 15px !important;
+  }
+
+  .auth-form .form-submit-btn {
+    padding: 13px 16px !important;
+    font-size: 14px !important;
+    min-height: 44px !important;
+  }
+}
