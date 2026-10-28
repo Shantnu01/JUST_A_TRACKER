@@ -3133,6 +3133,13 @@ const handleNudge = async (toUserId, toUsername) => {
           deletePod={() => activeGroup && handleDeletePod(activeGroup.id, activeGroup.name)}
           onSwitchToDesktop={handleToggleDesktopView}
           dbStatus={dbStatus}
+          focusSoundType={focusSoundType}
+          handleSelectSound={handleSelectSound}
+          focusSoundVolume={focusSoundVolume}
+          setFocusSoundVolume={setFocusSoundVolume}
+          curriculumSubject={curriculumSubject}
+          activeCurriculum={activeCurriculum}
+          openSubjectCurriculum={openSubjectCurriculum}
         />
 
         {authModalOpen && (
