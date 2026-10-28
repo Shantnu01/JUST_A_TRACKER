@@ -259,6 +259,11 @@ async function ensureTable() {
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )`);
 
+    // 12. Study Groups Notice Board columns migration
+    await pool.query(`ALTER TABLE study_groups ADD COLUMN IF NOT EXISTS notice_text TEXT DEFAULT ''`);
+    await pool.query(`ALTER TABLE study_groups ADD COLUMN IF NOT EXISTS notice_updated_at TIMESTAMPTZ DEFAULT NOW()`);
+    await pool.query(`ALTER TABLE study_groups ADD COLUMN IF NOT EXISTS notice_updated_by TEXT DEFAULT ''`);
+
     dbInitialized = true;
     console.log('[Database] Connected and schema verified.');
   } catch (error) {
@@ -437,6 +442,9 @@ app.get('/api/groups', authenticateToken, async (req, res) => {
     await ensureTable();
     const result = await pool.query(
       `SELECT g.id, g.name, g.invite_code, g.created_at, g.created_by,
+         COALESCE(g.notice_text, '') as notice_text,
+         g.notice_updated_at,
+         COALESCE(g.notice_updated_by, '') as notice_updated_by,
          (SELECT count(*)::int FROM group_members WHERE group_id = g.id) as member_count
        FROM study_groups g
        JOIN group_members gm ON gm.group_id = g.id
@@ -476,7 +484,10 @@ app.post('/api/groups', authenticateToken, async (req, res) => {
     const groupResult = await pool.query(
       `INSERT INTO study_groups (name, invite_code, created_by)
        VALUES ($1, $2, $3)
-       RETURNING id, name, invite_code, created_at`,
+       RETURNING id, name, invite_code, created_at, created_by,
+                 COALESCE(notice_text, '') as notice_text,
+                 notice_updated_at,
+                 COALESCE(notice_updated_by, '') as notice_updated_by`,
       [cleanName, code, req.user.id]
     );
     const group = groupResult.rows[0];
@@ -505,7 +516,7 @@ app.post('/api/groups/join', authenticateToken, async (req, res) => {
   const code = invite_code.trim().toUpperCase();
   try {
     await ensureTable();
-    const groupResult = await pool.query('SELECT id, name, invite_code FROM study_groups WHERE invite_code = $1', [code]);
+    const groupResult = await pool.query('SELECT id, name, invite_code, created_by, COALESCE(notice_text, \'\') as notice_text, notice_updated_at, COALESCE(notice_updated_by, \'\') as notice_updated_by FROM study_groups WHERE invite_code = $1', [code]);
     if (groupResult.rows.length === 0) {
       return res.status(404).json({ error: `No study pod found with invite code "${code}".` });
     }
@@ -617,6 +628,74 @@ app.post('/api/groups/:id/leave', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Leave group failed:', error.message);
     return res.status(500).json({ error: 'Failed to leave pod.' });
+  }
+});
+
+// Delete group (Owner only)
+app.delete('/api/groups/:id', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
+  try {
+    await ensureTable();
+    const groupCheck = await pool.query('SELECT created_by, name FROM study_groups WHERE id = $1', [groupId]);
+    if (groupCheck.rows.length === 0) {
+      return res.status(404).json({ error: 'Study Pod not found.' });
+    }
+    const group = groupCheck.rows[0];
+    if (group.created_by !== req.user.id) {
+      return res.status(403).json({ error: 'Only the pod creator can delete this pod.' });
+    }
+
+    await pool.query('DELETE FROM study_groups WHERE id = $1', [groupId]);
+    await invalidateLeaderboard(groupId, new Date().toISOString().slice(0, 10));
+    return res.json({ success: true, message: `Pod "${group.name}" deleted.` });
+  } catch (error) {
+    console.error('Delete group failed:', error.message);
+    return res.status(500).json({ error: 'Failed to delete pod.' });
+  }
+});
+
+// Update Pod Notice Board (Any Pod Member)
+app.put('/api/groups/:id/notice', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
+  const { notice } = req.body || {};
+  if (typeof notice !== 'string') {
+    return res.status(400).json({ error: 'Notice content is required.' });
+  }
+  const cleanNotice = notice.trim().slice(0, 500);
+
+  try {
+    await ensureTable();
+    const memberCheck = await pool.query(
+      'SELECT user_id FROM group_members WHERE group_id = $1 AND user_id = $2',
+      [groupId, req.user.id]
+    );
+    if (memberCheck.rows.length === 0) {
+      return res.status(403).json({ error: 'You must be a member of this pod to update the notice.' });
+    }
+
+    const result = await pool.query(
+      `UPDATE study_groups
+       SET notice_text = $1, notice_updated_at = NOW(), notice_updated_by = $2
+       WHERE id = $3
+       RETURNING id, name, COALESCE(notice_text, '') as notice_text, notice_updated_at, COALESCE(notice_updated_by, '') as notice_updated_by`,
+      [cleanNotice, req.user.username || 'Member', groupId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Pod not found.' });
+    }
+
+    return res.json({
+      success: true,
+      notice_text: result.rows[0].notice_text,
+      notice_updated_at: result.rows[0].notice_updated_at,
+      notice_updated_by: result.rows[0].notice_updated_by
+    });
+  } catch (error) {
+    console.error('Update notice failed:', error.message);
+    return res.status(500).json({ error: 'Failed to update notice.' });
   }
 });
 

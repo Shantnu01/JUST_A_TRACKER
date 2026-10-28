@@ -442,6 +442,125 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   cursor: not-allowed !important;
 }
 
+/* Pod Notice Board Styling */
+.pod-notice-card {
+  background: #fffefa;
+  border: 1px solid #d9e2d5;
+  border-left: 4px solid #537c5f;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.pod-notice-content {
+  flex: 1;
+  min-width: 0;
+}
+.pod-notice-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #3b5a44;
+  margin-bottom: 6px;
+}
+.pod-notice-body {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #213326;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.pod-notice-empty {
+  font-size: 13px;
+  color: #7b887d;
+  font-style: italic;
+}
+.pod-notice-meta {
+  font-size: 11px;
+  color: #7b887d;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.pod-notice-edit-btn {
+  background: #f0f4ee;
+  border: 1px solid #d0dcd0;
+  color: #2e4d37;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.pod-notice-edit-btn:hover {
+  background: #e2ece0;
+  border-color: #537c5f;
+}
+.pod-notice-edit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.pod-notice-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 75px;
+  padding: 10px 12px;
+  border: 1px solid #c9d6c7;
+  border-radius: 8px;
+  font: 13.5px/1.5 inherit;
+  resize: vertical;
+  background: #ffffff;
+  color: #1a271e;
+}
+.pod-notice-textarea:focus {
+  outline: none;
+  border-color: #537c5f;
+  box-shadow: 0 0 0 2px rgba(83, 124, 95, 0.2);
+}
+
+/* Tokyo-Lofi Theme overrides for Pod Notice Card */
+[data-theme="tokyo-lofi"] .pod-notice-card {
+  background: #1c1928 !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
+  border-left-color: #F59E0B !important;
+}
+[data-theme="tokyo-lofi"] .pod-notice-header {
+  color: #F59E0B !important;
+}
+[data-theme="tokyo-lofi"] .pod-notice-body {
+  color: #FFF8E7 !important;
+}
+[data-theme="tokyo-lofi"] .pod-notice-empty {
+  color: #9B8EA8 !important;
+}
+[data-theme="tokyo-lofi"] .pod-notice-meta {
+  color: #9B8EA8 !important;
+}
+[data-theme="tokyo-lofi"] .pod-notice-edit-btn {
+  background: #241e30 !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  color: #FFB347 !important;
+}
+[data-theme="tokyo-lofi"] .pod-notice-textarea {
+  background: #12111A !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  color: #FFF8E7 !important;
+}
+
 /* Developer & Coding Performance Hub Styles */
 .coding-hub-layout{max-width:1150px;margin:0 auto;padding-top:6px}
 .coding-top-banner{background:#fffefa;border:1px solid #e2e5dc;border-radius:14px;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:18px;flex-wrap:wrap}

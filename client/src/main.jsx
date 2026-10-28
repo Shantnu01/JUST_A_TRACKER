@@ -82,7 +82,10 @@ import {
   Zap,
   Radio,
   MessageSquare,
-  Send
+  Send,
+  Pin,
+  Trash2,
+  Edit3
 } from 'lucide-react';
 import './styles.css';
 import { playFocusSound, stopFocusSound, setSoundVolume } from './utils/soundEngine';
@@ -520,6 +523,9 @@ function App() {
   const [joinInviteCode, setJoinInviteCode] = useState('');
   const [podError, setPodError] = useState('');
   const [podDropdownOpen, setPodDropdownOpen] = useState(false);
+  const [editingNotice, setEditingNotice] = useState(false);
+  const [noticeDraft, setNoticeDraft] = useState('');
+  const [noticeSaving, setNoticeSaving] = useState(false);
 
   const [nudgeCooldowns, setNudgeCooldowns] = useState({});
 
@@ -2031,6 +2037,12 @@ function App() {
   useEffect(() => {
     if (!isToday || !schedule || schedule.length === 0) return;
 
+    // If day already has an AI-healed plan active, do not trigger auto-drift alert!
+    if (hasDayOverride) {
+      setChiefOfStaffAlert(null);
+      return;
+    }
+
     const runDriftCheck = () => {
       let dismissUntil = chiefDismissUntil;
       try {
@@ -2056,18 +2068,20 @@ function App() {
     runDriftCheck();
     const interval = setInterval(runDriftCheck, 30000);
     return () => clearInterval(interval);
-  }, [isToday, schedule, habits, day, activeId, chiefDismissUntil]);
+  }, [isToday, schedule, habits, day, activeId, chiefDismissUntil, hasDayOverride]);
 
   // Chief of Staff Action Handlers
   const applyChiefOfStaffHeal = (planToApply = null) => {
     const plan = planToApply || chiefOfStaffAlert;
     if (!plan || !plan.proposedSchedule) return;
 
+    // Immediately dismiss Chief of Staff for 120 minutes so it never pops back
+    dismissChiefOfStaff(120);
+
     const updated = plan.proposedSchedule;
     // Save as Day-Specific Override for today only (does NOT alter normal daily timetable!)
     saveDayScheduleOverride(key, updated);
 
-    dismissChiefOfStaff(20);
     setToast(`✨ AI Healed Plan applied for today only! Saved ${plan.savingsMinutes || 0}m. Normal timetable resumes at 4 AM.`);
     setTimeout(() => setToast(''), 3500);
   };
@@ -2389,7 +2403,7 @@ function App() {
     }
   };
 
-    const handleLeavePod = async (groupId, groupName) => {
+  const handleLeavePod = async (groupId, groupName) => {
     if (!groupId || !token) return;
     if (!window.confirm(`Are you sure you want to leave study pod "${groupName}"?`)) return;
     try {
@@ -2413,6 +2427,73 @@ function App() {
     } catch {
       setToast('Failed to leave pod.');
       setTimeout(() => setToast(''), 2500);
+    }
+  };
+
+  const handleDeletePod = async (groupId, groupName) => {
+    if (!groupId || !token) return;
+    if (!window.confirm(`Are you sure you want to permanently delete pod "${groupName}"? This action cannot be undone and will delete the pod for all members.`)) return;
+    try {
+      const res = await fetch(`${API}/groups/${groupId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setGroups(prev => prev.filter(g => g.id !== groupId));
+        if (activeGroupId === groupId) {
+          const remaining = groups.filter(g => g.id !== groupId);
+          const nextId = remaining[0]?.id || '';
+          setActiveGroupId(nextId);
+          if (nextId) localStorage.setItem('daymark-active-group', nextId);
+          else localStorage.removeItem('daymark-active-group');
+        }
+        playChime(true);
+        setToast(`Deleted pod "${groupName}"`);
+        setTimeout(() => setToast(''), 2500);
+      } else {
+        setToast(data.error || 'Failed to delete pod.');
+        setTimeout(() => setToast(''), 2500);
+      }
+    } catch {
+      setToast('Network error deleting pod.');
+      setTimeout(() => setToast(''), 2500);
+    }
+  };
+
+  const handleSaveNotice = async () => {
+    if (!activeGroupId || !token) return;
+    setNoticeSaving(true);
+    try {
+      const res = await fetch(`${API}/groups/${activeGroupId}/notice`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ notice: noticeDraft })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setGroups(prev => prev.map(g => g.id === activeGroupId ? {
+          ...g,
+          notice_text: data.notice_text,
+          notice_updated_at: data.notice_updated_at,
+          notice_updated_by: data.notice_updated_by
+        } : g));
+        setEditingNotice(false);
+        playChime(true);
+        setToast('📌 Pod notice board updated!');
+        setTimeout(() => setToast(''), 2500);
+      } else {
+        setToast(data.error || 'Failed to update notice');
+        setTimeout(() => setToast(''), 2500);
+      }
+    } catch {
+      setToast('Network error updating notice');
+      setTimeout(() => setToast(''), 2500);
+    } finally {
+      setNoticeSaving(false);
     }
   };
 
@@ -3888,8 +3969,104 @@ const handleNudge = async (toUserId, toUsername) => {
                     <button className="reset-schedule-btn" onClick={() => setJoinPodModalOpen(true)}>
                       <Share2 size={14} /> Join with Code
                     </button>
+                    {activeGroup && user && (
+                      activeGroup.created_by === user.id ? (
+                        <button
+                          className="reset-schedule-btn"
+                          style={{ color: '#dc2626', borderColor: '#fca5a5' }}
+                          onClick={() => handleDeletePod(activeGroup.id, activeGroup.name)}
+                          title="Delete this pod permanently (Owner only)"
+                        >
+                          <Trash2 size={13} /> Delete Pod
+                        </button>
+                      ) : (
+                        <button
+                          className="reset-schedule-btn"
+                          style={{ color: '#dc2626', borderColor: '#fca5a5' }}
+                          onClick={() => handleLeavePod(activeGroup.id, activeGroup.name)}
+                          title="Leave this pod"
+                        >
+                          <LogOut size={13} /> Exit Pod
+                        </button>
+                      )
+                    )}
                   </div>
                 </div>
+
+                {/* Pod Notice Board (Pinned Announcement) */}
+                {activeGroup && (
+                  <div className="pod-notice-card">
+                    <div className="pod-notice-content">
+                      <div className="pod-notice-header">
+                        <Pin size={13} style={{ transform: 'rotate(45deg)' }} />
+                        <span>Pod Notice Board</span>
+                        {activeGroup.notice_updated_at && activeGroup.notice_text && (
+                          <span className="pod-notice-meta">
+                            · Updated by {activeGroup.notice_updated_by || 'Member'} {new Date(activeGroup.notice_updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        )}
+                      </div>
+
+                      {editingNotice ? (
+                        <div className="pod-notice-edit-box">
+                          <textarea
+                            className="pod-notice-textarea"
+                            value={noticeDraft}
+                            onChange={(e) => setNoticeDraft(e.target.value)}
+                            placeholder="Post a study sprint goal, meeting time, or announcement for your pod (max 500 characters)..."
+                            maxLength={500}
+                            rows={3}
+                            autoFocus
+                          />
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <small style={{ color: '#7b877d' }}>{500 - noticeDraft.length} chars remaining</small>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <button
+                                className="reset-schedule-btn"
+                                style={{ padding: '5px 10px', fontSize: '11px' }}
+                                onClick={() => setEditingNotice(false)}
+                                disabled={noticeSaving}
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                className="save-schedule-btn"
+                                style={{ padding: '5px 12px', fontSize: '11px' }}
+                                onClick={handleSaveNotice}
+                                disabled={noticeSaving}
+                              >
+                                {noticeSaving ? 'Saving...' : 'Post Notice'}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="pod-notice-body">
+                          {activeGroup.notice_text ? (
+                            <p style={{ margin: 0 }}>{activeGroup.notice_text}</p>
+                          ) : (
+                            <span className="pod-notice-empty">
+                              No announcements pinned yet. Click to post a daily focus target or sprint message for your pod.
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {!editingNotice && (
+                      <button
+                        className="pod-notice-edit-btn"
+                        onClick={() => {
+                          setNoticeDraft(activeGroup.notice_text || '');
+                          setEditingNotice(true);
+                        }}
+                        title="Edit or post pod announcement"
+                      >
+                        <Edit3 size={12} /> {activeGroup.notice_text ? 'Edit Notice' : 'Post Notice'}
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {/* Combined Pod Output Banner */}
                 {activeGroup && leaderboard && (
