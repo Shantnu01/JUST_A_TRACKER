@@ -13852,3 +13852,572 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="translucent"] {
   /* Inherits liquid-glass */
 }
+
+
+/* ==========================================================================
+   MOBILE UI OPTIMIZATION (COMPREHENSIVE PER-THEME ADAPTATION <= 640px)
+   Bespoke mobile responsiveness for all 10 themes with zero desktop regressions
+   ========================================================================== */
+
+@media (max-width: 640px) {
+
+  /* ------------------------------------------------------------------------
+     1. GLOBAL MOBILE SHELL & CONTAINER DISCIPLINE
+     ------------------------------------------------------------------------ */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .app-shell {
+    display: block !important;
+    min-height: 100vh !important;
+    padding-bottom: 76px !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .main-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px 12px 84px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Vertical Flow for Dashboard Columns on Mobile */
+  .content-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+  }
+
+  .right-column {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+  }
+
+  .schedule-panel,
+  .habits-panel,
+  .settings-panel,
+  .note-panel,
+  .report-main,
+  .tokyo-soundscape-card {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 18px 14px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     2. WELCOME ROW, HERO GREETING & EMBEDDED TOOLS ROW
+     ------------------------------------------------------------------------ */
+  .welcome-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    padding: 8px 0 16px 0 !important;
+    margin-bottom: 18px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .welcome-row h2 {
+    font-size: clamp(22px, 5.5vw, 28px) !important;
+    line-height: 1.2 !important;
+    min-height: 1.25em !important;
+    margin-bottom: 4px !important;
+    word-break: break-word !important;
+  }
+
+  .welcome-tools-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    margin-top: 10px !important;
+  }
+
+  .welcome-tools-row .top-actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .evening-closeout-pill,
+  .pod-pill,
+  .sync-chip,
+  .theme-switcher-btn,
+  .date-chip {
+    font-size: 11px !important;
+    padding: 6px 10px !important;
+    height: 32px !important;
+    box-sizing: border-box !important;
+  }
+
+  .welcome-right-widgets {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 6px !important;
+  }
+
+  .welcome-right-widgets .streak-card,
+  .welcome-right-widgets .tokyo-clock-card {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding: 10px 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .tokyo-clock-time {
+    font-size: 22px !important;
+    letter-spacing: 1px !important;
+  }
+
+  .tokyo-clock-label {
+    font-size: 9.5px !important;
+    letter-spacing: 1.5px !important;
+  }
+
+  .tokyo-terminal-strip {
+    font-size: 9.5px !important;
+    letter-spacing: 1px !important;
+    gap: 6px !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     3. METRICS GRID: RESPONSIVE 2-COLUMN DISPLAY
+     ------------------------------------------------------------------------ */
+  .metrics-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-bottom: 16px !important;
+    width: 100% !important;
+  }
+
+  .metrics-grid .metric-card:last-child {
+    grid-column: span 2 !important;
+  }
+
+  .metric-card {
+    padding: 12px 14px !important;
+    box-sizing: border-box !important;
+    gap: 8px !important;
+  }
+
+  .metric-copy strong {
+    font-size: 18px !important;
+    line-height: 1.15 !important;
+  }
+
+  .metric-copy span,
+  .metric-copy small {
+    font-size: 11px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     4. SCHEDULE ITEMS (TIMETABLE ROWS) ON MOBILE
+     ------------------------------------------------------------------------ */
+  .schedule-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 14px 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .schedule-item .time-col {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  .schedule-item .time-col strong {
+    font-size: 24px !important;
+    line-height: 1 !important;
+  }
+
+  .event-body {
+    width: 100% !important;
+  }
+
+  .event-title-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .event-title-row h4 {
+    font-size: 14px !important;
+  }
+
+  .duration-pill {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+
+  .event-action {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 4px !important;
+  }
+
+  .action-button,
+  .finish-button {
+    flex: 1 1 auto !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     5. HABITS CHECKLIST TOUCH-FRIENDLY ROWS
+     ------------------------------------------------------------------------ */
+  .habit-row {
+    padding: 12px 10px !important;
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .check-box {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    border-radius: 6px !important;
+  }
+
+  .habit-copy {
+    font-size: 13.5px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     6. COLUMN GLASS STYLE CARDS IN ROUTINE SETTINGS
+     ------------------------------------------------------------------------ */
+  .column-style-options-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .column-style-option-btn {
+    padding: 12px 10px !important;
+  }
+
+  .col-opt-content strong {
+    font-size: 13px !important;
+  }
+
+  .col-opt-content p {
+    font-size: 10.5px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+
+  /* ========================================================================
+     7. BESPOKE PER-THEME MOBILE OPTIMIZATIONS (ALL 10 THEMES)
+     ======================================================================== */
+
+  /* --- THEME 1: DAYMARK CLASSIC (default) --- */
+  [data-theme="default"] .sidebar {
+    background: #fffefa !important;
+    border-top: 1px solid #e2e5dc !important;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06) !important;
+  }
+  [data-theme="default"] .nav-item.selected {
+    background: #e9f0e6 !important;
+    color: #274934 !important;
+    font-weight: 700 !important;
+  }
+  [data-theme="default"] .schedule-item {
+    background: #ffffff !important;
+    border: 1px solid #e5e5dd !important;
+    border-radius: 10px !important;
+  }
+  [data-theme="default"] .schedule-item.active-session {
+    border-left: 3px solid #274934 !important;
+    background: #f7faf5 !important;
+  }
+  [data-theme="default"] .action-button {
+    background: #274934 !important;
+    color: #ffffff !important;
+  }
+
+  /* --- THEME 2: TOKYO LOFI (tokyo-lofi) --- */
+  [data-theme="tokyo-lofi"] .sidebar {
+    background: #100f17 !important;
+    border-top: 1px solid rgba(245, 158, 11, 0.25) !important;
+    box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.7) !important;
+  }
+  [data-theme="tokyo-lofi"] .nav-item.selected {
+    background: rgba(244, 114, 182, 0.1) !important;
+    color: #F472B6 !important;
+    border-top: 2px solid #F472B6 !important;
+  }
+  [data-theme="tokyo-lofi"] .schedule-item.active-session {
+    border-left: 3px solid #F59E0B !important;
+    background: rgba(245, 158, 11, 0.08) !important;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.12) !important;
+  }
+  [data-theme="tokyo-lofi"] .action-button {
+    background: #F59E0B !important;
+    color: #12111A !important;
+    border: none !important;
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3) !important;
+  }
+  [data-theme="tokyo-lofi"] .finish-button {
+    background: rgba(244, 114, 182, 0.2) !important;
+    color: #F472B6 !important;
+    border: 1px solid rgba(244, 114, 182, 0.4) !important;
+  }
+
+  /* --- THEME 3: DYNAMIC VIDEO (dynamic-video) --- */
+  [data-theme="dynamic-video"] .sidebar {
+    background: rgba(8, 12, 22, 0.88) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6) !important;
+  }
+  [data-theme="dynamic-video"] .nav-item.selected {
+    background: rgba(255, 255, 255, 0.14) !important;
+    color: #FFFFFF !important;
+    border-top: 2px solid #F59E0B !important;
+  }
+  [data-theme="dynamic-video"] .panel,
+  [data-theme="dynamic-video"] .metric-card,
+  [data-theme="dynamic-video"] .streak-card {
+    backdrop-filter: blur(16px) saturate(175%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(175%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  }
+  [data-theme="dynamic-video"] .action-button {
+    background: #F59E0B !important;
+    color: #04070E !important;
+    font-weight: 700 !important;
+  }
+
+  /* --- THEME 4: NEO-BRUTALIST (neo-brutalist) --- */
+  [data-theme="neo-brutalist"] .sidebar {
+    background: #ffffff !important;
+    border-top: 2.5px solid #18181b !important;
+    box-shadow: 0 -3px 0 #18181b !important;
+  }
+  [data-theme="neo-brutalist"] .nav-item.selected {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border: 2px solid #18181b !important;
+    box-shadow: 2px 2px 0 #18181b !important;
+    border-radius: 0 !important;
+  }
+  [data-theme="neo-brutalist"] .schedule-item {
+    background: #ffffff !important;
+    border: 2px solid #18181b !important;
+    box-shadow: 3px 3px 0 #18181b !important;
+    border-radius: 0 !important;
+    margin-bottom: 8px !important;
+  }
+  [data-theme="neo-brutalist"] .schedule-item.active-session {
+    border-left: 4px solid #2563eb !important;
+    background: #eff6ff !important;
+  }
+  [data-theme="neo-brutalist"] .action-button {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border: 2px solid #18181b !important;
+    box-shadow: 2px 2px 0 #18181b !important;
+    border-radius: 0 !important;
+  }
+  [data-theme="neo-brutalist"] .check-box {
+    border-radius: 0 !important;
+    border: 2px solid #18181b !important;
+  }
+
+  /* --- THEME 5: ZEN PAPER (zen-paper) --- */
+  [data-theme="zen-paper"] .sidebar {
+    background: #fbf9f4 !important;
+    border-top: 1px solid #ebe5d8 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04) !important;
+  }
+  [data-theme="zen-paper"] .nav-item.selected {
+    background: rgba(217, 72, 15, 0.08) !important;
+    color: #D9480F !important;
+    font-weight: 700 !important;
+  }
+  [data-theme="zen-paper"] .schedule-item {
+    border-bottom: 1px solid #ece6da !important;
+  }
+  [data-theme="zen-paper"] .schedule-item.active-session {
+    border-left: 2.5px solid #D9480F !important;
+    background: rgba(217, 72, 15, 0.04) !important;
+  }
+  [data-theme="zen-paper"] .action-button {
+    background: #D9480F !important;
+    color: #ffffff !important;
+  }
+
+  /* --- THEME 6: GHIBLI MEADOW (ghibli-meadow) --- */
+  [data-theme="ghibli-meadow"] .sidebar {
+    background: #f4f8ed !important;
+    border-top: 1.5px solid #d0e4d7 !important;
+    box-shadow: 0 -2px 10px rgba(66, 105, 74, 0.08) !important;
+  }
+  [data-theme="ghibli-meadow"] .nav-item.selected {
+    background: #dceed4 !important;
+    color: #27382f !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+  }
+  [data-theme="ghibli-meadow"] .schedule-item {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid #d2e4d8 !important;
+    border-radius: 12px !important;
+    margin-bottom: 8px !important;
+  }
+  [data-theme="ghibli-meadow"] .schedule-item.active-session {
+    border-left: 3.5px solid #42694a !important;
+    background: #f1f8ee !important;
+  }
+  [data-theme="ghibli-meadow"] .action-button {
+    background: #42694a !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+  }
+
+  /* --- THEME 7: ACID RUNWAY (acid-runway) --- */
+  [data-theme="acid-runway"] .sidebar {
+    background: #080808 !important;
+    border-top: 1.5px solid #222222 !important;
+    box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.9) !important;
+  }
+  [data-theme="acid-runway"] .nav-item.selected {
+    background: rgba(204, 255, 0, 0.12) !important;
+    color: #ccff00 !important;
+    border-top: 2px solid #ccff00 !important;
+  }
+  [data-theme="acid-runway"] .schedule-item {
+    background: #0d0d0d !important;
+    border: 1px solid #1a1a1a !important;
+    margin-bottom: 8px !important;
+  }
+  [data-theme="acid-runway"] .schedule-item.active-session {
+    border-left: 3px solid #ccff00 !important;
+    background: rgba(204, 255, 0, 0.06) !important;
+    box-shadow: 0 0 14px rgba(204, 255, 0, 0.15) !important;
+  }
+  [data-theme="acid-runway"] .action-button {
+    background: #ccff00 !important;
+    color: #050505 !important;
+    font-weight: 800 !important;
+  }
+
+  /* --- THEME 8: SPIDER-VERSE (spider-verse) --- */
+  [data-theme="spider-verse"] .sidebar {
+    background: #100b24 !important;
+    border-top: 2.5px solid #ff0055 !important;
+    box-shadow: 0 -3px 14px rgba(255, 0, 85, 0.35) !important;
+  }
+  [data-theme="spider-verse"] .nav-item.selected {
+    background: rgba(0, 240, 255, 0.14) !important;
+    color: #00f0ff !important;
+    border-top: 2px solid #00f0ff !important;
+    font-weight: 800 !important;
+  }
+  [data-theme="spider-verse"] .schedule-item {
+    background: #140e2b !important;
+    border: 1.5px solid rgba(255, 0, 85, 0.3) !important;
+    margin-bottom: 8px !important;
+  }
+  [data-theme="spider-verse"] .schedule-item.active-session {
+    border-left: 3.5px solid #00f0ff !important;
+    background: rgba(0, 240, 255, 0.08) !important;
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.2) !important;
+  }
+  [data-theme="spider-verse"] .action-button {
+    background: #ff0055 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    box-shadow: 2px 2px 0 #00f0ff !important;
+  }
+
+  /* --- THEME 9: SUNLIT STUDIO (sunlit-studio) --- */
+  [data-theme="sunlit-studio"] .sidebar {
+    background: #fafaf5 !important;
+    border-top: 1px solid #ebebeb !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04) !important;
+  }
+  [data-theme="sunlit-studio"] .nav-item.selected {
+    background: rgba(229, 148, 0, 0.08) !important;
+    color: #c47d00 !important;
+    font-weight: 600 !important;
+  }
+  [data-theme="sunlit-studio"] .schedule-item {
+    background: #ffffff !important;
+    border: 1px solid #ebebeb !important;
+    border-radius: 10px !important;
+    margin-bottom: 8px !important;
+  }
+  [data-theme="sunlit-studio"] .schedule-item.active-session {
+    border-left: 3px solid #e59400 !important;
+    background: rgba(229, 148, 0, 0.04) !important;
+  }
+  [data-theme="sunlit-studio"] .action-button {
+    background: #e59400 !important;
+    color: #ffffff !important;
+  }
+
+  /* --- THEME 10: WARM PARCHMENT (warm-parchment) --- */
+  [data-theme="warm-parchment"] .sidebar {
+    background: #f0eae0 !important;
+    border-top: 1px solid #e8e0d0 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04) !important;
+  }
+  [data-theme="warm-parchment"] .nav-item.selected {
+    background: rgba(180, 83, 9, 0.08) !important;
+    color: #b45309 !important;
+    font-weight: 700 !important;
+  }
+  [data-theme="warm-parchment"] .schedule-item {
+    border-bottom: 1px solid #e8e0d0 !important;
+  }
+  [data-theme="warm-parchment"] .schedule-item.active-session {
+    border-left: 2.5px solid #b45309 !important;
+    background: rgba(180, 83, 9, 0.05) !important;
+  }
+  [data-theme="warm-parchment"] .action-button {
+    background: #b45309 !important;
+    color: #ffffff !important;
+  }
+}
