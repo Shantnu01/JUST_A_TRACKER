@@ -520,10 +520,7 @@ function App() {
   const [joinInviteCode, setJoinInviteCode] = useState('');
   const [podError, setPodError] = useState('');
   const [podDropdownOpen, setPodDropdownOpen] = useState(false);
-  const [podRadar, setPodRadar] = useState([]);
-  const [podHypeList, setPodHypeList] = useState([]);
-  const [hypeInputText, setHypeInputText] = useState('');
-  const [podTargetMinutes, setPodTargetMinutes] = useState(900);
+
   const [nudgeCooldowns, setNudgeCooldowns] = useState({});
 
   // Friction & Context-Switch Interceptor Agent State
@@ -856,40 +853,7 @@ function App() {
     return () => clearInterval(interval);
   }, [token, activeGroupId, todayKey]);
 
-  // Upstash Redis: Pod Radar, Hype Wall & Target fetcher
-  useEffect(() => {
-    if (!token || !activeGroupId) {
-      setPodRadar([]);
-      setPodHypeList([]);
-      return;
-    }
-    const fetchPodExtras = async () => {
-      try {
-        const [radarRes, hypeRes, targetRes] = await Promise.all([
-          fetch(`${API}/groups/${activeGroupId}/radar`, { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(`${API}/groups/${activeGroupId}/hype`, { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(`${API}/groups/${activeGroupId}/target?date=${todayKey}`, { headers: { Authorization: `Bearer ${token}` } })
-        ]);
-        if (radarRes.ok) {
-          const radarData = await radarRes.json();
-          setPodRadar(radarData.radar || []);
-        }
-        if (hypeRes.ok) {
-          const hypeData = await hypeRes.json();
-          setPodHypeList(Array.isArray(hypeData) ? hypeData : []);
-        }
-        if (targetRes.ok) {
-          const targetData = await targetRes.json();
-          if (targetData.target_minutes) {
-            setPodTargetMinutes(targetData.target_minutes);
-          }
-        }
-      } catch {}
-    };
-    fetchPodExtras();
-    const interval = setInterval(fetchPodExtras, 10000);
-    return () => clearInterval(interval);
-  }, [token, activeGroupId, todayKey]);
+  
 
   // Live countdown timer for nudge cooldowns
   useEffect(() => {
@@ -2425,7 +2389,34 @@ function App() {
     }
   };
 
-  const handleNudge = async (toUserId, toUsername) => {
+    const handleLeavePod = async (groupId, groupName) => {
+    if (!groupId || !token) return;
+    if (!window.confirm(`Are you sure you want to leave study pod "${groupName}"?`)) return;
+    try {
+      const res = await fetch(`${API}/groups/${groupId}/leave`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setGroups(prev => prev.filter(g => g.id !== groupId));
+        if (activeGroupId === groupId) {
+          const remaining = groups.filter(g => g.id !== groupId);
+          const nextId = remaining[0]?.id || '';
+          setActiveGroupId(nextId);
+          if (nextId) localStorage.setItem('daymark-active-group', nextId);
+          else localStorage.removeItem('daymark-active-group');
+        }
+        playChime(true);
+        setToast(`Left pod "${groupName}"`);
+        setTimeout(() => setToast(''), 2500);
+      }
+    } catch {
+      setToast('Failed to leave pod.');
+      setTimeout(() => setToast(''), 2500);
+    }
+  };
+
+const handleNudge = async (toUserId, toUsername) => {
     if (!activeGroupId || !token) return;
     try {
       const res = await fetch(`${API}/groups/${activeGroupId}/nudge`, {
@@ -2454,57 +2445,7 @@ function App() {
     }
   };
 
-  const handlePostHype = async (emoji, text) => {
-    if (!activeGroupId || !token) return;
-    const cleanText = (text || hypeInputText || '').trim();
-    if (!cleanText) return;
-    try {
-      const res = await fetch(`${API}/groups/${activeGroupId}/hype`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ emoji: emoji || '🔥', text: cleanText })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.item) {
-          setPodHypeList(prev => [data.item, ...prev.slice(0, 34)]);
-        }
-        setHypeInputText('');
-        playChime(true);
-        setToast(`Hype shout sent to your Pod!`);
-        setTimeout(() => setToast(''), 2000);
-      }
-    } catch {
-      setToast('Failed to post hype shout.');
-      setTimeout(() => setToast(''), 2000);
-    }
-  };
-
-  const handleSetPodTarget = async (targetMinutes) => {
-    if (!activeGroupId || !token) return;
-    try {
-      const res = await fetch(`${API}/groups/${activeGroupId}/target`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ date: todayKey, target_minutes: targetMinutes })
-      });
-      if (res.ok) {
-        setPodTargetMinutes(targetMinutes);
-        playChime(true);
-        setToast(`🎯 Pod Target updated to ${Math.floor(targetMinutes / 60)} hours!`);
-        setTimeout(() => setToast(''), 2500);
-      }
-    } catch {
-      setToast('Failed to update pod target.');
-      setTimeout(() => setToast(''), 2000);
-    }
-  };
+  
 
   // Open 1:00 AM Recap for yesterday
   const openRecapModal = async () => {
@@ -3950,87 +3891,6 @@ function App() {
                   </div>
                 </div>
 
-                {/* 1. Live Lock-In Radar (Powered by Upstash Redis TTL) */}
-                {activeGroup && (
-                  <div className="pod-radar-card">
-                    <div className="pod-radar-header">
-                      <div className="pod-radar-title">
-                        <span className="pod-radar-beacon" />
-                        <span>Live Lock-In Radar (Upstash Redis)</span>
-                      </div>
-                      <span className="pod-radar-count-badge">
-                        {(podRadar.length > 0 ? podRadar : podMembers).filter(r => r.is_active_now ?? r.is_studying).length} of {activeGroup.member_count} Locked In Right Now
-                      </span>
-                    </div>
-                    <div className="pod-radar-grid">
-                      {(podRadar.length > 0 ? podRadar : podMembers).map(m => {
-                        const isLive = Boolean(m.is_active_now ?? m.is_studying);
-                        const blockName = m.current_block || m.current_block_title || 'Focused session';
-                        return (
-                          <div key={m.id} className={`pod-radar-member ${isLive ? 'active-studying' : ''}`}>
-                            <div className="radar-avatar-wrap">
-                              <div className="radar-avatar" style={{ background: m.avatar_color || '#3b82f6' }}>
-                                {m.username.charAt(0).toUpperCase()}
-                              </div>
-                              <span className={`radar-status-dot ${isLive ? 'online' : ''}`} />
-                            </div>
-                            <div className="radar-member-meta">
-                              <div className="radar-member-name">
-                                {m.username} {m.id === user.id ? '(You)' : ''}
-                              </div>
-                              {isLive ? (
-                                <div className="radar-member-block">⚡ {blockName}</div>
-                              ) : (
-                                <div className="radar-member-break">On break</div>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* 2. Collaborative Pod Target & Team Milestone Bar */}
-                {activeGroup && leaderboard && (
-                  <div className="pod-target-card">
-                    <div className="pod-target-header">
-                      <div className="pod-target-title">
-                        <Target size={16} color="#10b981" />
-                        <span>Daily Squad Target ({Math.floor(podTargetMinutes / 60)}h Goal)</span>
-                      </div>
-                      <div className="pod-target-selector">
-                        {[600, 900, 1200, 1500].map(mins => (
-                          <button
-                            key={mins}
-                            className={`pod-target-pill ${podTargetMinutes === mins ? 'active' : ''}`}
-                            onClick={() => handleSetPodTarget(mins)}
-                            title={`Set daily pod target to ${mins / 60} hours`}
-                          >
-                            {mins / 60}h Goal
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="pod-progress-track">
-                      <div
-                        className="pod-progress-fill"
-                        style={{ width: `${Math.min(100, Math.round(((leaderboard.total_pod_minutes || 0) / podTargetMinutes) * 100))}%` }}
-                      />
-                    </div>
-                    <div className="pod-target-meta-row">
-                      <span>
-                        <strong>{Math.floor((leaderboard.total_pod_minutes || 0) / 60)}h {(leaderboard.total_pod_minutes || 0) % 60}m</strong> logged of {Math.floor(podTargetMinutes / 60)}h ({Math.round(((leaderboard.total_pod_minutes || 0) / podTargetMinutes) * 100)}% achieved · {Math.max(0, Math.floor((podTargetMinutes - (leaderboard.total_pod_minutes || 0)) / 60))}h {Math.max(0, (podTargetMinutes - (leaderboard.total_pod_minutes || 0)) % 60)}m to goal)
-                      </span>
-                      <div className="pod-target-milestones">
-                        <span className="pod-milestone-tag">🥉 50% Bronze</span>
-                        <span className="pod-milestone-tag">🥈 75% Silver</span>
-                        <span className="pod-milestone-tag">🥇 100% Gold Titans</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Combined Pod Output Banner */}
                 {activeGroup && leaderboard && (
                   <div className="pod-summary-banner">
@@ -4056,7 +3916,7 @@ function App() {
                 )}
 
                 {/* Competitive Leaderboard */}
-                {activeGroup ? (<>
+                {activeGroup ? (
                   <div className="panel" style={{ padding: '22px', marginBottom: '24px' }}>
                     <div className="panel-heading" style={{ marginBottom: '12px' }}>
                       <div>
@@ -4136,76 +3996,7 @@ function App() {
                     </div>
                   </div>
 
-                  {/* 3. Ephemeral Pod Hype Wall & Micro-Reactions (Live Redis Stream) */}
-                  <div className="pod-hype-card">
-                    <div className="pod-hype-header">
-                      <div className="pod-hype-title">
-                        <Flame size={16} color="#f59e0b" />
-                        <span>Pod Hype Wall & Micro-Reactions</span>
-                      </div>
-                      <span className="pod-radar-count-badge">Live Redis Stream</span>
-                    </div>
-                    <div className="pod-hype-quick-row">
-                      {[
-                        ['🔥', 'Locked in!'],
-                        ['⚡', 'Deep focus mode'],
-                        ['☕', 'Coffee break reset'],
-                        ['🏆', 'Problem solved!'],
-                        ['🚀', 'Pushing clean code!']
-                      ].map(([emoji, label]) => (
-                        <button
-                          key={label}
-                          className="pod-hype-quick-btn"
-                          onClick={() => handlePostHype(emoji, label)}
-                        >
-                          <span>{emoji}</span> {label}
-                        </button>
-                      ))}
-                    </div>
-                    <form
-                      className="pod-hype-form"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handlePostHype('🔥', hypeInputText);
-                      }}
-                    >
-                      <input
-                        type="text"
-                        className="pod-hype-input"
-                        placeholder="Cheer your squad or share what you solved… (max 140 chars)"
-                        value={hypeInputText}
-                        onChange={(e) => setHypeInputText(e.target.value)}
-                        maxLength={140}
-                      />
-                      <button type="submit" className="pod-hype-send-btn" disabled={!hypeInputText.trim()}>
-                        <Send size={13} /> Shout
-                      </button>
-                    </form>
-                    <div className="pod-hype-feed">
-                      {podHypeList.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '16px', fontSize: '11px', color: '#94a3b8' }}>
-                          No cheers yet today. Click any reaction button above to hype up your pod!
-                        </div>
-                      ) : (
-                        podHypeList.map(item => (
-                          <div key={item.id} className="pod-hype-item">
-                            <div className="pod-hype-avatar" style={{ background: item.avatar_color || '#3b82f6' }}>
-                              {item.username?.charAt(0).toUpperCase()}
-                            </div>
-                            <div className="pod-hype-body">
-                              <span className="pod-hype-author">{item.username}</span>
-                              <span className="pod-hype-text">{item.emoji} {item.text}</span>
-                            </div>
-                            <span className="pod-hype-time">
-                              {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </span>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </>
-                ) : (
+                  ) : (
                   <div className="panel" style={{ padding: '32px', textAlign: 'center' }}>
                     <Flame size={32} color="#c5973b" style={{ marginBottom: '10px' }} />
                     <h4 style={{ font: '700 16px Manrope', margin: '0 0 6px' }}>No active pod selected</h4>

@@ -17,11 +17,7 @@ import {
   getCachedLeaderboard,
   setCachedLeaderboard,
   invalidateLeaderboard,
-  checkAndSetNudgeCooldown,
-  pushPodHype,
-  getPodHype,
-  getPodDailyTarget,
-  setPodDailyTarget
+  checkAndSetNudgeCooldown
 } from './redis.js';
 
 // Determine if clustering should be active
@@ -516,21 +512,29 @@ app.post('/api/groups/join', authenticateToken, async (req, res) => {
 
     const group = groupResult.rows[0];
 
-    // Check member count (Max 5)
-    const countResult = await pool.query('SELECT count(*)::int as count FROM group_members WHERE group_id = $1', [group.id]);
-    const currentCount = countResult.rows[0].count;
-    if (currentCount >= 5) {
-      return res.status(400).json({ error: 'This study pod is full (maximum 5 members reached).' });
-    }
-
     // Check if user is already a member
     const memberCheck = await pool.query('SELECT 1 FROM group_members WHERE group_id = $1 AND user_id = $2', [group.id, req.user.id]);
     if (memberCheck.rows.length > 0) {
       return res.status(400).json({ error: 'You are already a member of this study pod.' });
     }
 
-    await pool.query('INSERT INTO group_members (group_id, user_id) VALUES ($1, $2)', [group.id, req.user.id]);
-    return res.json({ ...group, member_count: currentCount + 1 });
+    // Atomic insert with max-5 condition to eliminate concurrency race conditions
+    const insertRes = await pool.query(
+      `INSERT INTO group_members (group_id, user_id)
+       SELECT $1, $2
+       WHERE (SELECT count(*) FROM group_members WHERE group_id = $1) < 5
+       RETURNING group_id`,
+      [group.id, req.user.id]
+    );
+
+    if (insertRes.rows.length === 0) {
+      return res.status(400).json({ error: 'This study pod is full (maximum 5 members reached).' });
+    }
+
+    const countResult = await pool.query('SELECT count(*)::int as count FROM group_members WHERE group_id = $1', [group.id]);
+    await invalidateLeaderboard(group.id, new Date().toISOString().slice(0, 10));
+
+    return res.json({ ...group, member_count: countResult.rows[0]?.count || 1 });
   } catch (error) {
     console.error('Join group failed:', error.message);
     return res.status(500).json({ error: 'Failed to join study pod.' });
@@ -552,7 +556,7 @@ app.get('/api/groups/:id/members', authenticateToken, async (req, res) => {
 
     const result = await pool.query(
       `SELECT u.id, u.username, u.avatar_color, gm.joined_at,
-         COALESCE(p.is_studying, false) as is_studying,
+         CASE WHEN p.is_studying = true AND p.last_seen > NOW() - INTERVAL '90 seconds' THEN true ELSE false END as is_studying,
          COALESCE(p.current_block_title, '') as current_block_title,
          p.session_started_at,
          p.last_seen,
@@ -578,13 +582,12 @@ app.get('/api/groups/:id/members', authenticateToken, async (req, res) => {
         return {
           ...row,
           is_studying: Boolean(live.is_studying),
-          current_block_title: live.current_block_title || row.current_block_title,
-          is_live_radar: Boolean(live.is_studying)
+          current_block_title: live.current_block_title || row.current_block_title
         };
       }
       return {
         ...row,
-        is_live_radar: Boolean(row.is_studying)
+        is_studying: Boolean(row.is_studying)
       };
     });
 
@@ -598,10 +601,18 @@ app.get('/api/groups/:id/members', authenticateToken, async (req, res) => {
 // Leave group
 app.post('/api/groups/:id/leave', authenticateToken, async (req, res) => {
   if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
   try {
     await ensureTable();
-    await pool.query('DELETE FROM group_members WHERE group_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-    await invalidateLeaderboard(req.params.id, new Date().toISOString().slice(0, 10));
+    await pool.query('DELETE FROM group_members WHERE group_id = $1 AND user_id = $2', [groupId, req.user.id]);
+    await invalidateLeaderboard(groupId, new Date().toISOString().slice(0, 10));
+
+    // If pod has 0 members remaining, clean up the orphaned pod
+    const countCheck = await pool.query('SELECT count(*)::int as count FROM group_members WHERE group_id = $1', [groupId]);
+    if (countCheck.rows[0]?.count === 0) {
+      await pool.query('DELETE FROM study_groups WHERE id = $1', [groupId]);
+    }
+
     return res.json({ success: true });
   } catch (error) {
     console.error('Leave group failed:', error.message);
@@ -769,6 +780,14 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
   const targetDate = req.query.date || new Date().toISOString().slice(0, 10);
 
   try {
+    await ensureTable();
+
+    // Authorization: Verify requesting user is actually a member of this study pod
+    const memberCheck = await pool.query('SELECT 1 FROM group_members WHERE group_id = $1 AND user_id = $2', [groupId, req.user.id]);
+    if (memberCheck.rows.length === 0) {
+      return res.status(403).json({ error: 'You are not a member of this study pod.' });
+    }
+
     // 1. Check Redis cache first
     const cached = await getCachedLeaderboard(groupId, targetDate);
     if (cached && Array.isArray(cached.members)) {
@@ -779,18 +798,16 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
         const live = liveMap[m.id];
         return {
           ...m,
-          is_studying: live ? Boolean(live.is_studying) : m.is_studying,
-          current_block_title: live && live.current_block_title ? live.current_block_title : m.current_block_title,
-          is_live_radar: Boolean(live ? live.is_studying : m.is_studying)
+          is_studying: live ? Boolean(live.is_studying) : Boolean(m.is_studying),
+          current_block_title: live && live.current_block_title ? live.current_block_title : m.current_block_title
         };
       });
       return res.json({ ...cached, members: updatedMembers, cached: true });
     }
 
-    await ensureTable();
     const result = await pool.query(
       `SELECT u.id, u.username, u.avatar_color,
-         COALESCE(p.is_studying, false) as is_studying,
+         CASE WHEN p.is_studying = true AND p.last_seen > NOW() - INTERVAL '90 seconds' THEN true ELSE false END as is_studying,
          COALESCE(p.current_block_title, '') as current_block_title,
          COALESCE(d.completed_minutes, '{}'::jsonb) as completed_minutes,
          COALESCE(d.checks, '{}'::jsonb) as checks,
@@ -818,9 +835,8 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
         id: member.id,
         username: member.username,
         avatar_color: member.avatar_color,
-        is_studying: live ? Boolean(live.is_studying) : member.is_studying,
+        is_studying: live ? Boolean(live.is_studying) : Boolean(member.is_studying),
         current_block_title: live && live.current_block_title ? live.current_block_title : member.current_block_title,
-        is_live_radar: Boolean(live ? live.is_studying : member.is_studying),
         total_minutes: totalMins,
         habits_done: habitsDone,
         notes: member.notes,
@@ -863,103 +879,6 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Leaderboard error:', error.message);
     return res.status(500).json({ error: 'Failed to compute leaderboard.' });
-  }
-});
-
-// ================= POD FEATURE 1: LIVE RADAR (REDIS-POWERED) =================
-app.get('/api/groups/:id/radar', authenticateToken, async (req, res) => {
-  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
-  const groupId = req.params.id;
-  try {
-    const membersRes = await pool.query(
-      `SELECT u.id, u.username, u.avatar_color, gm.joined_at
-       FROM group_members gm
-       JOIN users u ON u.id = gm.user_id
-       WHERE gm.group_id = $1`,
-      [groupId]
-    );
-    const memberIds = membersRes.rows.map(m => m.id);
-    const liveMap = await getLivePresenceMulti(memberIds);
-    const radar = membersRes.rows.map(m => {
-      const live = liveMap[m.id];
-      return {
-        id: m.id,
-        username: m.username,
-        avatar_color: m.avatar_color,
-        is_active_now: Boolean(live?.is_studying),
-        current_block: live?.current_block_title || '',
-        updated_at: live?.updated_at || null
-      };
-    });
-    return res.json({
-      group_id: groupId,
-      radar,
-      active_count: radar.filter(r => r.is_active_now).length,
-      redis_connected: isRedisReady()
-    });
-  } catch (err) {
-    console.error('Pod radar error:', err.message);
-    return res.status(500).json({ error: 'Failed to fetch pod radar.' });
-  }
-});
-
-// ================= POD FEATURE 2: EPHEMERAL HYPE WALL (REDIS RING BUFFER) =================
-app.get('/api/groups/:id/hype', authenticateToken, async (req, res) => {
-  const groupId = req.params.id;
-  try {
-    const hypeList = await getPodHype(groupId, 35);
-    return res.json(hypeList);
-  } catch (err) {
-    console.error('Fetch hype error:', err.message);
-    return res.status(500).json({ error: 'Failed to fetch pod hype.' });
-  }
-});
-
-app.post('/api/groups/:id/hype', authenticateToken, async (req, res) => {
-  const groupId = req.params.id;
-  const { emoji = '🔥', text = '' } = req.body || {};
-  if (!text || typeof text !== 'string' || text.trim().length === 0) {
-    return res.status(400).json({ error: 'Hype shout message is required.' });
-  }
-  try {
-    const item = {
-      id: `hype_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-      user_id: req.user.id,
-      username: req.user.username,
-      avatar_color: req.user.avatar_color || '#3b82f6',
-      emoji: String(emoji).slice(0, 8),
-      text: String(text).trim().slice(0, 140),
-      created_at: new Date().toISOString()
-    };
-    await pushPodHype(groupId, item);
-    return res.json({ success: true, item });
-  } catch (err) {
-    console.error('Post hype error:', err.message);
-    return res.status(500).json({ error: 'Failed to post hype shout.' });
-  }
-});
-
-// ================= POD FEATURE 3: COLLABORATIVE POD TARGET =================
-app.get('/api/groups/:id/target', authenticateToken, async (req, res) => {
-  const groupId = req.params.id;
-  const targetDate = req.query.date || new Date().toISOString().slice(0, 10);
-  try {
-    const targetMinutes = await getPodDailyTarget(groupId, targetDate);
-    return res.json({ group_id: groupId, date: targetDate, target_minutes: targetMinutes });
-  } catch (err) {
-    return res.status(500).json({ error: 'Failed to fetch pod target.' });
-  }
-});
-
-app.post('/api/groups/:id/target', authenticateToken, async (req, res) => {
-  const groupId = req.params.id;
-  const { date = new Date().toISOString().slice(0, 10), target_minutes = 900 } = req.body || {};
-  const mins = Math.max(60, Math.min(3600, Number(target_minutes) || 900));
-  try {
-    await setPodDailyTarget(groupId, date, mins);
-    return res.json({ success: true, target_minutes: mins });
-  } catch (err) {
-    return res.status(500).json({ error: 'Failed to set pod target.' });
   }
 });
 

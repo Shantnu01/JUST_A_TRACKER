@@ -55,15 +55,14 @@ Configure via Environment Variables:
 
 ---
 
-## 🏎️ 3. Upstash Redis Pod Acceleration & Ephemeral Radar
+## 🏎️ 3. Upstash Redis Pod Acceleration & Reliability
 
 To protect PostgreSQL connections from heartbeat thrashing and deliver sub-10ms response times, the app integrates **Upstash Redis**:
-* **Live Lock-In Radar**: Users studying report live state directly to Redis with 70s auto-expiring TTL (`presence:<userId>`), avoiding SQL overhead and auto-cleaning on tab close.
-* **Sub-10ms Leaderboard Caching**: Pod rankings are cached for 25s and immediately invalidated when any member marks a habit or logs session minutes.
-* **Atomic Nudge Cooldowns**: Enforces 5-minute spam prevention atomically (`SET NX EX 300`) while returning exact remaining seconds for client countdown timers.
-* **Ephemeral Pod Hype Wall**: Micro-reactions (`🔥`, `⚡`, `☕`, `🏆`, `🚀`) are buffered in a Redis ring buffer (`LPUSH` + `LTRIM 0 49`) with a 48h TTL, creating zero DB bloat.
+* **Live Ephemeral Presence**: Heartbeats update Redis with a 65s auto-expiring TTL (`presence:<userId>`). If a member closes their tab or browser, their presence cleanly expires, eliminating the stale "In Focus" offline bug.
+* **Sub-10ms Leaderboard Caching**: Pod rankings are cached for 20s and immediately invalidated when any member marks a habit or logs focus time.
+* **Atomic Nudge Cooldowns**: Enforces 5-minute spam prevention atomically (`SET NX EX 300`) with zero database load while returning exact remaining seconds for live button countdowns.
 
-## ⚙️ 3. Production Host Setup (Render)
+## ⚙️ 4. Production Host Setup (Render)
 
 The project includes [`render.yaml`](./render.yaml) for a single-service fullstack deployment where Express serves both the REST API and the compiled Vite React frontend.
 

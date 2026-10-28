@@ -40,10 +40,10 @@ test('Production Readiness: Upstash Redis Pod Infrastructure', async () => {
   assert.ok(redisModule.isRedisReady, 'isRedisReady helper must exist');
   assert.ok(redisModule.setLivePresence, 'setLivePresence helper must exist');
   assert.ok(redisModule.getLivePresenceMulti, 'getLivePresenceMulti helper must exist');
+  assert.ok(redisModule.getCachedLeaderboard, 'getCachedLeaderboard helper must exist');
+  assert.ok(redisModule.setCachedLeaderboard, 'setCachedLeaderboard helper must exist');
+  assert.ok(redisModule.invalidateLeaderboard, 'invalidateLeaderboard helper must exist');
   assert.ok(redisModule.checkAndSetNudgeCooldown, 'checkAndSetNudgeCooldown helper must exist');
-  assert.ok(redisModule.pushPodHype, 'pushPodHype helper must exist');
-  assert.ok(redisModule.getPodHype, 'getPodHype helper must exist');
-  assert.ok(redisModule.getPodDailyTarget, 'getPodDailyTarget helper must exist');
 
   if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
     const ready = redisModule.isRedisReady();
