@@ -6,11 +6,16 @@
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix client",
     "start": "node server/src/index.js",
+    "desktop": "electron electron/main.cjs",
+    "desktop:dev": "electron electron/main.cjs",
+    "cap:sync": "npm --prefix client run build && npm --prefix client run cap:sync",
+    "cap:open": "npm --prefix client run cap:open",
     "test": "npm run test --prefix server && npm run build --prefix client",
     "postinstall": "npm install --prefix client && npm install --prefix server",
     "install:all": "npm install && npm install --prefix client && npm install --prefix server"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "electron": "^45.1.0"
   }
 }

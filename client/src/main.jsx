@@ -90,12 +90,15 @@ import {
 import './styles.css';
 import { playFocusSound, stopFocusSound, setSoundVolume } from './utils/soundEngine';
 import { calculateCircadianScore, getCircadianEnergyLevel, getCognitiveTier, calculateAutoShift, detectScheduleDrift, generateChiefOfStaffPlan, slotScheduleToCircadian } from './utils/circadianEngine';
+import { initNativeAlarms, syncNativeAlarms, triggerNativeHaptic, isNativeApp } from './utils/nativeAlarm';
 
 // Dynamic API endpoint: Uses relative /api for unified production & Vite proxy,
 // or uses VITE_API_URL if configured for separate frontend/backend deployments.
 const API = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api`
-  : '/api';
+  : (isNativeApp()
+      ? (localStorage.getItem('daymark-api-url') || 'https://routine-tracker.onrender.com/api')
+      : '/api');
 
 const iconMap = {
   Code2,
@@ -1584,6 +1587,15 @@ function App() {
     }
   }, [user?.id, day.alarms]);
 
+  // Initialize native Android alarm channels and keep native alarm scheduler in sync
+  useEffect(() => {
+    initNativeAlarms();
+  }, []);
+
+  useEffect(() => {
+    syncNativeAlarms(alarms);
+  }, [alarms]);
+
   // Reliable Alarm Interval Loop (checked every second, immune to background throttling)
   useEffect(() => {
     if (!isToday) return;
@@ -1600,6 +1612,7 @@ function App() {
         setLastTriggeredMinute(minuteKey);
         setActiveAlarmModal(triggered);
         playAlarmMelody();
+        triggerNativeHaptic();
 
         // Browser notification if granted
         if ('Notification' in window && Notification.permission === 'granted') {
@@ -2142,6 +2155,7 @@ function App() {
   const saveAlarms = (nextAlarms) => {
     const capped = nextAlarms.slice(0, 5);
     setAlarms(capped);
+    syncNativeAlarms(capped);
     const key = user ? `daymark-alarms-${user.id}` : 'daymark-alarms-guest';
     localStorage.setItem(key, JSON.stringify(capped));
     patchDay({ alarms: capped });
@@ -2206,6 +2220,7 @@ function App() {
 
   const testAlarmSound = () => {
     playAlarmMelody();
+    triggerNativeHaptic();
     setToast('🔔 Playing alarm test chime!');
     setTimeout(() => setToast(''), 3000);
   };
