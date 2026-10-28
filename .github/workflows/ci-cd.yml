@@ -1,0 +1,103 @@
+name: Production CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ===========================================================================
+  # 1. CI STAGE: Lint, Test, Security Audit & Production Bundle Compilation
+  # ===========================================================================
+  ci:
+    name: Test & Build Verification
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: 📦 Install Root, Server & Client Dependencies
+        run: |
+          npm run install:all
+
+      - name: 🛡️ Security Audit
+        run: |
+          npm audit --omit=dev --audit-level=critical || true
+
+      - name: 🧪 Run Automated Tests & Production Build
+        run: |
+          npm test
+
+      - name: 🔍 Verify Client Production Assets
+        run: |
+          test -f client/dist/index.html || (echo "❌ client/dist/index.html is missing!" && exit 1)
+          echo "✅ Production client bundle compiled successfully."
+          ls -la client/dist
+          ls -la client/dist/assets
+
+  # ===========================================================================
+  # 2. CD STAGE: Production Deployment & Health Verification
+  # ===========================================================================
+  deploy:
+    name: Production Deployment (Render / Cloud)
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Trigger Production Deploy Hook
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "ℹ️ RENDER_DEPLOY_HOOK_URL secret not configured in GitHub repository."
+            echo "   Render will deploy automatically via Git Webhook on push to main branch."
+          else
+            echo "🚀 Triggering Render Production Deploy Hook..."
+            RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$DEPLOY_HOOK")
+            HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+            BODY=$(echo "$RESPONSE" | head -n -1)
+            
+            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+              echo "✅ Render deployment successfully triggered! HTTP $HTTP_STATUS"
+              echo "$BODY"
+            else
+              echo "⚠️ Deploy hook returned HTTP status: $HTTP_STATUS"
+              echo "$BODY"
+            fi
+          fi
+
+      - name: 🏥 Post-Deployment Health Check (Optional)
+        env:
+          PROD_URL: ${{ secrets.PRODUCTION_URL }}
+        run: |
+          if [ -n "$PROD_URL" ]; then
+            echo "🩺 Verifying production health check at $PROD_URL/api/health..."
+            for i in {1..12}; do
+              STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$PROD_URL/api/health" || true)
+              if [ "$STATUS" = "200" ]; then
+                echo "✅ Production service is healthy and online (HTTP 200)!"
+                exit 0
+              fi
+              echo "⏳ Waiting for service to finish restarting... (attempt $i/12 - status: $STATUS)"
+              sleep 10
+            done
+            echo "⚠️ Health check timed out or returned non-200, check Render logs."
+          fi
