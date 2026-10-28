@@ -2453,7 +2453,7 @@ function App() {
         {theme === 'dynamic-video' && (
           <div className="dynamic-video-bg-container">
             <iframe
-              src={`https://www.youtube.com/embed/${dynamicVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${dynamicVideoId}&showinfo=0&rel=0&modestbranding=1&enablejsapi=1`}
+              src={`https://www.youtube-nocookie.com/embed/${dynamicVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${dynamicVideoId}&cc_load_policy=0&iv_load_policy=3&vq=hd1080&playsinline=1&rel=0&showinfo=0&modestbranding=1&enablejsapi=1`}
               title="Dynamic YouTube Background"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
