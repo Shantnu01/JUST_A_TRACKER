@@ -4722,10 +4722,25 @@ function App() {
 
         {view === 'Routine settings' && (
           <section className="panel settings-panel">
-            <span className="eyebrow">ROUTINE CONFIGURATION</span>
-            <h3>Edit Routine Timings & Blocks</h3>
+            <div className="panel-heading" style={{ marginBottom: '16px' }}>
+              <div>
+                <span className="eyebrow">
+                  {theme === 'tokyo-lofi' ? 'ROUTINE CONFIGURATION // 時間割' : 'ROUTINE CONFIGURATION'}
+                </span>
+                <h3>
+                  {theme === 'tokyo-lofi' ? 'Shinkansen Timetable Master' : 'Edit Routine Timings & Blocks'}
+                </h3>
+              </div>
+              {theme === 'tokyo-lofi' && (
+                <span className="count-badge">
+                  {editingSchedule.length} BLOCKS
+                </span>
+              )}
+            </div>
             <p className="muted">
-              Customize the start time, end time, and titles of your daily schedule. Any changes made here update your daily tracker instantly.
+              {theme === 'tokyo-lofi'
+                ? 'Customize departure times, deep-work sessions, and rest windows. Changes sync directly to your Shinkansen train board.'
+                : 'Customize the start time, end time, and titles of your daily schedule. Any changes made here update your daily tracker instantly.'}
             </p>
 
             {/* Save & Reset Actions Bar */}
@@ -4745,6 +4760,9 @@ function App() {
                 const hours = computeDurationHours(item.start, item.end);
                 return (
                   <div className="schedule-edit-card" key={item.id}>
+                    <div className="edit-icon-box">
+                      <Icon size={17} />
+                    </div>
                     <div className="edit-times">
                       <input
                         type="time"

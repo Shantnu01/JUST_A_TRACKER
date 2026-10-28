@@ -271,7 +271,7 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   .settings-panel{padding:18px 14px}
   .settings-summary{grid-template-columns:1fr;gap:8px}
   .settings-summary>div{grid-template-columns:85px 1fr}
-  .schedule-edit-card{grid-template-columns:1fr;gap:10px;padding:12px}
+  .edit-icon-box{width:34px;height:34px;border-radius:8px;background:#edf2e9;color:#315b45;display:grid;place-items:center;flex-shrink:0}.schedule-edit-card{grid-template-columns:1fr;gap:10px;padding:12px}
   .edit-times{width:100%;justify-content:flex-start;flex-wrap:wrap}
   .edit-duration-badge{justify-self:start}
   .pod-summary-banner{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;padding:14px!important}
@@ -11287,4 +11287,327 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"] textarea:focus {
   border-color: #F59E0B !important;
   outline: none !important;
+}
+
+/* ==========================================================================
+   TOKYO LOFI BESPOKE ROUTINE SETTINGS & SCHEDULE REDESIGN
+   Bespoke Washi Paper & Shinkansen Timetable Architecture
+   Zero white boxes - deep midnight purple, warm amber glow, capsule pills
+   ========================================================================== */
+
+[data-theme="tokyo-lofi"] .settings-panel {
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  border-radius: 16px !important;
+  padding: 32px clamp(18px, 3vw, 36px) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(245, 158, 11, 0.04) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Subtle Watermark Kanji (時 - Time/Schedule) matching the Washi Paper Notebook */
+[data-theme="tokyo-lofi"] .settings-panel::after {
+  content: '時' !important;
+  position: absolute !important;
+  right: 18px !important;
+  bottom: 8px !important;
+  font-size: 190px !important;
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif !important;
+  color: rgba(245, 158, 11, 0.032) !important;
+  pointer-events: none !important;
+  line-height: 1 !important;
+  z-index: 0 !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel .panel-heading {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  position: relative !important;
+  z-index: 1 !important;
+  margin-bottom: 16px !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel .eyebrow {
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+  font-weight: 700 !important;
+  display: block !important;
+  margin-bottom: 4px !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel h3 {
+  color: #FAF8FF !important;
+  font-weight: 800 !important;
+  font-size: clamp(20px, 2.5vw, 26px) !important;
+  letter-spacing: -0.6px !important;
+  margin: 0 0 6px !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel p.muted {
+  color: #D4CEEB !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  max-width: 640px !important;
+  margin-bottom: 22px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Tokyo Pill Badge (e.g. 7 BLOCKS) */
+[data-theme="tokyo-lofi"] .settings-panel .count-badge {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
+  white-space: nowrap !important;
+}
+
+/* Actions Bar */
+[data-theme="tokyo-lofi"] .settings-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 24px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  flex-wrap: wrap !important;
+}
+
+[data-theme="tokyo-lofi"] .save-schedule-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  padding: 10px 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3) !important;
+  transition: all 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .save-schedule-btn:hover {
+  background: #FFB347 !important;
+  color: #12111A !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45) !important;
+}
+
+[data-theme="tokyo-lofi"] .reset-schedule-btn {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  color: #D4CEEB !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 10px 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: all 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .reset-schedule-btn:hover {
+  background: #241E30 !important;
+  border-color: #F59E0B !important;
+  color: #F59E0B !important;
+}
+
+/* Schedule Editor Grid */
+[data-theme="tokyo-lofi"] .schedule-editor-grid {
+  display: grid !important;
+  gap: 12px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Individual Block Card - 100% Zero-White, Bespoke Dark Purple & Warm Amber */
+[data-theme="tokyo-lofi"] .schedule-edit-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.16) !important;
+  border-left: 3.5px solid rgba(245, 158, 11, 0.45) !important;
+  border-radius: 10px !important;
+  padding: 14px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-edit-card:hover {
+  background: #1E1A2C !important;
+  border-color: rgba(245, 158, 11, 0.38) !important;
+  border-left-color: #F59E0B !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(245, 158, 11, 0.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Left Icon Box */
+[data-theme="tokyo-lofi"] .schedule-edit-card .edit-icon-box {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 8px !important;
+  background: #120F1D !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  color: #F59E0B !important;
+  display: grid !important;
+  place-items: center !important;
+  flex-shrink: 0 !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Time Inputs Wrapper */
+[data-theme="tokyo-lofi"] .edit-times {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times input[type="time"] {
+  background: #120F1D !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  border-radius: 6px !important;
+  padding: 7px 10px !important;
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #FAF8FF !important;
+  outline: none !important;
+  color-scheme: dark !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times input[type="time"]:focus {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25) !important;
+  background: #161224 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times span {
+  color: #A39BBF !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Block Details (Title & Subtitle Inputs) */
+[data-theme="tokyo-lofi"] .edit-details {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input {
+  background: #120F1D !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  border-radius: 6px !important;
+  padding: 7px 12px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #FAF8FF !important;
+  outline: none !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input:focus {
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2) !important;
+  background: #161224 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input::placeholder {
+  color: #6B6484 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input {
+  background: #100D18 !important;
+  border: 1px solid rgba(255, 140, 0, 0.12) !important;
+  border-radius: 6px !important;
+  padding: 5px 12px !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 12px !important;
+  color: #D4CEEB !important;
+  outline: none !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input:focus {
+  border-color: rgba(245, 158, 11, 0.6) !important;
+  background: #141020 !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-sub-input::placeholder {
+  color: #554F6A !important;
+}
+
+/* Duration Capsule Pill - Matching 0h 0m (0%) Pill in Habit Screenshot */
+[data-theme="tokyo-lofi"] .edit-duration-badge {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  color: #F59E0B !important;
+  border-radius: 20px !important;
+  padding: 4px 12px !important;
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Settings Tip Note */
+[data-theme="tokyo-lofi"] .settings-note {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+  border-radius: 10px !important;
+  color: #D4CEEB !important;
+  padding: 14px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-note svg {
+  color: #F59E0B !important;
+  flex-shrink: 0 !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-note span {
+  color: #D4CEEB !important;
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+}
+
+@media (max-width: 768px) {
+  [data-theme="tokyo-lofi"] .schedule-edit-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  [data-theme="tokyo-lofi"] .edit-times {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+  [data-theme="tokyo-lofi"] .edit-duration-badge {
+    align-self: flex-start !important;
+  }
 }
