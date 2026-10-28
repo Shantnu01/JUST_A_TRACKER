@@ -8,6 +8,7 @@ import {
 } from './utils/curriculumEngine';
 import TimetableCurrentCheckpoint from './components/TimetableCurrentCheckpoint';
 import StageRoadmapsView from './components/StageRoadmapsView';
+import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -554,77 +555,6 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
-  const [tokyoAudioPlaying, setTokyoAudioPlaying] = useState(false);
-  const tokyoAudioRef = React.useRef(null);
-  const toggleTokyoAudio = () => {
-    if (!tokyoAudioPlaying) {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioCtx();
-        if (ctx.state === 'suspended') ctx.resume();
-
-        const bufferSize = ctx.sampleRate * 2;
-        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.99886 * b0 + white * 0.0555179;
-          b1 = 0.99332 * b1 + white * 0.0750759;
-          b2 = 0.96900 * b2 + white * 0.1538520;
-          b3 = 0.86650 * b3 + white * 0.3104856;
-          b4 = 0.55000 * b4 + white * 0.5329522;
-          b5 = -0.7616 * b5 - white * 0.0168980;
-          output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
-          output[i] *= 0.025;
-          b6 = white * 0.115926;
-        }
-
-        const rainSource = ctx.createBufferSource();
-        rainSource.buffer = noiseBuffer;
-        rainSource.loop = true;
-
-        const lowpass = ctx.createBiquadFilter();
-        lowpass.type = 'lowpass';
-        lowpass.frequency.setValueAtTime(850, ctx.currentTime);
-
-        const humOsc = ctx.createOscillator();
-        humOsc.type = 'sine';
-        humOsc.frequency.setValueAtTime(60, ctx.currentTime);
-        const humGain = ctx.createGain();
-        humGain.gain.setValueAtTime(0.012, ctx.currentTime);
-        humOsc.connect(humGain);
-
-        const pinkNoiseGain = ctx.createGain();
-        pinkNoiseGain.gain.setValueAtTime(0.07, ctx.currentTime);
-
-        rainSource.connect(lowpass);
-        lowpass.connect(pinkNoiseGain);
-        pinkNoiseGain.connect(ctx.destination);
-        humGain.connect(ctx.destination);
-
-        rainSource.start(0);
-        humOsc.start(0);
-
-        tokyoAudioRef.current = { ctx, rainSource, humOsc };
-        setTokyoAudioPlaying(true);
-      } catch (err) {
-        console.warn('Audio context prevented:', err);
-      }
-    } else {
-      if (tokyoAudioRef.current) {
-        try {
-          tokyoAudioRef.current.rainSource.stop();
-          tokyoAudioRef.current.rainSource.disconnect();
-          tokyoAudioRef.current.humOsc.stop();
-          tokyoAudioRef.current.humOsc.disconnect();
-          tokyoAudioRef.current.ctx.close();
-        } catch (e) {}
-        tokyoAudioRef.current = null;
-      }
-      setTokyoAudioPlaying(false);
-    }
-  };
   // 7. Subject Curriculum & Stage Roadmap State
   const [curriculumModalOpen, setCurriculumModalOpen] = useState(false);
   const [curriculumSubject, setCurriculumSubject] = useState('NLP');
@@ -3268,39 +3198,7 @@ function App() {
               </section>
 
               <div className="right-column">
-                {theme === 'tokyo-lofi' && (
-                  <div className="tokyo-ambient-player">
-                    <div className="tokyo-player-left">
-                      <button
-                        type="button"
-                        className="tokyo-audio-toggle-btn"
-                        onClick={toggleTokyoAudio}
-                        title="Toggle Lo-Fi Tape Rain"
-                      >
-                        {tokyoAudioPlaying ? (
-                          <svg style={{ width: '14px', height: '14px' }} fill="currentColor" viewBox="0 0 24 24">
-                            <rect x="6" y="4" width="4" height="16" />
-                            <rect x="14" y="4" width="4" height="16" />
-                          </svg>
-                        ) : (
-                          <svg style={{ width: '14px', height: '14px', marginLeft: '2px' }} fill="currentColor" viewBox="0 0 24 24">
-                            <polygon points="5 3 19 12 5 21 5 3" />
-                          </svg>
-                        )}
-                      </button>
-                      <div>
-                        <div className="tokyo-player-title">Shibuya Rain & 2am Tape Hum</div>
-                        <div className="tokyo-player-sub">SYNTHESIZED AMBIENT NOISE (432Hz)</div>
-                      </div>
-                    </div>
-                    <div className={`tokyo-visualizer ${tokyoAudioPlaying ? 'playing' : ''}`}>
-                      <div className="wave-bar" />
-                      <div className="wave-bar" />
-                      <div className="wave-bar" />
-                      <div className="wave-bar" />
-                    </div>
-                  </div>
-                )}
+                {theme === 'tokyo-lofi' && <TokyoSoundscapePlayer />}
                 <section className={`panel habits-panel ${!isToday ? 'read-only' : ''}`}>
                   <div className="panel-heading">
                     <div>
