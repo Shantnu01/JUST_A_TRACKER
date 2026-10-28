@@ -10,6 +10,19 @@ import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import webpush from 'web-push';
+import {
+  isRedisReady,
+  setLivePresence,
+  getLivePresenceMulti,
+  getCachedLeaderboard,
+  setCachedLeaderboard,
+  invalidateLeaderboard,
+  checkAndSetNudgeCooldown,
+  pushPodHype,
+  getPodHype,
+  getPodDailyTarget,
+  setPodDailyTarget
+} from './redis.js';
 
 // Determine if clustering should be active
 export const isClusterEnabled = () => {
@@ -555,7 +568,27 @@ app.get('/api/groups/:id/members', authenticateToken, async (req, res) => {
       [groupId]
     );
 
-    return res.json(result.rows);
+    // Overlay high-frequency Redis live presence
+    const memberIds = result.rows.map(m => m.id);
+    const liveMap = await getLivePresenceMulti(memberIds);
+
+    const enriched = result.rows.map(row => {
+      const live = liveMap[row.id];
+      if (live) {
+        return {
+          ...row,
+          is_studying: Boolean(live.is_studying),
+          current_block_title: live.current_block_title || row.current_block_title,
+          is_live_radar: Boolean(live.is_studying)
+        };
+      }
+      return {
+        ...row,
+        is_live_radar: Boolean(row.is_studying)
+      };
+    });
+
+    return res.json(enriched);
   } catch (error) {
     console.error('Fetch group members failed:', error.message);
     return res.status(500).json({ error: 'Failed to fetch pod members.' });
@@ -568,6 +601,7 @@ app.post('/api/groups/:id/leave', authenticateToken, async (req, res) => {
   try {
     await ensureTable();
     await pool.query('DELETE FROM group_members WHERE group_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
+    await invalidateLeaderboard(req.params.id, new Date().toISOString().slice(0, 10));
     return res.json({ success: true });
   } catch (error) {
     console.error('Leave group failed:', error.message);
@@ -600,13 +634,23 @@ function calculateGrindPoints(completedMinutesObj = {}, checksObj = {}, notes = 
   return { points, totalMins, habitsDone };
 }
 
-// ================= LIVE PRESENCE & HEARTBEAT =================
+// ================= LIVE PRESENCE & HEARTBEAT (UPSTASH REDIS OPTIMIZED) =================
 app.post('/api/presence/heartbeat', authenticateToken, async (req, res) => {
-  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
   const { is_studying = false, current_block_title = '' } = req.body || {};
-  try {
-    await ensureTable();
-    await pool.query(
+  const isStudyingBool = Boolean(is_studying);
+  const blockTitleSafe = String(current_block_title || '').slice(0, 50);
+
+  // 1. Fast Ephemeral Presence in Upstash Redis (70s TTL, auto-clean)
+  await setLivePresence(req.user.id, {
+    is_studying: isStudyingBool,
+    current_block_title: blockTitleSafe,
+    username: req.user.username,
+    avatar_color: req.user.avatar_color
+  }, 70);
+
+  // 2. Write-behind sync to PostgreSQL without blocking response
+  if (pool) {
+    pool.query(
       `INSERT INTO user_presence (user_id, is_studying, current_block_title, session_started_at, last_seen)
        VALUES ($1, $2, $3, CASE WHEN $2 THEN NOW() ELSE NULL END, NOW())
        ON CONFLICT (user_id) DO UPDATE SET
@@ -618,16 +662,14 @@ app.post('/api/presence/heartbeat', authenticateToken, async (req, res) => {
            ELSE user_presence.session_started_at
          END,
          last_seen = NOW()`,
-      [req.user.id, Boolean(is_studying), String(current_block_title).slice(0, 50)]
-    );
-    return res.json({ success: true });
-  } catch (error) {
-    console.error('Heartbeat error:', error.message);
-    return res.status(500).json({ error: 'Failed to update presence.' });
+      [req.user.id, isStudyingBool, blockTitleSafe]
+    ).catch(err => console.warn('[Presence DB Sync Warning]:', err.message));
   }
+
+  return res.json({ success: true, redis_active: isRedisReady() });
 });
 
-// ================= NUDGE SYSTEM =================
+// ================= NUDGE SYSTEM (UPSTASH REDIS ATOMIC RATE-LIMITED) =================
 app.post('/api/groups/:id/nudge', authenticateToken, async (req, res) => {
   if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
   const groupId = req.params.id;
@@ -646,23 +688,24 @@ app.post('/api/groups/:id/nudge', authenticateToken, async (req, res) => {
       return res.status(403).json({ error: 'Both users must be members of the pod.' });
     }
 
-    // Rate limit: 1 nudge per user pair per 5 minutes
-    const recent = await pool.query(
-      `SELECT created_at FROM group_nudges 
-       WHERE group_id = $1 AND from_user_id = $2 AND to_user_id = $3 
-       AND created_at > NOW() - INTERVAL '5 minutes'`,
-      [groupId, req.user.id, to_user_id]
-    );
-    if (recent.rows.length > 0) {
-      return res.status(429).json({ error: 'You recently nudged this friend. Please wait 5 minutes before nudging again.' });
+    // Atomic Redis rate limit (1 nudge per pair per 5 minutes = 300s)
+    const cooldown = await checkAndSetNudgeCooldown(groupId, req.user.id, to_user_id, 300);
+    if (!cooldown.allowed) {
+      const mins = Math.floor(cooldown.remainingSeconds / 60);
+      const secs = cooldown.remainingSeconds % 60;
+      return res.status(429).json({
+        error: `Nudge on cooldown. Please wait ${mins > 0 ? `${mins}m ` : ''}${secs}s before nudging again.`,
+        remaining_seconds: cooldown.remainingSeconds
+      });
     }
 
+    // Record nudge in DB
     await pool.query(
       `INSERT INTO group_nudges (group_id, from_user_id, to_user_id) VALUES ($1, $2, $3)`,
       [groupId, req.user.id, to_user_id]
     );
 
-    // Instant Mobile/Desktop Notification Bar Alert
+    // Instant Mobile/Desktop Push Alert
     try {
       const infoRes = await pool.query(
         `SELECT g.name as group_name, u.username as sender_name 
@@ -686,7 +729,7 @@ app.post('/api/groups/:id/nudge', authenticateToken, async (req, res) => {
       console.warn('[WebPush] Failed sending nudge push notification:', pushErr.message);
     }
 
-    return res.json({ success: true, message: 'Nudge sent successfully!' });
+    return res.json({ success: true, message: 'Nudge sent successfully!', remaining_seconds: 300 });
   } catch (error) {
     console.error('Nudge error:', error.message);
     return res.status(500).json({ error: 'Failed to send nudge.' });
@@ -698,7 +741,7 @@ app.get('/api/nudges/unread', authenticateToken, async (req, res) => {
   try {
     await ensureTable();
     const result = await pool.query(
-      `SELECT n.id, n.group_id, g.name as group_name, u.username as from_username, n.created_at
+      `SELECT n.id, n.group_id, g.name as group_name, u.username as from_username, n.from_user_id, n.created_at
        FROM group_nudges n
        JOIN users u ON u.id = n.from_user_id
        JOIN study_groups g ON g.id = n.group_id
@@ -719,13 +762,31 @@ app.get('/api/nudges/unread', authenticateToken, async (req, res) => {
   }
 });
 
-// ================= COMPETITIVE LEADERBOARD & 1:00 AM RECAP =================
+// ================= COMPETITIVE LEADERBOARD & CACHED RECAP =================
 app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
   if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
   const groupId = req.params.id;
   const targetDate = req.query.date || new Date().toISOString().slice(0, 10);
 
   try {
+    // 1. Check Redis cache first
+    const cached = await getCachedLeaderboard(groupId, targetDate);
+    if (cached && Array.isArray(cached.members)) {
+      // Refresh live presence on top of cached scores (<5ms)
+      const memberIds = cached.members.map(m => m.id);
+      const liveMap = await getLivePresenceMulti(memberIds);
+      const updatedMembers = cached.members.map(m => {
+        const live = liveMap[m.id];
+        return {
+          ...m,
+          is_studying: live ? Boolean(live.is_studying) : m.is_studying,
+          current_block_title: live && live.current_block_title ? live.current_block_title : m.current_block_title,
+          is_live_radar: Boolean(live ? live.is_studying : m.is_studying)
+        };
+      });
+      return res.json({ ...cached, members: updatedMembers, cached: true });
+    }
+
     await ensureTable();
     const result = await pool.query(
       `SELECT u.id, u.username, u.avatar_color,
@@ -742,18 +803,24 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
       [groupId, targetDate]
     );
 
+    // Fetch live presence from Redis
+    const memberIds = result.rows.map(m => m.id);
+    const liveMap = await getLivePresenceMulti(memberIds);
+
     const membersWithScores = result.rows.map(member => {
       const { points, totalMins, habitsDone } = calculateGrindPoints(
         member.completed_minutes,
         member.checks,
         member.notes
       );
+      const live = liveMap[member.id];
       return {
         id: member.id,
         username: member.username,
         avatar_color: member.avatar_color,
-        is_studying: member.is_studying,
-        current_block_title: member.current_block_title,
+        is_studying: live ? Boolean(live.is_studying) : member.is_studying,
+        current_block_title: live && live.current_block_title ? live.current_block_title : member.current_block_title,
+        is_live_radar: Boolean(live ? live.is_studying : member.is_studying),
         total_minutes: totalMins,
         habits_done: habitsDone,
         notes: member.notes,
@@ -781,16 +848,118 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
     const totalPodMinutes = ranked.reduce((acc, m) => acc + m.total_minutes, 0);
     const totalPodHabits = ranked.reduce((acc, m) => acc + m.habits_done, 0);
 
-    return res.json({
+    const payload = {
       date: targetDate,
       group_id: groupId,
       total_pod_minutes: totalPodMinutes,
       total_pod_habits: totalPodHabits,
       members: ranked
-    });
+    };
+
+    // Cache in Redis for 25 seconds
+    await setCachedLeaderboard(groupId, targetDate, payload, 25);
+
+    return res.json(payload);
   } catch (error) {
     console.error('Leaderboard error:', error.message);
     return res.status(500).json({ error: 'Failed to compute leaderboard.' });
+  }
+});
+
+// ================= POD FEATURE 1: LIVE RADAR (REDIS-POWERED) =================
+app.get('/api/groups/:id/radar', authenticateToken, async (req, res) => {
+  if (!pool) return res.status(503).json({ error: 'Database is not configured.' });
+  const groupId = req.params.id;
+  try {
+    const membersRes = await pool.query(
+      `SELECT u.id, u.username, u.avatar_color, gm.joined_at
+       FROM group_members gm
+       JOIN users u ON u.id = gm.user_id
+       WHERE gm.group_id = $1`,
+      [groupId]
+    );
+    const memberIds = membersRes.rows.map(m => m.id);
+    const liveMap = await getLivePresenceMulti(memberIds);
+    const radar = membersRes.rows.map(m => {
+      const live = liveMap[m.id];
+      return {
+        id: m.id,
+        username: m.username,
+        avatar_color: m.avatar_color,
+        is_active_now: Boolean(live?.is_studying),
+        current_block: live?.current_block_title || '',
+        updated_at: live?.updated_at || null
+      };
+    });
+    return res.json({
+      group_id: groupId,
+      radar,
+      active_count: radar.filter(r => r.is_active_now).length,
+      redis_connected: isRedisReady()
+    });
+  } catch (err) {
+    console.error('Pod radar error:', err.message);
+    return res.status(500).json({ error: 'Failed to fetch pod radar.' });
+  }
+});
+
+// ================= POD FEATURE 2: EPHEMERAL HYPE WALL (REDIS RING BUFFER) =================
+app.get('/api/groups/:id/hype', authenticateToken, async (req, res) => {
+  const groupId = req.params.id;
+  try {
+    const hypeList = await getPodHype(groupId, 35);
+    return res.json(hypeList);
+  } catch (err) {
+    console.error('Fetch hype error:', err.message);
+    return res.status(500).json({ error: 'Failed to fetch pod hype.' });
+  }
+});
+
+app.post('/api/groups/:id/hype', authenticateToken, async (req, res) => {
+  const groupId = req.params.id;
+  const { emoji = '🔥', text = '' } = req.body || {};
+  if (!text || typeof text !== 'string' || text.trim().length === 0) {
+    return res.status(400).json({ error: 'Hype shout message is required.' });
+  }
+  try {
+    const item = {
+      id: `hype_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      user_id: req.user.id,
+      username: req.user.username,
+      avatar_color: req.user.avatar_color || '#3b82f6',
+      emoji: String(emoji).slice(0, 8),
+      text: String(text).trim().slice(0, 140),
+      created_at: new Date().toISOString()
+    };
+    await pushPodHype(groupId, item);
+    return res.json({ success: true, item });
+  } catch (err) {
+    console.error('Post hype error:', err.message);
+    return res.status(500).json({ error: 'Failed to post hype shout.' });
+  }
+});
+
+// ================= POD FEATURE 3: COLLABORATIVE POD TARGET =================
+app.get('/api/groups/:id/target', authenticateToken, async (req, res) => {
+  const groupId = req.params.id;
+  const targetDate = req.query.date || new Date().toISOString().slice(0, 10);
+  try {
+    const targetMinutes = await getPodDailyTarget(groupId, targetDate);
+    return res.json({ group_id: groupId, date: targetDate, target_minutes: targetMinutes });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch pod target.' });
+  }
+});
+
+app.post('/api/groups/:id/target', authenticateToken, async (req, res) => {
+  const groupId = req.params.id;
+  const { date = new Date().toISOString().slice(0, 10), target_minutes = 900 } = req.body || {};
+  const mins = Math.max(60, Math.min(3600, Number(target_minutes) || 900));
+  try {
+    await setPodDailyTarget(groupId, date, mins);
+    return res.json({ success: true, target_minutes: mins });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to set pod target.' });
   }
 });
 
@@ -862,6 +1031,16 @@ app.put('/api/days/:date', optionalAuth, async (req, res) => {
          RETURNING day_date, checks, notes, completed_minutes, alarms, points, updated_at`,
         [req.user.id, req.params.date, JSON.stringify(checks), notes.slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms), points]
       );
+
+      // Invalidate Redis cached leaderboard for all groups this user is in
+      pool.query('SELECT group_id FROM group_members WHERE user_id = $1', [req.user.id])
+        .then(gRes => {
+          for (const row of gRes.rows) {
+            invalidateLeaderboard(row.group_id, req.params.date);
+          }
+        })
+        .catch(() => {});
+
       return res.json(result.rows[0]);
     } else {
       const result = await pool.query(

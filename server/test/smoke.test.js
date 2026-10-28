@@ -34,3 +34,19 @@ test('Production Readiness: Multi-Core Cluster Parallelism Capability', async ()
   assert.ok(cores >= 1, 'System should detect at least 1 CPU core');
   console.log(`ℹ Detected ${cores} logical CPU core(s) available for clustering.`);
 });
+
+test('Production Readiness: Upstash Redis Pod Infrastructure', async () => {
+  const redisModule = await import('../src/redis.js');
+  assert.ok(redisModule.isRedisReady, 'isRedisReady helper must exist');
+  assert.ok(redisModule.setLivePresence, 'setLivePresence helper must exist');
+  assert.ok(redisModule.getLivePresenceMulti, 'getLivePresenceMulti helper must exist');
+  assert.ok(redisModule.checkAndSetNudgeCooldown, 'checkAndSetNudgeCooldown helper must exist');
+  assert.ok(redisModule.pushPodHype, 'pushPodHype helper must exist');
+  assert.ok(redisModule.getPodHype, 'getPodHype helper must exist');
+  assert.ok(redisModule.getPodDailyTarget, 'getPodDailyTarget helper must exist');
+
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const ready = redisModule.isRedisReady();
+    assert.strictEqual(ready, true, 'Redis should connect when credentials are provided');
+  }
+});

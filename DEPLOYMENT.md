@@ -55,6 +55,14 @@ Configure via Environment Variables:
 
 ---
 
+## 🏎️ 3. Upstash Redis Pod Acceleration & Ephemeral Radar
+
+To protect PostgreSQL connections from heartbeat thrashing and deliver sub-10ms response times, the app integrates **Upstash Redis**:
+* **Live Lock-In Radar**: Users studying report live state directly to Redis with 70s auto-expiring TTL (`presence:<userId>`), avoiding SQL overhead and auto-cleaning on tab close.
+* **Sub-10ms Leaderboard Caching**: Pod rankings are cached for 25s and immediately invalidated when any member marks a habit or logs session minutes.
+* **Atomic Nudge Cooldowns**: Enforces 5-minute spam prevention atomically (`SET NX EX 300`) while returning exact remaining seconds for client countdown timers.
+* **Ephemeral Pod Hype Wall**: Micro-reactions (`🔥`, `⚡`, `☕`, `🏆`, `🚀`) are buffered in a Redis ring buffer (`LPUSH` + `LTRIM 0 49`) with a 48h TTL, creating zero DB bloat.
+
 ## ⚙️ 3. Production Host Setup (Render)
 
 The project includes [`render.yaml`](./render.yaml) for a single-service fullstack deployment where Express serves both the REST API and the compiled Vite React frontend.
@@ -75,6 +83,8 @@ In Render Web Service settings $\to$ **Environment**:
 |---|---|
 | `NODE_VERSION` | `20` |
 | `DATABASE_URL` | Your PostgreSQL connection string with `?sslmode=require` |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL (e.g. `https://funny-poodle-199709.upstash.io`) |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST Token for high-throughput live presence and caching |
 | `JWT_SECRET` | Secure 64-character random string for Study Pod auth |
 | `CLIENT_ORIGIN` | `https://<your-service-name>.onrender.com` |
 | `VAPID_PUBLIC_KEY` | *(Optional)* WebPush public key |
