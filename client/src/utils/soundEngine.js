@@ -70,7 +70,9 @@ function createPinkNoiseBuffer(ctx) {
 export function stopFocusSound() {
   if (currentSource) {
     try {
-      if (currentSource.stop) {
+      if (currentSource.destroy) {
+        currentSource.destroy();
+      } else if (currentSource.stop) {
         currentSource.stop();
       } else if (currentSource.oscLeft && currentSource.oscRight) {
         currentSource.oscLeft.stop();
@@ -94,6 +96,152 @@ export function setSoundVolume(volume) {
       gainNode.gain.value = v;
     }
   }
+}
+
+// Helper: Start synthetic rain sound with droplet taps
+function startRainSound(ctx, destGain) {
+  const buffer = createPinkNoiseBuffer(ctx);
+  const rainSrc = ctx.createBufferSource();
+  rainSrc.buffer = buffer;
+  rainSrc.loop = true;
+
+  const lowpass = ctx.createBiquadFilter();
+  lowpass.type = 'lowpass';
+  lowpass.frequency.setValueAtTime(1150, ctx.currentTime);
+
+  const rainGain = ctx.createGain();
+  rainGain.gain.setValueAtTime(0.75, ctx.currentTime);
+
+  rainSrc.connect(lowpass);
+  lowpass.connect(rainGain);
+  rainGain.connect(destGain);
+  rainSrc.start(0);
+
+  // Periodic subtle water droplet taps
+  let isRunning = true;
+  let dropletTimer = null;
+
+  function scheduleDroplet() {
+    if (!isRunning || !ctx || ctx.state === 'closed') return;
+    try {
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const dropGain = ctx.createGain();
+      const freq = 1400 + Math.random() * 1200;
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.65, now + 0.035);
+
+      dropGain.gain.setValueAtTime(0.0001, now);
+      dropGain.gain.linearRampToValueAtTime(0.02 + Math.random() * 0.02, now + 0.004);
+      dropGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
+
+      osc.connect(dropGain);
+      dropGain.connect(destGain);
+
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } catch {}
+
+    const nextDelay = 140 + Math.random() * 320;
+    dropletTimer = setTimeout(scheduleDroplet, nextDelay);
+  }
+
+  scheduleDroplet();
+
+  return {
+    destroy: () => {
+      isRunning = false;
+      if (dropletTimer) clearTimeout(dropletTimer);
+      try {
+        rainSrc.stop();
+        rainSrc.disconnect();
+        lowpass.disconnect();
+        rainGain.disconnect();
+      } catch {}
+    }
+  };
+}
+
+// Helper: Start synthetic birdsong with forest breeze
+function startBirdSound(ctx, destGain) {
+  // Ambient breeze bed
+  const buffer = createPinkNoiseBuffer(ctx);
+  const breezeSrc = ctx.createBufferSource();
+  breezeSrc.buffer = buffer;
+  breezeSrc.loop = true;
+
+  const breezeFilter = ctx.createBiquadFilter();
+  breezeFilter.type = 'bandpass';
+  breezeFilter.frequency.setValueAtTime(500, ctx.currentTime);
+  breezeFilter.Q.setValueAtTime(0.7, ctx.currentTime);
+
+  const breezeGain = ctx.createGain();
+  breezeGain.gain.setValueAtTime(0.05, ctx.currentTime);
+
+  breezeSrc.connect(breezeFilter);
+  breezeFilter.connect(breezeGain);
+  breezeGain.connect(destGain);
+  breezeSrc.start(0);
+
+  // Procedural bird calls
+  let isRunning = true;
+  let birdTimer = null;
+
+  function scheduleBirdCall() {
+    if (!isRunning || !ctx || ctx.state === 'closed') return;
+    try {
+      const now = ctx.currentTime;
+      const numChirps = Math.floor(Math.random() * 3) + 1;
+      const baseFreq = 2600 + Math.random() * 1200;
+
+      for (let c = 0; c < numChirps; c++) {
+        const chirpStart = now + c * (0.08 + Math.random() * 0.04);
+        const osc = ctx.createOscillator();
+        const chirpGain = ctx.createGain();
+
+        osc.type = 'sine';
+        const sweepUp = Math.random() > 0.45;
+        if (sweepUp) {
+          osc.frequency.setValueAtTime(baseFreq, chirpStart);
+          osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, chirpStart + 0.035);
+          osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.9, chirpStart + 0.07);
+        } else {
+          osc.frequency.setValueAtTime(baseFreq * 1.4, chirpStart);
+          osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.85, chirpStart + 0.065);
+        }
+
+        chirpGain.gain.setValueAtTime(0.0001, chirpStart);
+        chirpGain.gain.linearRampToValueAtTime(0.055 + Math.random() * 0.03, chirpStart + 0.012);
+        chirpGain.gain.exponentialRampToValueAtTime(0.0001, chirpStart + 0.07);
+
+        osc.connect(chirpGain);
+        chirpGain.connect(destGain);
+
+        osc.start(chirpStart);
+        osc.stop(chirpStart + 0.075);
+      }
+    } catch {}
+
+    const nextDelay = 1800 + Math.random() * 2600;
+    birdTimer = setTimeout(scheduleBirdCall, nextDelay);
+  }
+
+  scheduleBirdCall();
+
+  return {
+    destroy: () => {
+      isRunning = false;
+      if (birdTimer) clearTimeout(birdTimer);
+      try {
+        breezeSrc.stop();
+        breezeSrc.disconnect();
+        breezeFilter.disconnect();
+        breezeGain.disconnect();
+      } catch {}
+    }
+  };
 }
 
 export async function playFocusSound(type, volume = 0.4) {
@@ -136,19 +284,24 @@ export async function playFocusSound(type, volume = 0.4) {
     source.start(0);
     currentSource = source;
     activeSoundType = 'pink';
+  } else if (type === 'rain') {
+    currentSource = startRainSound(ctx, gainNode);
+    activeSoundType = 'rain';
+  } else if (type === 'birds') {
+    currentSource = startBirdSound(ctx, gainNode);
+    activeSoundType = 'birds';
   } else if (type === 'binaural') {
-    // 40 Hz Gamma Focus: Works on both stereo headphones & mobile phone speakers
-    // Uses 200 Hz carrier frequency with a 40 Hz amplitude modulation so phone speakers reproduce the 40Hz beat clearly!
+    // 40 Hz Gamma Focus
     const carrier = ctx.createOscillator();
     carrier.type = 'sine';
-    carrier.frequency.setValueAtTime(216, ctx.currentTime); // 216 Hz soothing warm tone
+    carrier.frequency.setValueAtTime(216, ctx.currentTime);
 
     const modGain = ctx.createGain();
     modGain.gain.setValueAtTime(0.5, ctx.currentTime);
 
     const modulator = ctx.createOscillator();
     modulator.type = 'sine';
-    modulator.frequency.setValueAtTime(40, ctx.currentTime); // 40 Hz Gamma rhythm
+    modulator.frequency.setValueAtTime(40, ctx.currentTime);
     modulator.connect(modGain.gain);
 
     carrier.connect(modGain);
@@ -157,7 +310,17 @@ export async function playFocusSound(type, volume = 0.4) {
     carrier.start(0);
     modulator.start(0);
 
-    currentSource = { carrier, modulator };
+    currentSource = {
+      destroy: () => {
+        try {
+          carrier.stop();
+          modulator.stop();
+          carrier.disconnect();
+          modulator.disconnect();
+          modGain.disconnect();
+        } catch {}
+      }
+    };
     activeSoundType = 'binaural';
   }
 }

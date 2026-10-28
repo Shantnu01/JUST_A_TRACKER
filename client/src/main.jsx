@@ -3147,6 +3147,20 @@ function App() {
                         >
                           Pink
                         </button>
+                        <button 
+                          className={`sound-btn ${focusSoundType === 'rain' ? 'active' : ''}`}
+                          onClick={() => handleSelectSound('rain')}
+                          title="Rain: Soothing steady rainfall and water droplets"
+                        >
+                          Rain
+                        </button>
+                        <button 
+                          className={`sound-btn ${focusSoundType === 'birds' ? 'active' : ''}`}
+                          onClick={() => handleSelectSound('birds')}
+                          title="Birds: Forest birdsong and morning breeze"
+                        >
+                          Birds
+                        </button>
                       </div>
                       {focusSoundType !== 'off' && (
                         <div className="volume-wrap">
