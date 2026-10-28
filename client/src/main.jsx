@@ -527,7 +527,22 @@ function App() {
   const [noticeDraft, setNoticeDraft] = useState('');
   const [noticeSaving, setNoticeSaving] = useState(false);
 
-  const [nudgeCooldowns, setNudgeCooldowns] = useState({});
+  const [nudgeCooldowns, setNudgeCooldowns] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('daymark_nudge_cooldowns') || '{}');
+      const now = Date.now();
+      const initial = {};
+      for (const [uid, expiresAt] of Object.entries(saved)) {
+        const remaining = Math.ceil((Number(expiresAt) - now) / 1000);
+        if (remaining > 0) {
+          initial[uid] = remaining;
+        }
+      }
+      return initial;
+    } catch {
+      return {};
+    }
+  });
 
   // Friction & Context-Switch Interceptor Agent State
   const [interceptorModalOpen, setInterceptorModalOpen] = useState(false);
@@ -850,7 +865,32 @@ function App() {
         if (res.ok) {
           const data = await res.json();
           setLeaderboard(data);
-          setPodMembers(data.members || []);
+          const members = data.members || [];
+          setPodMembers(members);
+
+          // Sync server-reported nudge cooldowns into state & localStorage
+          setNudgeCooldowns(prev => {
+            let updated = false;
+            const next = { ...prev };
+            let saved = {};
+            try { saved = JSON.parse(localStorage.getItem('daymark_nudge_cooldowns') || '{}'); } catch {}
+
+            members.forEach(m => {
+              if (m.nudge_cooldown && Number(m.nudge_cooldown) > 0) {
+                const serverRem = Number(m.nudge_cooldown);
+                if (!next[m.id] || serverRem > next[m.id]) {
+                  next[m.id] = serverRem;
+                  saved[m.id] = Date.now() + serverRem * 1000;
+                  updated = true;
+                }
+              }
+            });
+            if (updated) {
+              try { localStorage.setItem('daymark_nudge_cooldowns', JSON.stringify(saved)); } catch {}
+              return next;
+            }
+            return prev;
+          });
         }
       } catch {}
     };
@@ -2511,11 +2551,31 @@ const handleNudge = async (toUserId, toUsername) => {
       const data = await res.json();
       if (res.ok) {
         playChime(true);
-        setNudgeCooldowns(prev => ({ ...prev, [toUserId]: data.remaining_seconds || 300 }));
+        const rem = data.remaining_seconds || 300;
+        const expiresAt = Date.now() + rem * 1000;
+        setNudgeCooldowns(prev => {
+          const next = { ...prev, [toUserId]: rem };
+          try {
+            const saved = JSON.parse(localStorage.getItem('daymark_nudge_cooldowns') || '{}');
+            saved[toUserId] = expiresAt;
+            localStorage.setItem('daymark_nudge_cooldowns', JSON.stringify(saved));
+          } catch {}
+          return next;
+        });
         setToast(`👋 Nudged ${toUsername}! Locked in.`);
       } else {
         if (data.remaining_seconds) {
-          setNudgeCooldowns(prev => ({ ...prev, [toUserId]: data.remaining_seconds }));
+          const rem = data.remaining_seconds;
+          const expiresAt = Date.now() + rem * 1000;
+          setNudgeCooldowns(prev => {
+            const next = { ...prev, [toUserId]: rem };
+            try {
+              const saved = JSON.parse(localStorage.getItem('daymark_nudge_cooldowns') || '{}');
+              saved[toUserId] = expiresAt;
+              localStorage.setItem('daymark_nudge_cooldowns', JSON.stringify(saved));
+            } catch {}
+            return next;
+          });
         }
         setToast(data.error || 'Failed to nudge');
       }
@@ -2690,6 +2750,18 @@ const handleNudge = async (toUserId, toUsername) => {
                       >
                         <Share2 size={13} /> Join Pod with Code
                       </button>
+                      {activeGroup && (
+                        <button
+                          className="pod-dropdown-action"
+                          style={{ color: '#dc2626' }}
+                          onClick={() => {
+                            setPodDropdownOpen(false);
+                            handleLeavePod(activeGroup.id, activeGroup.name);
+                          }}
+                        >
+                          <LogOut size={13} /> Exit Pod ({activeGroup.name})
+                        </button>
+                      )}
                     </div>
                   </>
                 )}
@@ -3969,26 +4041,25 @@ const handleNudge = async (toUserId, toUsername) => {
                     <button className="reset-schedule-btn" onClick={() => setJoinPodModalOpen(true)}>
                       <Share2 size={14} /> Join with Code
                     </button>
-                    {activeGroup && user && (
-                      activeGroup.created_by === user.id ? (
-                        <button
-                          className="reset-schedule-btn"
-                          style={{ color: '#dc2626', borderColor: '#fca5a5' }}
-                          onClick={() => handleDeletePod(activeGroup.id, activeGroup.name)}
-                          title="Delete this pod permanently (Owner only)"
-                        >
-                          <Trash2 size={13} /> Delete Pod
-                        </button>
-                      ) : (
-                        <button
-                          className="reset-schedule-btn"
-                          style={{ color: '#dc2626', borderColor: '#fca5a5' }}
-                          onClick={() => handleLeavePod(activeGroup.id, activeGroup.name)}
-                          title="Leave this pod"
-                        >
-                          <LogOut size={13} /> Exit Pod
-                        </button>
-                      )
+                    {activeGroup && (
+                      <button
+                        className="reset-schedule-btn pod-exit-btn"
+                        style={{ color: '#dc2626', borderColor: '#fca5a5' }}
+                        onClick={() => handleLeavePod(activeGroup.id, activeGroup.name)}
+                        title="Leave this pod"
+                      >
+                        <LogOut size={13} /> Exit Pod
+                      </button>
+                    )}
+                    {activeGroup && user && activeGroup.created_by === user.id && (
+                      <button
+                        className="reset-schedule-btn pod-delete-btn"
+                        style={{ color: '#b91c1c', borderColor: '#f87171' }}
+                        onClick={() => handleDeletePod(activeGroup.id, activeGroup.name)}
+                        title="Permanently delete this pod for everyone (Owner only)"
+                      >
+                        <Trash2 size={13} /> Delete Pod
+                      </button>
                     )}
                   </div>
                 </div>
@@ -4148,8 +4219,8 @@ const handleNudge = async (toUserId, toUsername) => {
                               <Zap size={12} /> {member.points} GP
                             </div>
 
-                            {/* Nudge Button (only for other members) */}
-                            {!isSelf && (
+                            {/* Action Button: Nudge for peers, Exit Pod for self */}
+                            {!isSelf ? (
                               <button
                                 className={`nudge-btn ${nudgeCooldowns[member.id] > 0 ? 'on-cooldown' : ''}`}
                                 onClick={() => {
@@ -4164,6 +4235,23 @@ const handleNudge = async (toUserId, toUsername) => {
                                 ) : (
                                   <>👋 Nudge</>
                                 )}
+                              </button>
+                            ) : (
+                              <button
+                                className="reset-schedule-btn pod-self-exit-btn"
+                                style={{
+                                  padding: '5px 10px',
+                                  fontSize: '11px',
+                                  color: '#dc2626',
+                                  borderColor: '#fca5a5',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px'
+                                }}
+                                onClick={() => handleLeavePod(activeGroup.id, activeGroup.name)}
+                                title="Leave this study pod"
+                              >
+                                <LogOut size={12} /> Exit Pod
                               </button>
                             )}
                             

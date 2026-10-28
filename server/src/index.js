@@ -573,14 +573,18 @@ app.get('/api/groups/:id/members', authenticateToken, async (req, res) => {
          p.last_seen,
          COALESCE(d.completed_minutes, '{}'::jsonb) as today_completed_minutes,
          COALESCE(d.checks, '{}'::jsonb) as today_checks,
-         COALESCE(d.notes, '') as today_notes
+         COALESCE(d.notes, '') as today_notes,
+         COALESCE((SELECT GREATEST(0, 300 - EXTRACT(EPOCH FROM (NOW() - gn.created_at))::int)
+          FROM group_nudges gn
+          WHERE gn.group_id = $1 AND gn.from_user_id = $2 AND gn.to_user_id = u.id AND gn.created_at > NOW() - INTERVAL '5 minutes'
+          ORDER BY gn.created_at DESC LIMIT 1), 0) as nudge_cooldown
        FROM group_members gm
        JOIN users u ON u.id = gm.user_id
        LEFT JOIN user_presence p ON p.user_id = u.id
        LEFT JOIN user_routine_days d ON d.user_id = u.id AND d.day_date = CURRENT_DATE
        WHERE gm.group_id = $1
        ORDER BY gm.joined_at ASC`,
-      [groupId]
+      [groupId, req.user.id]
     );
 
     // Overlay high-frequency Redis live presence
@@ -778,7 +782,27 @@ app.post('/api/groups/:id/nudge', authenticateToken, async (req, res) => {
       return res.status(403).json({ error: 'Both users must be members of the pod.' });
     }
 
-    // Atomic Redis rate limit (1 nudge per pair per 5 minutes = 300s)
+    // 1. Strict Postgres SQL rate limit check (1 nudge per pair per 5 minutes = 300s)
+    const lastNudgeCheck = await pool.query(
+      `SELECT EXTRACT(EPOCH FROM (NOW() - created_at))::int as seconds_ago
+       FROM group_nudges
+       WHERE group_id = $1 AND from_user_id = $2 AND to_user_id = $3
+         AND created_at > NOW() - INTERVAL '5 minutes'
+       ORDER BY created_at DESC LIMIT 1`,
+      [groupId, req.user.id, to_user_id]
+    );
+    if (lastNudgeCheck.rows.length > 0) {
+      const secondsAgo = lastNudgeCheck.rows[0].seconds_ago;
+      const remaining = Math.max(1, 300 - secondsAgo);
+      const mins = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      return res.status(429).json({
+        error: `Nudge on cooldown. Please wait ${mins > 0 ? `${mins}m ` : ''}${secs}s before nudging again.`,
+        remaining_seconds: remaining
+      });
+    }
+
+    // 2. Atomic Redis rate limit (1 nudge per pair per 5 minutes = 300s)
     const cooldown = await checkAndSetNudgeCooldown(groupId, req.user.id, to_user_id, 300);
     if (!cooldown.allowed) {
       const mins = Math.floor(cooldown.remainingSeconds / 60);
@@ -868,9 +892,21 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
     }
 
     // 1. Check Redis cache first
+    // Fetch active nudge cooldowns for requesting user (to attach personalized cooldowns)
+    const nudgeCooldownRes = await pool.query(
+      `SELECT to_user_id, GREATEST(0, 300 - EXTRACT(EPOCH FROM (NOW() - created_at))::int) as remaining
+       FROM group_nudges
+       WHERE group_id = $1 AND from_user_id = $2 AND created_at > NOW() - INTERVAL '5 minutes'`,
+      [groupId, req.user.id]
+    );
+    const cooldownMap = {};
+    nudgeCooldownRes.rows.forEach(r => {
+      cooldownMap[r.to_user_id] = Number(r.remaining || 0);
+    });
+
     const cached = await getCachedLeaderboard(groupId, targetDate);
     if (cached && Array.isArray(cached.members)) {
-      // Refresh live presence on top of cached scores (<5ms)
+      // Refresh live presence and personalized nudge cooldowns on top of cached scores (<5ms)
       const memberIds = cached.members.map(m => m.id);
       const liveMap = await getLivePresenceMulti(memberIds);
       const updatedMembers = cached.members.map(m => {
@@ -878,7 +914,8 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
         return {
           ...m,
           is_studying: live ? Boolean(live.is_studying) : Boolean(m.is_studying),
-          current_block_title: live && live.current_block_title ? live.current_block_title : m.current_block_title
+          current_block_title: live && live.current_block_title ? live.current_block_title : m.current_block_title,
+          nudge_cooldown: cooldownMap[m.id] || 0
         };
       });
       return res.json({ ...cached, members: updatedMembers, cached: true });
@@ -919,7 +956,8 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
         total_minutes: totalMins,
         habits_done: habitsDone,
         notes: member.notes,
-        points
+        points,
+        nudge_cooldown: cooldownMap[member.id] || 0
       };
     });
 
