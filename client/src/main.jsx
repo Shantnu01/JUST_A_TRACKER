@@ -554,7 +554,9 @@ function App() {
 
   // Column Glass / Transparency Style: 'normal' | 'translucent' | 'transparent' | 'smoky'
   const [columnStyle, setColumnStyle] = useState(() => {
-    return localStorage.getItem('daymark-column-style') || 'normal';
+    const saved = localStorage.getItem('daymark-column-style');
+    if (saved === 'translucent') return 'liquid-glass';
+    return saved || 'normal';
   });
 
   useEffect(() => {
@@ -4863,22 +4865,22 @@ function App() {
                   {
                     id: 'normal',
                     label: 'Normal',
-                    badge: 'Default Theme',
-                    desc: 'Original solid theme surfaces and card borders with standard opacity.',
+                    badge: 'Theme Default',
+                    desc: 'Original solid surfaces and card borders with standard theme opacity.',
                     icon: Layers
                   },
                   {
-                    id: 'translucent',
-                    label: 'Translucent',
-                    badge: 'Frosted Glass',
-                    desc: 'Semi-transparent frosted glass with background blur. Balances backdrop with crisp readability.',
+                    id: 'liquid-glass',
+                    label: 'Liquid Glass',
+                    badge: 'Apple Glass',
+                    desc: 'Refractive Apple VisionOS frosted glass with specular top highlight and fluid depth.',
                     icon: Sparkles
                   },
                   {
                     id: 'transparent',
                     label: 'Transparent',
-                    badge: 'Crystal Clear',
-                    desc: 'Ultra-thin transparent glass. Background videos, wallpapers, and atmospheric effects show clearly.',
+                    badge: 'Crystal Hover',
+                    desc: '100% see-through crystal glass. Panels hover statically like clean window glass over the background.',
                     icon: Eye
                   },
                   {
