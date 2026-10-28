@@ -2516,41 +2516,7 @@ function App() {
             </svg>
           </div>
         )}
-        {theme === 'cyber-sakura' && (
-          <>
-            <div className="ambient-glow-disc" aria-hidden="true" />
-            <div className="sakura-drift-field" aria-hidden="true">
-              <svg className="sakura-petal petal-1" viewBox="-15 -22 30 44">
-                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-              </svg>
-              <svg className="sakura-petal petal-2" viewBox="-15 -22 30 44">
-                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-              </svg>
-              <svg className="sakura-petal petal-3" viewBox="-15 -22 30 44">
-                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-              </svg>
-              <svg className="sakura-petal petal-4" viewBox="-15 -22 30 44">
-                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-              </svg>
-              <svg className="sakura-petal petal-5" viewBox="-15 -22 30 44">
-                <path d="M0,-20 C5,-15 15,-5 10,0 C15,5 5,15 0,20 C-5,15 -15,5 -10,0 C-15,-5 -5,-15 0,-20 Z" />
-              </svg>
-            </div>
-            <div className="cyber-terminal-strip">
-              <div className="cyber-strip-left">
-                <span className="cyber-pulse-dot" />
-                <span>ARCHITECTURAL MATRIX // PROTOCOL EXECUTION</span>
-                <span className="cyber-strip-sep">/</span>
-                <span className="cyber-strip-date">{prettyDate(selectedDate).toUpperCase()}</span>
-              </div>
-              <div className="cyber-strip-right">
-                <span className="cyber-status-text">SYSTEM: ONLINE</span>
-                <span className="cyber-strip-sep">/</span>
-                <span className="cyber-clock-text">JST {jstTime || '00:15:33'}</span>
-              </div>
-            </div>
-          </>
-        )}
+
         {theme === 'tokyo-lofi' && (
           <>
             <div className="film-grain" aria-hidden="true" />
@@ -2711,9 +2677,7 @@ function App() {
                     ? 'Acid Runway'
                     : theme === 'spider-verse'
                     ? 'Spider-Verse'
-                    : theme === 'cyber-sakura'
-                    ? 'Cyber Sakura'
-                    : theme === 'tokyo-lofi'
+                                        : theme === 'tokyo-lofi'
                     ? 'Tokyo Lofi'
                     : theme === 'sunlit-studio'
                     ? 'Sunlit Studio'
@@ -2811,19 +2775,6 @@ function App() {
                       <div className="theme-item-text">
                         <strong>Spider-Verse</strong>
                         <small>Miles Morales comic pop-art & action figure</small>
-                      </div>
-                    </button>
-                    <button
-                      className={`theme-dropdown-item ${theme === 'cyber-sakura' ? 'active' : ''}`}
-                      onClick={() => {
-                        setTheme('cyber-sakura');
-                        setThemeDropdownOpen(false);
-                      }}
-                    >
-                      <span className="theme-preview-dot sakura" />
-                      <div className="theme-item-text">
-                        <strong>Cyber Sakura</strong>
-                        <small>Y2K cyberpunk, hot pink & floating sakura petals</small>
                       </div>
                     </button>
                     <button
@@ -2950,16 +2901,7 @@ function App() {
                   </div>
                 </div>
               )}
-              {theme === 'cyber-sakura' && (
-                <div className="cyber-telemetry-card">
-                  <div className="cyber-telemetry-status">
-                    <span className="cyber-pulse-dot" />
-                    <span>SYSTEM: ACTIVE</span>
-                  </div>
-                  <div className="cyber-telemetry-time">{jstTime || '00:15:33'} <small>JST</small></div>
-                  <div className="cyber-telemetry-sub">SYS_NODE // 2.6</div>
-                </div>
-              )}
+
             </section>
 
             {/* Morning Non-Negotiable Priority Banner */}
@@ -3058,8 +3000,6 @@ function App() {
                     <span className="eyebrow">
                       {theme === 'tokyo-lofi'
                         ? 'TIMETABLE // 今日の日程'
-                        : theme === 'cyber-sakura'
-                        ? "TODAY'S PROTOCOL // SYS_EXEC"
                         : isToday
                         ? 'YOUR PLAN'
                         : isPast
@@ -3069,8 +3009,6 @@ function App() {
                     <h3>
                       {theme === 'tokyo-lofi'
                         ? 'Shinkansen Departure Board'
-                        : theme === 'cyber-sakura'
-                        ? "Architectural Protocol // Sequence"
                         : isToday
                         ? "Today's schedule"
                         : `Schedule for ${prettyDate(selectedDate)}`}
@@ -3362,8 +3300,8 @@ function App() {
                 <section className={`panel habits-panel ${!isToday ? 'read-only' : ''}`}>
                   <div className="panel-heading">
                     <div>
-                      <span className="eyebrow">{theme === 'tokyo-lofi' ? 'DAILY RITUALS // 日課' : theme === 'cyber-sakura' ? 'DAILY COMMITMENTS // 誓約' : (isToday ? 'DAILY CHECK-IN' : 'ARCHIVED HABITS')}</span>
-                      <h3>{theme === 'tokyo-lofi' ? 'Washi Paper Notebook' : theme === 'cyber-sakura' ? 'Daily Commitments' : 'Keep yourself honest'}</h3>
+                      <span className="eyebrow">{theme === 'tokyo-lofi' ? 'DAILY RITUALS // 日課' : (isToday ? 'DAILY CHECK-IN' : 'ARCHIVED HABITS')}</span>
+                      <h3>{theme === 'tokyo-lofi' ? 'Washi Paper Notebook' : 'Keep yourself honest'}</h3>
                     </div>
                     <span className="count-badge">
                       {doneCount}/{habits.length}

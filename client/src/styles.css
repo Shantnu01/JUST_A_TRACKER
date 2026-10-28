@@ -12285,3 +12285,346 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   color: #FF2D78 !important;
   font-weight: 700 !important;
 }
+
+/* ==========================================================================
+   TOKYO LOFI MASTER TYPOGRAPHY & ZERO-OLIVE ERADICATION SYSTEM
+   Completely replaces all dark olive / sage colors with high-contrast text:
+   - Headings & Strong: #FAF8FF (Crisp White)
+   - Body & Descriptions: #D4CEEB (Warm Cream)
+   - Accents & Badges: #F59E0B (Amber Neon) / #F472B6 (Tokyo Pink)
+   - Muted & Secondary: #A39BBF (Bright Lavender)
+   ========================================================================== */
+
+/* 1. Global Reset for Tokyo Lofi typography */
+[data-theme="tokyo-lofi"],
+[data-theme="tokyo-lofi"] body,
+[data-theme="tokyo-lofi"] .main-content {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] h1,
+[data-theme="tokyo-lofi"] h2,
+[data-theme="tokyo-lofi"] h3,
+[data-theme="tokyo-lofi"] h4,
+[data-theme="tokyo-lofi"] h5,
+[data-theme="tokyo-lofi"] h6,
+[data-theme="tokyo-lofi"] strong,
+[data-theme="tokyo-lofi"] b {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] p,
+[data-theme="tokyo-lofi"] span,
+[data-theme="tokyo-lofi"] li,
+[data-theme="tokyo-lofi"] td {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .muted,
+[data-theme="tokyo-lofi"] .subhead,
+[data-theme="tokyo-lofi"] small,
+[data-theme="tokyo-lofi"] time {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .eyebrow,
+[data-theme="tokyo-lofi"] .side-label {
+  color: #F59E0B !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* 2. STAGE ROADMAPS HUB — ZERO-OLIVE HIGH CONTRAST */
+[data-theme="tokyo-lofi"] .stage-roadmaps-hub,
+[data-theme="tokyo-lofi"] .stage-roadmaps-hub * {
+  /* Prevent any olive inheritance */
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-title,
+[data-theme="tokyo-lofi"] .stage-focus-title,
+[data-theme="tokyo-lofi"] .checkpoint-headline,
+[data-theme="tokyo-lofi"] .blank-creator-title,
+[data-theme="tokyo-lofi"] .option-title,
+[data-theme="tokyo-lofi"] .command-subject-name,
+[data-theme="tokyo-lofi"] .format-guide-head,
+[data-theme="tokyo-lofi"] .paste-label,
+[data-theme="tokyo-lofi"] .modal-card-title,
+[data-theme="tokyo-lofi"] .curriculum-stage-head strong,
+[data-theme="tokyo-lofi"] .stage-card-header strong {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-hub-subtitle,
+[data-theme="tokyo-lofi"] .option-desc,
+[data-theme="tokyo-lofi"] .blank-creator-desc,
+[data-theme="tokyo-lofi"] .editor-subtext,
+[data-theme="tokyo-lofi"] .empty-checkpoints-prompt,
+[data-theme="tokyo-lofi"] .checkpoint-sub-pill,
+[data-theme="tokyo-lofi"] .detail-pill-tag,
+[data-theme="tokyo-lofi"] .curriculum-detail-tag,
+[data-theme="tokyo-lofi"] .modal-card-sub,
+[data-theme="tokyo-lofi"] .stage-counter-pill,
+[data-theme="tokyo-lofi"] .stage-checkpoint-item,
+[data-theme="tokyo-lofi"] .stage-focus-counter,
+[data-theme="tokyo-lofi"] .stage-tab-ratio {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .stage-tab-num,
+[data-theme="tokyo-lofi"] .roadmap-pill-percent,
+[data-theme="tokyo-lofi"] .stage-focus-number-badge,
+[data-theme="tokyo-lofi"] .command-progress-badge,
+[data-theme="tokyo-lofi"] .blank-creator-badge,
+[data-theme="tokyo-lofi"] .format-guide-code,
+[data-theme="tokyo-lofi"] .pin-timetable-btn,
+[data-theme="tokyo-lofi"] .pinned-badge-active {
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill {
+  color: #D4CEEB !important;
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill:hover {
+  color: #FAF8FF !important;
+  background: #241E30 !important;
+}
+
+[data-theme="tokyo-lofi"] .roadmap-subject-pill.active {
+  color: #FAF8FF !important;
+  background: rgba(245, 158, 11, 0.18) !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn {
+  color: #D4CEEB !important;
+  background: #1C1928 !important;
+  border: 1px solid rgba(255, 140, 0, 0.18) !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn:hover {
+  color: #FAF8FF !important;
+  background: #241E30 !important;
+}
+
+[data-theme="tokyo-lofi"] .single-stage-tab-btn.viewing {
+  color: #FAF8FF !important;
+  background: rgba(245, 158, 11, 0.18) !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-row {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.15) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .single-checkpoint-row:hover {
+  background: #201C2E !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .checkpoint-headline.strikethrough {
+  color: #8B83A8 !important;
+  text-decoration: line-through !important;
+}
+
+[data-theme="tokyo-lofi"] .add-checkpoint-input {
+  color: #FAF8FF !important;
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+}
+
+/* 3. CODING HUB — ZERO-OLIVE HIGH CONTRAST */
+[data-theme="tokyo-lofi"] .coding-top-banner h3,
+[data-theme="tokyo-lofi"] .potd-body h4,
+[data-theme="tokyo-lofi"] .coding-panel-header strong,
+[data-theme="tokyo-lofi"] .lc-total-num strong,
+[data-theme="tokyo-lofi"] .lc-diff-label strong,
+[data-theme="tokyo-lofi"] .gh-meta strong,
+[data-theme="tokyo-lofi"] .gh-counts strong,
+[data-theme="tokyo-lofi"] .gh-chart-title,
+[data-theme="tokyo-lofi"] .gh-repo-name,
+[data-theme="tokyo-lofi"] .sheet-header h3,
+[data-theme="tokyo-lofi"] .pattern-group-header h4,
+[data-theme="tokyo-lofi"] .pattern-title,
+[data-theme="tokyo-lofi"] .contest-card h4,
+[data-theme="tokyo-lofi"] .suggestion-card h4,
+[data-theme="tokyo-lofi"] .smart-commit-title,
+[data-theme="tokyo-lofi"] .commit-stat-box strong,
+[data-theme="tokyo-lofi"] .webhook-title,
+[data-theme="tokyo-lofi"] .company-label,
+[data-theme="tokyo-lofi"] .snippet-header strong,
+[data-theme="tokyo-lofi"] .snippet-reply-item strong,
+[data-theme="tokyo-lofi"] .peer-review-title,
+[data-theme="tokyo-lofi"] .cf-org-name,
+[data-theme="tokyo-lofi"] .mock-problem-name,
+[data-theme="tokyo-lofi"] .leaderboard-user-info strong {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-top-banner p,
+[data-theme="tokyo-lofi"] .potd-body p,
+[data-theme="tokyo-lofi"] .lc-diff-label,
+[data-theme="tokyo-lofi"] .gh-meta p,
+[data-theme="tokyo-lofi"] .gh-counts span,
+[data-theme="tokyo-lofi"] .sheet-header p,
+[data-theme="tokyo-lofi"] .sheet-progress-box,
+[data-theme="tokyo-lofi"] .progress-caption,
+[data-theme="tokyo-lofi"] .contest-time,
+[data-theme="tokyo-lofi"] .suggestion-card p,
+[data-theme="tokyo-lofi"] .company-chip,
+[data-theme="tokyo-lofi"] .snippet-notes-box,
+[data-theme="tokyo-lofi"] .snippet-reply-item,
+[data-theme="tokyo-lofi"] .cf-org-info,
+[data-theme="tokyo-lofi"] .coding-subtab-btn,
+[data-theme="tokyo-lofi"] .leaderboard-table th,
+[data-theme="tokyo-lofi"] .leaderboard-table td,
+[data-theme="tokyo-lofi"] .empty-prompt p {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-panel-header small,
+[data-theme="tokyo-lofi"] .lc-total-num small,
+[data-theme="tokyo-lofi"] .lc-diff-label em,
+[data-theme="tokyo-lofi"] .gh-counts,
+[data-theme="tokyo-lofi"] .commit-stat-box small,
+[data-theme="tokyo-lofi"] .snippet-header small,
+[data-theme="tokyo-lofi"] .duration-tag {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .pattern-count,
+[data-theme="tokyo-lofi"] .potd-chip,
+[data-theme="tokyo-lofi"] .platform-tag,
+[data-theme="tokyo-lofi"] .suggestion-badge,
+[data-theme="tokyo-lofi"] .star-tag,
+[data-theme="tokyo-lofi"] .lang-tag,
+[data-theme="tokyo-lofi"] .mock-timer-clock,
+[data-theme="tokyo-lofi"] .leaderboard-you-tag,
+[data-theme="tokyo-lofi"] .webhook-box code,
+[data-theme="tokyo-lofi"] .count-pill {
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn:hover {
+  color: #FAF8FF !important;
+  background: #241E30 !important;
+}
+
+[data-theme="tokyo-lofi"] .coding-subtab-btn.active {
+  color: #FAF8FF !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .company-chip:hover {
+  color: #FAF8FF !important;
+  background: #241E30 !important;
+}
+
+[data-theme="tokyo-lofi"] .company-chip.active {
+  color: #12111A !important;
+  background: #F59E0B !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-solve-btn,
+[data-theme="tokyo-lofi"] .contest-link-btn,
+[data-theme="tokyo-lofi"] .like-btn,
+[data-theme="tokyo-lofi"] .webhook-toggle-btn {
+  color: #FAF8FF !important;
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-solve-btn:hover,
+[data-theme="tokyo-lofi"] .contest-link-btn:hover,
+[data-theme="tokyo-lofi"] .like-btn:hover,
+[data-theme="tokyo-lofi"] .webhook-toggle-btn:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .potd-check-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+/* 4. ROUTINE SETTINGS & TODAY SCHEDULE — ZERO-OLIVE HIGH CONTRAST */
+[data-theme="tokyo-lofi"] .settings-panel h3,
+[data-theme="tokyo-lofi"] .edit-title-input,
+[data-theme="tokyo-lofi"] .edit-times input[type="time"],
+[data-theme="tokyo-lofi"] .schedule-item .event-title-row h4,
+[data-theme="tokyo-lofi"] .session-clock,
+[data-theme="tokyo-lofi"] .session-clock span {
+  color: #FAF8FF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="tokyo-lofi"] .settings-panel p,
+[data-theme="tokyo-lofi"] .settings-note,
+[data-theme="tokyo-lofi"] .settings-note span,
+[data-theme="tokyo-lofi"] .edit-sub-input,
+[data-theme="tokyo-lofi"] .schedule-item .event-body p,
+[data-theme="tokyo-lofi"] .habit-row,
+[data-theme="tokyo-lofi"] .duration-pill {
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-times span,
+[data-theme="tokyo-lofi"] .schedule-item .time-col span,
+[data-theme="tokyo-lofi"] .footer,
+[data-theme="tokyo-lofi"] .footer span {
+  color: #A39BBF !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-duration-badge,
+[data-theme="tokyo-lofi"] .schedule-item .time-col strong,
+[data-theme="tokyo-lofi"] .logged-label,
+[data-theme="tokyo-lofi"] .settings-note svg,
+[data-theme="tokyo-lofi"] .session-clock svg {
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .schedule-edit-card {
+  background: #161322 !important;
+  border: 1px solid rgba(255, 140, 0, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-title-input,
+[data-theme="tokyo-lofi"] .edit-sub-input,
+[data-theme="tokyo-lofi"] .edit-times input[type="time"] {
+  background: #14111D !important;
+  border: 1px solid rgba(255, 140, 0, 0.22) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .edit-duration-badge {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"] .save-schedule-btn {
+  background: #F59E0B !important;
+  color: #12111A !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="tokyo-lofi"] .reset-schedule-btn {
+  background: #241E30 !important;
+  border: 1px solid rgba(255, 140, 0, 0.25) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .reset-schedule-btn:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #F59E0B !important;
+}
