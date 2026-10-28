@@ -35,7 +35,12 @@ export const isClusterEnabled = () => {
 // ============================================================================
 if (cluster.isPrimary && isClusterEnabled()) {
   const totalCores = os.availableParallelism ? os.availableParallelism() : os.cpus().length;
-  const maxWorkers = Number(process.env.MAX_WORKERS || 4);
+  let maxWorkers = 4;
+  if (process.env.MAX_WORKERS === 'all' || process.env.MAX_WORKERS === 'max') {
+    maxWorkers = totalCores;
+  } else if (process.env.MAX_WORKERS) {
+    maxWorkers = Number(process.env.MAX_WORKERS);
+  }
   const workerCount = Number(process.env.WEB_CONCURRENCY) || Math.min(totalCores, maxWorkers);
 
   console.log(`=================================================================`);
