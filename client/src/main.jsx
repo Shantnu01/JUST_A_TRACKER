@@ -10,6 +10,7 @@ import TimetableCurrentCheckpoint from './components/TimetableCurrentCheckpoint'
 import StageRoadmapsView from './components/StageRoadmapsView';
 import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
 import DynamicVideoModal, { extractYouTubeId } from './components/DynamicVideoModal';
+import SynapticBridgeModal from './components/SynapticBridgeModal';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -551,6 +552,8 @@ function App() {
   });
   const [dynamicVideoModalOpen, setDynamicVideoModalOpen] = useState(false);
   const [isZenMode, setIsZenMode] = useState(false);
+  const [synapticBridgeOpen, setSynapticBridgeOpen] = useState(false);
+  const [synapticActiveBlock, setSynapticActiveBlock] = useState(null);
 
   // Column Glass / Transparency Style: 'normal' | 'translucent' | 'transparent' | 'smoky'
   const [columnStyle, setColumnStyle] = useState(() => {
@@ -1661,6 +1664,8 @@ function App() {
         setArtifactNotes('');
         setArtifactUrl('');
         setArtifactModalOpen(true);
+        setSynapticActiveBlock(taskObj);
+        setSynapticBridgeOpen(true);
       }
     }
     setRunning(false);
@@ -2983,6 +2988,20 @@ function App() {
                   <button className="evening-closeout-pill" onClick={() => setCloseoutModalOpen(true)} title="Complete your 3-minute evening shutdown ritual">
                     <Moon size={13} />
                     <span>Evening Closeout</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="evening-closeout-pill synaptic-trigger-pill"
+                    onClick={() => {
+                      const cur = (activeId ? schedule.find(s => s.id === activeId) : null) || current || schedule[0];
+                      setSynapticActiveBlock(cur);
+                      setSynapticBridgeOpen(true);
+                    }}
+                    title="Active Recall & Interleaving Retrieval Practice"
+                    style={{ background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.35)', color: '#F59E0B' }}
+                  >
+                    <Brain size={13} />
+                    <span>Synaptic Bridge</span>
                   </button>
                   {theme === 'tokyo-lofi' && isToday && renderTopActions()}
                 </div>
@@ -6183,6 +6202,15 @@ function App() {
           setDynamicDim(dim);
           localStorage.setItem('daymark-dynamic-dim', dim.toString());
         }}
+      />
+
+      <SynapticBridgeModal
+        isOpen={synapticBridgeOpen}
+        onClose={() => setSynapticBridgeOpen(false)}
+        activeBlock={synapticActiveBlock}
+        pinnedCheckpoint={null}
+        theme={theme}
+        columnStyle={columnStyle}
       />
 
       {toast && (
