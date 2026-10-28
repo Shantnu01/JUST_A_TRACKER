@@ -9,6 +9,7 @@ import {
 import TimetableCurrentCheckpoint from './components/TimetableCurrentCheckpoint';
 import StageRoadmapsView from './components/StageRoadmapsView';
 import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
+import DynamicVideoModal, { extractYouTubeId } from './components/DynamicVideoModal';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -23,6 +24,9 @@ import {
   Calendar,
   Check,
   CheckCircle2,
+  Youtube,
+  Video,
+  Eye,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -537,6 +541,26 @@ function App() {
     return saved || 'default';
   });
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+  // Dynamic Video Theme State
+  const [dynamicVideoId, setDynamicVideoId] = useState(() => {
+    return localStorage.getItem('daymark-dynamic-yt-id') || 'XPPdim4fLto';
+  });
+  const [dynamicDim, setDynamicDim] = useState(() => {
+    const saved = localStorage.getItem('daymark-dynamic-dim');
+    return saved !== null ? parseFloat(saved) : 0.45;
+  });
+  const [dynamicVideoModalOpen, setDynamicVideoModalOpen] = useState(false);
+  const [isZenMode, setIsZenMode] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isZenMode) {
+        setIsZenMode(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isZenMode]);
 
   // Tokyo Lofi Live JST Clock & Ambient Web Audio Generator
   const [jstTime, setJstTime] = useState('');
@@ -2340,7 +2364,7 @@ function App() {
   };
 
   return (
-    <div className="app-shell" data-theme={theme}>
+    <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme}>
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">
@@ -2426,6 +2450,21 @@ function App() {
       </aside>
 
             <main className="main-content" style={{ position: 'relative' }}>
+        {theme === 'dynamic-video' && (
+          <div className="dynamic-video-bg-container">
+            <iframe
+              src={`https://www.youtube.com/embed/${dynamicVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${dynamicVideoId}&showinfo=0&rel=0&modestbranding=1&enablejsapi=1`}
+              title="Dynamic YouTube Background"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+            <div
+              className="dynamic-video-overlay"
+              style={{ opacity: isZenMode ? 0.1 : dynamicDim }}
+            />
+          </div>
+        )}
         {theme === 'spider-verse' && (
           <div className="spidey-swing-anchor" title="THWIP! Miles Morales on duty!">
             <div className="spidey-web-line" />
@@ -2588,6 +2627,28 @@ function App() {
               <Download size={17} />
             </button>
             
+            {theme === 'dynamic-video' && (
+              <div className="dynamic-topbar-actions">
+                <button
+                  type="button"
+                  className="dynamic-action-btn config"
+                  onClick={() => setDynamicVideoModalOpen(true)}
+                  title="Change YouTube Background URL / Settings"
+                >
+                  <Youtube size={13} className="text-amber-400" />
+                  <span>Change Video</span>
+                </button>
+                <button
+                  type="button"
+                  className={`dynamic-action-btn zen ${isZenMode ? 'active' : ''}`}
+                  onClick={() => setIsZenMode(z => !z)}
+                  title="Toggle Fullscreen Zen Mode (Hide UI, keep music & video playing)"
+                >
+                  <Eye size={13} />
+                  <span>{isZenMode ? 'Exit Zen' : '✦ Zen Mode'}</span>
+                </button>
+              </div>
+            )}
             {/* Visual Theme Selector */}
             <div className="theme-switcher-wrapper" style={{ position: 'relative' }}>
               <button
@@ -2601,7 +2662,9 @@ function App() {
               >
                 <Palette size={13} />
                 <span>
-                  {theme === 'neo-brutalist'
+                  {theme === 'dynamic-video'
+                    ? 'Dynamic Video'
+                    : theme === 'neo-brutalist'
                     ? 'Neo-Brutalist'
                     : theme === 'zen-paper'
                     ? 'Zen Paper'
@@ -2735,6 +2798,19 @@ function App() {
                       <div className="theme-item-text">
                         <strong>Sunlit Studio</strong>
                         <small>Airy creative studio, warm saffron & ultra-clean layout</small>
+                      </div>
+                    </button>
+                    <button
+                      className={`theme-dropdown-item ${theme === 'dynamic-video' ? 'active' : ''}`}
+                      onClick={() => {
+                        setTheme('dynamic-video');
+                        setThemeDropdownOpen(false);
+                      }}
+                    >
+                      <span className="theme-preview-dot dynamic" />
+                      <div className="theme-item-text">
+                        <strong>Dynamic Video (YouTube BG)</strong>
+                        <small>Paste any YouTube link as live background with translucent glass</small>
                       </div>
                     </button>
                     <button
@@ -3212,7 +3288,7 @@ function App() {
               </section>
 
               <div className="right-column">
-                {theme === 'tokyo-lofi' && <TokyoSoundscapePlayer />}
+                {(theme === 'tokyo-lofi' || theme === 'dynamic-video') && <TokyoSoundscapePlayer />}
                 <section className={`panel habits-panel ${!isToday ? 'read-only' : ''}`}>
                   <div className="panel-heading">
                     <div>
@@ -5893,6 +5969,34 @@ function App() {
         </div>
       )}
 
+
+      {theme === 'dynamic-video' && isZenMode && (
+        <button
+          type="button"
+          className="dynamic-exit-zen-btn"
+          onClick={() => setIsZenMode(false)}
+          title="Click or press ESC to show your routine dashboard"
+        >
+          <span className="zen-ping-dot" />
+          <span>✦ Show Routine Dashboard</span>
+          <span className="zen-esc-badge">ESC</span>
+        </button>
+      )}
+
+      <DynamicVideoModal
+        isOpen={dynamicVideoModalOpen}
+        onClose={() => setDynamicVideoModalOpen(false)}
+        currentVideoUrl={dynamicVideoId}
+        onSaveVideo={(id) => {
+          setDynamicVideoId(id);
+          localStorage.setItem('daymark-dynamic-yt-id', id);
+        }}
+        overlayDim={dynamicDim}
+        onChangeDim={(dim) => {
+          setDynamicDim(dim);
+          localStorage.setItem('daymark-dynamic-dim', dim.toString());
+        }}
+      />
 
       {toast && (
         <div className="toast">

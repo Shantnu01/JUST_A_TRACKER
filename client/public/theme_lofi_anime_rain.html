@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veranda Forest Rain · Lo-Fi Glass Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      /* Translucent Glass Variables (allowing the forest rain outside the balcony to shine through) */
+      --glass-panel-bg: rgba(8, 12, 22, 0.28);
+      --glass-card-bg: rgba(14, 18, 32, 0.22);
+      --glass-card-hover: rgba(24, 32, 54, 0.42);
+      --glass-border: rgba(255, 255, 255, 0.13);
+      --glass-border-subtle: rgba(255, 255, 255, 0.08);
+      --glass-blur: 14px;
+      --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.22);
+
+      --amber: #F59E0B;
+      --emerald: #10B981;
+      --lavender: #C084FC;
+      --ink-white: #FFFFFF;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: #04070e;
+      color: var(--ink-white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 1. Fullscreen Looping Video Background (Anime Balcony Rain & Forest Trees) */
+    .video-background-container {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .video-background-container iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: 56.25vw;
+      min-height: 100vh;
+      min-width: 177.77vh;
+      transform: translate(-50%, -50%) scale(1.08);
+      filter: brightness(0.78) contrast(1.08) saturate(1.15);
+      pointer-events: none;
+      transition: filter 0.8s ease;
+    }
+
+    /* Cinematic Subtle Vignette (Dimmed in normal mode, disappears in Zen Mode) */
+    .cinematic-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(circle at 50% 50%, rgba(4, 7, 14, 0.08) 0%, rgba(4, 7, 14, 0.52) 100%),
+                  linear-gradient(180deg, rgba(6, 9, 18, 0.35) 0%, rgba(4, 7, 14, 0.2) 50%, rgba(4, 7, 14, 0.6) 100%);
+      pointer-events: none;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 2. Glassmorphism Columns Architecture */
+    .glass-panel {
+      background: var(--glass-panel-bg);
+      backdrop-filter: blur(var(--glass-blur)) saturate(175%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(175%);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), var(--glass-highlight);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card {
+      background: var(--glass-card-bg);
+      backdrop-filter: blur(calc(var(--glass-blur) * 0.7));
+      -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 0.7));
+      border: 1px solid var(--glass-border-subtle);
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25), var(--glass-highlight);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      background: var(--glass-card-hover);
+      border-color: rgba(245, 158, 11, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38), var(--glass-highlight);
+    }
+
+    .active-session-card {
+      background: rgba(245, 158, 11, 0.16) !important;
+      border: 1px solid rgba(245, 158, 11, 0.55) !important;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+    }
+
+    /* Text Crispness on Translucent Surfaces */
+    .text-crisp {
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .mono-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Visualizer wave bars */
+    .wave-bar {
+      width: 2.5px;
+      background: #F59E0B;
+      border-radius: 1.5px;
+      transition: height 0.2s ease;
+    }
+    .playing .wave-bar:nth-child(1) { animation: wave 0.9s ease-in-out infinite alternate; }
+    .playing .wave-bar:nth-child(2) { animation: wave 1.2s ease-in-out 0.2s infinite alternate; }
+    .playing .wave-bar:nth-child(3) { animation: wave 0.8s ease-in-out 0.4s infinite alternate; }
+    .playing .wave-bar:nth-child(4) { animation: wave 1.1s ease-in-out 0.15s infinite alternate; }
+    .playing .wave-bar:nth-child(5) { animation: wave 0.95s ease-in-out 0.35s infinite alternate; }
+
+    @keyframes wave {
+      0% { height: 3px; opacity: 0.35; }
+      100% { height: 18px; opacity: 1; }
+    }
+
+    /* Checkbox Styling */
+    .glass-check {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .glass-check:checked {
+      background: #F59E0B;
+      border-color: #F59E0B;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
+    }
+
+    .glass-check:checked::after {
+      content: '';
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
+
+    /* Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 4px;
+      height: 4px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #F59E0B;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.9);
+      cursor: pointer;
+    }
+
+    /* 3. ZEN MODE TRANSITION (Hides UI and leaves only Balcony Rain Video & Music) */
+    #workspaceContent {
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body.zen-mode #workspaceContent {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(24px) scale(0.98);
+    }
+
+    body.zen-mode .cinematic-overlay {
+      opacity: 0.1; /* Video becomes vibrant and clear */
+    }
+
+    body.zen-mode .video-background-container iframe {
+      filter: brightness(0.95) contrast(1.05) saturate(1.1);
+    }
+
+    /* Minimalist Floating Pill in Zen Mode */
+    #exitZenPill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 9999px;
+      background: rgba(8, 12, 22, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.25s ease;
+      animation: floatPill 3s ease-in-out infinite alternate;
+    }
+
+    #exitZenPill:hover {
+      background: rgba(245, 158, 11, 0.25);
+      border-color: rgba(245, 158, 11, 0.5);
+      transform: scale(1.04);
+      box-shadow: 0 14px 40px rgba(245, 158, 11, 0.25);
+    }
+
+    body.zen-mode #exitZenPill {
+      display: flex;
+    }
+
+    @keyframes floatPill {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8">
+
+  <!-- 1. FULLSCREEN LIVE VIDEO BACKGROUND: Anime Girl on Balcony Studying in the Rain with Trees Outside -->
+  <div class="video-background-container">
+    <iframe
+      id="bgVideoIframe"
+      src="https://www.youtube.com/embed/XPPdim4fLto?autoplay=1&mute=1&controls=0&loop=1&playlist=XPPdim4fLto&showinfo=0&rel=0&modestbranding=1&enablejsapi=1"
+      title="Balcony Rain & Forest Trees Anime Study"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <div class="cinematic-overlay"></div>
+
+  <!-- 2. WORKSPACE DASHBOARD CONTENT (Overlays translucent glass) -->
+  <div id="workspaceContent" class="relative z-10 max-w-7xl mx-auto flex flex-col gap-6">
+
+    <!-- TOPBAR: Glass Studio Header with Zen Mode Button -->
+    <header class="glass-panel px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Balcony Location -->
+      <div class="flex items-center gap-4">
+        <div class="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 font-bold text-xl shadow-lg shadow-amber-500/20 text-crisp">
+          雨
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5">
+            <h1 class="text-base font-bold tracking-wide text-white text-crisp">VERANDA FOREST RAIN</h1>
+            <span class="text-[10px] font-mono tracking-widest px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 font-bold uppercase">
+              BALCONY STUDY
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 text-crisp">Rain outside the balcony falling through garden trees · Translucent Glass</p>
+        </div>
+      </div>
+
+      <!-- Controls: ZEN MODE BUTTON + Glass Controls + Clock -->
+      <div class="flex items-center flex-wrap gap-4">
+
+        <!-- 🌟 ONE-CLICK ZEN MODE BUTTON (User's Requested Feature) -->
+        <button
+          id="enterZenBtn"
+          type="button"
+          class="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/25 to-amber-600/30 hover:from-amber-500/35 hover:to-amber-600/45 border border-amber-400/50 text-amber-200 text-xs font-mono font-bold shadow-lg shadow-amber-500/15 transition-all transform active:scale-95 text-crisp"
+          title="Hide all dashboard panels to enjoy full-screen video with uninterrupted music"
+        >
+          <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+          <span>✦ ZEN VIEW (ONLY VIDEO & MUSIC)</span>
+        </button>
+
+        <!-- Glass Opacity Switcher -->
+        <div class="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/15">
+          <button id="modeClear" class="px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-slate-300 hover:text-white transition-all">
+            Transparent
+          </button>
+          <button id="modeTranslucent" class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-amber-500/25 text-amber-300 border border-amber-400/40 transition-all">
+            Translucent
+          </button>
+          <button id="modeSmoked" class="px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-slate-300 hover:text-white transition-all">
+            Smoked
+          </button>
+        </div>
+
+        <!-- Live Tokyo Clock -->
+        <div class="text-right pl-2 border-l border-white/15">
+          <div id="liveClock" class="text-xl font-bold mono-num text-white tracking-wider text-crisp">02:54:10</div>
+          <div class="text-[10px] font-mono text-amber-300 uppercase tracking-widest text-crisp">TOKYO · JST</div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN 3-COLUMN TRANSLUCENT OVERLAYS -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- LEFT COLUMN: Profile & Ambient Focus Metrics (3 cols) -->
+      <div class="lg:col-span-3 flex flex-col gap-6">
+
+        <!-- User Focus Card -->
+        <div class="glass-panel p-5 flex flex-col gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="relative w-12 h-12 rounded-2xl overflow-hidden border border-amber-400/50 shadow-lg shadow-amber-500/20 flex-shrink-0">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" class="w-full h-full object-cover" alt="Student Avatar">
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white text-crisp">Shantnu</h3>
+              <p class="text-xs text-amber-300 font-mono flex items-center gap-1.5 text-crisp">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                Studying on Balcony
+              </p>
+            </div>
+          </div>
+
+          <!-- Mini Metrics Strip -->
+          <div class="grid grid-cols-2 gap-2 pt-3 border-t border-white/10 text-center font-mono">
+            <div class="glass-card p-3">
+              <span class="text-[10px] text-slate-300 uppercase tracking-wider block text-crisp">Focus Today</span>
+              <span class="text-xl font-bold text-amber-400 text-crisp">4h 45m</span>
+            </div>
+            <div class="glass-card p-3">
+              <span class="text-[10px] text-slate-300 uppercase tracking-wider block text-crisp">Study Streak</span>
+              <span class="text-xl font-bold text-purple-300 text-crisp">14 Days</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Studio Navigation -->
+        <nav class="glass-panel p-3 flex flex-col gap-1.5">
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-300 text-sm font-semibold transition-all text-crisp">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Today's Routine
+          </button>
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 text-sm font-medium transition-all text-crisp">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            Stage Roadmaps
+          </button>
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 text-sm font-medium transition-all text-crisp">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            Coding Arena
+          </button>
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 text-sm font-medium transition-all text-crisp">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Focus Notes
+          </button>
+        </nav>
+
+        <!-- Weather on Balcony Card -->
+        <div class="glass-panel p-4 flex items-center justify-between text-xs font-mono">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🌧️</span>
+            <div>
+              <div class="font-bold text-white text-crisp">Balcony Veranda</div>
+              <div class="text-slate-300 text-crisp">Rain outside in forest trees</div>
+            </div>
+          </div>
+          <span class="text-amber-400 font-bold px-2 py-1 rounded bg-amber-500/20 border border-amber-400/30 text-crisp">
+            RAIN 98%
+          </span>
+        </div>
+
+      </div>
+
+      <!-- CENTER COLUMN: Translucent Schedule Timetable (5 cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-4">
+        
+        <div class="glass-panel p-6">
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <span class="text-[11px] font-mono tracking-widest text-amber-400 uppercase block font-bold text-crisp">
+                TIMETABLE OVERLAY // 時間割
+              </span>
+              <h2 class="text-lg font-bold text-white text-crisp">Daily Study Protocol</h2>
+            </div>
+            <span class="text-xs font-mono px-3 py-1 rounded-full bg-white/10 text-slate-200 border border-white/15 text-crisp">
+              6 Sessions Planned
+            </span>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            
+            <!-- Session 1: DONE -->
+            <div class="glass-card p-4 flex items-center justify-between opacity-80 hover:opacity-100">
+              <div class="flex items-center gap-4">
+                <div class="text-lg font-bold mono-num text-emerald-400 text-crisp">07:00</div>
+                <div class="w-1 h-8 rounded-full bg-emerald-500/70"></div>
+                <div>
+                  <div class="text-xs font-mono text-emerald-400 text-crisp">DONE · 1h 30m</div>
+                  <div class="text-sm font-semibold text-white text-crisp">Morning Algorithms & LeetCode</div>
+                  <div class="text-xs text-slate-300 text-crisp">Dynamic Programming & Graph Traversal</div>
+                </div>
+              </div>
+              <span class="text-xs font-mono text-emerald-300 bg-emerald-500/20 px-2.5 py-1 rounded-lg border border-emerald-500/30 text-crisp">
+                ✓ DONE
+              </span>
+            </div>
+
+            <!-- Session 2: ACTIVE NOW -->
+            <div class="glass-card active-session-card p-4 flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="text-xl font-bold mono-num text-amber-400 text-crisp">09:00</div>
+                <div class="w-1.5 h-10 rounded-full bg-amber-400 animate-pulse"></div>
+                <div>
+                  <div class="text-xs font-mono text-amber-300 flex items-center gap-1.5 text-crisp">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                    ACTIVE NOW · 3h 00m
+                  </div>
+                  <div class="text-sm font-bold text-white text-crisp">NLP Attention & Transformers</div>
+                  <div class="text-xs text-amber-200/90 text-crisp">Multi-head self-attention & RoPE embeddings</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-mono font-bold text-amber-300 bg-amber-500/30 px-2.5 py-1 rounded-lg border border-amber-400/40 inline-block text-crisp">
+                  FOCUSING
+                </span>
+                <span class="text-[10px] text-amber-200/80 font-mono mt-1 block text-crisp">1h 12m left</span>
+              </div>
+            </div>
+
+            <!-- Session 3: UPCOMING -->
+            <div class="glass-card p-4 flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="text-lg font-bold mono-num text-purple-300 text-crisp">13:30</div>
+                <div class="w-1 h-8 rounded-full bg-purple-400/60"></div>
+                <div>
+                  <div class="text-xs font-mono text-purple-300 text-crisp">UPCOMING · 1h 30m</div>
+                  <div class="text-sm font-semibold text-white text-crisp">Distributed Systems Architecture</div>
+                  <div class="text-xs text-slate-300 text-crisp">Consensus protocols, Raft & Paxos</div>
+                </div>
+              </div>
+              <span class="text-xs font-mono text-purple-300 bg-purple-500/20 px-2.5 py-1 rounded-lg border border-purple-500/30 text-crisp">
+                IN 1h 18m
+              </span>
+            </div>
+
+            <!-- Session 4: UPCOMING -->
+            <div class="glass-card p-4 flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="text-lg font-bold mono-num text-blue-300 text-crisp">16:00</div>
+                <div class="w-1 h-8 rounded-full bg-blue-400/50"></div>
+                <div>
+                  <div class="text-xs font-mono text-blue-300 text-crisp">WELLNESS · 1h 00m</div>
+                  <div class="text-sm font-semibold text-white text-crisp">Balcony Rest & Green Tea Reset</div>
+                  <div class="text-xs text-slate-300 text-crisp">Stretching, breathing & watching rain on trees</div>
+                </div>
+              </div>
+              <span class="text-xs font-mono text-blue-300 bg-blue-500/20 px-2.5 py-1 rounded-lg border border-blue-500/30 text-crisp">
+                1h 00m
+              </span>
+            </div>
+
+            <!-- Session 5: NIGHT REVIEW -->
+            <div class="glass-card p-4 flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="text-lg font-bold mono-num text-slate-300 text-crisp">20:30</div>
+                <div class="w-1 h-8 rounded-full bg-slate-400/40"></div>
+                <div>
+                  <div class="text-xs font-mono text-slate-400 text-crisp">NIGHT RITUAL · 45m</div>
+                  <div class="text-sm font-semibold text-white text-crisp">Daily Code Commit & Reflection</div>
+                  <div class="text-xs text-slate-300 text-crisp">Review study notes and prepare tomorrow's blocks</div>
+                </div>
+              </div>
+              <span class="text-xs font-mono text-slate-400 bg-white/10 px-2.5 py-1 rounded-lg border border-white/15 text-crisp">
+                45m
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Balcony Sound Machine & Habits (4 cols) -->
+      <div class="lg:col-span-4 flex flex-col gap-6">
+
+        <!-- 1. Balcony Rain & Lo-Fi Sound Player -->
+        <div class="glass-panel p-5">
+          <div class="flex items-center justify-between mb-3.5">
+            <span class="text-[11px] font-mono tracking-wider text-amber-400 uppercase font-bold text-crisp">
+              BALCONY SOUND MACHINE
+            </span>
+            <div id="visualizerBars" class="flex items-center gap-1 h-4">
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+              <div class="wave-bar"></div>
+            </div>
+          </div>
+
+          <!-- Active Sound Preview Strip -->
+          <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-black/40 border border-white/15 mb-4">
+            <button id="audioToggleBtn" class="w-12 h-12 rounded-full bg-amber-500 hover:bg-amber-400 text-black flex items-center justify-center shadow-lg shadow-amber-500/30 transition-transform active:scale-95 flex-shrink-0">
+              <svg id="playIcon" class="w-5 h-5 ml-0.5 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <svg id="pauseIcon" class="w-5 h-5 fill-current hidden" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <div class="min-w-0">
+              <div id="soundTitle" class="text-sm font-bold text-white truncate text-crisp">Veranda Rain & Garden Trees</div>
+              <div id="soundSub" class="text-[11px] font-mono text-amber-300/80 text-crisp">Synthesized Rain Drops & Forest Rustle</div>
+            </div>
+          </div>
+
+          <!-- Soundscape Selector Chips -->
+          <div class="grid grid-cols-2 gap-2 text-xs font-mono mb-4">
+            <button data-sound="rain" class="sound-chip active px-3 py-2.5 rounded-xl bg-amber-500/25 border border-amber-400/50 text-amber-300 font-semibold flex items-center gap-2 text-crisp">
+              <span>🌧️</span> Rain on Trees
+            </button>
+            <button data-sound="birds" class="sound-chip px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:bg-white/10 flex items-center gap-2 text-crisp">
+              <span>🐦</span> Morning Birds
+            </button>
+            <button data-sound="lofi" class="sound-chip px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:bg-white/10 flex items-center gap-2 text-crisp">
+              <span>📻</span> 24/7 Lo-Fi Radio
+            </button>
+            <button data-sound="binaural" class="sound-chip px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-200 hover:bg-white/10 flex items-center gap-2 text-crisp">
+              <span>🧠</span> 40Hz Focus Wave
+            </button>
+          </div>
+
+          <!-- Volume Slider -->
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-slate-300 font-mono text-crisp">VOL</span>
+            <input type="range" id="volSlider" min="0" max="1" step="0.05" value="0.75" class="flex-1">
+            <span id="volVal" class="text-xs text-amber-400 font-mono text-crisp">75%</span>
+          </div>
+        </div>
+
+        <!-- 2. "Keep Yourself Honest" Daily Rituals Checklist -->
+        <div class="glass-panel p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <span class="text-[11px] font-mono tracking-wider text-purple-300 uppercase font-bold text-crisp">
+                DAILY RITUALS // 日課
+              </span>
+              <h3 class="text-sm font-bold text-white text-crisp">Keep Yourself Honest</h3>
+            </div>
+            <span id="habitCounter" class="text-xs font-mono px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 text-crisp">
+              3/5 Done
+            </span>
+          </div>
+
+          <div class="flex flex-col gap-2.5">
+            <label class="glass-card p-3.5 flex items-center gap-3.5 cursor-pointer">
+              <input type="checkbox" checked class="glass-check">
+              <span class="text-xs font-semibold text-slate-100 text-crisp">Hydrate 500ml warm water at dawn</span>
+            </label>
+
+            <label class="glass-card p-3.5 flex items-center gap-3.5 cursor-pointer">
+              <input type="checkbox" checked class="glass-check">
+              <span class="text-xs font-semibold text-slate-100 text-crisp">Solve 2 LeetCode Mediums before lunch</span>
+            </label>
+
+            <label class="glass-card p-3.5 flex items-center gap-3.5 cursor-pointer">
+              <input type="checkbox" checked class="glass-check">
+              <span class="text-xs font-semibold text-slate-100 text-crisp">Zero distraction mode during NLP Deep Work</span>
+            </label>
+
+            <label class="glass-card p-3.5 flex items-center gap-3.5 cursor-pointer">
+              <input type="checkbox" class="glass-check">
+              <span class="text-xs font-semibold text-slate-100 text-crisp">Study 20 pages System Design Architecture</span>
+            </label>
+
+            <label class="glass-card p-3.5 flex items-center gap-3.5 cursor-pointer">
+              <input type="checkbox" class="glass-check">
+              <span class="text-xs font-semibold text-slate-100 text-crisp">10-minute mindfulness on balcony in the rain</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- 3. MINIMALIST FLOATING PILL (Visible only in Zen Mode) -->
+  <button id="exitZenPill" type="button" title="Click or press ESC to show your routine dashboard">
+    <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+    <span>✦ Show Routine Dashboard</span>
+    <span class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-white/15 text-slate-300">ESC</span>
+  </button>
+
+  <!-- 4. JAVASCRIPT: Zen Mode Controller + Glass Modes + Audio Engine -->
+  <script>
+    // 1. Live JST Clock
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const el = document.getElementById('liveClock');
+      if (el) el.textContent = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 2. ZEN MODE (Hide UI & Keep Music / Video Playing)
+    const enterZenBtn = document.getElementById('enterZenBtn');
+    const exitZenPill = document.getElementById('exitZenPill');
+
+    function enterZenMode() {
+      document.body.classList.add('zen-mode');
+      // If audio is paused, start it automatically so user has the soothing experience
+      if (!isPlaying) {
+        startSound(currentSound);
+      }
+    }
+
+    function exitZenMode() {
+      document.body.classList.remove('zen-mode');
+    }
+
+    if (enterZenBtn) enterZenBtn.addEventListener('click', enterZenMode);
+    if (exitZenPill) exitZenPill.addEventListener('click', exitZenMode);
+
+    // ESC key toggles Zen Mode
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (document.body.classList.contains('zen-mode')) {
+          exitZenMode();
+        } else {
+          enterZenMode();
+        }
+      }
+    });
+
+    // 3. Glass Mode Switcher (Transparent / Translucent / Smoked)
+    const modeClear = document.getElementById('modeClear');
+    const modeTranslucent = document.getElementById('modeTranslucent');
+    const modeSmoked = document.getElementById('modeSmoked');
+
+    function setGlassMode(mode) {
+      const root = document.documentElement;
+      [modeClear, modeTranslucent, modeSmoked].forEach(btn => {
+        btn.classList.remove('bg-amber-500/25', 'text-amber-300', 'border', 'border-amber-400/40', 'font-bold');
+        btn.classList.add('text-slate-300', 'font-medium');
+      });
+
+      if (mode === 'clear') {
+        modeClear.classList.add('bg-amber-500/25', 'text-amber-300', 'border', 'border-amber-400/40', 'font-bold');
+        root.style.setProperty('--glass-panel-bg', 'rgba(6, 10, 18, 0.12)');
+        root.style.setProperty('--glass-card-bg', 'rgba(10, 14, 26, 0.14)');
+        root.style.setProperty('--glass-blur', '6px');
+        root.style.setProperty('--glass-border', 'rgba(255, 255, 255, 0.16)');
+      } else if (mode === 'translucent') {
+        modeTranslucent.classList.add('bg-amber-500/25', 'text-amber-300', 'border', 'border-amber-400/40', 'font-bold');
+        root.style.setProperty('--glass-panel-bg', 'rgba(8, 12, 22, 0.28)');
+        root.style.setProperty('--glass-card-bg', 'rgba(14, 18, 32, 0.22)');
+        root.style.setProperty('--glass-blur', '14px');
+        root.style.setProperty('--glass-border', 'rgba(255, 255, 255, 0.13)');
+      } else if (mode === 'smoked') {
+        modeSmoked.classList.add('bg-amber-500/25', 'text-amber-300', 'border', 'border-amber-400/40', 'font-bold');
+        root.style.setProperty('--glass-panel-bg', 'rgba(8, 12, 22, 0.55)');
+        root.style.setProperty('--glass-card-bg', 'rgba(14, 18, 32, 0.45)');
+        root.style.setProperty('--glass-blur', '24px');
+        root.style.setProperty('--glass-border', 'rgba(255, 255, 255, 0.12)');
+      }
+    }
+
+    modeClear.addEventListener('click', () => setGlassMode('clear'));
+    modeTranslucent.addEventListener('click', () => setGlassMode('translucent'));
+    modeSmoked.addEventListener('click', () => setGlassMode('smoked'));
+
+    // 4. Balcony Sound Machine & Web Audio Engine
+    let audioCtx = null;
+    let isPlaying = false;
+    let currentSound = 'rain';
+    let audioNodes = [];
+    let htmlAudio = null;
+
+    const audioToggleBtn = document.getElementById('audioToggleBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const visualizerBars = document.getElementById('visualizerBars');
+    const soundTitle = document.getElementById('soundTitle');
+    const soundSub = document.getElementById('soundSub');
+    const volSlider = document.getElementById('volSlider');
+    const volVal = document.getElementById('volVal');
+
+    const soundChips = document.querySelectorAll('.sound-chip');
+
+    const SOUND_INFO = {
+      rain: { title: 'Veranda Rain & Garden Trees', sub: 'Synthesized Rain Drops & Forest Rustle' },
+      birds: { title: 'Kyoto Veranda & Birdsong', sub: 'Forest Birds with Gentle Morning Breeze' },
+      lofi: { title: '24/7 Tokyo Balcony Chill Beats', sub: 'Live Downtempo Lo-Fi Stream' },
+      binaural: { title: '40Hz Deep Gamma Wave', sub: 'Binaural Synchronization for Peak Coding' }
+    };
+
+    function stopSound() {
+      if (audioNodes) {
+        audioNodes.forEach(n => {
+          try { if (n.stop) n.stop(); n.disconnect(); } catch {}
+        });
+        audioNodes = [];
+      }
+      if (htmlAudio) {
+        try { htmlAudio.pause(); htmlAudio.src = ''; } catch {}
+        htmlAudio = null;
+      }
+      isPlaying = false;
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      visualizerBars.classList.remove('playing');
+    }
+
+    function startSound(type) {
+      stopSound();
+
+      if (type === 'lofi') {
+        const audio = new Audio('https://radio.plaza.one/mp3');
+        audio.volume = parseFloat(volSlider.value);
+        audio.play().then(() => {
+          htmlAudio = audio;
+          isPlaying = true;
+          playIcon.classList.add('hidden');
+          pauseIcon.classList.remove('hidden');
+          visualizerBars.classList.add('playing');
+        }).catch(err => {
+          console.warn('Audio stream fallback:', err);
+        });
+        return;
+      }
+
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioCtx();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(parseFloat(volSlider.value), audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+
+        const nodes = [masterGain];
+
+        if (type === 'rain') {
+          // Rain pink noise + tree rustle
+          const bufSize = audioCtx.sampleRate * 2;
+          const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+          const out = buf.getChannelData(0);
+          let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+          for (let i = 0; i < bufSize; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.99886 * b0 + white * 0.0555179;
+            b1 = 0.99332 * b1 + white * 0.0750759;
+            b2 = 0.96900 * b2 + white * 0.1538520;
+            b3 = 0.86650 * b3 + white * 0.3104856;
+            b4 = 0.55000 * b4 + white * 0.5329522;
+            b5 = -0.7616 * b5 - white * 0.0168980;
+            out[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.024;
+            b6 = white * 0.115926;
+          }
+          const rainSrc = audioCtx.createBufferSource();
+          rainSrc.buffer = buf;
+          rainSrc.loop = true;
+
+          const filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(1100, audioCtx.currentTime);
+
+          rainSrc.connect(filter);
+          filter.connect(masterGain);
+          rainSrc.start(0);
+          nodes.push(rainSrc, filter);
+        } else if (type === 'birds') {
+          const osc = audioCtx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(3200, audioCtx.currentTime);
+          const oscGain = audioCtx.createGain();
+          oscGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          osc.connect(oscGain);
+          oscGain.connect(masterGain);
+          osc.start(0);
+          nodes.push(osc, oscGain);
+        } else if (type === 'binaural') {
+          const merger = audioCtx.createChannelMerger(2);
+          const oscL = audioCtx.createOscillator();
+          oscL.frequency.setValueAtTime(216, audioCtx.currentTime);
+          const oscR = audioCtx.createOscillator();
+          oscR.frequency.setValueAtTime(256, audioCtx.currentTime);
+          oscL.connect(merger, 0, 0);
+          oscR.connect(merger, 0, 1);
+          merger.connect(masterGain);
+          oscL.start(0);
+          oscR.start(0);
+          nodes.push(oscL, oscR, merger);
+        }
+
+        audioNodes = nodes;
+        isPlaying = true;
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+        visualizerBars.classList.add('playing');
+      } catch (err) {
+        console.warn('Audio start error:', err);
+      }
+    }
+
+    if (audioToggleBtn) {
+      audioToggleBtn.addEventListener('click', () => {
+        if (isPlaying) stopSound();
+        else startSound(currentSound);
+      });
+    }
+
+    soundChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        soundChips.forEach(c => {
+          c.classList.remove('active', 'bg-amber-500/25', 'border-amber-400/50', 'text-amber-300', 'font-semibold');
+          c.classList.add('bg-white/5', 'border-white/10', 'text-slate-200');
+        });
+        chip.classList.add('active', 'bg-amber-500/25', 'border-amber-400/50', 'text-amber-300', 'font-semibold');
+        chip.classList.remove('bg-white/5', 'border-white/10', 'text-slate-200');
+
+        currentSound = chip.dataset.sound;
+        soundTitle.textContent = SOUND_INFO[currentSound].title;
+        soundSub.textContent = SOUND_INFO[currentSound].sub;
+
+        if (isPlaying) {
+          startSound(currentSound);
+        }
+      });
+    });
+
+    if (volSlider) {
+      volSlider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        volVal.textContent = Math.round(val * 100) + '%';
+        if (htmlAudio) htmlAudio.volume = val;
+        if (audioNodes && audioNodes[0]) {
+          try { audioNodes[0].gain.setValueAtTime(val, audioCtx.currentTime); } catch {}
+        }
+      });
+    }
+
+    // 5. Habit Completion Counter
+    const habitChecks = document.querySelectorAll('.glass-check');
+    const habitCounter = document.getElementById('habitCounter');
+
+    function updateHabits() {
+      let done = 0;
+      habitChecks.forEach(cb => { if (cb.checked) done++; });
+      if (habitCounter) habitCounter.textContent = `${done}/${habitChecks.length} Done`;
+    }
+
+    habitChecks.forEach(cb => cb.addEventListener('change', updateHabits));
+  </script>
+</body>
+</html>
