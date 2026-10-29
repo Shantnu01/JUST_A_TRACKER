@@ -89,6 +89,7 @@ if (cluster.isPrimary && isClusterEnabled()) {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const clientDistPath = path.resolve(__dirname, '../../client/dist');
+const buildsPath = path.resolve(__dirname, '../../builds');
 
 const { Pool } = pg;
 const app = express();
@@ -364,11 +365,33 @@ app.get('/api/health', async (_req, res) => {
 });
 
 // ================= APP VERSION & LIVE OTA UPDATE NOTIFICATIONS =================
-app.get('/api/app-version', (_req, res) => {
-  const latestVersion = process.env.APP_LATEST_VERSION || '1.0.1';
-  const apkUrl = process.env.APK_DOWNLOAD_URL || 'https://github.com/Shantnu01/JUST_A_TRACKER/releases/latest';
-  const exeUrl = process.env.EXE_DOWNLOAD_URL || 'https://github.com/Shantnu01/JUST_A_TRACKER/releases/latest';
-  const releaseNotes = process.env.APP_RELEASE_NOTES || 'New dedicated Mobile UI, live background alarms, and instant multi-platform updates.';
+app.use('/builds', express.static(buildsPath));
+
+app.get('/download/android', (_req, res) => {
+  const apkFile = path.join(buildsPath, 'Daymark-Routine-Android.apk');
+  if (fs.existsSync(apkFile)) {
+    return res.download(apkFile, 'Daymark-Routine-Android.apk');
+  }
+  return res.redirect('https://github.com/Shantnu01/JUST_A_TRACKER/releases/latest');
+});
+
+app.get('/download/pc', (_req, res) => {
+  const exeFile = path.join(buildsPath, 'Daymark-Routine-PC.exe');
+  if (fs.existsSync(exeFile)) {
+    return res.download(exeFile, 'Daymark-Routine-PC.exe');
+  }
+  return res.redirect('https://github.com/Shantnu01/JUST_A_TRACKER/releases/latest');
+});
+
+app.get('/api/app-version', (req, res) => {
+  const latestVersion = process.env.APP_LATEST_VERSION || '1.0.2';
+  const proto = req.headers['x-forwarded-proto'] || req.protocol || 'http';
+  const host = req.get('host') || `localhost:${port}`;
+  const origin = `${proto}://${host}`;
+
+  const apkUrl = process.env.APK_DOWNLOAD_URL || `${origin}/download/android`;
+  const exeUrl = process.env.EXE_DOWNLOAD_URL || `${origin}/download/pc`;
+  const releaseNotes = process.env.APP_RELEASE_NOTES || 'Seamless offline-to-online chunked batch sync, zero-data-loss background queue, dedicated mobile space layout, and one-click in-app update installer.';
 
   res.json({
     latest_version: latestVersion,
@@ -377,7 +400,8 @@ app.get('/api/app-version', (_req, res) => {
     notes: releaseNotes,
     apk_url: apkUrl,
     exe_url: exeUrl,
-    web_url: 'https://routine-tracker.onrender.com',
+    web_url: origin,
+    has_ota_bundle: true,
     released_at: new Date().toISOString()
   });
 });
@@ -1128,6 +1152,101 @@ app.put('/api/days/:date', optionalAuth, async (req, res) => {
   } catch (error) {
     console.error('Save day failed:', error.message);
     return res.status(500).json({ error: 'Unable to save routine data.' });
+  }
+});
+
+// ================= OFFLINE CHUNKED BATCH SYNC ENDPOINT =================
+// Safely ingests offline sessions & habit logs queued when the user was offline (e.g. 5+ hours).
+// Processes records in atomic transactional chunks to prevent database connection & CPU exhaustion.
+app.post('/api/days/batch-sync', optionalAuth, async (req, res) => {
+  if (!pool) {
+    return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
+  }
+
+  const { items = [], chunkIndex = 1, totalChunks = 1 } = req.body || {};
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: 'Payload must contain a non-empty items array.' });
+  }
+
+  if (items.length > 30) {
+    return res.status(400).json({ error: 'Chunk size exceeds safety limit of 30 items per batch.' });
+  }
+
+  let client = null;
+  try {
+    await ensureTable();
+    client = await pool.connect();
+    const affectedDates = [];
+
+    try {
+      await client.query('BEGIN');
+
+      for (const item of items) {
+        const { date, checks = {}, notes = '', completed_minutes = {}, alarms = {} } = item;
+        if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+
+        affectedDates.push(date);
+
+        if (req.user) {
+          const { points } = calculateGrindPoints(completed_minutes, checks, notes);
+          await client.query(
+            `INSERT INTO user_routine_days (user_id, day_date, checks, notes, completed_minutes, alarms, points, updated_at)
+             VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6::jsonb, $7, NOW())
+             ON CONFLICT (user_id, day_date) DO UPDATE SET
+               checks = EXCLUDED.checks,
+               notes = EXCLUDED.notes,
+               completed_minutes = EXCLUDED.completed_minutes,
+               alarms = EXCLUDED.alarms,
+               points = EXCLUDED.points,
+               updated_at = NOW()`,
+            [req.user.id, date, JSON.stringify(checks), (notes || '').slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms), points]
+          );
+        } else {
+          await client.query(
+            `INSERT INTO routine_days (day_date, checks, notes, completed_minutes, alarms, updated_at)
+             VALUES ($1, $2::jsonb, $3, $4::jsonb, $5::jsonb, NOW())
+             ON CONFLICT (day_date) DO UPDATE SET
+               checks = EXCLUDED.checks,
+               notes = EXCLUDED.notes,
+               completed_minutes = EXCLUDED.completed_minutes,
+               alarms = EXCLUDED.alarms,
+               updated_at = NOW()`,
+            [date, JSON.stringify(checks), (notes || '').slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms)]
+          );
+        }
+      }
+
+      await client.query('COMMIT');
+    } catch (txError) {
+      if (client) await client.query('ROLLBACK');
+      throw txError;
+    }
+
+    // Invalidate Redis cached leaderboard for any modified dates
+    if (req.user && affectedDates.length > 0) {
+      pool.query('SELECT group_id FROM group_members WHERE user_id = $1', [req.user.id])
+        .then(gRes => {
+          for (const row of gRes.rows) {
+            for (const d of affectedDates) {
+              invalidateLeaderboard(row.group_id, d);
+            }
+          }
+        })
+        .catch(() => {});
+    }
+
+    return res.json({
+      success: true,
+      processed: affectedDates.length,
+      chunkIndex,
+      totalChunks,
+      syncedAt: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('[BatchSync] Error processing offline batch:', error.message);
+    return res.status(500).json({ error: 'Failed to process offline batch sync.' });
+  } finally {
+    if (client) client.release();
   }
 });
 

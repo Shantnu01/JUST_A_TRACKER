@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import './mobile.css';
+import OfflineSyncIndicator from '../components/OfflineSyncIndicator';
 import {
   Sun,
   CheckCircle2,
@@ -68,7 +69,8 @@ export default function MobileApp(props) {
     curriculumSubject,
     activeCurriculum,
     openSubjectCurriculum,
-    columnStyle
+    columnStyle,
+    apiBase
   } = props;
 
   const [activeTab, setActiveTab] = useState('today');
@@ -213,6 +215,9 @@ export default function MobileApp(props) {
         </div>
 
         <div className="m-header-actions">
+          {/* Offline Sync Status Pill */}
+          <OfflineSyncIndicator apiBase={apiBase || '/api'} token={token} />
+
           {/* Streak Flame Badge */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.28)', padding: '4px 8px', borderRadius: '16px', fontSize: '11px', fontWeight: '800', color: '#f59e0b' }}>
             <Flame size={13} fill="#f59e0b" color="#f59e0b" />

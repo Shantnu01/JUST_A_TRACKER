@@ -6,8 +6,8 @@ export const CURRENT_APP_VERSION = '1.0.0';
  * Compare two semver strings: returns 1 if v1 > v2, -1 if v1 < v2, 0 if equal
  */
 export function compareVersions(v1, v2) {
-  const parts1 = String(v1 || '0.0.0').split('.').map(Number);
-  const parts2 = String(v2 || '0.0.0').split('.').map(Number);
+  const parts1 = String(v1 || '0.0.0').replace(/^v/, '').split('.').map(Number);
+  const parts2 = String(v2 || '0.0.0').replace(/^v/, '').split('.').map(Number);
 
   for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
     const num1 = parts1[i] || 0;
@@ -44,22 +44,29 @@ export async function checkForAppUpdate(apiEndpoint) {
 }
 
 /**
- * Execute update based on platform
+ * Execute update based on platform (Android APK, Windows PC EXE, or Web)
  */
 export function executeAppUpdate(updateInfo) {
   if (!updateInfo) return;
 
-  if (Capacitor.isNativePlatform()) {
+  const isAndroid = Capacitor.isNativePlatform() || (typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent));
+  const isPc = isElectron() || (typeof navigator !== 'undefined' && /windows|win32/i.test(navigator.userAgent));
+
+  if (isAndroid) {
     // Android Phone APK direct download/install
-    const url = updateInfo.apk_url || 'https://github.com/Shantnu01/JUST_A_TRACKER/releases/latest';
-    window.open(url, '_system');
-  } else if (isElectron()) {
+    const url = updateInfo.apk_url || '/download/android';
+    if (Capacitor.isNativePlatform()) {
+      window.open(url, '_system');
+    } else {
+      triggerBrowserDownload(url, 'Daymark-Routine-Android.apk');
+    }
+  } else if (isPc) {
     // Windows Desktop EXE direct download
-    const url = updateInfo.exe_url || 'https://github.com/Shantnu01/JUST_A_TRACKER/releases/latest';
+    const url = updateInfo.exe_url || '/download/pc';
     if (window.shell && window.shell.openExternal) {
       window.shell.openExternal(url);
     } else {
-      window.open(url, '_blank');
+      triggerBrowserDownload(url, 'Daymark-Routine-PC.exe');
     }
   } else {
     // Web browser: purge service worker cache and reload
@@ -69,5 +76,19 @@ export function executeAppUpdate(updateInfo) {
       });
     }
     window.location.reload(true);
+  }
+}
+
+function triggerBrowserDownload(url, filename) {
+  try {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch {
+    window.open(url, '_blank');
   }
 }

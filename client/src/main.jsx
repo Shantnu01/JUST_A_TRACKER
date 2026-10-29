@@ -11,6 +11,9 @@ import StageRoadmapsView from './components/StageRoadmapsView';
 import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
 import DynamicVideoModal, { extractYouTubeId } from './components/DynamicVideoModal';
 import SynapticBridgeModal from './components/SynapticBridgeModal';
+import offlineSyncEngine from './utils/offlineSyncEngine';
+import OfflineSyncIndicator from './components/OfflineSyncIndicator';
+import AppUpdateBanner, { useAppUpdateCheck } from './components/AppUpdateManager';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -1577,10 +1580,17 @@ function App() {
       })
     })
       .then(res => {
-        if (res.ok) setDbStatus('connected');
+        if (res.ok) {
+          setDbStatus('connected');
+          offlineSyncEngine.removeSyncedDates([key]);
+        } else {
+          // Server returned error (e.g. 503 database offline) -> enqueue for chunked batch sync
+          offlineSyncEngine.enqueueDayUpdate(key, nextDay);
+        }
       })
       .catch(() => {
-        // Safe offline / browser-storage fallback
+        // Offline / network failure -> enqueue for chunked batch sync
+        offlineSyncEngine.enqueueDayUpdate(key, nextDay);
       });
   };
 
@@ -3060,6 +3070,8 @@ const handleNudge = async (toUserId, toUsername) => {
               )}
             </div>
 
+            <OfflineSyncIndicator apiBase={API} token={token} onSyncComplete={() => setToast('Offline changes synced to server!')} />
+
             <div className="date-chip">
               <span className={`status-dot ${isToday ? '' : 'inactive'}`} />
               {prettyDate(selectedDate)}
@@ -3141,6 +3153,7 @@ const handleNudge = async (toUserId, toUsername) => {
           activeCurriculum={activeCurriculum}
           openSubjectCurriculum={openSubjectCurriculum}
           columnStyle={columnStyle}
+          apiBase={API}
         />
 
         {authModalOpen && (
