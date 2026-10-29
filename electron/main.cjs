@@ -56,7 +56,7 @@ function createWindow() {
     mainWindow.loadFile(distPath).catch(err => {
       console.error('Failed to load bundled HTML file:', err, distPath);
       // Fallback to live web URL if local load fails
-      mainWindow.loadURL('https://routine-tracker.onrender.com').catch(urlErr => {
+      mainWindow.loadURL('https://just-a-tracker.onrender.com').catch(urlErr => {
         dialog.showErrorBox(
           'Daymark Loading Error',
           `Could not load local application bundle at:\n${distPath}\n\nError: ${err.message}`

@@ -5695,7 +5695,7 @@ const handleNudge = async (toUserId, toUsername) => {
                       setTimeout(() => window.location.reload(), 800);
                     }
                   }}
-                  placeholder="https://routine-tracker.onrender.com/api"
+                  placeholder="https://just-a-tracker.onrender.com/api"
                   style={{
                     flex: 1,
                     minWidth: '260px',

@@ -28,7 +28,7 @@ export function getDefaultApiBase() {
   const isFile = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
   const isElectron = typeof navigator === 'object' && typeof navigator.userAgent === 'string' && /Electron/i.test(navigator.userAgent);
   if (isFile || isElectron) {
-    return 'https://routine-tracker.onrender.com/api';
+    return 'https://just-a-tracker.onrender.com/api';
   }
   return '/api';
 }

@@ -38,7 +38,7 @@ export function getDefaultApiEndpoint() {
   }
   const isFile = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
   if (isFile || isElectron() || (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform && Capacitor.isNativePlatform())) {
-    return 'https://routine-tracker.onrender.com/api';
+    return 'https://just-a-tracker.onrender.com/api';
   }
   return '/api';
 }
