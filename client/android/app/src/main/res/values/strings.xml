@@ -4,4 +4,8 @@
     <string name="title_activity_main">Daymark Routine</string>
     <string name="package_name">com.daymark.routine</string>
     <string name="custom_url_scheme">com.daymark.routine</string>
+    <string name="device_admin_label">Daymark Focus Shield</string>
+    <string name="device_admin_desc">Prevents uninstallation and tampering while focus sessions are active.</string>
+    <string name="accessibility_service_label">Daymark Ultra App Blocker</string>
+    <string name="accessibility_service_desc">Enforces focus sessions by closing distracting apps, floating windows, and split-screen.</string>
 </resources>

@@ -15,10 +15,13 @@ import offlineSyncEngine from './utils/offlineSyncEngine';
 import OfflineSyncIndicator from './components/OfflineSyncIndicator';
 import AppUpdateBanner, { useAppUpdateCheck } from './components/AppUpdateManager';
 import ThemeClockCard from './components/ThemeClockCard';
+import FocusShieldModal from './components/FocusShieldModal';
+import { getBlockerStatus } from './utils/appBlocker';
 import { requestUserLocationAndWeather, DEFAULT_TOKYO_WEATHER, getCachedWeather } from './utils/weatherService';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
+  Shield,
   AlarmClock,
   Activity,
   Milestone,
@@ -679,6 +682,21 @@ function App() {
   // 1:00 AM Recap State
   const [recapModalOpen, setRecapModalOpen] = useState(false);
   const [recapData, setRecapData] = useState(null);
+
+  // Ultra Focus Shield / App Blocker State
+  const [shieldModalOpen, setShieldModalOpen] = useState(false);
+  const [shieldStatus, setShieldStatus] = useState(null);
+  useEffect(() => {
+    const fetchShield = async () => {
+      try {
+        const s = await getBlockerStatus();
+        if (s) setShieldStatus(s);
+      } catch (e) {}
+    };
+    fetchShield();
+    const t = setInterval(fetchShield, 3000);
+    return () => clearInterval(t);
+  }, []);
 
   // Core App State
   const [store, setStore] = useState(readStore);
@@ -3518,6 +3536,15 @@ const handleNudge = async (toUserId, toUsername) => {
                   >
                     <Brain size={13} />
                     <span>Synaptic Bridge</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`evening-closeout-pill focus-shield-trigger-pill ${shieldStatus?.isActive ? 'shield-active' : ''}`}
+                    onClick={() => setShieldModalOpen(true)}
+                    title="Ultra Focus Shield & Distracting App Blocker"
+                  >
+                    <Shield size={13} />
+                    <span>{shieldStatus?.isActive ? 'Shield Active 🔒' : 'App Shield'}</span>
                   </button>
                   {theme === 'tokyo-lofi' && isToday && renderTopActions()}
                 </div>
@@ -6903,6 +6930,12 @@ const handleNudge = async (toUserId, toUsername) => {
         pinnedCheckpoint={null}
         theme={theme}
         columnStyle={columnStyle}
+      />
+
+      <FocusShieldModal
+        isOpen={shieldModalOpen}
+        onClose={() => setShieldModalOpen(false)}
+        setToast={setToast}
       />
 
       {toast && (

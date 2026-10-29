@@ -16809,3 +16809,560 @@ html[data-theme="tokyo-lofi"],
   cursor: pointer;
 }
 
+/* ==========================================================================
+   DAYMARK ULTRA FOCUS SHIELD & APP BLOCKER MODAL
+   ========================================================================== */
+.focus-shield-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 10, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.focus-shield-modal {
+  background: #0D0C15;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #FAF8FF;
+}
+
+.shield-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.shield-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.shield-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #818CF8;
+  display: grid;
+  place-content: center;
+}
+
+.shield-icon-badge.active {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10B981;
+  color: #10B981;
+  animation: pulseDot 2s infinite;
+}
+
+.shield-eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #F59E0B;
+  text-transform: uppercase;
+}
+
+.shield-modal-title {
+  margin: 2px 0 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.shield-close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #A39BBF;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.shield-close-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+}
+
+/* Active State Banner */
+.shield-active-state-box {
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.shield-active-pulse-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1.5px solid #10B981;
+  color: #10B981;
+  display: grid;
+  place-content: center;
+  position: relative;
+}
+
+.shield-timer-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.shield-timer-display .timer-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 42px;
+  font-weight: 800;
+  color: #38BDF8;
+  letter-spacing: 2px;
+}
+
+.shield-timer-display .timer-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #94A3B8;
+  font-weight: 600;
+}
+
+.emergency-active-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid #F59E0B;
+  color: #FBBF24;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.emergency-available-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.emergency-available-box p {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: #A39BBF;
+}
+
+.emergency-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #4F46E5;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.emergency-trigger-btn:hover {
+  background: #4338CA;
+}
+
+.emergency-exhausted-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #F87171;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.active-blocked-tags {
+  font-size: 12px;
+  color: #64748B;
+}
+
+/* Config Scroll View */
+.shield-config-scroll {
+  padding: 20px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.section-head-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-step {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #F59E0B;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.section-head h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.select-all-btn {
+  background: transparent;
+  border: none;
+  color: #818CF8;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Permission Cards */
+.permission-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permission-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 12px;
+}
+
+.perm-info strong {
+  display: block;
+  font-size: 12px;
+  color: #FFFFFF;
+}
+
+.perm-info p {
+  margin: 2px 0 0;
+  font-size: 10.5px;
+  color: #94A3B8;
+}
+
+.perm-badge.ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.perm-action-btn {
+  background: #3B82F6;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.perm-action-btn.admin {
+  background: #8B5CF6;
+}
+
+/* Duration Selector */
+.duration-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.duration-pill {
+  flex: 1 1 0;
+  min-width: 70px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #CBD5E1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.duration-pill.active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3B82F6;
+  color: #60A5FA;
+}
+
+/* Emergency Option */
+.shield-emergency-option-card {
+  background: rgba(245, 158, 11, 0.04);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.emergency-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.emergency-checkbox-label input {
+  margin-top: 3px;
+  accent-color: #F59E0B;
+  width: 16px;
+  height: 16px;
+}
+
+.emergency-opt-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #FBBF24;
+}
+
+.emergency-opt-content p {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: #A39BBF;
+  line-height: 1.4;
+}
+
+/* Apps Checklist */
+.apps-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  color: #94A3B8;
+}
+
+.apps-search-wrap input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-size: 12px;
+  width: 100%;
+}
+
+.apps-checkbox-list {
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.app-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.app-item-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.app-item-row.selected {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.app-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.app-check-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  transition: all 0.12s ease;
+}
+
+.app-check-box.checked {
+  background: #6366F1;
+  border-color: #6366F1;
+  color: #FFFFFF;
+}
+
+.app-meta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-name {
+  font-size: 12px;
+  color: #FFFFFF;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.app-pkg {
+  font-size: 9.5px;
+  color: #64748B;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.app-cat-badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94A3B8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Footer Action */
+.shield-footer-action {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.engage-shield-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
+}
+
+.engage-shield-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.shield-sub-warning {
+  margin: 0;
+  font-size: 10.5px;
+  color: #94A3B8;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Header Trigger Button */
+.focus-shield-trigger-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99, 102, 241, 0.12) !important;
+  border: 1px solid rgba(99, 102, 241, 0.35) !important;
+  color: #A5B4FC !important;
+  border-radius: 9999px !important;
+  padding: 7px 14px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.focus-shield-trigger-pill:hover {
+  background: rgba(99, 102, 241, 0.25) !important;
+}
+
+.focus-shield-trigger-pill.shield-active {
+  background: rgba(16, 185, 129, 0.18) !important;
+  border-color: #10B981 !important;
+  color: #34D399 !important;
+  animation: pulseDot 2s infinite;
+}
+
