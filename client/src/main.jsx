@@ -12,16 +12,11 @@ import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
 import DynamicVideoModal, { extractYouTubeId } from './components/DynamicVideoModal';
 import SynapticBridgeModal from './components/SynapticBridgeModal';
 import offlineSyncEngine from './utils/offlineSyncEngine';
-import OfflineSyncIndicator from './components/OfflineSyncIndicator';
 import AppUpdateBanner, { useAppUpdateCheck } from './components/AppUpdateManager';
-import ThemeClockCard from './components/ThemeClockCard';
-import FocusShieldModal from './components/FocusShieldModal';
-import { getBlockerStatus } from './utils/appBlocker';
 import { requestUserLocationAndWeather, DEFAULT_TOKYO_WEATHER, getCachedWeather } from './utils/weatherService';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  Shield,
   AlarmClock,
   Activity,
   Milestone,
@@ -682,21 +677,6 @@ function App() {
   // 1:00 AM Recap State
   const [recapModalOpen, setRecapModalOpen] = useState(false);
   const [recapData, setRecapData] = useState(null);
-
-  // Ultra Focus Shield / App Blocker State
-  const [shieldModalOpen, setShieldModalOpen] = useState(false);
-  const [shieldStatus, setShieldStatus] = useState(null);
-  useEffect(() => {
-    const fetchShield = async () => {
-      try {
-        const s = await getBlockerStatus();
-        if (s) setShieldStatus(s);
-      } catch (e) {}
-    };
-    fetchShield();
-    const t = setInterval(fetchShield, 3000);
-    return () => clearInterval(t);
-  }, []);
 
   // Core App State
   const [store, setStore] = useState(readStore);
@@ -3109,8 +3089,6 @@ const handleNudge = async (toUserId, toUsername) => {
               )}
             </div>
 
-            <OfflineSyncIndicator apiBase={API} token={token} onSyncComplete={() => setToast('Offline changes synced to server!')} />
-
             <div className="date-chip">
               <span className={`status-dot ${isToday ? '' : 'inactive'}`} />
               {prettyDate(selectedDate)}
@@ -3537,15 +3515,6 @@ const handleNudge = async (toUserId, toUsername) => {
                     <Brain size={13} />
                     <span>Synaptic Bridge</span>
                   </button>
-                  <button
-                    type="button"
-                    className={`evening-closeout-pill focus-shield-trigger-pill ${shieldStatus?.isActive ? 'shield-active' : ''}`}
-                    onClick={() => setShieldModalOpen(true)}
-                    title="Ultra Focus Shield & Distracting App Blocker"
-                  >
-                    <Shield size={13} />
-                    <span>{shieldStatus?.isActive ? 'Shield Active 🔒' : 'App Shield'}</span>
-                  </button>
                   {theme === 'tokyo-lofi' && isToday && renderTopActions()}
                 </div>
                 {theme !== 'tokyo-lofi' && (
@@ -3574,11 +3543,15 @@ const handleNudge = async (toUserId, toUsername) => {
                     </span>
                   </div>
                 </div>
-                <ThemeClockCard
-                  theme={theme}
-                  timeZone={theme === 'tokyo-lofi' ? weatherData.timeZone : undefined}
-                  locationLabel={theme === 'tokyo-lofi' ? weatherData.timeZoneLabel : undefined}
-                />
+                {theme === 'tokyo-lofi' && (
+                  <div className="tokyo-clock-card">
+                    <div className="tokyo-clock-time">{jstTime || '21:42:08'}</div>
+                    <div className="tokyo-clock-label">
+                      <span className="tokyo-clock-dot" />
+                      <span>{weatherData.country ? `${weatherData.country.toUpperCase()} · ${weatherData.timeZoneLabel}` : 'TOKYO · JST (UTC+9)'}</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
             </section>
@@ -6930,12 +6903,6 @@ const handleNudge = async (toUserId, toUsername) => {
         pinnedCheckpoint={null}
         theme={theme}
         columnStyle={columnStyle}
-      />
-
-      <FocusShieldModal
-        isOpen={shieldModalOpen}
-        onClose={() => setShieldModalOpen(false)}
-        setToast={setToast}
       />
 
       {toast && (

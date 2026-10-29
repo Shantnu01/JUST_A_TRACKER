@@ -1,8 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import './mobile.css';
 import OfflineSyncIndicator from '../components/OfflineSyncIndicator';
+import FocusShieldModal from '../components/FocusShieldModal';
+import { getBlockerStatus } from '../utils/appBlocker';
 import {
   Sun,
+  Shield,
   CheckCircle2,
   Users,
   GitBranch,
@@ -79,6 +82,24 @@ export default function MobileApp(props) {
   const [alarmsExpanded, setAlarmsExpanded] = useState(false);
   const [soundscapeExpanded, setSoundscapeExpanded] = useState(false);
   const [localCooldown, setLocalCooldown] = useState(nudgeCooldownRemaining || 0);
+  const [shieldModalOpen, setShieldModalOpen] = useState(false);
+  const [shieldStatus, setShieldStatus] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    const fetchShield = async () => {
+      try {
+        const s = await getBlockerStatus();
+        if (active && s) setShieldStatus(s);
+      } catch (e) {}
+    };
+    fetchShield();
+    const t = setInterval(fetchShield, 3000);
+    return () => {
+      active = false;
+      clearInterval(t);
+    };
+  }, []);
 
   // Sync and tick local cooldown countdown smoothly every second
   useEffect(() => {
@@ -792,6 +813,22 @@ export default function MobileApp(props) {
             <div style={{ background: 'var(--m-surface)', border: '1px solid var(--m-border)', borderRadius: '14px', overflow: 'hidden' }}>
               <div
                 style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--m-border)', cursor: 'pointer' }}
+                onClick={() => setShieldModalOpen(true)}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Shield size={15} color="#10b981" />
+                  <span style={{ fontSize: '13px', color: '#fff', fontWeight: '600' }}>Focus Shield & App Blocker</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '11px', color: shieldStatus?.isActive ? '#10b981' : '#64748b' }}>
+                    {shieldStatus?.isActive ? 'Active 🔒' : 'Configure'}
+                  </span>
+                  <ChevronRight size={14} color="#64748b" />
+                </div>
+              </div>
+
+              <div
+                style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--m-border)', cursor: 'pointer' }}
                 onClick={onSwitchToDesktop}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -885,6 +922,12 @@ export default function MobileApp(props) {
           <span className="m-nav-label">Profile</span>
         </button>
       </nav>
+
+      <FocusShieldModal
+        isOpen={shieldModalOpen}
+        onClose={() => setShieldModalOpen(false)}
+        setToast={props.setToast || (() => {})}
+      />
     </div>
   );
 }
