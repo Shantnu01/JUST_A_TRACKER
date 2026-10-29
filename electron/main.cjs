@@ -1,6 +1,7 @@
 const { app, BrowserWindow, shell, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { initDesktopBackend } = require('./desktop-backend.cjs');
 
 let mainWindow = null;
 
@@ -104,6 +105,7 @@ if (!gotTheLock) {
   });
 
   app.whenReady().then(() => {
+    initDesktopBackend();
     createWindow();
 
     app.on('activate', () => {
