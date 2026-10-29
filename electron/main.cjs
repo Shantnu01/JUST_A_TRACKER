@@ -37,7 +37,7 @@ function createWindow() {
       contextIsolation: true,
       // Disable background throttling so routine alarms and sounds ring on time even when minimized
       backgroundThrottling: false,
-      sandbox: true
+      webSecurity: false
     }
   });
 

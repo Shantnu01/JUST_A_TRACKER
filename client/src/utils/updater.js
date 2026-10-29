@@ -26,6 +26,24 @@ export function isElectron() {
 }
 
 /**
+ * Resolves the primary backend API endpoint.
+ * In a packaged PC app (.exe running via file:// or Electron) or Android APK,
+ * relative '/api' is unreachable on the local filesystem, so we route directly
+ * to the production cloud backend (or custom configured URL).
+ */
+export function getDefaultApiEndpoint() {
+  if (typeof localStorage !== 'undefined') {
+    const custom = localStorage.getItem('daymark-api-url');
+    if (custom && custom.trim()) return custom.trim().replace(/\/+$/, '');
+  }
+  const isFile = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
+  if (isFile || isElectron() || (typeof Capacitor !== 'undefined' && Capacitor.isNativePlatform && Capacitor.isNativePlatform())) {
+    return 'https://routine-tracker.onrender.com/api';
+  }
+  return '/api';
+}
+
+/**
  * Check for newer version from server
  */
 export async function checkForAppUpdate(apiEndpoint) {

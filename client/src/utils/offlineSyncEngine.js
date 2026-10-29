@@ -20,6 +20,19 @@
 const QUEUE_STORAGE_KEY = 'daymark-offline-queue';
 const DEFAULT_CHUNK_SIZE = 5;
 
+export function getDefaultApiBase() {
+  if (typeof localStorage !== 'undefined') {
+    const custom = localStorage.getItem('daymark-api-url');
+    if (custom && custom.trim()) return custom.trim().replace(/\/+$/, '');
+  }
+  const isFile = typeof window !== 'undefined' && window.location && window.location.protocol === 'file:';
+  const isElectron = typeof navigator === 'object' && typeof navigator.userAgent === 'string' && /Electron/i.test(navigator.userAgent);
+  if (isFile || isElectron) {
+    return 'https://routine-tracker.onrender.com/api';
+  }
+  return '/api';
+}
+
 class OfflineSyncEngine {
   constructor() {
     this.isOnlineState = typeof navigator !== 'undefined' ? navigator.onLine : true;
@@ -131,7 +144,7 @@ class OfflineSyncEngine {
    * Splits pending items into chunks of `chunkSize` (default 5).
    * Between each chunk, awaits `interChunkDelayMs` to avoid overwhelming backend.
    */
-  async syncOfflineQueueInChunks(apiBase = '/api', token = null, onProgress = null) {
+  async syncOfflineQueueInChunks(apiBase = getDefaultApiBase(), token = null, onProgress = null) {
     if (this.syncInProgress) {
       return { success: false, reason: 'sync_already_in_progress' };
     }

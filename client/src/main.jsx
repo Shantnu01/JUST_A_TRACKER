@@ -92,18 +92,16 @@ import {
 } from 'lucide-react';
 import './styles.css';
 import MobileApp from './mobile/MobileApp';
-import { checkForAppUpdate, executeAppUpdate, CURRENT_APP_VERSION } from './utils/updater';
+import { checkForAppUpdate, executeAppUpdate, CURRENT_APP_VERSION, getDefaultApiEndpoint } from './utils/updater';
 import { playFocusSound, stopFocusSound, setSoundVolume } from './utils/soundEngine';
 import { calculateCircadianScore, getCircadianEnergyLevel, getCognitiveTier, calculateAutoShift, detectScheduleDrift, generateChiefOfStaffPlan, slotScheduleToCircadian } from './utils/circadianEngine';
 import { initNativeAlarms, syncNativeAlarms, triggerNativeHaptic, isNativeApp } from './utils/nativeAlarm';
 
 // Dynamic API endpoint: Uses relative /api for unified production & Vite proxy,
-// or uses VITE_API_URL if configured for separate frontend/backend deployments.
+// or automatically connects to production cloud backend for Electron PC app & Android APK.
 const API = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api`
-  : (isNativeApp()
-      ? (localStorage.getItem('daymark-api-url') || 'https://routine-tracker.onrender.com/api')
-      : '/api');
+  : getDefaultApiEndpoint();
 
 const iconMap = {
   Code2,
@@ -5615,6 +5613,63 @@ const handleNudge = async (toUserId, toUsername) => {
               <span>
                 Tip: Keep buffer blocks between deep sessions to avoid cognitive fatigue and sustain long-term consistency.
               </span>
+            </div>
+
+            {/* Server Connection & Cloud Sync Settings */}
+            <div className="column-style-setting-card" style={{ marginTop: '24px' }}>
+              <div className="column-style-header">
+                <div>
+                  <span className="eyebrow">CLOUD CONNECTION & UPDATES</span>
+                  <h4>Server Endpoint & Sync Status</h4>
+                  <p className="muted" style={{ margin: '4px 0 0', fontSize: '13px' }}>
+                    Active backend server used for study pods, routine backup, and real-time synchronization:
+                  </p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className="column-style-current-pill" style={{ color: dbStatus === 'connected' ? '#10B981' : '#F59E0B' }}>
+                    {dbStatus === 'connected' ? '● CLOUD CONNECTED' : '○ OFFLINE CACHE'}
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <input
+                  type="text"
+                  defaultValue={API}
+                  onBlur={(e) => {
+                    const val = e.target.value.trim();
+                    if (val && val !== API) {
+                      localStorage.setItem('daymark-api-url', val);
+                      setToast('API endpoint saved. Reloading...');
+                      setTimeout(() => window.location.reload(), 800);
+                    }
+                  }}
+                  placeholder="https://routine-tracker.onrender.com/api"
+                  style={{
+                    flex: 1,
+                    minWidth: '260px',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '9px 14px',
+                    color: '#fff',
+                    fontSize: '13px',
+                    fontFamily: 'monospace'
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.removeItem('daymark-api-url');
+                    setToast('Reset to default cloud backend. Reloading...');
+                    setTimeout(() => window.location.reload(), 800);
+                  }}
+                  className="reset-schedule-btn"
+                  style={{ padding: '8px 14px', fontSize: '12px' }}
+                >
+                  Reset Default Cloud
+                </button>
+              </div>
             </div>
           </section>
         )}
