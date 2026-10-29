@@ -29,6 +29,7 @@ function createWindow() {
     minHeight: 620,
     title: 'Daymark Routine Tracker',
     backgroundColor: '#0c0f17',
+    icon: path.join(__dirname, 'icon.png'),
     show: false,
     autoHideMenuBar: true,
     webPreferences: {

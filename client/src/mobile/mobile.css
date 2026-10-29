@@ -1,26 +1,22 @@
 /* ==========================================================================
-   DAYMARK ULTIMATE MOBILE DESIGN SYSTEM
+   DAYMARK MINIMAL MOBILE ARCHITECTURE
    Engineered for Android APK & Mobile Viewports
-   Inspired by Structured, Forest, Routine, and Things 3
+   Progressive Disclosure • Restrained Typography • 48px+ Touch Targets
    ========================================================================== */
 
 :root {
-  --m-bg: #070a11;
-  --m-surface: #0f1624;
-  --m-surface-card: #151f33;
-  --m-surface-elevated: #1c2942;
-  --m-surface-hover: #223252;
+  --m-bg: #090d16;
+  --m-surface: #121927;
+  --m-surface-card: #182235;
+  --m-surface-elevated: #202d45;
   --m-border: rgba(255, 255, 255, 0.08);
   --m-border-strong: rgba(255, 255, 255, 0.16);
   --m-primary: #3b82f6;
-  --m-primary-glow: rgba(59, 130, 246, 0.35);
-  --m-accent-amber: #f59e0b;
   --m-accent-emerald: #10b981;
-  --m-accent-emerald-glow: rgba(16, 185, 129, 0.3);
+  --m-accent-amber: #f59e0b;
   --m-accent-purple: #8b5cf6;
-  --m-accent-purple-glow: rgba(139, 92, 246, 0.3);
   --m-accent-rose: #f43f5e;
-  --m-text-primary: #f8fafc;
+  --m-text-primary: #ffffff;
   --m-text-secondary: #94a3b8;
   --m-text-muted: #64748b;
   --m-safe-top: env(safe-area-inset-top, 0px);
@@ -39,8 +35,8 @@
   overflow-x: hidden;
   background-color: var(--m-bg);
   color: var(--m-text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  padding-bottom: calc(76px + var(--m-safe-bottom));
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  padding-bottom: calc(72px + var(--m-safe-bottom));
   padding-top: var(--m-safe-top);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
@@ -49,17 +45,17 @@
 }
 
 /* ==========================================================================
-   1. MOBILE APP HEADER
+   1. MINIMAL APP HEADER
    ========================================================================== */
 .m-app-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(7, 10, 17, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(9, 13, 22, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--m-border);
-  padding: 12px 16px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -71,21 +67,18 @@
   gap: 10px;
 }
 
-.m-header-logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  color: #fff;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+.m-header-logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 .m-header-title {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
-  letter-spacing: -0.4px;
+  letter-spacing: -0.3px;
   margin: 0;
   color: #fff;
   display: flex;
@@ -102,7 +95,7 @@
 .m-header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .m-icon-btn {
@@ -115,13 +108,11 @@
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: transform 0.12s ease, background 0.12s ease;
-  position: relative;
+  transition: transform 0.1s ease;
 }
 
 .m-icon-btn:active {
   transform: scale(0.92);
-  background: var(--m-surface-card);
 }
 
 .m-icon-btn.is-active {
@@ -131,44 +122,33 @@
 }
 
 /* ==========================================================================
-   2. MAIN CONTENT CONTAINER
+   2. CONTENT CONTAINER
    ========================================================================== */
 .m-tab-container {
-  padding: 14px 14px 20px;
-  max-width: 540px;
+  padding: 14px 14px 18px;
+  max-width: 520px;
   margin: 0 auto;
 }
 
 /* ==========================================================================
-   3. HERO FOCUS TIMER CARD (Inspired by Forest & Structured)
+   3. TODAY TAB: HERO FOCUS CARD (UNCLUTTERED & PURPOSEFUL)
    ========================================================================== */
 .m-focus-hero {
-  background: linear-gradient(145deg, #131d2e, #0c1422);
-  border: 1px solid rgba(59, 130, 246, 0.28);
-  border-radius: 20px;
-  padding: 18px 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   position: relative;
   overflow: hidden;
-}
-
-.m-focus-hero::before {
-  content: '';
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 140px;
-  height: 140px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.22), transparent 70%);
-  pointer-events: none;
 }
 
 .m-hero-top-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .m-hero-pill {
@@ -179,17 +159,15 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  padding: 3px 10px;
+  padding: 3px 9px;
   border-radius: 20px;
-  background: rgba(59, 130, 246, 0.18);
+  background: rgba(59, 130, 246, 0.16);
   color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .m-hero-pill.is-running {
-  background: rgba(16, 185, 129, 0.18);
+  background: rgba(16, 185, 129, 0.16);
   color: #34d399;
-  border-color: rgba(16, 185, 129, 0.35);
 }
 
 .m-pulse-dot {
@@ -197,17 +175,17 @@
   height: 6px;
   border-radius: 50%;
   background: currentColor;
-  animation: mPulse 1.8s infinite ease-in-out;
+  animation: mPulse 2s infinite ease-in-out;
 }
 
 @keyframes mPulse {
   0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.6); opacity: 0.5; }
+  50% { transform: scale(1.5); opacity: 0.4; }
   100% { transform: scale(1); opacity: 1; }
 }
 
 .m-hero-session-name {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.4px;
   margin: 0 0 2px;
@@ -220,7 +198,7 @@
 .m-hero-session-sub {
   font-size: 12px;
   color: var(--m-text-secondary);
-  margin: 0 0 16px;
+  margin: 0 0 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -231,20 +209,21 @@
   align-items: baseline;
   justify-content: center;
   gap: 4px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .m-hero-digits {
-  font-family: 'Space Grotesk', ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 46px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  font-size: 44px;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: -1px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .m-hero-digits-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--m-text-muted);
   text-transform: uppercase;
@@ -271,7 +250,7 @@
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: transform 0.12s ease, opacity 0.12s ease;
+  transition: transform 0.1s ease;
 }
 
 .m-hero-btn:active {
@@ -281,7 +260,7 @@
 .m-hero-btn-primary {
   background: #3b82f6;
   color: #fff;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
 }
 
 .m-hero-btn-pause {
@@ -292,108 +271,99 @@
 .m-hero-btn-finish {
   background: #10b981;
   color: #fff;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
 }
 
-/* Soundscape mini strip inside hero */
-.m-hero-soundscapes {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+/* ==========================================================================
+   4. COMPACT 1-ROW METRIC STRIP
+   ========================================================================== */
+.m-compact-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--m-text-secondary);
+}
+
+.m-strip-item {
   display: flex;
   align-items: center;
   gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
 }
 
-.m-hero-soundscapes::-webkit-scrollbar {
-  display: none;
-}
-
-.m-sound-chip {
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--m-text-secondary);
-  white-space: nowrap;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.m-sound-chip.is-active {
-  background: rgba(59, 130, 246, 0.25);
-  border-color: #3b82f6;
+.m-strip-item strong {
   color: #fff;
+  font-weight: 700;
 }
 
 /* ==========================================================================
-   4. METRICS / STATS BAR (3 Clean Pills)
+   5. PROGRESSIVE DISCLOSURE: COLLAPSIBLE EXPANDERS
    ========================================================================== */
-.m-quick-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.m-stat-pill {
+.m-collapsible-banner {
   background: var(--m-surface);
   border: 1px solid var(--m-border);
   border-radius: 14px;
-  padding: 10px;
-  text-align: center;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.m-collapsible-header {
+  padding: 12px 14px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
 }
 
-.m-stat-pill-label {
-  font-size: 10px;
+.m-collapsible-header:active {
+  background: var(--m-surface-card);
+}
+
+.m-collapsible-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--m-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 2px;
+  color: #f1f5f9;
 }
 
-.m-stat-pill-value {
-  font-size: 16px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.3px;
+.m-collapsible-content {
+  padding: 0 14px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  animation: mExpand 0.2s ease-out;
 }
 
-.m-stat-pill-sub {
-  font-size: 10px;
-  color: var(--m-text-secondary);
+@keyframes mExpand {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
-   5. TIMELINE / ROUTINE SCHEDULE (Structured / Routine Inspired)
+   6. CLEAN ROUTINE TIMELINE
    ========================================================================== */
 .m-section-title-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 22px 0 12px;
+  margin: 18px 0 10px;
 }
 
 .m-section-title-row h3 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
   margin: 0;
   color: #fff;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .m-section-badge {
@@ -402,42 +372,40 @@
   background: var(--m-surface-card);
   border: 1px solid var(--m-border);
   color: var(--m-text-secondary);
-  padding: 3px 8px;
-  border-radius: 12px;
+  padding: 2px 7px;
+  border-radius: 10px;
 }
 
 .m-timeline-wrapper {
   position: relative;
-  padding-left: 20px;
+  padding-left: 18px;
 }
 
-/* The vertical connector line connecting blocks */
 .m-timeline-wrapper::before {
   content: '';
   position: absolute;
-  top: 18px;
-  bottom: 24px;
-  left: 6px;
+  top: 14px;
+  bottom: 20px;
+  left: 5px;
   width: 2px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.09);
   border-radius: 2px;
 }
 
 .m-timeline-item {
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
 }
 
-/* Node indicator on the timeline */
 .m-timeline-node {
   position: absolute;
-  left: -20px;
+  left: -18px;
   top: 50%;
   transform: translateY(-50%);
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: var(--m-surface);
   border: 2px solid var(--m-border-strong);
@@ -449,7 +417,7 @@
 .m-timeline-node.is-active {
   border-color: #3b82f6;
   background: #3b82f6;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
 .m-timeline-node.is-done {
@@ -461,13 +429,13 @@
   flex: 1;
   background: var(--m-surface);
   border: 1px solid var(--m-border);
-  border-radius: 14px;
-  padding: 12px 14px;
+  border-radius: 12px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  transition: transform 0.12s ease, border-color 0.12s ease;
+  gap: 10px;
+  transition: transform 0.1s ease;
 }
 
 .m-timeline-card:active {
@@ -476,25 +444,24 @@
 
 .m-timeline-card.is-active {
   background: var(--m-surface-card);
-  border-color: rgba(59, 130, 246, 0.45);
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.4);
 }
 
 .m-timeline-time {
-  min-width: 58px;
+  min-width: 54px;
   display: flex;
   flex-direction: column;
 }
 
 .m-time-start {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #fff;
   font-variant-numeric: tabular-nums;
 }
 
 .m-time-end {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--m-text-muted);
 }
 
@@ -504,10 +471,10 @@
 }
 
 .m-timeline-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #f1f5f9;
-  margin: 0 0 2px;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -522,9 +489,9 @@
 }
 
 .m-timeline-action {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   background: var(--m-surface-elevated);
   border: 1px solid var(--m-border);
   color: var(--m-text-secondary);
@@ -541,56 +508,35 @@
 }
 
 /* ==========================================================================
-   6. HABITS CHECKLIST (Things 3 / Notion Mobile Inspired)
+   7. HABITS CHECKLIST
    ========================================================================== */
-.m-habit-progress-card {
-  background: linear-gradient(135deg, #122119, #0f1624);
-  border: 1px solid rgba(16, 185, 129, 0.28);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.m-habit-prog-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.m-habit-prog-pct {
-  font-size: 24px;
-  font-weight: 800;
-  color: #10b981;
-}
-
-.m-habit-bar {
-  height: 8px;
+.m-habit-progress-bar {
+  height: 6px;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
-.m-habit-fill {
+.m-habit-progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #10b981, #34d399);
-  border-radius: 8px;
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 6px;
+  transition: width 0.3s ease;
 }
 
 .m-filter-chips {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 12px;
 }
 
 .m-filter-chip {
   flex: 1;
   text-align: center;
-  padding: 7px 10px;
-  border-radius: 10px;
-  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 11px;
   font-weight: 700;
   background: var(--m-surface);
   border: 1px solid var(--m-border);
@@ -607,15 +553,15 @@
 .m-habit-card {
   background: var(--m-surface);
   border: 1px solid var(--m-border);
-  border-radius: 14px;
-  padding: 12px 14px;
+  border-radius: 12px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
-  min-height: 54px;
-  transition: transform 0.1s ease, border-color 0.15s ease, background 0.15s ease;
-  margin-bottom: 8px;
+  min-height: 48px;
+  margin-bottom: 6px;
+  transition: transform 0.1s ease;
 }
 
 .m-habit-card:active {
@@ -623,9 +569,9 @@
 }
 
 .m-habit-checkbox {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   border: 1.5px solid var(--m-border-strong);
   display: grid;
   place-items: center;
@@ -636,19 +582,18 @@
 }
 
 .m-habit-card.is-checked {
-  background: rgba(16, 185, 129, 0.08);
-  border-color: rgba(16, 185, 129, 0.28);
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.25);
 }
 
 .m-habit-card.is-checked .m-habit-checkbox {
   background: #10b981;
   border-color: #10b981;
   color: #fff;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
 }
 
 .m-habit-name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #f1f5f9;
   flex: 1;
@@ -669,59 +614,50 @@
 }
 
 /* ==========================================================================
-   7. STUDY PODS (Accountability & Live Radar)
+   8. STUDY PODS
    ========================================================================== */
 .m-pod-hero {
-  background: linear-gradient(135deg, #1f1a38, #12182c);
-  border: 1px solid rgba(139, 92, 246, 0.35);
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 16px;
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
 }
 
 .m-pod-hero-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .m-pod-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   color: #fff;
   margin: 0;
 }
 
 .m-pod-count-badge {
-  background: rgba(139, 92, 246, 0.25);
+  background: rgba(139, 92, 246, 0.2);
   color: #c4b5fd;
-  border: 1px solid rgba(139, 92, 246, 0.4);
-  padding: 4px 10px;
-  border-radius: 20px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  padding: 2px 8px;
+  border-radius: 14px;
   font-size: 11px;
   font-weight: 700;
-}
-
-.m-pod-notice {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 12px;
-  color: #e2e8f0;
-  line-height: 1.4;
-  margin: 10px 0 14px;
 }
 
 .m-pod-actions {
   display: flex;
   gap: 8px;
+  margin-top: 10px;
 }
 
 .m-btn-nudge {
   flex: 1;
-  height: 44px;
-  border-radius: 12px;
+  height: 42px;
+  border-radius: 10px;
   border: none;
   background: #8b5cf6;
   color: #fff;
@@ -732,22 +668,20 @@
   justify-content: center;
   gap: 6px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
 }
 
 .m-btn-nudge:disabled {
-  background: #334155;
-  color: #94a3b8;
-  box-shadow: none;
+  background: #252d3d;
+  color: #64748b;
   cursor: not-allowed;
 }
 
 .m-btn-leave {
-  height: 44px;
-  padding: 0 14px;
-  border-radius: 12px;
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
   color: #f87171;
   font-size: 12px;
   font-weight: 700;
@@ -757,64 +691,54 @@
 .m-pod-member-row {
   background: var(--m-surface);
   border: 1px solid var(--m-border);
-  border-radius: 12px;
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.m-pod-member-row.is-self {
-  border-color: rgba(59, 130, 246, 0.4);
-  background: var(--m-surface-card);
-}
-
-.m-member-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #3b82f6;
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-/* ==========================================================================
-   8. ROADMAPS & STAGES (Curriculum)
-   ========================================================================== */
-.m-roadmap-hero {
-  background: var(--m-surface);
-  border: 1px solid var(--m-border);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 14px;
-}
-
-.m-stage-card {
-  background: var(--m-surface);
-  border: 1px solid var(--m-border);
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 10px;
-}
-
-.m-stage-card.is-active {
-  border-color: rgba(59, 130, 246, 0.4);
-  background: var(--m-surface-card);
-}
-
-.m-stage-header {
+  border-radius: 10px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 6px;
 }
 
+.m-pod-member-row.is-self {
+  border-color: rgba(59, 130, 246, 0.35);
+  background: var(--m-surface-card);
+}
+
+.m-member-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   9. ROADMAPS & STAGES
+   ========================================================================== */
+.m-stage-card {
+  background: var(--m-surface);
+  border: 1px solid var(--m-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+
+.m-stage-card.is-active {
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.m-stage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .m-stage-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #fff;
   margin: 0;
@@ -823,11 +747,10 @@
 .m-checkpoint-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 0;
+  gap: 8px;
+  padding: 6px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 13px;
-  color: var(--m-text-secondary);
+  font-size: 12px;
 }
 
 .m-checkpoint-item:last-child {
@@ -835,25 +758,24 @@
 }
 
 /* ==========================================================================
-   9. ROUTINE ALARMS LIST
+   10. ROUTINE ALARMS & SOUNDSCAPES
    ========================================================================== */
 .m-alarm-card {
-  background: var(--m-surface);
+  background: var(--m-surface-card);
   border: 1px solid var(--m-border);
-  border-radius: 14px;
-  padding: 14px 16px;
+  border-radius: 10px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .m-alarm-time {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 800;
   color: #fff;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.5px;
 }
 
 .m-alarm-label {
@@ -862,11 +784,11 @@
 }
 
 .m-toggle-switch {
-  width: 48px;
-  height: 28px;
+  width: 44px;
+  height: 24px;
   background: #334155;
-  border-radius: 20px;
-  padding: 3px;
+  border-radius: 14px;
+  padding: 2px;
   cursor: pointer;
   transition: background 0.2s ease;
   display: flex;
@@ -878,11 +800,10 @@
 }
 
 .m-toggle-knob {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -890,8 +811,34 @@
   transform: translateX(20px);
 }
 
+/* Audio Soundscapes Studio */
+.m-sound-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.m-sound-btn {
+  padding: 10px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--m-border);
+  background: var(--m-surface-card);
+  color: var(--m-text-secondary);
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.m-sound-btn.is-active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+  color: #fff;
+}
+
 /* ==========================================================================
-   10. BOTTOM NAVIGATION BAR
+   11. BOTTOM NAVIGATION BAR
    ========================================================================== */
 .m-bottom-nav {
   position: fixed;
@@ -899,9 +846,9 @@
   left: 0;
   right: 0;
   z-index: 999;
-  height: calc(60px + var(--m-safe-bottom));
+  height: calc(58px + var(--m-safe-bottom));
   padding-bottom: var(--m-safe-bottom);
-  background: rgba(7, 10, 17, 0.94);
+  background: rgba(9, 13, 22, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--m-border);
@@ -917,12 +864,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 2px;
   border: none;
   background: transparent;
   color: var(--m-text-muted);
   cursor: pointer;
-  transition: color 0.12s ease;
+  transition: color 0.1s ease;
   padding: 0;
 }
 
@@ -945,8 +892,8 @@
   position: absolute;
   top: -2px;
   right: -3px;
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #10b981;
   box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
@@ -955,68 +902,47 @@
 .m-nav-label {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
 }
 
 .m-nav-tab.is-active .m-nav-label {
   color: #fff;
 }
 
-
-/* ==========================================================================
-   11. COLUMN STYLE & PANEL SURFACE REACTION (Mobile Roadmaps & Cards)
-   ========================================================================== */
-
-/* 1. Crystal Transparent Glass */
+/* Column Style Adaptations for Mobile */
 [data-column-style="transparent"] .m-focus-hero,
-[data-column-style="transparent"] .m-roadmap-hero,
 [data-column-style="transparent"] .m-stage-card,
 [data-column-style="transparent"] .m-pod-hero,
-[data-column-style="transparent"] .m-habit-progress-card,
 [data-column-style="transparent"] .m-timeline-card,
 [data-column-style="transparent"] .m-habit-card,
-[data-column-style="transparent"] .m-alarm-card,
-[data-column-style="transparent"] .m-stat-pill,
-[data-column-style="transparent"] .m-pod-member-row {
+[data-column-style="transparent"] .m-collapsible-banner {
   background: transparent !important;
-  backdrop-filter: blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
-  border-color: rgba(255, 255, 255, 0.22) !important;
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25) !important;
 }
 
-/* 2. Apple Liquid Glass */
 [data-column-style="liquid-glass"] .m-focus-hero,
-[data-column-style="liquid-glass"] .m-roadmap-hero,
 [data-column-style="liquid-glass"] .m-stage-card,
 [data-column-style="liquid-glass"] .m-pod-hero,
-[data-column-style="liquid-glass"] .m-habit-progress-card,
 [data-column-style="liquid-glass"] .m-timeline-card,
 [data-column-style="liquid-glass"] .m-habit-card,
-[data-column-style="liquid-glass"] .m-alarm-card,
-[data-column-style="liquid-glass"] .m-stat-pill,
-[data-column-style="liquid-glass"] .m-pod-member-row {
+[data-column-style="liquid-glass"] .m-collapsible-banner {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
   backdrop-filter: blur(20px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  box-shadow: inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.4), 0 16px 40px rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
 }
 
-/* 3. Smoky Obsidian Tint */
 [data-column-style="smoky"] .m-focus-hero,
-[data-column-style="smoky"] .m-roadmap-hero,
 [data-column-style="smoky"] .m-stage-card,
 [data-column-style="smoky"] .m-pod-hero,
-[data-column-style="smoky"] .m-habit-progress-card,
 [data-column-style="smoky"] .m-timeline-card,
 [data-column-style="smoky"] .m-habit-card,
-[data-column-style="smoky"] .m-alarm-card,
-[data-column-style="smoky"] .m-stat-pill,
-[data-column-style="smoky"] .m-pod-member-row {
+[data-column-style="smoky"] .m-collapsible-banner {
   background: rgba(8, 9, 15, 0.85) !important;
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
-  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.12), 0 20px 48px rgba(0, 0, 0, 0.6) !important;
 }

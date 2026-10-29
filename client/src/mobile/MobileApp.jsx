@@ -15,17 +15,14 @@ import {
   Sparkles,
   Volume2,
   VolumeX,
-  Radio,
   LogOut,
   LogIn,
   ChevronRight,
   ChevronDown,
   ShieldCheck,
   Send,
-  Trash2,
   Monitor,
   Headphones,
-  Zap,
   Target
 } from 'lucide-react';
 
@@ -77,6 +74,8 @@ export default function MobileApp(props) {
   const [activeTab, setActiveTab] = useState('today');
   const [habitFilter, setHabitFilter] = useState('all'); // 'all' | 'pending' | 'done'
   const [expandedStageId, setExpandedStageId] = useState(null);
+  const [alarmsExpanded, setAlarmsExpanded] = useState(false);
+  const [soundscapeExpanded, setSoundscapeExpanded] = useState(false);
   const [localCooldown, setLocalCooldown] = useState(nudgeCooldownRemaining || 0);
 
   // Sync and tick local cooldown countdown smoothly every second
@@ -125,6 +124,11 @@ export default function MobileApp(props) {
       return true;
     });
   }, [habits, day, habitFilter]);
+
+  // Active alarms count
+  const activeAlarmsCount = useMemo(() => {
+    return (alarms || []).filter((a) => a.enabled).length;
+  }, [alarms]);
 
   // Curriculum stages (fallback to curated curriculum if activeCurriculum is empty)
   const curriculumStages = useMemo(() => {
@@ -188,15 +192,17 @@ export default function MobileApp(props) {
   }, [activeCurriculum]);
 
   return (
-    <div className="mobile-viewport-root" data-column-style={columnStyle || "normal"}>
+    <div className="mobile-viewport-root" data-column-style={columnStyle || 'normal'}>
       {/* =================================================================== */}
-      {/* TOP MOBILE APP BAR                                                  */}
+      {/* 1. MINIMAL APP HEADER (Brand + Date + Streak Flame)                 */}
       {/* =================================================================== */}
       <header className="m-app-header">
         <div className="m-header-left">
-          <div className="m-header-logo">
-            <Sparkles size={18} />
-          </div>
+          <img
+            src="./favicon.png"
+            alt="Daymark Logo"
+            className="m-header-logo-img"
+          />
           <div>
             <h1 className="m-header-title">
               Daymark
@@ -207,79 +213,60 @@ export default function MobileApp(props) {
         </div>
 
         <div className="m-header-actions">
-          {/* Quick Soundscape Active Chip */}
-          {focusSoundType && focusSoundType !== 'off' && (
-            <button
-              type="button"
-              className="m-icon-btn is-active"
-              onClick={() => handleSelectSound && handleSelectSound('off')}
-              title={`Mute soundscape (${focusSoundType})`}
-              aria-label="Mute soundscape"
-            >
-              <Headphones size={15} />
-            </button>
-          )}
+          {/* Streak Flame Badge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.28)', padding: '4px 8px', borderRadius: '16px', fontSize: '11px', fontWeight: '800', color: '#f59e0b' }}>
+            <Flame size={13} fill="#f59e0b" color="#f59e0b" />
+            <span>{completion}%</span>
+          </div>
 
-          {/* Quick Alarm Sound Test */}
+          {/* Quick Audio Sheet Toggle */}
           <button
             type="button"
-            className="m-icon-btn"
-            onClick={testAlarmSound}
-            title="Test alarm sound"
-            aria-label="Test alarm sound"
+            className={`m-icon-btn ${focusSoundType && focusSoundType !== 'off' ? 'is-active' : ''}`}
+            onClick={() => setSoundscapeExpanded((prev) => !prev)}
+            title="Focus Audio Soundscapes"
+            aria-label="Focus Audio Soundscapes"
           >
-            <AlarmClock size={16} />
-          </button>
-
-          {/* Switch to Full Desktop UI */}
-          <button
-            type="button"
-            className="m-icon-btn"
-            onClick={onSwitchToDesktop}
-            title="Switch to Desktop View"
-            aria-label="Switch to Desktop View"
-          >
-            <Monitor size={16} />
+            <Headphones size={15} />
           </button>
         </div>
       </header>
 
       {/* =================================================================== */}
-      {/* MAIN VIEWS CONTAINER                                                */}
+      {/* 2. MAIN VIEWS CONTAINER                                             */}
       {/* =================================================================== */}
       <main className="m-tab-container">
         {/* ================================================================= */}
-        {/* TAB 1: TODAY (Routine Timeline & Focus Session)                    */}
+        {/* TAB 1: TODAY (Routine & Active Session)                           */}
         {/* ================================================================= */}
         {activeTab === 'today' && (
           <div>
-            {/* HERO FOCUS CARD (Forest & Structured Inspired) */}
+            {/* HERO FOCUS CARD (Focused & Uncluttered) */}
             <div className="m-focus-hero">
               <div className="m-hero-top-row">
                 <div className={`m-hero-pill ${running ? 'is-running' : ''}`}>
                   <span className="m-pulse-dot" />
-                  <span>{running ? 'In Flow' : current ? 'Ready to Focus' : 'Focus Session'}</span>
+                  <span>{running ? 'In Flow' : current ? 'Up Next' : 'Ready to Focus'}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#94a3b8' }}>
-                  <Flame size={13} color="#f59e0b" fill="#f59e0b" />
-                  <strong>{completion}% Done</strong>
+                <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                  {current ? `${current.start} - ${current.end}` : 'Self-Paced'}
                 </div>
               </div>
 
               <h2 className="m-hero-session-name">
-                {current ? current.title : (activeId ? 'Active Deep Work' : 'Ready for Next Block')}
+                {current ? current.title : (activeId ? 'Active Focus Block' : 'Ready for Next Session')}
               </h2>
               <div className="m-hero-session-sub">
                 {current ? current.subtitle : 'Lock in without distractions and build momentum.'}
               </div>
 
-              {/* Digital Monospace Timer */}
+              {/* Monospace Digits */}
               <div className="m-hero-digits-wrap">
                 <span className="m-hero-digits">{formattedTimer}</span>
                 <span className="m-hero-digits-label">elapsed</span>
               </div>
 
-              {/* Touch Ergonomic Controls */}
+              {/* 48px+ Tactile Action Buttons */}
               <div className={`m-hero-controls ${!running && seconds === 0 ? 'is-idle' : ''}`}>
                 {running ? (
                   <>
@@ -288,14 +275,14 @@ export default function MobileApp(props) {
                       className="m-hero-btn m-hero-btn-pause"
                       onClick={pauseSession}
                     >
-                      <Pause size={17} /> Pause
+                      <Pause size={16} /> Pause
                     </button>
                     <button
                       type="button"
                       className="m-hero-btn m-hero-btn-finish"
                       onClick={finishSession}
                     >
-                      <Check size={17} /> Complete Block
+                      <Check size={16} /> Done
                     </button>
                   </>
                 ) : (
@@ -304,65 +291,133 @@ export default function MobileApp(props) {
                     className="m-hero-btn m-hero-btn-primary"
                     onClick={() => startSession(current ? current.id : 'focus')}
                   >
-                    <Play size={17} /> {seconds > 0 ? 'Resume Session' : 'Start Focus Session'}
+                    <Play size={16} /> {seconds > 0 ? 'Resume Session' : 'Start Focus Session'}
                   </button>
                 )}
               </div>
+            </div>
 
-              {/* Integrated Ambient Soundscapes Pill Strip */}
-              <div className="m-hero-soundscapes">
-                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '700', marginRight: '4px' }}>
-                  🎧 AUDIO:
-                </span>
-                {[
-                  { id: 'off', label: 'Off' },
-                  { id: 'rain', label: 'Rain 🌧️' },
-                  { id: 'brown', label: 'Brown Noise 🌊' },
-                  { id: 'birds', label: 'Birds 🌲' },
-                  { id: 'binaural', label: '40Hz Gamma 🧠' }
-                ].map((s) => (
+            {/* Compact 1-Row Metrics Bar (Zero Cluster) */}
+            <div className="m-compact-strip">
+              <div className="m-strip-item">
+                <Clock size={13} color="#3b82f6" />
+                <span>Focus: <strong>{Math.round((focusMinutes / 60) * 10) / 10}h</strong></span>
+              </div>
+              <div className="m-strip-item">
+                <CheckCircle2 size={13} color="#10b981" />
+                <span>Habits: <strong>{doneCount}/{habits?.length || 0}</strong></span>
+              </div>
+              <div className="m-strip-item">
+                <Users size={13} color="#a78bfa" />
+                <span>Pod: <strong>{podMembers ? podMembers.length : 1} live</strong></span>
+              </div>
+            </div>
+
+            {/* PROGRESSIVE DISCLOSURE 1: Focus Soundscapes Drawer */}
+            {soundscapeExpanded && (
+              <div className="m-collapsible-banner">
+                <div
+                  className="m-collapsible-header"
+                  onClick={() => setSoundscapeExpanded(false)}
+                >
+                  <div className="m-collapsible-left">
+                    <Headphones size={15} color="#3b82f6" />
+                    <span>Focus Soundscapes ({focusSoundType || 'off'})</span>
+                  </div>
+                  <ChevronDown size={15} color="#94a3b8" />
+                </div>
+                <div className="m-collapsible-content">
+                  <div className="m-sound-grid">
+                    {[
+                      { id: 'off', label: '⏹️ Off' },
+                      { id: 'rain', label: '🌧️ Soft Rain' },
+                      { id: 'brown', label: '🌊 Brown Noise' },
+                      { id: 'birds', label: '🌲 Forest Birds' },
+                      { id: 'pink', label: '📻 Pink Noise' },
+                      { id: 'binaural', label: '🧠 40Hz Gamma' }
+                    ].map((s) => (
+                      <button
+                        key={s.id}
+                        type="button"
+                        className={`m-sound-btn ${(focusSoundType || 'off') === s.id ? 'is-active' : ''}`}
+                        onClick={() => handleSelectSound && handleSelectSound(s.id)}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Volume Slider */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Volume2 size={14} color="#94a3b8" />
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value={focusSoundVolume || 0.4}
+                      onChange={(e) => setFocusSoundVolume && setFocusSoundVolume(parseFloat(e.target.value))}
+                      style={{ flex: 1, accentColor: '#3b82f6' }}
+                    />
+                    <span style={{ fontSize: '11px', color: '#94a3b8', minWidth: '28px', textAlign: 'right' }}>
+                      {Math.round((focusSoundVolume || 0.4) * 100)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* PROGRESSIVE DISCLOSURE 2: Collapsible Routine Alarms Accordion */}
+            <div className="m-collapsible-banner">
+              <div
+                className="m-collapsible-header"
+                onClick={() => setAlarmsExpanded((prev) => !prev)}
+              >
+                <div className="m-collapsible-left">
+                  <AlarmClock size={15} color="#f59e0b" />
+                  <span>Routine Alarms ({activeAlarmsCount} Active)</span>
+                </div>
+                {alarmsExpanded ? (
+                  <ChevronDown size={15} color="#94a3b8" />
+                ) : (
+                  <ChevronRight size={15} color="#94a3b8" />
+                )}
+              </div>
+
+              {alarmsExpanded && (
+                <div className="m-collapsible-content">
+                  {alarms && alarms.map((alarm) => (
+                    <div key={alarm.id} className="m-alarm-card">
+                      <div>
+                        <div className="m-alarm-time">{alarm.time}</div>
+                        <div className="m-alarm-label">{alarm.label || 'Routine alert'}</div>
+                      </div>
+
+                      <div
+                        className={`m-toggle-switch ${alarm.enabled ? 'is-on' : ''}`}
+                        onClick={() => toggleAlarm(alarm.id)}
+                      >
+                        <div className="m-toggle-knob" />
+                      </div>
+                    </div>
+                  ))}
+
                   <button
-                    key={s.id}
                     type="button"
-                    className={`m-sound-chip ${(focusSoundType || 'off') === s.id ? 'is-active' : ''}`}
-                    onClick={() => handleSelectSound && handleSelectSound(s.id)}
+                    style={{ width: '100%', padding: '8px', marginTop: '6px', background: 'transparent', border: '1px solid var(--m-border)', borderRadius: '8px', fontSize: '11px', fontWeight: '700', color: '#94a3b8', cursor: 'pointer' }}
+                    onClick={testAlarmSound}
                   >
-                    {s.label}
+                    🔊 Test Native Sound & Vibration
                   </button>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
 
-            {/* Quick 3-Pill Metrics Row */}
-            <div className="m-quick-stats">
-              <div className="m-stat-pill">
-                <span className="m-stat-pill-label">Focus</span>
-                <span className="m-stat-pill-value">
-                  {Math.round((focusMinutes / 60) * 10) / 10}h
-                </span>
-                <span className="m-stat-pill-sub">of {totalPlannedFocusHours}h</span>
-              </div>
-
-              <div className="m-stat-pill">
-                <span className="m-stat-pill-label">Habits</span>
-                <span className="m-stat-pill-value">{doneCount}/{habits?.length || 0}</span>
-                <span className="m-stat-pill-sub">{completion}% score</span>
-              </div>
-
-              <div className="m-stat-pill">
-                <span className="m-stat-pill-label">Pod</span>
-                <span className="m-stat-pill-value" style={{ color: '#a78bfa' }}>
-                  {podMembers ? podMembers.length : 1} live
-                </span>
-                <span className="m-stat-pill-sub">accountable</span>
-              </div>
-            </div>
-
-            {/* Structured Routine Timeline with Connected Line */}
+            {/* Routine Timeline */}
             <div className="m-section-title-row">
               <h3>
-                <Clock size={16} color="#3b82f6" />
-                <span>Routine Timeline</span>
+                <Clock size={15} color="#3b82f6" />
+                <span>Today's Routine</span>
               </h3>
               <span className="m-section-badge">{schedule?.length || 0} blocks</span>
             </div>
@@ -373,12 +428,10 @@ export default function MobileApp(props) {
                 const isDone = item.completed;
                 return (
                   <div key={item.id || idx} className="m-timeline-item">
-                    {/* Node on vertical connector */}
                     <div className={`m-timeline-node ${isActive ? 'is-active' : isDone ? 'is-done' : ''}`}>
-                      {isDone && <Check size={8} color="#fff" strokeWidth={3} />}
+                      {isDone && <Check size={7} color="#fff" strokeWidth={3} />}
                     </div>
 
-                    {/* Timeline Event Card */}
                     <div className={`m-timeline-card ${isActive ? 'is-active' : ''}`}>
                       <div className="m-timeline-time">
                         <span className="m-time-start">{item.start}</span>
@@ -400,77 +453,38 @@ export default function MobileApp(props) {
                             startSession(item.id);
                           }
                         }}
-                        title={isActive && running ? 'Pause block' : 'Start this block'}
-                        aria-label={isActive && running ? 'Pause block' : 'Start this block'}
+                        title={isActive && running ? 'Pause' : 'Start'}
+                        aria-label={isActive && running ? 'Pause block' : 'Start block'}
                       >
-                        {isActive && running ? <Pause size={15} /> : <Play size={15} />}
+                        {isActive && running ? <Pause size={14} /> : <Play size={14} />}
                       </button>
                     </div>
                   </div>
                 );
               })}
             </div>
-
-            {/* Routine Alarms (Native Android Protected) */}
-            <div className="m-section-title-row" style={{ marginTop: '26px' }}>
-              <h3>
-                <AlarmClock size={16} color="#f59e0b" />
-                <span>Routine Alarms</span>
-              </h3>
-              <span className="m-section-badge">Exact Alert</span>
-            </div>
-
-            <div>
-              {alarms && alarms.map((alarm) => (
-                <div key={alarm.id} className="m-alarm-card">
-                  <div>
-                    <div className="m-alarm-time">{alarm.time}</div>
-                    <div className="m-alarm-label">{alarm.label || 'Routine wake & focus trigger'}</div>
-                  </div>
-
-                  <div
-                    className={`m-toggle-switch ${alarm.enabled ? 'is-on' : ''}`}
-                    onClick={() => toggleAlarm(alarm.id)}
-                    title="Toggle alarm"
-                  >
-                    <div className="m-toggle-knob" />
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         )}
 
         {/* ================================================================= */}
-        {/* TAB 2: HABITS (Things 3 & Notion Inspired Checklist)              */}
+        {/* TAB 2: HABITS (Clean Daily Checklist)                             */}
         {/* ================================================================= */}
         {activeTab === 'habits' && (
           <div>
-            {/* Completion Progress Card */}
-            <div className="m-habit-progress-card">
-              <div className="m-habit-prog-head">
-                <div>
-                  <span style={{ fontSize: '11px', color: '#10b981', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                    Daily Discipline Score
-                  </span>
-                  <div className="m-habit-prog-pct">{completion}%</div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '13px', fontWeight: '700', color: '#fff' }}>
-                    {doneCount} of {habits?.length || 0} Done
-                  </span>
-                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>
-                    {completion >= 80 ? '🔥 On Fire' : 'Keep building'}
-                  </div>
-                </div>
-              </div>
-
-              <div className="m-habit-bar">
-                <div className="m-habit-fill" style={{ width: `${completion}%` }} />
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '13px', fontWeight: '800', color: '#fff' }}>
+                Daily Commitments
+              </span>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: '#10b981' }}>
+                {doneCount} of {habits?.length || 0} Done ({completion}%)
+              </span>
             </div>
 
-            {/* Filter Pills */}
+            <div className="m-habit-progress-bar">
+              <div className="m-habit-progress-fill" style={{ width: `${completion}%` }} />
+            </div>
+
+            {/* Filter Chips */}
             <div className="m-filter-chips">
               <button
                 type="button"
@@ -484,7 +498,7 @@ export default function MobileApp(props) {
                 className={`m-filter-chip ${habitFilter === 'pending' ? 'is-active' : ''}`}
                 onClick={() => setHabitFilter('pending')}
               >
-                Pending ({(habits?.length || 0) - doneCount})
+                Remaining ({(habits?.length || 0) - doneCount})
               </button>
               <button
                 type="button"
@@ -495,7 +509,6 @@ export default function MobileApp(props) {
               </button>
             </div>
 
-            {/* Habit Cards */}
             <div>
               {filteredHabits.map((habit) => {
                 const isChecked = !!(day?.checks && day.checks[habit.id]);
@@ -506,7 +519,7 @@ export default function MobileApp(props) {
                     onClick={() => toggleHabit(habit.id)}
                   >
                     <div className="m-habit-checkbox">
-                      <Check size={16} strokeWidth={3} />
+                      <Check size={14} strokeWidth={3} />
                     </div>
 
                     <span className="m-habit-name">{habit.name}</span>
@@ -523,32 +536,26 @@ export default function MobileApp(props) {
         )}
 
         {/* ================================================================= */}
-        {/* TAB 3: STUDY PODS (Accountability & Live Radar)                    */}
+        {/* TAB 3: STUDY PODS                                                 */}
         {/* ================================================================= */}
         {activeTab === 'pods' && (
           <div>
             <div className="m-pod-hero">
               <div className="m-pod-hero-top">
-                <div>
-                  <span style={{ fontSize: '11px', color: '#a78bfa', fontWeight: '800', textTransform: 'uppercase' }}>
-                    Active Study Pod
-                  </span>
-                  <h3 className="m-pod-title">
-                    {activePod ? activePod.name : 'Deep Work Pod'}
-                  </h3>
-                </div>
+                <h3 className="m-pod-title">
+                  {activePod ? activePod.name : 'Focus Study Pod'}
+                </h3>
                 <span className="m-pod-count-badge">
                   {podMembers ? podMembers.length : 1} Members
                 </span>
               </div>
 
               {podNotice && (
-                <div className="m-pod-notice">
-                  📢 <strong>Notice:</strong> {podNotice}
+                <div style={{ background: 'rgba(0,0,0,0.25)', padding: '8px 10px', borderRadius: '8px', fontSize: '11px', color: '#e2e8f0', margin: '8px 0 10px' }}>
+                  📢 {podNotice}
                 </div>
               )}
 
-              {/* Nudge Pod with Active Countdown Timer */}
               <div className="m-pod-actions">
                 <button
                   type="button"
@@ -556,8 +563,8 @@ export default function MobileApp(props) {
                   onClick={sendNudge}
                   disabled={localCooldown > 0}
                 >
-                  <Send size={14} />
-                  {localCooldown > 0 ? `Nudge in ${formattedCooldown}` : 'Nudge Study Pod'}
+                  <Send size={13} />
+                  {localCooldown > 0 ? `Nudge in ${formattedCooldown}` : 'Nudge Pod'}
                 </button>
 
                 {activePod && (
@@ -566,7 +573,7 @@ export default function MobileApp(props) {
                     className="m-btn-leave"
                     onClick={leavePod}
                   >
-                    Leave Pod
+                    Leave
                   </button>
                 )}
               </div>
@@ -574,12 +581,11 @@ export default function MobileApp(props) {
 
             <div className="m-section-title-row">
               <h3>
-                <Users size={16} color="#8b5cf6" />
-                <span>Live Radar & Members</span>
+                <Users size={15} color="#8b5cf6" />
+                <span>Live Member Radar</span>
               </h3>
             </div>
 
-            {/* Member List */}
             <div>
               {podMembers && podMembers.length > 0 ? (
                 podMembers.map((member, idx) => {
@@ -589,60 +595,59 @@ export default function MobileApp(props) {
                       key={member.id || idx}
                       className={`m-pod-member-row ${isSelf ? 'is-self' : ''}`}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div className="m-member-avatar">
                           {(member.username || member.name || 'U').charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <strong style={{ fontSize: '14px', color: '#fff', display: 'block' }}>
-                            {member.username || member.name || 'Anonymous'}
+                          <strong style={{ fontSize: '13px', color: '#fff', display: 'block' }}>
+                            {member.username || member.name || 'Member'}
                             {isSelf && ' (You)'}
                           </strong>
-                          <span style={{ fontSize: '11px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <span className="m-pulse-dot" style={{ width: '5px', height: '5px' }} />
-                            {member.status || 'Active Deep Focus'}
+                          <span style={{ fontSize: '10px', color: '#10b981' }}>
+                            {member.status || 'Focusing'}
                           </span>
                         </div>
                       </div>
 
                       <div style={{ textAlign: 'right' }}>
-                        <strong style={{ fontSize: '14px', color: '#3b82f6' }}>
+                        <strong style={{ fontSize: '13px', color: '#3b82f6' }}>
                           {member.focus_minutes || member.focusMinutes || 0}m
                         </strong>
                         <small style={{ display: 'block', fontSize: '10px', color: '#94a3b8' }}>
-                          {member.streak_days || member.streak || 1}d streak
+                          {member.streak_days || member.streak || 1}d
                         </small>
                       </div>
                     </div>
                   );
                 })
               ) : (
-                <div style={{ textAlign: 'center', padding: '24px', color: '#64748b', fontSize: '13px' }}>
-                  No other members in this pod yet. Share your invite code to study together!
+                <div style={{ textAlign: 'center', padding: '20px', color: '#64748b', fontSize: '12px' }}>
+                  No other members in pod. Share your code to study together!
                 </div>
               )}
             </div>
 
-            {/* Leaderboard */}
-            <div className="m-section-title-row" style={{ marginTop: '22px' }}>
+            {/* Pod Leaderboard */}
+            <div className="m-section-title-row" style={{ marginTop: '18px' }}>
               <h3>
-                <Flame size={16} color="#f59e0b" />
-                <span>Pod Leaderboard</span>
+                <Flame size={15} color="#f59e0b" />
+                <span>Leaderboard</span>
               </h3>
             </div>
 
             <div>
               {podLeaderboard && podLeaderboard.map((m, idx) => (
                 <div key={m.id || idx} className="m-pod-member-row">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: '800', width: '22px', textAlign: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: '800', width: '20px', textAlign: 'center' }}>
                       {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`}
                     </span>
-                    <span style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>
+                    <span style={{ fontSize: '13px', color: '#fff' }}>
                       {m.username || m.name || 'Member'}
                     </span>
                   </div>
-                  <span style={{ fontSize: '13px', fontWeight: '700', color: '#10b981' }}>
+                  <span style={{ fontSize: '12px', fontWeight: '700', color: '#10b981' }}>
                     {m.focus_minutes || m.focusMinutes || 0} min
                   </span>
                 </div>
@@ -652,36 +657,29 @@ export default function MobileApp(props) {
         )}
 
         {/* ================================================================= */}
-        {/* TAB 4: ROADMAPS (Curriculum & Stage Learning)                     */}
+        {/* TAB 4: ROADMAPS                                                   */}
         {/* ================================================================= */}
         {activeTab === 'roadmaps' && (
           <div>
-            <div className="m-roadmap-hero">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <div style={{ background: 'var(--m-surface)', border: '1px solid var(--m-border)', borderRadius: '14px', padding: '14px', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#60a5fa', textTransform: 'uppercase' }}>
-                  ACTIVE TRACK: {curriculumSubject || 'NLP & TRANSFORMERS'}
+                  TRACK: {curriculumSubject || 'NLP & DEEP LEARNING'}
                 </span>
-                <span className="m-section-badge">Stage 3 of 5</span>
+                <span className="m-section-badge">68% Done</span>
               </div>
-              <h3 style={{ fontSize: '17px', margin: '0 0 6px', color: '#fff', fontWeight: '800' }}>
-                LLM Foundations & Agentic Deployments
+              <h3 style={{ fontSize: '15px', margin: '0 0 6px', color: '#fff', fontWeight: '800' }}>
+                LLM Foundations & Architectures
               </h3>
-              <p style={{ fontSize: '12px', color: 'var(--m-text-secondary)', margin: '0 0 12px', lineHeight: 1.5 }}>
-                Mastering tokenization, attention mechanisms, rotary embeddings, fine-tuning, and MCP tool agents.
-              </p>
-              <div className="m-habit-bar">
-                <div className="m-habit-fill" style={{ width: '68%', background: '#3b82f6' }} />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#64748b' }}>
-                <span>Overall Curriculum Progress</span>
-                <span>68% Complete</span>
+              <div className="m-habit-progress-bar">
+                <div className="m-habit-progress-fill" style={{ width: '68%', background: '#3b82f6' }} />
               </div>
             </div>
 
             <div className="m-section-title-row">
               <h3>
-                <GitBranch size={16} color="#3b82f6" />
-                <span>Learning Stages</span>
+                <GitBranch size={15} color="#3b82f6" />
+                <span>Stages & Milestones</span>
               </h3>
             </div>
 
@@ -702,23 +700,23 @@ export default function MobileApp(props) {
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         {isCompleted ? (
-                          <CheckCircle2 size={16} color="#10b981" />
+                          <CheckCircle2 size={15} color="#10b981" />
                         ) : isActive ? (
                           <span className="m-pulse-dot" style={{ color: '#3b82f6' }} />
                         ) : (
-                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#475569' }} />
+                          <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#475569' }} />
                         )}
                         <h4 className="m-stage-title">{stage.title}</h4>
                       </div>
-                      {isExpanded ? <ChevronDown size={16} color="#94a3b8" /> : <ChevronRight size={16} color="#94a3b8" />}
+                      {isExpanded ? <ChevronDown size={14} color="#94a3b8" /> : <ChevronRight size={14} color="#94a3b8" />}
                     </div>
 
                     {isExpanded && stage.checkpoints && (
-                      <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                         {stage.checkpoints.map((chk, cIdx) => (
                           <div key={chk.id || cIdx} className="m-checkpoint-item">
                             <CheckCircle2
-                              size={15}
+                              size={14}
                               color={chk.completed ? '#10b981' : '#475569'}
                             />
                             <span style={{ color: chk.completed ? '#f1f5f9' : '#94a3b8' }}>
@@ -736,23 +734,24 @@ export default function MobileApp(props) {
         )}
 
         {/* ================================================================= */}
-        {/* TAB 5: FOCUS SOUNDSCAPES & PROFILE                                */}
+        {/* TAB 5: PROFILE & SYSTEM                                           */}
         {/* ================================================================= */}
         {activeTab === 'profile' && (
           <div>
-            {/* User Profile Card */}
-            <div style={{ background: 'var(--m-surface)', border: '1px solid var(--m-border)', borderRadius: '18px', padding: '16px', marginBottom: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', color: '#fff', display: 'grid', placeItems: 'center', fontSize: '18px', fontWeight: '800' }}>
-                  {user ? (user.username ? user.username.charAt(0).toUpperCase() : 'U') : 'G'}
-                </div>
+            <div style={{ background: 'var(--m-surface)', border: '1px solid var(--m-border)', borderRadius: '16px', padding: '14px', marginBottom: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img
+                  src="./favicon.png"
+                  alt="Daymark Profile Icon"
+                  style={{ width: '44px', height: '44px', borderRadius: '12px' }}
+                />
                 <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: '16px', margin: 0, color: '#fff' }}>
+                  <h3 style={{ fontSize: '15px', margin: 0, color: '#fff' }}>
                     {user ? user.username : 'Guest User'}
                   </h3>
                   <span style={{ fontSize: '11px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
                     <ShieldCheck size={12} />
-                    {dbStatus === 'connected' ? 'PostgreSQL Cloud Synced' : 'Ready'}
+                    {dbStatus === 'connected' ? 'Cloud Synced' : 'Device Local'}
                   </span>
                 </div>
                 {user ? (
@@ -763,132 +762,71 @@ export default function MobileApp(props) {
                     title="Log out"
                     aria-label="Log out"
                   >
-                    <LogOut size={16} color="#f87171" />
+                    <LogOut size={15} color="#f87171" />
                   </button>
                 ) : (
                   <button
                     type="button"
                     className="m-hero-btn m-hero-btn-primary"
-                    style={{ height: '36px', padding: '0 14px', fontSize: '12px' }}
+                    style={{ height: '34px', padding: '0 12px', fontSize: '11px' }}
                     onClick={() => setAuthModalOpen(true)}
                   >
-                    <LogIn size={13} /> Log In
+                    <LogIn size={12} /> Log In
                   </button>
                 )}
               </div>
             </div>
 
-            {/* Soundscapes Audio Suite */}
             <div className="m-section-title-row">
               <h3>
-                <Headphones size={16} color="#3b82f6" />
-                <span>Focus Soundscape Engine</span>
+                <Monitor size={15} color="#3b82f6" />
+                <span>Application & View</span>
               </h3>
             </div>
 
-            <div style={{ background: 'var(--m-surface)', border: '1px solid var(--m-border)', borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '16px' }}>
-                {[
-                  { id: 'rain', label: '🌧️ Soft Rain' },
-                  { id: 'brown', label: '🌊 Brown Noise' },
-                  { id: 'birds', label: '🌲 Forest Birds' },
-                  { id: 'pink', label: '📻 Pink Noise' },
-                  { id: 'binaural', label: '🧠 40Hz Gamma' },
-                  { id: 'off', label: '⏹️ Mute Audio' }
-                ].map((sound) => {
-                  const isCurrent = (focusSoundType || 'off') === sound.id;
-                  return (
-                    <button
-                      key={sound.id}
-                      type="button"
-                      style={{
-                        padding: '12px 10px',
-                        borderRadius: '12px',
-                        border: isCurrent ? '1.5px solid #3b82f6' : '1px solid var(--m-border)',
-                        background: isCurrent ? 'rgba(59, 130, 246, 0.2)' : 'var(--m-surface-card)',
-                        color: isCurrent ? '#fff' : '#94a3b8',
-                        fontWeight: '700',
-                        fontSize: '12px',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                      onClick={() => handleSelectSound && handleSelectSound(sound.id)}
-                    >
-                      {sound.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Volume Slider */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Volume2 size={16} color="#94a3b8" />
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.05"
-                  value={focusSoundVolume || 0.4}
-                  onChange={(e) => setFocusSoundVolume && setFocusSoundVolume(parseFloat(e.target.value))}
-                  style={{ flex: 1, accentColor: '#3b82f6' }}
-                />
-                <span style={{ fontSize: '12px', color: '#94a3b8', minWidth: '32px', textAlign: 'right' }}>
-                  {Math.round((focusSoundVolume || 0.4) * 100)}%
-                </span>
-              </div>
-            </div>
-
-            {/* App Preferences & Controls */}
-            <div className="m-section-title-row">
-              <h3>
-                <Monitor size={16} color="#a78bfa" />
-                <span>Display & System</span>
-              </h3>
-            </div>
-
-            <div style={{ background: 'var(--m-surface)', border: '1px solid var(--m-border)', borderRadius: '16px', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--m-surface)', border: '1px solid var(--m-border)', borderRadius: '14px', overflow: 'hidden' }}>
               <div
-                style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--m-border)', cursor: 'pointer' }}
+                style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--m-border)', cursor: 'pointer' }}
                 onClick={onSwitchToDesktop}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Monitor size={16} color="#3b82f6" />
-                  <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600' }}>Switch to Full Desktop UI</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Monitor size={15} color="#3b82f6" />
+                  <span style={{ fontSize: '13px', color: '#fff', fontWeight: '600' }}>Switch to Full Desktop UI</span>
                 </div>
-                <ChevronRight size={16} color="#64748b" />
+                <ChevronRight size={14} color="#64748b" />
               </div>
 
               <div
-                style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                 onClick={testAlarmSound}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Volume2 size={16} color="#10b981" />
-                  <span style={{ fontSize: '14px', color: '#fff', fontWeight: '600' }}>Test Sound & Vibration</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Volume2 size={15} color="#10b981" />
+                  <span style={{ fontSize: '13px', color: '#fff', fontWeight: '600' }}>Test Sound & Vibration</span>
                 </div>
-                <ChevronRight size={16} color="#64748b" />
+                <ChevronRight size={14} color="#64748b" />
               </div>
             </div>
 
-            <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '11px', color: 'var(--m-text-muted)' }}>
-              Daymark Routine Engine v1.0.0 • Mobile Production Build
+            <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '11px', color: 'var(--m-text-muted)' }}>
+              Daymark Routine Engine v1.0.0
             </div>
           </div>
         )}
       </main>
 
       {/* =================================================================== */}
-      {/* FLOATING BOTTOM NAVIGATION BAR                                      */}
+      {/* 3. FLOATING BOTTOM NAVIGATION BAR                                   */}
       {/* =================================================================== */}
       <nav className="m-bottom-nav">
         <button
           type="button"
           className={`m-nav-tab ${activeTab === 'today' ? 'is-active' : ''}`}
           onClick={() => setActiveTab('today')}
-          aria-label="Today Routine tab"
+          aria-label="Today tab"
         >
           <div className="m-nav-icon-wrap">
-            <Sun size={20} />
+            <Sun size={19} />
             {running && <span className="m-nav-dot" />}
           </div>
           <span className="m-nav-label">Today</span>
@@ -898,10 +836,10 @@ export default function MobileApp(props) {
           type="button"
           className={`m-nav-tab ${activeTab === 'habits' ? 'is-active' : ''}`}
           onClick={() => setActiveTab('habits')}
-          aria-label="Habits Checklist tab"
+          aria-label="Habits tab"
         >
           <div className="m-nav-icon-wrap">
-            <CheckCircle2 size={20} />
+            <CheckCircle2 size={19} />
           </div>
           <span className="m-nav-label">Habits</span>
         </button>
@@ -910,10 +848,10 @@ export default function MobileApp(props) {
           type="button"
           className={`m-nav-tab ${activeTab === 'pods' ? 'is-active' : ''}`}
           onClick={() => setActiveTab('pods')}
-          aria-label="Study Pods tab"
+          aria-label="Pods tab"
         >
           <div className="m-nav-icon-wrap">
-            <Users size={20} />
+            <Users size={19} />
           </div>
           <span className="m-nav-label">Pods</span>
         </button>
@@ -925,7 +863,7 @@ export default function MobileApp(props) {
           aria-label="Roadmaps tab"
         >
           <div className="m-nav-icon-wrap">
-            <GitBranch size={20} />
+            <GitBranch size={19} />
           </div>
           <span className="m-nav-label">Roadmaps</span>
         </button>
@@ -934,10 +872,10 @@ export default function MobileApp(props) {
           type="button"
           className={`m-nav-tab ${activeTab === 'profile' ? 'is-active' : ''}`}
           onClick={() => setActiveTab('profile')}
-          aria-label="Focus Audio & Profile tab"
+          aria-label="Profile tab"
         >
           <div className="m-nav-icon-wrap">
-            <User size={20} />
+            <User size={19} />
           </div>
           <span className="m-nav-label">Profile</span>
         </button>
