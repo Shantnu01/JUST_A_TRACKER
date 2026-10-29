@@ -3140,6 +3140,7 @@ const handleNudge = async (toUserId, toUsername) => {
           curriculumSubject={curriculumSubject}
           activeCurriculum={activeCurriculum}
           openSubjectCurriculum={openSubjectCurriculum}
+          columnStyle={columnStyle}
         />
 
         {authModalOpen && (
@@ -4107,6 +4108,7 @@ const handleNudge = async (toUserId, toUsername) => {
             setToast={setToast}
             onJumpToToday={() => setView('Today')}
             theme={theme}
+            columnStyle={columnStyle}
           />
         )}
 

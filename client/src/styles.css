@@ -13864,6 +13864,82 @@ html[data-theme="tokyo-lofi"],
 }
 
 
+
+/* --- Stage Roadmaps: True Crystal Transparent Glass --- */
+[data-column-style="transparent"] .stage-roadmaps-hub .roadmap-command-center,
+[data-column-style="transparent"] .stage-roadmaps-hub .single-stage-focused-card,
+[data-column-style="transparent"] .stage-roadmaps-hub .roadmap-hub-header,
+[data-column-style="transparent"] .stage-roadmaps-hub .roadmap-blank-creator-card,
+[data-column-style="transparent"] .stage-roadmaps-hub .roadmap-outline-editor-card,
+[data-column-style="transparent"] .stage-roadmaps-hub .creator-option-box,
+[data-column-style="transparent"] .stage-roadmaps-hub .creator-paste-section,
+[data-column-style="transparent"] .stage-roadmaps-hub .roadmap-format-guide-box,
+[data-column-style="transparent"] .stage-roadmaps-hub .roadmap-modal-card,
+[data-column-style="transparent"] .stage-roadmaps-hub .single-stage-tab-btn,
+[data-column-style="transparent"] .stage-roadmaps-hub .roadmap-subject-pill,
+[data-column-style="transparent"] .roadmap-command-center,
+[data-column-style="transparent"] .single-stage-focused-card,
+[data-column-style="transparent"] .roadmap-hub-header,
+[data-column-style="transparent"] .roadmap-blank-creator-card,
+[data-column-style="transparent"] .roadmap-outline-editor-card,
+[data-column-style="transparent"] .creator-option-box,
+[data-column-style="transparent"] .roadmap-modal-card {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), 0 14px 40px rgba(0, 0, 0, 0.28) !important;
+}
+
+[data-column-style="transparent"] .stage-roadmaps-hub .stage-focus-header,
+[data-column-style="transparent"] .stage-roadmaps-hub .single-checkpoint-row,
+[data-column-style="transparent"] .stage-roadmaps-hub .stage-focus-add-checkpoint-row,
+[data-column-style="transparent"] .stage-roadmaps-hub .empty-checkpoints-prompt,
+[data-column-style="transparent"] .stage-roadmaps-hub .creator-paste-textarea,
+[data-column-style="transparent"] .stage-roadmaps-hub .roadmap-editor-textarea,
+[data-column-style="transparent"] .stage-focus-header,
+[data-column-style="transparent"] .single-checkpoint-row,
+[data-column-style="transparent"] .stage-focus-add-checkpoint-row {
+  background: rgba(255, 255, 255, 0.02) !important;
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  background-image: none !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-column-style="transparent"] .single-checkpoint-row:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-column-style="transparent"] .command-subject-name,
+[data-column-style="transparent"] .stage-focus-title,
+[data-column-style="transparent"] .checkpoint-headline,
+[data-column-style="transparent"] .roadmap-hub-title,
+[data-column-style="transparent"] .blank-creator-title,
+[data-column-style="transparent"] .option-title {
+  color: #FAF8FF !important;
+}
+
+[data-column-style="transparent"] .checkpoint-sub-pill {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #D4CEEB !important;
+}
+
+[data-column-style="transparent"] .single-stage-tab-btn.viewing {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-command-center,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-hub-header {
+  border-color: rgba(245, 158, 11, 0.26) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 220, 160, 0.4), 0 16px 40px rgba(0, 0, 0, 0.35) !important;
+}
+
 /* ==========================================================================
    2. APPLE LIQUID GLASS (VisionOS / macOS Specular Refraction)
    ========================================================================== */
@@ -13948,6 +14024,82 @@ html[data-theme="tokyo-lofi"],
 }
 
 
+
+/* --- Stage Roadmaps: Apple Liquid Glass (Refractive VisionOS Specular Depth) --- */
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .roadmap-command-center,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .single-stage-focused-card,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .roadmap-hub-header,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .roadmap-blank-creator-card,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .roadmap-outline-editor-card,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .creator-option-box,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .creator-paste-section,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .roadmap-format-guide-box,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .roadmap-modal-card,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .single-stage-tab-btn,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .roadmap-subject-pill,
+[data-column-style="liquid-glass"] .roadmap-command-center,
+[data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-column-style="liquid-glass"] .roadmap-hub-header,
+[data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-column-style="liquid-glass"] .roadmap-outline-editor-card,
+[data-column-style="liquid-glass"] .creator-option-box,
+[data-column-style="liquid-glass"] .roadmap-modal-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+  backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.15), 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .stage-focus-header,
+[data-column-style="liquid-glass"] .stage-focus-header {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .single-checkpoint-row,
+[data-column-style="liquid-glass"] .single-checkpoint-row {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+}
+
+[data-column-style="liquid-glass"] .single-checkpoint-row:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-column-style="liquid-glass"] .command-subject-name,
+[data-column-style="liquid-glass"] .stage-focus-title,
+[data-column-style="liquid-glass"] .checkpoint-headline,
+[data-column-style="liquid-glass"] .roadmap-hub-title,
+[data-column-style="liquid-glass"] .blank-creator-title,
+[data-column-style="liquid-glass"] .option-title {
+  color: #FAF8FF !important;
+}
+
+[data-column-style="liquid-glass"] .checkpoint-sub-pill {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #D4CEEB !important;
+}
+
+[data-column-style="liquid-glass"] .single-stage-tab-btn.viewing {
+  background: rgba(245, 158, 11, 0.16) !important;
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-command-center,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-hub-header {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.11) 0%, rgba(28, 25, 40, 0.32) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  box-shadow: inset 0 1.5px 1px 0 rgba(255, 220, 150, 0.5), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2), 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+}
+
 /* ==========================================================================
    3. SMOKY (Deep Smoked Obsidian Tint)
    ========================================================================== */
@@ -14003,6 +14155,73 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .panel,
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .metric-card,
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .streak-card {
+  background: rgba(14, 12, 22, 0.85) !important;
+  border-color: rgba(245, 158, 11, 0.18) !important;
+}
+
+
+/* --- Stage Roadmaps: Smoky Obsidian --- */
+[data-column-style="smoky"] .stage-roadmaps-hub .roadmap-command-center,
+[data-column-style="smoky"] .stage-roadmaps-hub .single-stage-focused-card,
+[data-column-style="smoky"] .stage-roadmaps-hub .roadmap-hub-header,
+[data-column-style="smoky"] .stage-roadmaps-hub .roadmap-blank-creator-card,
+[data-column-style="smoky"] .stage-roadmaps-hub .roadmap-outline-editor-card,
+[data-column-style="smoky"] .stage-roadmaps-hub .creator-option-box,
+[data-column-style="smoky"] .stage-roadmaps-hub .creator-paste-section,
+[data-column-style="smoky"] .stage-roadmaps-hub .roadmap-format-guide-box,
+[data-column-style="smoky"] .stage-roadmaps-hub .roadmap-modal-card,
+[data-column-style="smoky"] .stage-roadmaps-hub .single-stage-tab-btn,
+[data-column-style="smoky"] .stage-roadmaps-hub .roadmap-subject-pill,
+[data-column-style="smoky"] .roadmap-command-center,
+[data-column-style="smoky"] .single-stage-focused-card,
+[data-column-style="smoky"] .roadmap-hub-header,
+[data-column-style="smoky"] .roadmap-blank-creator-card,
+[data-column-style="smoky"] .roadmap-outline-editor-card,
+[data-column-style="smoky"] .creator-option-box,
+[data-column-style="smoky"] .roadmap-modal-card {
+  background: rgba(8, 9, 15, 0.82) !important;
+  backdrop-filter: blur(28px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(130%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), 0 24px 60px rgba(0, 0, 0, 0.65) !important;
+}
+
+[data-column-style="smoky"] .stage-roadmaps-hub .stage-focus-header,
+[data-column-style="smoky"] .stage-focus-header {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-column-style="smoky"] .stage-roadmaps-hub .single-checkpoint-row,
+[data-column-style="smoky"] .single-checkpoint-row {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 10px !important;
+}
+
+[data-column-style="smoky"] .single-checkpoint-row:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-column-style="smoky"] .command-subject-name,
+[data-column-style="smoky"] .stage-focus-title,
+[data-column-style="smoky"] .checkpoint-headline,
+[data-column-style="smoky"] .roadmap-hub-title,
+[data-column-style="smoky"] .blank-creator-title,
+[data-column-style="smoky"] .option-title {
+  color: #FAF8FF !important;
+}
+
+[data-column-style="smoky"] .checkpoint-sub-pill {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #D4CEEB !important;
+}
+
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-command-center,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-hub-header {
   background: rgba(14, 12, 22, 0.85) !important;
   border-color: rgba(245, 158, 11, 0.18) !important;
 }

@@ -70,7 +70,8 @@ export default function MobileApp(props) {
     setFocusSoundVolume,
     curriculumSubject,
     activeCurriculum,
-    openSubjectCurriculum
+    openSubjectCurriculum,
+    columnStyle
   } = props;
 
   const [activeTab, setActiveTab] = useState('today');
@@ -187,7 +188,7 @@ export default function MobileApp(props) {
   }, [activeCurriculum]);
 
   return (
-    <div className="mobile-viewport-root">
+    <div className="mobile-viewport-root" data-column-style={columnStyle || "normal"}>
       {/* =================================================================== */}
       {/* TOP MOBILE APP BAR                                                  */}
       {/* =================================================================== */}

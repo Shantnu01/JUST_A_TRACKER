@@ -961,3 +961,62 @@
 .m-nav-tab.is-active .m-nav-label {
   color: #fff;
 }
+
+
+/* ==========================================================================
+   11. COLUMN STYLE & PANEL SURFACE REACTION (Mobile Roadmaps & Cards)
+   ========================================================================== */
+
+/* 1. Crystal Transparent Glass */
+[data-column-style="transparent"] .m-focus-hero,
+[data-column-style="transparent"] .m-roadmap-hero,
+[data-column-style="transparent"] .m-stage-card,
+[data-column-style="transparent"] .m-pod-hero,
+[data-column-style="transparent"] .m-habit-progress-card,
+[data-column-style="transparent"] .m-timeline-card,
+[data-column-style="transparent"] .m-habit-card,
+[data-column-style="transparent"] .m-alarm-card,
+[data-column-style="transparent"] .m-stat-pill,
+[data-column-style="transparent"] .m-pod-member-row {
+  background: transparent !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 2. Apple Liquid Glass */
+[data-column-style="liquid-glass"] .m-focus-hero,
+[data-column-style="liquid-glass"] .m-roadmap-hero,
+[data-column-style="liquid-glass"] .m-stage-card,
+[data-column-style="liquid-glass"] .m-pod-hero,
+[data-column-style="liquid-glass"] .m-habit-progress-card,
+[data-column-style="liquid-glass"] .m-timeline-card,
+[data-column-style="liquid-glass"] .m-habit-card,
+[data-column-style="liquid-glass"] .m-alarm-card,
+[data-column-style="liquid-glass"] .m-stat-pill,
+[data-column-style="liquid-glass"] .m-pod-member-row {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.4), 0 16px 40px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* 3. Smoky Obsidian Tint */
+[data-column-style="smoky"] .m-focus-hero,
+[data-column-style="smoky"] .m-roadmap-hero,
+[data-column-style="smoky"] .m-stage-card,
+[data-column-style="smoky"] .m-pod-hero,
+[data-column-style="smoky"] .m-habit-progress-card,
+[data-column-style="smoky"] .m-timeline-card,
+[data-column-style="smoky"] .m-habit-card,
+[data-column-style="smoky"] .m-alarm-card,
+[data-column-style="smoky"] .m-stat-pill,
+[data-column-style="smoky"] .m-pod-member-row {
+  background: rgba(8, 9, 15, 0.85) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.12), 0 20px 48px rgba(0, 0, 0, 0.6) !important;
+}
