@@ -11,9 +11,6 @@ import StageRoadmapsView from './components/StageRoadmapsView';
 import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
 import DynamicVideoModal, { extractYouTubeId } from './components/DynamicVideoModal';
 import SynapticBridgeModal from './components/SynapticBridgeModal';
-import offlineSyncEngine from './utils/offlineSyncEngine';
-import AppUpdateBanner, { useAppUpdateCheck } from './components/AppUpdateManager';
-import { requestUserLocationAndWeather, DEFAULT_TOKYO_WEATHER, getCachedWeather } from './utils/weatherService';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -91,17 +88,14 @@ import {
   Edit3
 } from 'lucide-react';
 import './styles.css';
-import MobileApp from './mobile/MobileApp';
-import { checkForAppUpdate, executeAppUpdate, CURRENT_APP_VERSION, getDefaultApiEndpoint } from './utils/updater';
 import { playFocusSound, stopFocusSound, setSoundVolume } from './utils/soundEngine';
 import { calculateCircadianScore, getCircadianEnergyLevel, getCognitiveTier, calculateAutoShift, detectScheduleDrift, generateChiefOfStaffPlan, slotScheduleToCircadian } from './utils/circadianEngine';
-import { initNativeAlarms, syncNativeAlarms, triggerNativeHaptic, isNativeApp } from './utils/nativeAlarm';
 
 // Dynamic API endpoint: Uses relative /api for unified production & Vite proxy,
-// or automatically connects to production cloud backend for Electron PC app & Android APK.
+// or uses VITE_API_URL if configured for separate frontend/backend deployments.
 const API = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api`
-  : getDefaultApiEndpoint();
+  : '/api';
 
 const iconMap = {
   Code2,
@@ -627,34 +621,13 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isZenMode]);
 
-  // Tokyo Lofi Geolocation & Local Weather Engine
-  const [weatherData, setWeatherData] = useState(() => {
-    return getCachedWeather() || DEFAULT_TOKYO_WEATHER;
-  });
-
-  const fetchWeather = useCallback(async () => {
-    try {
-      const res = await requestUserLocationAndWeather();
-      if (res) setWeatherData(res);
-    } catch (e) {
-      console.warn('[Weather] Request error:', e);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (theme === 'tokyo-lofi') {
-      fetchWeather();
-    }
-  }, [theme, fetchWeather]);
-
   // Tokyo Lofi Live JST Clock & Ambient Web Audio Generator
   const [jstTime, setJstTime] = useState('');
   useEffect(() => {
     const updateJST = () => {
       const now = new Date();
       try {
-        const targetTz = theme === 'tokyo-lofi' ? weatherData.timeZone : 'Asia/Tokyo';
-        const options = { timeZone: targetTz, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const options = { timeZone: 'Asia/Tokyo', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
         setJstTime(new Intl.DateTimeFormat([], options).format(now));
       } catch (e) {
         setJstTime(now.toLocaleTimeString());
@@ -663,7 +636,7 @@ function App() {
     updateJST();
     const timer = setInterval(updateJST, 1000);
     return () => clearInterval(timer);
-  }, [theme, weatherData.timeZone]);
+  }, []);
 
   // 7. Subject Curriculum & Stage Roadmap State
   const [curriculumModalOpen, setCurriculumModalOpen] = useState(false);
@@ -694,58 +667,6 @@ function App() {
   const [pushSubscribed, setPushSubscribed] = useState(() => {
     return typeof Notification !== 'undefined' && Notification.permission === 'granted';
   });
-
-  // Live Update Notification State (Web, Android APK & Windows PC EXE)
-  const [availableUpdate, setAvailableUpdate] = useState(null);
-
-  // Dedicated Mobile UI auto-switch (Phone viewport or Capacitor Native APK)
-  const [forceDesktopView, setForceDesktopView] = useState(() => {
-    try {
-      return localStorage.getItem('daymark_force_desktop') === 'true';
-    } catch {
-      return false;
-    }
-  });
-
-  const [isMobileScreen, setIsMobileScreen] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return isNativeApp() || window.innerWidth < 768;
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobileScreen(isNativeApp() || window.innerWidth < 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Check for updates on startup and every 10 minutes
-  useEffect(() => {
-    let mounted = true;
-    const checkUpdates = async () => {
-      const update = await checkForAppUpdate(API);
-      if (mounted && update) {
-        setAvailableUpdate(update);
-      }
-    };
-    checkUpdates();
-    const interval = setInterval(checkUpdates, 10 * 60 * 1000);
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
-  }, []);
-
-  const handleToggleDesktopView = () => {
-    const next = !forceDesktopView;
-    setForceDesktopView(next);
-    try {
-      localStorage.setItem('daymark_force_desktop', String(next));
-    } catch {}
-    setToast(next ? 'Switched to Full Desktop View' : 'Switched to Dedicated Mobile View');
-    setTimeout(() => setToast(''), 2500);
-  };
 
   // Developer & Coding Hub State
   const [codingProfile, setCodingProfile] = useState(() => {
@@ -1599,17 +1520,10 @@ function App() {
       })
     })
       .then(res => {
-        if (res.ok) {
-          setDbStatus('connected');
-          offlineSyncEngine.removeSyncedDates([key]);
-        } else {
-          // Server returned error (e.g. 503 database offline) -> enqueue for chunked batch sync
-          offlineSyncEngine.enqueueDayUpdate(key, nextDay);
-        }
+        if (res.ok) setDbStatus('connected');
       })
       .catch(() => {
-        // Offline / network failure -> enqueue for chunked batch sync
-        offlineSyncEngine.enqueueDayUpdate(key, nextDay);
+        // Safe offline / browser-storage fallback
       });
   };
 
@@ -1670,15 +1584,6 @@ function App() {
     }
   }, [user?.id, day.alarms]);
 
-  // Initialize native Android alarm channels and keep native alarm scheduler in sync
-  useEffect(() => {
-    initNativeAlarms();
-  }, []);
-
-  useEffect(() => {
-    syncNativeAlarms(alarms);
-  }, [alarms]);
-
   // Reliable Alarm Interval Loop (checked every second, immune to background throttling)
   useEffect(() => {
     if (!isToday) return;
@@ -1695,7 +1600,6 @@ function App() {
         setLastTriggeredMinute(minuteKey);
         setActiveAlarmModal(triggered);
         playAlarmMelody();
-        triggerNativeHaptic();
 
         // Browser notification if granted
         if ('Notification' in window && Notification.permission === 'granted') {
@@ -2238,7 +2142,6 @@ function App() {
   const saveAlarms = (nextAlarms) => {
     const capped = nextAlarms.slice(0, 5);
     setAlarms(capped);
-    syncNativeAlarms(capped);
     const key = user ? `daymark-alarms-${user.id}` : 'daymark-alarms-guest';
     localStorage.setItem(key, JSON.stringify(capped));
     patchDay({ alarms: capped });
@@ -2303,7 +2206,6 @@ function App() {
 
   const testAlarmSound = () => {
     playAlarmMelody();
-    triggerNativeHaptic();
     setToast('🔔 Playing alarm test chime!');
     setTimeout(() => setToast(''), 3000);
   };
@@ -3102,170 +3004,8 @@ const handleNudge = async (toUserId, toUsername) => {
     setTimeout(() => setToast(''), 2500);
   };
 
-  if (isMobileScreen && !forceDesktopView) {
-    return (
-      <>
-        {availableUpdate && (
-          <div className="update-notice-banner">
-            <div className="update-notice-content">
-              <Sparkles size={15} />
-              <span>
-                <strong>Update {availableUpdate.latest_version}:</strong> {availableUpdate.notes || 'New improvements ready.'}
-              </span>
-            </div>
-            <div className="update-notice-actions">
-              <button type="button" className="update-now-btn" onClick={() => executeAppUpdate(availableUpdate)}>
-                Update
-              </button>
-              <button type="button" className="update-dismiss-btn" onClick={() => setAvailableUpdate(null)} aria-label="Dismiss update">
-                <X size={13} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        <MobileApp
-          user={user}
-          token={token}
-          setAuthModalOpen={setAuthModalOpen}
-          logout={handleLogout}
-          day={day}
-          habits={habits}
-          toggleHabit={toggleHabit}
-          schedule={schedule}
-          activeId={activeId}
-          seconds={seconds}
-          running={running}
-          startSession={startSession}
-          pauseSession={() => setRunning(false)}
-          finishSession={() => finishSession()}
-          current={current}
-          completion={completion}
-          doneCount={doneCount}
-          focusMinutes={focusMinutes}
-          totalPlannedFocusHours={totalPlannedFocusHours}
-          alarms={alarms}
-          toggleAlarm={toggleAlarm}
-          testAlarmSound={testAlarmSound}
-          activePod={activeGroup}
-          podLeaderboard={leaderboard}
-          podMembers={podMembers}
-          podRadar={podRadar}
-          sendNudge={() => {
-            const other = podMembers.find(m => user && m.id !== user.id);
-            if (other) handleNudge(other.id, other.username || other.name);
-            else setToast('No other members currently in pod to nudge');
-          }}
-          nudgeCooldownRemaining={user && nudgeCooldowns[user.id] ? nudgeCooldowns[user.id] : 0}
-          podNotice={activeGroup?.notice_text}
-          leavePod={() => activeGroup && handleLeavePod(activeGroup.id, activeGroup.name)}
-          deletePod={() => activeGroup && handleDeletePod(activeGroup.id, activeGroup.name)}
-          onSwitchToDesktop={handleToggleDesktopView}
-          dbStatus={dbStatus}
-          focusSoundType={focusSoundType}
-          handleSelectSound={handleSelectSound}
-          focusSoundVolume={focusSoundVolume}
-          setFocusSoundVolume={setFocusSoundVolume}
-          curriculumSubject={curriculumSubject}
-          activeCurriculum={activeCurriculum}
-          openSubjectCurriculum={openSubjectCurriculum}
-          columnStyle={columnStyle}
-          apiBase={API}
-        />
-
-        {authModalOpen && (
-          <div className="auth-backdrop" onClick={() => setAuthModalOpen(false)}>
-            <div className="auth-modal" onClick={e => e.stopPropagation()}>
-              <div className="auth-modal-header">
-                <h3>{authTab === 'login' ? 'Welcome Back' : 'Create Account'}</h3>
-                <button type="button" className="auth-close-btn" onClick={() => setAuthModalOpen(false)} aria-label="Close modal">
-                  <X size={17} />
-                </button>
-              </div>
-              <div className="auth-tabs">
-                <button type="button" className={`auth-tab-btn ${authTab === 'login' ? 'active' : ''}`} onClick={() => { setAuthTab('login'); setAuthError(''); }}>Log In</button>
-                <button type="button" className={`auth-tab-btn ${authTab === 'register' ? 'active' : ''}`} onClick={() => { setAuthTab('register'); setAuthError(''); }}>Register</button>
-              </div>
-              <form onSubmit={handleAuthSubmit} className="auth-form">
-                {authError && <div className="auth-error-banner">{authError}</div>}
-                <div className="auth-field">
-                  <label htmlFor="m-auth-user">Username</label>
-                  <input id="m-auth-user" type="text" value={authUsername} onChange={e => setAuthUsername(e.target.value)} placeholder="Enter username" autoFocus required />
-                </div>
-                <div className="auth-field">
-                  <label htmlFor="m-auth-pw">Password</label>
-                  <input id="m-auth-pw" type="password" value={authPassword} onChange={e => setAuthPassword(e.target.value)} placeholder="Enter password (min 6 chars)" required />
-                </div>
-                <button type="submit" className="auth-submit-btn" disabled={authLoading}>
-                  {authLoading ? 'Processing...' : (authTab === 'login' ? 'Sign In' : 'Create Account')}
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {activeAlarmModal && (
-          <div className="alarm-ringing-backdrop">
-            <div className="alarm-ringing-modal">
-              <div className="alarm-ringing-icon-wrap">
-                <AlarmClock size={40} className="alarm-ringing-bell" color="#d97706" />
-              </div>
-              <span className="eyebrow" style={{ color: '#d97706', letterSpacing: '1px' }}>ROUTINE ALARM TRIGGERED</span>
-              <h2 className="alarm-ringing-time">{activeAlarmModal.time}</h2>
-              <p className="alarm-ringing-label">{activeAlarmModal.label || 'Time for your routine activity!'}</p>
-              <div className="alarm-ringing-actions">
-                <button className="alarm-dismiss-btn" onClick={dismissAlarm}>
-                  <Check size={16} /> Dismiss Alarm
-                </button>
-                <button className="alarm-snooze-btn" onClick={snoozeAlarm}>
-                  <Clock3 size={15} /> Snooze 5 Min
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {toast && (
-          <div className="toast">
-            <span>{toast}</span>
-            <button type="button" onClick={() => setToast('')} aria-label="Dismiss message">
-              <X size={14} />
-            </button>
-          </div>
-        )}
-      </>
-    );
-  }
-
   return (
-    <>
-      {availableUpdate && (
-        <div className="update-notice-banner">
-          <div className="update-notice-content">
-            <Sparkles size={16} />
-            <span>
-              <strong>New Update Available ({availableUpdate.latest_version}):</strong> {availableUpdate.notes || 'Improvements and fixes ready.'}
-            </span>
-          </div>
-          <div className="update-notice-actions">
-            <button type="button" className="update-now-btn" onClick={() => executeAppUpdate(availableUpdate)}>
-              Update Now
-            </button>
-            <button type="button" className="update-dismiss-btn" onClick={() => setAvailableUpdate(null)} aria-label="Dismiss update notification">
-              <X size={14} />
-            </button>
-          </div>
-        </div>
-      )}
-      {isMobileScreen && forceDesktopView && (
-        <div className="force-desktop-pill-bar">
-          <span>Viewing Desktop Layout</span>
-          <button type="button" onClick={handleToggleDesktopView}>
-            Switch to Mobile View
-          </button>
-        </div>
-      )}
-      <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme} data-column-style={columnStyle}>
+    <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme} data-column-style={columnStyle}>
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">
@@ -3398,20 +3138,15 @@ const handleNudge = async (toUserId, toUsername) => {
             <div className="tokyo-terminal-strip">
               <div className="tokyo-strip-left">
                 <span className="tokyo-strip-dot" />
-                <span>{weatherData.isCustom ? `${weatherData.country} TERMINAL` : 'TOKYO TERMINAL'} <span className="tokyo-subline">// METROPOLITAN LINE</span></span>
+                <span>TOKYO TERMINAL <span className="tokyo-subline">// METROPOLITAN LINE</span></span>
                 <span className="tokyo-strip-sep">/</span>
                 <span className="tokyo-strip-date">{prettyDate(selectedDate).toUpperCase()}</span>
               </div>
-              <div
-                className="tokyo-strip-right"
-                onClick={fetchWeather}
-                title="Click to detect location & refresh local weather outside"
-                style={{ cursor: 'pointer' }}
-              >
+              <div className="tokyo-strip-right">
                 <svg className="tokyo-weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
                 </svg>
-                <span>{weatherData.country} WEATHER: {weatherData.temp}°C {weatherData.condition}</span>
+                <span>TOKYO WEATHER: 18°C CLOUDY</span>
               </div>
             </div>
           </>
@@ -3548,7 +3283,7 @@ const handleNudge = async (toUserId, toUsername) => {
                     <div className="tokyo-clock-time">{jstTime || '21:42:08'}</div>
                     <div className="tokyo-clock-label">
                       <span className="tokyo-clock-dot" />
-                      <span>{weatherData.country ? `${weatherData.country.toUpperCase()} · ${weatherData.timeZoneLabel}` : 'TOKYO · JST (UTC+9)'}</span>
+                      <span>TOKYO · JST (UTC+9)</span>
                     </div>
                   </div>
                 )}
@@ -4143,7 +3878,6 @@ const handleNudge = async (toUserId, toUsername) => {
             setToast={setToast}
             onJumpToToday={() => setView('Today')}
             theme={theme}
-            columnStyle={columnStyle}
           />
         )}
 
@@ -5638,63 +5372,6 @@ const handleNudge = async (toUserId, toUsername) => {
                 Tip: Keep buffer blocks between deep sessions to avoid cognitive fatigue and sustain long-term consistency.
               </span>
             </div>
-
-            {/* Server Connection & Cloud Sync Settings */}
-            <div className="column-style-setting-card" style={{ marginTop: '24px' }}>
-              <div className="column-style-header">
-                <div>
-                  <span className="eyebrow">CLOUD CONNECTION & UPDATES</span>
-                  <h4>Server Endpoint & Sync Status</h4>
-                  <p className="muted" style={{ margin: '4px 0 0', fontSize: '13px' }}>
-                    Active backend server used for study pods, routine backup, and real-time synchronization:
-                  </p>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className="column-style-current-pill" style={{ color: dbStatus === 'connected' ? '#10B981' : '#F59E0B' }}>
-                    {dbStatus === 'connected' ? '● CLOUD CONNECTED' : '○ OFFLINE CACHE'}
-                  </span>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <input
-                  type="text"
-                  defaultValue={API}
-                  onBlur={(e) => {
-                    const val = e.target.value.trim();
-                    if (val && val !== API) {
-                      localStorage.setItem('daymark-api-url', val);
-                      setToast('API endpoint saved. Reloading...');
-                      setTimeout(() => window.location.reload(), 800);
-                    }
-                  }}
-                  placeholder="https://just-a-tracker.onrender.com/api"
-                  style={{
-                    flex: 1,
-                    minWidth: '260px',
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.15)',
-                    borderRadius: '8px',
-                    padding: '9px 14px',
-                    color: '#fff',
-                    fontSize: '13px',
-                    fontFamily: 'monospace'
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    localStorage.removeItem('daymark-api-url');
-                    setToast('Reset to default cloud backend. Reloading...');
-                    setTimeout(() => window.location.reload(), 800);
-                  }}
-                  className="reset-schedule-btn"
-                  style={{ padding: '8px 14px', fontSize: '12px' }}
-                >
-                  Reset Default Cloud
-                </button>
-              </div>
-            </div>
           </section>
         )}
 
@@ -6915,7 +6592,6 @@ const handleNudge = async (toUserId, toUsername) => {
         </div>
       )}
     </div>
-    </>
   );
 }
 
