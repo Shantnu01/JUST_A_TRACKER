@@ -14,6 +14,8 @@ import SynapticBridgeModal from './components/SynapticBridgeModal';
 import offlineSyncEngine from './utils/offlineSyncEngine';
 import OfflineSyncIndicator from './components/OfflineSyncIndicator';
 import AppUpdateBanner, { useAppUpdateCheck } from './components/AppUpdateManager';
+import ThemeClockCard from './components/ThemeClockCard';
+import { requestUserLocationAndWeather, DEFAULT_TOKYO_WEATHER, getCachedWeather } from './utils/weatherService';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -627,13 +629,34 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isZenMode]);
 
+  // Tokyo Lofi Geolocation & Local Weather Engine
+  const [weatherData, setWeatherData] = useState(() => {
+    return getCachedWeather() || DEFAULT_TOKYO_WEATHER;
+  });
+
+  const fetchWeather = useCallback(async () => {
+    try {
+      const res = await requestUserLocationAndWeather();
+      if (res) setWeatherData(res);
+    } catch (e) {
+      console.warn('[Weather] Request error:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (theme === 'tokyo-lofi') {
+      fetchWeather();
+    }
+  }, [theme, fetchWeather]);
+
   // Tokyo Lofi Live JST Clock & Ambient Web Audio Generator
   const [jstTime, setJstTime] = useState('');
   useEffect(() => {
     const updateJST = () => {
       const now = new Date();
       try {
-        const options = { timeZone: 'Asia/Tokyo', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const targetTz = theme === 'tokyo-lofi' ? weatherData.timeZone : 'Asia/Tokyo';
+        const options = { timeZone: targetTz, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
         setJstTime(new Intl.DateTimeFormat([], options).format(now));
       } catch (e) {
         setJstTime(now.toLocaleTimeString());
@@ -642,7 +665,7 @@ function App() {
     updateJST();
     const timer = setInterval(updateJST, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [theme, weatherData.timeZone]);
 
   // 7. Subject Curriculum & Stage Roadmap State
   const [curriculumModalOpen, setCurriculumModalOpen] = useState(false);
@@ -3379,15 +3402,20 @@ const handleNudge = async (toUserId, toUsername) => {
             <div className="tokyo-terminal-strip">
               <div className="tokyo-strip-left">
                 <span className="tokyo-strip-dot" />
-                <span>TOKYO TERMINAL <span className="tokyo-subline">// METROPOLITAN LINE</span></span>
+                <span>{weatherData.isCustom ? `${weatherData.country} TERMINAL` : 'TOKYO TERMINAL'} <span className="tokyo-subline">// METROPOLITAN LINE</span></span>
                 <span className="tokyo-strip-sep">/</span>
                 <span className="tokyo-strip-date">{prettyDate(selectedDate).toUpperCase()}</span>
               </div>
-              <div className="tokyo-strip-right">
+              <div
+                className="tokyo-strip-right"
+                onClick={fetchWeather}
+                title="Click to detect location & refresh local weather outside"
+                style={{ cursor: 'pointer' }}
+              >
                 <svg className="tokyo-weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
                 </svg>
-                <span>TOKYO WEATHER: 18°C CLOUDY</span>
+                <span>{weatherData.country} WEATHER: {weatherData.temp}°C {weatherData.condition}</span>
               </div>
             </div>
           </>
@@ -3519,15 +3547,11 @@ const handleNudge = async (toUserId, toUsername) => {
                     </span>
                   </div>
                 </div>
-                {theme === 'tokyo-lofi' && (
-                  <div className="tokyo-clock-card">
-                    <div className="tokyo-clock-time">{jstTime || '21:42:08'}</div>
-                    <div className="tokyo-clock-label">
-                      <span className="tokyo-clock-dot" />
-                      <span>TOKYO · JST (UTC+9)</span>
-                    </div>
-                  </div>
-                )}
+                <ThemeClockCard
+                  theme={theme}
+                  timeZone={theme === 'tokyo-lofi' ? weatherData.timeZone : undefined}
+                  locationLabel={theme === 'tokyo-lofi' ? weatherData.timeZoneLabel : undefined}
+                />
               </div>
 
             </section>

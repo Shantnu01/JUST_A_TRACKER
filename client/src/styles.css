@@ -8911,6 +8911,7 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   display: none !important;
 }
 
+.welcome-right-widgets,
 [data-theme="tokyo-lofi"] .welcome-right-widgets {
   display: flex !important;
   align-items: center !important;
@@ -9037,25 +9038,45 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   font-weight: 300 !important;
 }
 
-/* JST Live Clock Station Card */
-.tokyo-clock-card {
-  background: rgba(28, 25, 40, 0.5);
-  border: 1px solid rgba(245, 158, 11, 0.15);
+/* ==========================================================================
+   UNIVERSAL THEME-MATCHED TIME CLOCK WIDGETS
+   ========================================================================== */
+.theme-clock-card {
   border-radius: 12px;
-  padding: 14px 22px;
-  backdrop-filter: blur(8px);
+  padding: 12px 20px;
   text-align: right;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.2s ease;
+  min-width: 170px;
+  box-sizing: border-box;
+}
+
+.clock-sec-dim {
+  opacity: 0.55;
+  font-size: 0.78em;
+  font-weight: 300;
+}
+
+/* 1. TOKYO LOFI CLOCK */
+.tokyo-clock-card,
+.theme-clock-card.tokyo-lofi {
+  background: rgba(28, 25, 40, 0.5);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .tokyo-clock-time {
   font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 300;
   color: #FAF8FF;
   letter-spacing: 2px;
   line-height: 1;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .tokyo-clock-label {
@@ -9063,10 +9084,10 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   align-items: center;
   justify-content: flex-end;
   gap: 7px;
-  font-size: 11px;
+  font-size: 10.5px;
   text-transform: uppercase;
-  letter-spacing: 2.5px;
-  color: #6B6484;
+  letter-spacing: 2px;
+  color: #8C84A8;
   font-weight: 600;
 }
 
@@ -9079,9 +9100,420 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   animation: pulseDot 2s infinite;
 }
 
+/* 2. NEO-BRUTALIST CLOCK */
+.theme-clock-card.neo-brutalist {
+  background: #FEF08A;
+  border: 2.5px solid #18181B;
+  box-shadow: 3.5px 3.5px 0 #18181B;
+  border-radius: 6px;
+  padding: 10px 16px;
+}
+
+.nb-clock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #18181B;
+  color: #FEF08A;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  align-self: flex-end;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.nb-clock-lightning {
+  color: #FEF08A;
+  font-size: 10px;
+}
+
+.nb-clock-time {
+  font-family: Impact, 'Arial Black', sans-serif;
+  font-size: 28px;
+  color: #18181B;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.nb-clock-time .clock-sec-sub {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+.nb-clock-date {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #18181B;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* 3. ZEN-PAPER CLOCK */
+.theme-clock-card.zen-paper {
+  background: #FAF8F5;
+  border: 1px solid #E7E5E4;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+}
+
+.zen-clock-time {
+  font-family: 'Hiragino Mincho ProN', Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: #292524;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.zen-clock-colon {
+  opacity: 0.4;
+  margin: 0 1px;
+}
+
+.zen-clock-sec {
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+.zen-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #78716C;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.zen-clock-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #78716C;
+  opacity: 0.7;
+}
+
+/* 4. GHIBLI MEADOW CLOCK */
+.theme-clock-card.ghibli-meadow {
+  background: rgba(240, 253, 244, 0.9);
+  border: 1.5px solid rgba(134, 239, 172, 0.7);
+  box-shadow: 0 4px 12px rgba(22, 101, 52, 0.06);
+  border-radius: 12px;
+}
+
+.ghibli-clock-time {
+  font-family: 'Nunito', -apple-system, sans-serif;
+  font-size: 27px;
+  font-weight: 800;
+  color: #14532D;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.ghibli-clock-ampm {
+  font-size: 12px;
+  font-weight: 700;
+  color: #16A34A;
+  margin-left: 3px;
+}
+
+.ghibli-clock-sec {
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.ghibli-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #166534;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.ghibli-clock-sprout {
+  font-size: 11px;
+}
+
+/* 5. ACID RUNWAY CLOCK */
+.theme-clock-card.acid-runway {
+  background: #09090D;
+  border: 1.5px solid #CCFF00;
+  box-shadow: 0 0 16px rgba(204, 255, 0, 0.18);
+  border-radius: 8px;
+}
+
+.acid-clock-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #CCFF00;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+}
+
+.acid-bracket {
+  color: #CCFF00;
+  opacity: 0.6;
+}
+
+.acid-clock-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 800;
+  color: #CCFF00;
+  letter-spacing: 2px;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(204, 255, 0, 0.4);
+}
+
+.acid-clock-sec {
+  font-size: 18px;
+  opacity: 0.75;
+}
+
+/* 6. SPIDER-VERSE CLOCK */
+.theme-clock-card.spider-verse {
+  background: rgba(10, 10, 22, 0.95);
+  border: 2px solid #00FFFF;
+  box-shadow: 3.5px 3.5px 0 #FF007F;
+  border-radius: 8px;
+}
+
+.spider-clock-time {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 30px;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.spider-cyan {
+  color: #00FFFF;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+.spider-magenta {
+  color: #FF007F;
+  font-size: 20px;
+  text-shadow: 0 0 8px rgba(255, 0, 127, 0.5);
+}
+
+.spider-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #FFE600;
+  text-transform: uppercase;
+}
+
+.spider-clock-glitch {
+  color: #FF007F;
+}
+
+/* 7. SUNLIT STUDIO CLOCK */
+.theme-clock-card.sunlit-studio {
+  background: #FFFFFF;
+  border: 1px solid #EBEBEB;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+}
+
+.sunlit-clock-time {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: #1A1A1A;
+  letter-spacing: 1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.sunlit-clock-ampm {
+  font-size: 12px;
+  font-weight: 600;
+  color: #E59400;
+  margin-left: 3px;
+}
+
+.sunlit-clock-sec {
+  font-size: 16px;
+  opacity: 0.5;
+  font-weight: 300;
+}
+
+.sunlit-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #737373;
+}
+
+.sunlit-clock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #E59400;
+  animation: pulseDot 2s infinite;
+}
+
+/* 8. WARM PARCHMENT CLOCK */
+.theme-clock-card.warm-parchment {
+  background: #FDFBF7;
+  border: 1.5px solid #E2D9CC;
+  box-shadow: 0 2px 6px rgba(180, 83, 9, 0.04);
+  border-radius: 8px;
+}
+
+.parchment-clock-time {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 27px;
+  font-weight: 400;
+  color: #1A1612;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.parchment-clock-ampm {
+  font-size: 12px;
+  color: #B45309;
+  font-style: italic;
+  margin-left: 3px;
+}
+
+.parchment-clock-sec {
+  font-size: 16px;
+  opacity: 0.55;
+  font-family: -apple-system, sans-serif;
+}
+
+.parchment-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #786B5A;
+  font-weight: 500;
+}
+
+.parchment-clock-ink-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #B45309;
+}
+
+/* 9. DYNAMIC VIDEO CLOCK */
+.theme-clock-card.dynamic-video {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+}
+
+.dynamic-clock-time {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 28px;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+  margin-bottom: 4px;
+  letter-spacing: 1.5px;
+}
+
+.dynamic-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.dynamic-clock-glow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 0 8px #FFFFFF;
+  animation: pulseDot 2s infinite;
+}
+
+/* 10. DEFAULT / OBSIDIAN CLOCK */
+.theme-clock-card.default-theme {
+  background: rgba(24, 24, 27, 0.75);
+  border: 1px solid rgba(63, 63, 70, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+}
+
+.default-clock-time {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  font-size: 28px;
+  font-weight: 600;
+  color: #FAFAFA;
+  letter-spacing: 1.5px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.default-clock-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #A1A1AA;
+  font-weight: 600;
+}
+
+.default-clock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6366F1;
+  box-shadow: 0 0 6px rgba(99, 102, 241, 0.6);
+  animation: pulseDot 2s infinite;
+}
+
 @keyframes pulseDot {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.35; }
 }
 
 /* 5. BOXES / CARDS: Ditto Editorial Surface from Example */
@@ -13771,6 +14203,7 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .metric-card,
 [data-column-style="transparent"] .streak-card,
 [data-column-style="transparent"] .tokyo-clock-card,
+[data-column-style="transparent"] .theme-clock-card,
 [data-column-style="transparent"] .note-panel,
 [data-column-style="transparent"] .report-main,
 [data-column-style="transparent"] .settings-panel,
@@ -13883,7 +14316,10 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .roadmap-blank-creator-card,
 [data-column-style="transparent"] .roadmap-outline-editor-card,
 [data-column-style="transparent"] .creator-option-box,
-[data-column-style="transparent"] .roadmap-modal-card {
+[data-column-style="transparent"] .roadmap-modal-card,
+[data-theme][data-column-style="transparent"] .single-stage-focused-card,
+[data-theme][data-column-style="transparent"] .roadmap-command-center,
+[data-theme][data-column-style="transparent"] .roadmap-hub-header {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -13896,12 +14332,17 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .stage-roadmaps-hub .stage-focus-header,
 [data-column-style="transparent"] .stage-roadmaps-hub .single-checkpoint-row,
 [data-column-style="transparent"] .stage-roadmaps-hub .stage-focus-add-checkpoint-row,
+[data-column-style="transparent"] .stage-roadmaps-hub .stage-footer-nav,
 [data-column-style="transparent"] .stage-roadmaps-hub .empty-checkpoints-prompt,
 [data-column-style="transparent"] .stage-roadmaps-hub .creator-paste-textarea,
 [data-column-style="transparent"] .stage-roadmaps-hub .roadmap-editor-textarea,
 [data-column-style="transparent"] .stage-focus-header,
 [data-column-style="transparent"] .single-checkpoint-row,
-[data-column-style="transparent"] .stage-focus-add-checkpoint-row {
+[data-column-style="transparent"] .stage-focus-add-checkpoint-row,
+[data-column-style="transparent"] .stage-footer-nav,
+[data-theme][data-column-style="transparent"] .stage-focus-header,
+[data-theme][data-column-style="transparent"] .single-checkpoint-row,
+[data-theme][data-column-style="transparent"] .stage-footer-nav {
   background: rgba(255, 255, 255, 0.02) !important;
   background-color: rgba(255, 255, 255, 0.02) !important;
   background-image: none !important;
@@ -13936,6 +14377,9 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-command-center,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .single-stage-focused-card,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-hub-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
   border-color: rgba(245, 158, 11, 0.26) !important;
   box-shadow: inset 0 1px 1px 0 rgba(255, 220, 160, 0.4), 0 16px 40px rgba(0, 0, 0, 0.35) !important;
 }
@@ -13951,6 +14395,7 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="liquid-glass"] .metric-card,
 [data-column-style="liquid-glass"] .streak-card,
 [data-column-style="liquid-glass"] .tokyo-clock-card,
+[data-column-style="liquid-glass"] .theme-clock-card,
 [data-column-style="liquid-glass"] .note-panel,
 [data-column-style="liquid-glass"] .report-main,
 [data-column-style="liquid-glass"] .settings-panel,
@@ -14043,7 +14488,10 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="liquid-glass"] .roadmap-blank-creator-card,
 [data-column-style="liquid-glass"] .roadmap-outline-editor-card,
 [data-column-style="liquid-glass"] .creator-option-box,
-[data-column-style="liquid-glass"] .roadmap-modal-card {
+[data-column-style="liquid-glass"] .roadmap-modal-card,
+[data-theme][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme][data-column-style="liquid-glass"] .roadmap-command-center,
+[data-theme][data-column-style="liquid-glass"] .roadmap-hub-header {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
   backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
@@ -14052,18 +14500,27 @@ html[data-theme="tokyo-lofi"],
 }
 
 [data-column-style="liquid-glass"] .stage-roadmaps-hub .stage-focus-header,
-[data-column-style="liquid-glass"] .stage-focus-header {
+[data-column-style="liquid-glass"] .stage-focus-header,
+[data-theme][data-column-style="liquid-glass"] .stage-focus-header {
   background: rgba(255, 255, 255, 0.05) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 [data-column-style="liquid-glass"] .stage-roadmaps-hub .single-checkpoint-row,
-[data-column-style="liquid-glass"] .single-checkpoint-row {
+[data-column-style="liquid-glass"] .single-checkpoint-row,
+[data-theme][data-column-style="liquid-glass"] .single-checkpoint-row {
   background: rgba(255, 255, 255, 0.04) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 10px !important;
+}
+
+[data-column-style="liquid-glass"] .stage-roadmaps-hub .stage-footer-nav,
+[data-column-style="liquid-glass"] .stage-footer-nav,
+[data-theme][data-column-style="liquid-glass"] .stage-footer-nav {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 [data-column-style="liquid-glass"] .single-checkpoint-row:hover {
@@ -14111,6 +14568,7 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="smoky"] .metric-card,
 [data-column-style="smoky"] .streak-card,
 [data-column-style="smoky"] .tokyo-clock-card,
+[data-column-style="smoky"] .theme-clock-card,
 [data-column-style="smoky"] .note-panel,
 [data-column-style="smoky"] .report-main,
 [data-column-style="smoky"] .settings-panel,
@@ -14178,7 +14636,10 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="smoky"] .roadmap-blank-creator-card,
 [data-column-style="smoky"] .roadmap-outline-editor-card,
 [data-column-style="smoky"] .creator-option-box,
-[data-column-style="smoky"] .roadmap-modal-card {
+[data-column-style="smoky"] .roadmap-modal-card,
+[data-theme][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme][data-column-style="smoky"] .roadmap-command-center,
+[data-theme][data-column-style="smoky"] .roadmap-hub-header {
   background: rgba(8, 9, 15, 0.82) !important;
   backdrop-filter: blur(28px) saturate(130%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(130%) !important;
@@ -14187,16 +14648,25 @@ html[data-theme="tokyo-lofi"],
 }
 
 [data-column-style="smoky"] .stage-roadmaps-hub .stage-focus-header,
-[data-column-style="smoky"] .stage-focus-header {
+[data-column-style="smoky"] .stage-focus-header,
+[data-theme][data-column-style="smoky"] .stage-focus-header {
   background: rgba(255, 255, 255, 0.03) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 [data-column-style="smoky"] .stage-roadmaps-hub .single-checkpoint-row,
-[data-column-style="smoky"] .single-checkpoint-row {
+[data-column-style="smoky"] .single-checkpoint-row,
+[data-theme][data-column-style="smoky"] .single-checkpoint-row {
   background: rgba(255, 255, 255, 0.03) !important;
   border: 1px solid rgba(255, 255, 255, 0.06) !important;
   border-radius: 10px !important;
+}
+
+[data-column-style="smoky"] .stage-roadmaps-hub .stage-footer-nav,
+[data-column-style="smoky"] .stage-footer-nav,
+[data-theme][data-column-style="smoky"] .stage-footer-nav {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 [data-column-style="smoky"] .single-checkpoint-row:hover {
@@ -14352,21 +14822,41 @@ html[data-theme="tokyo-lofi"],
   }
 
   .welcome-right-widgets .streak-card,
-  .welcome-right-widgets .tokyo-clock-card {
+  .welcome-right-widgets .tokyo-clock-card,
+  .welcome-right-widgets .theme-clock-card {
     flex: 1 1 0 !important;
     min-width: 0 !important;
     padding: 10px 12px !important;
     box-sizing: border-box !important;
   }
 
-  .tokyo-clock-time {
-    font-size: 22px !important;
+  .tokyo-clock-time,
+  .nb-clock-time,
+  .zen-clock-time,
+  .ghibli-clock-time,
+  .acid-clock-time,
+  .spider-clock-time,
+  .sunlit-clock-time,
+  .parchment-clock-time,
+  .dynamic-clock-time,
+  .default-clock-time {
+    font-size: 20px !important;
     letter-spacing: 1px !important;
   }
 
-  .tokyo-clock-label {
-    font-size: 9.5px !important;
-    letter-spacing: 1.5px !important;
+  .tokyo-clock-label,
+  .nb-clock-badge,
+  .nb-clock-date,
+  .zen-clock-label,
+  .ghibli-clock-label,
+  .acid-clock-header,
+  .spider-clock-label,
+  .sunlit-clock-label,
+  .parchment-clock-label,
+  .dynamic-clock-label,
+  .default-clock-label {
+    font-size: 9px !important;
+    letter-spacing: 1.2px !important;
   }
 
   .tokyo-terminal-strip {
@@ -14678,7 +15168,8 @@ html[data-theme="tokyo-lofi"],
   }
 
   [data-theme="tokyo-lofi"] .welcome-right-widgets .streak-card,
-  [data-theme="tokyo-lofi"] .welcome-right-widgets .tokyo-clock-card {
+  [data-theme="tokyo-lofi"] .welcome-right-widgets .tokyo-clock-card,
+  [data-theme="tokyo-lofi"] .welcome-right-widgets .theme-clock-card {
     flex: 1 1 0 !important;
     min-width: 0 !important;
     padding: 10px 12px !important;
