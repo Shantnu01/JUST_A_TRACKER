@@ -2779,8 +2779,8 @@ const handleNudge = async (toUserId, toUsername) => {
               className="sync-chip"
               title={
                 dbStatus === 'connected'
-                  ? 'All changes synced'
-                  : 'Operating in offline mode'
+                  ? 'Connected to database (Online)'
+                  : 'Operating in offline mode (Offline)'
               }
             >
               <span
@@ -2788,7 +2788,7 @@ const handleNudge = async (toUserId, toUsername) => {
                   dbStatus === 'connected' ? 'synced' : dbStatus === 'checking' ? 'checking' : 'local'
                 }`}
               />
-              <span>{dbStatus === 'connected' ? 'Synced' : dbStatus === 'checking' ? 'Syncing…' : 'Offline'}</span>
+              <span>{dbStatus === 'connected' ? 'Online' : dbStatus === 'checking' ? 'Syncing…' : 'Offline'}</span>
             </div>
             <button className="icon-button" title="Export progress as CSV" onClick={exportCsv}>
               <Download size={17} />
