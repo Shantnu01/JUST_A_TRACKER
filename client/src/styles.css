@@ -79,14 +79,19 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   /* Topbar: Title & Smooth Horizontal Tool Strip */
   .topbar{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding-bottom:14px}
   .topbar h1{font-size:20px;line-height:1.25;margin:2px 0 0}
-  /* Top actions: Fluid wrapping with visible overflow so dropdowns never get clipped */
+  /* Top actions: Smooth single row with visible overflow so dropdowns never get clipped */
   .top-actions {
     display: flex !important;
-    flex-wrap: wrap !important;
+    flex-wrap: nowrap !important;
     align-items: center !important;
     gap: 8px !important;
     width: 100% !important;
-    overflow: visible !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .top-actions::-webkit-scrollbar {
+    display: none !important;
   }
   .sync-chip, .date-chip, .pod-pill, .theme-switcher-btn {
     padding: 7px 11px !important;
@@ -3245,12 +3250,19 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
     padding: 14px 10px 80px !important;
   }
 
-  /* Top actions header row on phone */
+  /* Top actions header row on phone - cohesive single line */
   .top-actions {
     display: flex !important;
-    flex-wrap: wrap !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
     gap: 6px !important;
     width: 100% !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .top-actions::-webkit-scrollbar {
+    display: none !important;
   }
 
   .top-actions .date-chip,
@@ -5348,6 +5360,177 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 
 .delete-checkpoint-btn:hover {
   color: #dc2626 !important;
+}
+
+/* Active Recall & Understanding Badges & Tooltips */
+.checkpoint-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.checkpoint-recall-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.checkpoint-recall-pill.has-understanding {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.checkpoint-recall-pill.has-understanding:hover {
+  background: rgba(245, 158, 11, 0.22);
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+}
+
+.checkpoint-recall-pill.revise-it {
+  background: rgba(167, 139, 250, 0.12);
+  color: #a78bfa;
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.checkpoint-recall-pill.revise-it:hover {
+  background: rgba(167, 139, 250, 0.2);
+  border-color: #a78bfa;
+  transform: translateY(-1px);
+}
+
+.checkpoint-hover-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 20px;
+  width: 330px;
+  max-width: 90vw;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+  border-radius: 11px;
+  padding: 13px 15px;
+  z-index: 2500;
+  pointer-events: auto;
+  animation: tooltipFade 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tooltipFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tooltip-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.tooltip-headline {
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  font-weight: 800;
+  color: #f59e0b;
+  text-transform: uppercase;
+}
+
+.tooltip-quick-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.tooltip-quick-edit-btn:hover {
+  background: #f59e0b;
+  color: #181524;
+  border-color: #f59e0b;
+}
+
+.tooltip-understanding-prose {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.tooltip-revise-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.revise-pill-tag {
+  font-size: 11px;
+  font-weight: 800;
+  color: #a78bfa;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.revise-help-msg {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.tooltip-date-tag {
+  font-size: 9.5px;
+  color: var(--muted);
+  margin-top: 8px;
+  text-align: right;
+  border-top: 1px dashed rgba(0, 0, 0, 0.08);
+  padding-top: 4px;
+}
+
+/* Tokyo Lofi Theme Overrides for Checkpoint Recall */
+[data-theme="tokyo-lofi"] .checkpoint-hover-tooltip {
+  background: #181526 !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .tooltip-top-row {
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="tokyo-lofi"] .tooltip-quick-edit-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .tooltip-understanding-prose {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .tooltip-date-tag {
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* Add Checkpoint Row */
@@ -13810,10 +13993,25 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .session-footer,
 [data-column-style="transparent"] .ring:before,
 [data-column-style="transparent"] .timetable-checkpoint-capsule,
-[data-column-style="transparent"] .schedule-edit-card {
+[data-column-style="transparent"] .schedule-edit-card,
+[data-column-style="transparent"] .single-checkpoint-row,
+[data-column-style="transparent"] .single-stage-tab-btn,
+[data-column-style="transparent"] .stage-focus-checkpoints-list {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
+}
+
+[data-column-style="transparent"] .single-checkpoint-row {
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: none !important;
+}
+
+[data-column-style="transparent"] .single-checkpoint-row:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
 }
 
 [data-column-style="transparent"] .schedule-item {
@@ -13918,18 +14116,21 @@ html[data-theme="tokyo-lofi"],
 }
 
 [data-column-style="liquid-glass"] .schedule-item,
-[data-column-style="liquid-glass"] .habit-row {
-  background: rgba(255, 255, 255, 0.04) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+[data-column-style="liquid-glass"] .habit-row,
+[data-column-style="liquid-glass"] .single-checkpoint-row,
+[data-column-style="liquid-glass"] .single-stage-tab-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   border-radius: 8px !important;
 }
 
 [data-column-style="liquid-glass"] .schedule-item:hover,
-[data-column-style="liquid-glass"] .habit-row:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
+[data-column-style="liquid-glass"] .habit-row:hover,
+[data-column-style="liquid-glass"] .single-checkpoint-row:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
 }
 
 /* Theme Reaction: Tokyo Lofi Liquid Glass (Amber fluid refraction) */
@@ -14017,9 +14218,19 @@ html[data-theme="tokyo-lofi"],
 }
 
 [data-column-style="smoky"] .schedule-item,
-[data-column-style="smoky"] .habit-row {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+[data-column-style="smoky"] .habit-row,
+[data-column-style="smoky"] .single-checkpoint-row,
+[data-column-style="smoky"] .single-stage-tab-btn {
+  background: rgba(14, 12, 22, 0.78) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+}
+
+[data-column-style="smoky"] .single-checkpoint-row:hover {
+  background: rgba(22, 18, 32, 0.88) !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
 }
 
 /* Theme Reaction: Light Themes Smoky (Dark obsidian card over light background) */

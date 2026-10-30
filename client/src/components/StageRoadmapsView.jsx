@@ -16,7 +16,10 @@ import {
   Trash2,
   ExternalLink,
   ChevronRight,
-  HelpCircle
+  HelpCircle,
+  Brain,
+  Edit3,
+  BookOpen
 } from 'lucide-react';
 import {
   loadSubjectCurriculum,
@@ -24,6 +27,7 @@ import {
   deleteSubjectCurriculum,
   calculateCurriculumProgress,
   toggleCurriculumCheckpoint,
+  updateCheckpointUnderstanding,
   addCheckpointToStage,
   addStageToCurriculum,
   deleteStageFromCurriculum,
@@ -33,6 +37,7 @@ import {
   formatCurriculumToText,
   CHATGPT_ROADMAP_PROMPT_TEMPLATE
 } from '../utils/curriculumEngine';
+import CheckpointUnderstandingModal from './CheckpointUnderstandingModal';
 
 export default function StageRoadmapsView({
   routine = [],
@@ -96,6 +101,10 @@ export default function StageRoadmapsView({
 
   // Format guide collapse state
   const [showFormatGuide, setShowFormatGuide] = useState(false);
+  // Active recall & understanding micro-prompt & hover states
+  const [understandingPromptData, setUnderstandingPromptData] = useState(null);
+  const [hoveredCpId, setHoveredCpId] = useState(null);
+
   const fileInputRef = useRef(null);
 
 
@@ -251,9 +260,39 @@ export default function StageRoadmapsView({
     setCurriculum(updated);
     saveSubjectCurriculum(activeSubject, updated);
     if (onPlayChime) onPlayChime(true);
+
+    if (updated && updated._isCompletedNow) {
+      // Trigger Active Recall Micro-Prompt when checkpoint is achieved!
+      const targetCp = updated._checkpoint;
+      setUnderstandingPromptData({
+        stageId,
+        checkpointId,
+        title: checkpointTitle || targetCp?.title || 'Checkpoint',
+        initialText: targetCp?.understanding || ''
+      });
+      if (setToast) {
+        setToast('🎯 Checkpoint Achieved! Write your key takeaway.');
+        setTimeout(() => setToast(''), 2500);
+      }
+    } else {
+      if (setToast) {
+        setToast(`✓ Checkpoint updated: ${checkpointTitle || 'Saved'}`);
+        setTimeout(() => setToast(''), 2200);
+      }
+    }
+  };
+
+  // Save Understanding for Checkpoint
+  const handleSaveUnderstanding = (text) => {
+    if (!curriculum || !understandingPromptData) return;
+    const { stageId, checkpointId } = understandingPromptData;
+    const updated = updateCheckpointUnderstanding(curriculum, stageId, checkpointId, text);
+    setCurriculum(updated);
+    saveSubjectCurriculum(activeSubject, updated);
+    setUnderstandingPromptData(null);
     if (setToast) {
-      setToast(`✓ Checkpoint updated: ${checkpointTitle || 'Saved'}`);
-      setTimeout(() => setToast(''), 2200);
+      setToast('🧠 Understanding saved & synced to active recall!');
+      setTimeout(() => setToast(''), 2500);
     }
   };
 
@@ -782,7 +821,10 @@ STAGE 3 — [STAGE NAME]
                   currentStage.checkpoints.map(cp => (
                     <div
                       key={cp.id}
-                      className={`single-checkpoint-row ${cp.completed ? 'completed' : ''}`}
+                      className={`single-checkpoint-row ${cp.completed ? 'completed' : ''} ${cp.understanding ? 'has-takeaway' : 'needs-revision'}`}
+                      onMouseEnter={() => setHoveredCpId(cp.id)}
+                      onMouseLeave={() => setHoveredCpId(null)}
+                      style={{ position: 'relative' }}
                     >
                       <label className="checkpoint-toggle-label">
                         <input
@@ -805,14 +847,103 @@ STAGE 3 — [STAGE NAME]
                         </div>
                       </label>
 
-                      <button
-                        type="button"
-                        className="delete-checkpoint-btn"
-                        onClick={() => handleDeleteCheckpoint(currentStage.id, cp.id)}
-                        title="Delete checkpoint"
-                      >
-                        <Trash2 size={13} />
-                      </button>
+                      <div className="checkpoint-row-actions">
+                        {/* Recall pill: Understood vs Revise it */}
+                        {cp.understanding ? (
+                          <button
+                            type="button"
+                            className="checkpoint-recall-pill has-understanding"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setUnderstandingPromptData({
+                                stageId: currentStage.id,
+                                checkpointId: cp.id,
+                                title: cp.title,
+                                initialText: cp.understanding
+                              });
+                            }}
+                            title="Key takeaway recorded. Click to review or edit."
+                          >
+                            <Brain size={12} color="#f59e0b" />
+                            <span>Takeaway</span>
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="checkpoint-recall-pill revise-it"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setUnderstandingPromptData({
+                                stageId: currentStage.id,
+                                checkpointId: cp.id,
+                                title: cp.title,
+                                initialText: ''
+                              });
+                            }}
+                            title="No takeaway recorded yet. Click to write your understanding!"
+                          >
+                            <BookOpen size={12} color="#a78bfa" />
+                            <span>Revise it</span>
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          className="delete-checkpoint-btn"
+                          onClick={() => handleDeleteCheckpoint(currentStage.id, cp.id)}
+                          title="Delete checkpoint"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+
+                      {/* Interactive Hover Tooltip for Understanding & Active Recall */}
+                      {hoveredCpId === cp.id && (
+                        <div className="checkpoint-hover-tooltip" onClick={e => e.stopPropagation()}>
+                          <div className="tooltip-top-row">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <Brain size={13} color="#f59e0b" />
+                              <span className="tooltip-headline">
+                                {cp.understanding ? 'ACTIVE RECALL // UNDERSTANDING' : 'ACTIVE RECALL // STATUS'}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              className="tooltip-quick-edit-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setUnderstandingPromptData({
+                                  stageId: currentStage.id,
+                                  checkpointId: cp.id,
+                                  title: cp.title,
+                                  initialText: cp.understanding || ''
+                                });
+                              }}
+                            >
+                              <Edit3 size={11} /> {cp.understanding ? 'Edit' : 'Record'}
+                            </button>
+                          </div>
+                          <div className="tooltip-content-area">
+                            {cp.understanding ? (
+                              <div className="tooltip-understanding-prose">
+                                {cp.understanding}
+                              </div>
+                            ) : (
+                              <div className="tooltip-revise-box">
+                                <span className="revise-pill-tag">📖 Revise it</span>
+                                <p className="revise-help-msg">
+                                  No takeaway notes recorded yet. Active recall reinforces long-term retention!
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                          {cp.completedAt && (
+                            <div className="tooltip-date-tag">
+                              Achieved: {new Date(cp.completedAt).toLocaleDateString()}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))
                 )}
@@ -871,6 +1002,16 @@ STAGE 3 — [STAGE NAME]
           })()}
         </>
       )}
+
+      {/* Active Recall Checkpoint Understanding Modal */}
+      <CheckpointUnderstandingModal
+        isOpen={Boolean(understandingPromptData)}
+        checkpointTitle={understandingPromptData?.title}
+        initialText={understandingPromptData?.initialText || ''}
+        onSave={handleSaveUnderstanding}
+        onClose={() => setUnderstandingPromptData(null)}
+        theme={theme}
+      />
     </div>
   );
 }

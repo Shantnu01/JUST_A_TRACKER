@@ -2,6 +2,7 @@ import {
   parseCurriculumText,
   loadSubjectCurriculum,
   saveSubjectCurriculum,
+  syncCurriculumsFromDb,
   calculateCurriculumProgress,
   toggleCurriculumCheckpoint,
   CHATGPT_ROADMAP_PROMPT_TEMPLATE
@@ -368,7 +369,7 @@ function getSavedScheduleOverride(dateKeyStr) {
 const prettyDate = (date = new Date()) =>
   new Intl.DateTimeFormat('en-IN', { weekday: 'long', day: 'numeric', month: 'long' }).format(date);
 
-const blankDay = () => ({ checks: {}, notes: '', completedMinutes: {}, alarms: {} });
+const blankDay = () => ({ checks: {}, notes: '', completedMinutes: {}, alarms: {}, closeout: {} });
 
 function readStore() {
   try {
@@ -825,10 +826,38 @@ function App() {
 
   // 6. Evening Closeout & Morning Non-Negotiable Priority State
   const [closeoutModalOpen, setCloseoutModalOpen] = useState(false);
+  const [closeoutTab, setCloseoutTab] = useState('today');
   const [closeoutWins, setCloseoutWins] = useState('');
   const [closeoutFriction, setCloseoutFriction] = useState('');
   const [closeoutPriority, setCloseoutPriority] = useState('');
   const [morningPriority, setMorningPriority] = useState(() => localStorage.getItem('daymark-tomorrow-priority') || '');
+
+  // Find most recent past closeout record before today
+  const lastCloseoutRecord = useMemo(() => {
+    const pastDates = Object.keys(store)
+      .filter(d => d < key && store[d]?.closeout && (store[d].closeout.wins || store[d].closeout.priority || store[d].closeout.friction))
+      .sort()
+      .reverse();
+    if (pastDates.length === 0) return null;
+    const lastDate = pastDates[0];
+    return {
+      date: lastDate,
+      ...store[lastDate].closeout
+    };
+  }, [store, key]);
+
+  // Sync closeout fields when active date or day record changes
+  useEffect(() => {
+    if (day?.closeout) {
+      setCloseoutWins(day.closeout.wins || '');
+      setCloseoutFriction(day.closeout.friction || '');
+      setCloseoutPriority(day.closeout.priority || '');
+    } else {
+      setCloseoutWins('');
+      setCloseoutFriction('');
+      setCloseoutPriority('');
+    }
+  }, [day?.closeout, key, closeoutModalOpen]);
 
   // day record loaded above
   const activeGroup = groups.find(g => g.id === activeGroupId) || null;
@@ -1544,7 +1573,8 @@ function App() {
         checks: nextDay.checks || {},
         notes: nextDay.notes || '',
         completed_minutes: nextDay.completedMinutes || {},
-        alarms: nextDay.alarms || {}
+        alarms: nextDay.alarms || {},
+        closeout: nextDay.closeout || {}
       })
     })
       .then(res => {
@@ -1586,7 +1616,8 @@ function App() {
             checks: data.checks || prev[key]?.checks || {},
             notes: data.notes ?? prev[key]?.notes ?? '',
             completedMinutes: data.completed_minutes || prev[key]?.completedMinutes || {},
-            alarms: data.alarms || prev[key]?.alarms || {}
+            alarms: data.alarms || prev[key]?.alarms || {},
+            closeout: data.closeout || prev[key]?.closeout || {}
           };
           const updated = { ...prev, [key]: merged };
           localStorage.setItem('daymark-data', JSON.stringify(updated));
@@ -1601,6 +1632,46 @@ function App() {
       cancelled = true;
     };
   }, [key, token]);
+
+  // Load all recorded routine history directly from DB for accurate weekly reports and CSV exports
+  useEffect(() => {
+    let cancelled = false;
+    const loadAllDaysHistory = async () => {
+      try {
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        // Sync curriculums and roadmaps from PostgreSQL database
+        syncCurriculumsFromDb(token);
+
+        const response = await fetch(`${API}/days`, { headers });
+        if (!response.ok) return;
+        const allDays = await response.json();
+        if (cancelled || !allDays || typeof allDays !== 'object') return;
+        setDbStatus('connected');
+        setStore(prev => {
+          const nextStore = { ...prev };
+          for (const [dKey, dayData] of Object.entries(allDays)) {
+            nextStore[dKey] = {
+              ...blankDay(),
+              ...(prev[dKey] || {}),
+              checks: dayData.checks || prev[dKey]?.checks || {},
+              notes: dayData.notes ?? prev[dKey]?.notes ?? '',
+              completedMinutes: dayData.completed_minutes || prev[dKey]?.completedMinutes || {},
+              alarms: dayData.alarms || prev[dKey]?.alarms || {},
+              closeout: dayData.closeout || prev[dKey]?.closeout || {}
+            };
+          }
+          localStorage.setItem('daymark-data', JSON.stringify(nextStore));
+          return nextStore;
+        });
+      } catch {
+        // Fallback to local storage
+      }
+    };
+    loadAllDaysHistory();
+    return () => {
+      cancelled = true;
+    };
+  }, [token, user]);
 
   // Sync alarms when switching user or when day.alarms is loaded from DB
   useEffect(() => {
@@ -1681,18 +1752,22 @@ function App() {
       d.setDate(start.getDate() + i);
       const dkey = dateKey(d);
       const data = store[dkey] || blankDay();
-      const n = habits.filter(h => data.checks[h.id]).length;
+      const n = habits.filter(h => data.checks?.[h.id]).length;
+      const totalMins = Object.values(data.completedMinutes || {}).reduce((a, b) => a + Number(b || 0), 0);
       days.push({
         date: d,
         count: n,
-        percent: Math.round((n / habits.length) * 100),
+        totalMins,
+        percent: habits.length > 0 ? Math.round((n / habits.length) * 100) : 0,
         key: dkey
       });
     }
     return days;
-  }, [store, selectedDate]);
+  }, [store, selectedDate, habits]);
 
   const weekAvg = Math.round(weekly.reduce((sum, d) => sum + d.percent, 0) / 7);
+  const weekTotalFocusMins = weekly.reduce((sum, d) => sum + (d.totalMins || 0), 0);
+  const weekTotalFocusHoursStr = `${Math.floor(weekTotalFocusMins / 60)}h ${weekTotalFocusMins % 60}m`;
 
   const toggleHabit = (id) => {
     if (!isToday) {
@@ -2288,7 +2363,12 @@ function App() {
       rows.push([
         k,
         focusStr,
-        ...habits.map(h => (d.checks?.[h.id] ? 'Done' : 'Not done')),
+        ...habits.map(h => {
+          const isDone = !!d.checks?.[h.id];
+          const loggedMins = getSubjectLoggedMinutes(h, d.completedMinutes || {});
+          const timeStr = loggedMins > 0 ? `${Math.floor(loggedMins / 60)}h ${loggedMins % 60}m` : '0m';
+          return isDone ? `Done (${timeStr})` : `Not done (${timeStr})`;
+        }),
         (d.notes || '').replaceAll('"', '""')
       ]);
     });
@@ -3985,15 +4065,19 @@ const handleNudge = async (toUserId, toUsername) => {
                   <strong>{weekAvg}%</strong>
                 </div>
                 <div>
+                  <small>Total focus logged</small>
+                  <strong>{weekTotalFocusHoursStr}</strong>
+                </div>
+                <div>
                   <small>Habits completed</small>
                   <strong>
-                    {weekly.reduce((s, d) => s + d.count, 0)} <em>/ 42</em>
+                    {weekly.reduce((s, d) => s + d.count, 0)} <em>/ {habits.length * 7}</em>
                   </strong>
                 </div>
                 <div>
                   <small>Days with progress</small>
                   <strong>
-                    {weekly.filter(d => d.count > 0).length}
+                    {weekly.filter(d => d.count > 0 || d.totalMins > 0).length}
                     <em> / 7</em>
                   </strong>
                 </div>
@@ -4009,13 +4093,18 @@ const handleNudge = async (toUserId, toUsername) => {
               </div>
               {habits.map(h => {
                 const n = weekly.filter(d => store[d.key]?.checks?.[h.id]).length;
+                const totalMinsForHabit = weekly.reduce((acc, d) => {
+                  const dayData = store[d.key] || blankDay();
+                  return acc + getSubjectLoggedMinutes(h, dayData.completedMinutes || {});
+                }, 0);
+                const habitHoursStr = `${Math.floor(totalMinsForHabit / 60)}h ${totalMinsForHabit % 60}m`;
                 return (
                   <div className="breakdown-row" key={h.id}>
                     <span>{h.label}</span>
                     <div className="progress-track">
                       <div style={{ width: `${(n / 7) * 100}%` }} />
                     </div>
-                    <strong>{n}/7</strong>
+                    <strong>{n}/7 {totalMinsForHabit > 0 && <small style={{ color: 'var(--muted)', marginLeft: '6px' }}>({habitHoursStr})</small>}</strong>
                   </div>
                 );
               })}
@@ -6275,7 +6364,7 @@ const handleNudge = async (toUserId, toUsername) => {
       {/* 6. Evening Closeout & Morning Non-Negotiable Modal */}
       {closeoutModalOpen && (
         <div className="modal-overlay" onClick={() => setCloseoutModalOpen(false)}>
-          <div className="modal-content" style={{ maxWidth: '540px' }} onClick={e => e.stopPropagation()}>
+          <div className="modal-content" style={{ maxWidth: '560px' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Moon size={22} color="#7c3aed" />
@@ -6284,60 +6373,177 @@ const handleNudge = async (toUserId, toUsername) => {
               <button className="modal-close" onClick={() => setCloseoutModalOpen(false)}>×</button>
             </div>
 
-            <form onSubmit={handleSaveCloseout} style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div>
-                <label className="modal-field-label" style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, marginBottom: '6px' }}>
-                  1. What moved the needle today? (Daily Highlights / Wins)
-                </label>
-                <textarea
-                  className="unblock-textarea"
-                  rows={2}
-                  placeholder="e.g., Shipped authentication module and fixed database timeout bug."
-                  value={closeoutWins}
-                  onChange={e => setCloseoutWins(e.target.value)}
-                />
-              </div>
+            {/* Top Switcher: Today's Shutdown vs Last Day's Closeout */}
+            <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px', marginTop: '10px' }}>
+              <button
+                type="button"
+                className={`closeout-tab-btn ${closeoutTab === 'today' ? 'active' : ''}`}
+                onClick={() => setCloseoutTab('today')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  border: closeoutTab === 'today' ? '1px solid #f59e0b' : '1px solid transparent',
+                  background: closeoutTab === 'today' ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
+                  color: closeoutTab === 'today' ? '#f59e0b' : 'var(--muted)',
+                  fontWeight: 700,
+                  fontSize: '12px',
+                  cursor: 'pointer'
+                }}
+              >
+                🌙 Today's Closeout
+              </button>
+              <button
+                type="button"
+                className={`closeout-tab-btn ${closeoutTab === 'yesterday' ? 'active' : ''}`}
+                onClick={() => setCloseoutTab('yesterday')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  border: closeoutTab === 'yesterday' ? '1px solid #7c3aed' : '1px solid transparent',
+                  background: closeoutTab === 'yesterday' ? 'rgba(124, 58, 237, 0.15)' : 'transparent',
+                  color: closeoutTab === 'yesterday' ? '#a78bfa' : 'var(--muted)',
+                  fontWeight: 700,
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                📜 Last Day's Closeout
+                {lastCloseoutRecord && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }} />}
+              </button>
+            </div>
 
-              <div>
-                <label className="modal-field-label" style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, marginBottom: '6px' }}>
-                  2. What caused friction or context-switching?
-                </label>
-                <textarea
-                  className="unblock-textarea"
-                  rows={2}
-                  placeholder="e.g., Spent 45m troubleshooting dependency conflict before asking."
-                  value={closeoutFriction}
-                  onChange={e => setCloseoutFriction(e.target.value)}
-                />
-              </div>
+            {closeoutTab === 'yesterday' ? (
+              <div style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {lastCloseoutRecord ? (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.04)', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 700 }}>
+                        Archived Closeout
+                      </span>
+                      <strong style={{ fontSize: '12px', color: '#f59e0b' }}>
+                        📅 {prettyDate(new Date(lastCloseoutRecord.date + 'T12:00:00'))}
+                      </strong>
+                    </div>
 
-              <div className="closeout-priority-box" style={{ background: '#fffbeb', border: '1.5px solid #f59e0b', borderRadius: '10px', padding: '12px' }}>
-                <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 800, color: '#92400e', marginBottom: '6px' }}>
-                  ★ 3. Tomorrow's Single Non-Negotiable Morning Priority:
-                </label>
-                <input
-                  type="text"
-                  className="unblock-textarea"
-                  style={{ height: '40px', resize: 'none' }}
-                  placeholder="e.g., Refactor Payment Webhook Handler (Must ship before lunch)"
-                  value={closeoutPriority}
-                  onChange={e => setCloseoutPriority(e.target.value)}
-                  required
-                />
-                <div style={{ fontSize: '0.75rem', color: '#b45309', marginTop: '4px' }}>
-                  This will be pinned as your hero spotlight at 09:00 AM tomorrow.
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--muted)', marginBottom: '4px' }}>
+                        1. Daily Highlights & Wins:
+                      </label>
+                      <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '10px 12px', fontSize: '0.9rem', color: 'var(--ink)' }}>
+                        {lastCloseoutRecord.wins || <em style={{ color: 'var(--muted)' }}>No wins logged</em>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--muted)', marginBottom: '4px' }}>
+                        2. Friction & Context Switching:
+                      </label>
+                      <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '10px 12px', fontSize: '0.9rem', color: 'var(--ink)' }}>
+                        {lastCloseoutRecord.friction || <em style={{ color: 'var(--muted)' }}>No friction logged</em>}
+                      </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1.5px solid rgba(245, 158, 11, 0.4)', borderRadius: '10px', padding: '12px' }}>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 800, color: '#f59e0b', marginBottom: '4px' }}>
+                        ★ Morning Non-Negotiable Priority Locked for Today:
+                      </label>
+                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--ink)' }}>
+                        {lastCloseoutRecord.priority || <em style={{ color: 'var(--muted)' }}>No priority set</em>}
+                      </div>
+                    </div>
+
+                    <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 0 }}>
+                      <button
+                        type="button"
+                        className="secondary-button"
+                        onClick={() => {
+                          if (lastCloseoutRecord.priority) {
+                            setCloseoutPriority(lastCloseoutRecord.priority);
+                            setToast('Copied priority to today!');
+                            setTimeout(() => setToast(''), 2000);
+                          }
+                          setCloseoutTab('today');
+                        }}
+                      >
+                        Reuse Priority for Today
+                      </button>
+                      <button type="button" className="primary-button" onClick={() => setCloseoutTab('today')}>
+                        Return to Today's Closeout →
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '36px 16px' }}>
+                    <Moon size={36} color="var(--muted)" style={{ margin: '0 auto 12px', opacity: 0.5 }} />
+                    <h4 style={{ margin: '0 0 6px' }}>No Previous Closeout Found</h4>
+                    <p className="muted" style={{ fontSize: '12px', maxWidth: '320px', margin: '0 auto 16px' }}>
+                      Complete tonight's shutdown ritual on the Today tab to record your daily reflection and lock tomorrow's morning priority!
+                    </p>
+                    <button type="button" className="primary-button" onClick={() => setCloseoutTab('today')}>
+                      Start Today's Closeout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <form onSubmit={handleSaveCloseout} style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div>
+                  <label className="modal-field-label" style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, marginBottom: '6px' }}>
+                    1. What moved the needle today? (Daily Highlights / Wins)
+                  </label>
+                  <textarea
+                    className="unblock-textarea"
+                    rows={2}
+                    placeholder="e.g., Shipped authentication module and fixed database timeout bug."
+                    value={closeoutWins}
+                    onChange={e => setCloseoutWins(e.target.value)}
+                  />
                 </div>
-              </div>
 
-              <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', padding: 0 }}>
-                <button type="button" className="secondary-button" onClick={() => setCloseoutModalOpen(false)}>
-                  Cancel
-                </button>
-                <button type="submit" className="primary-button" style={{ background: '#7c3aed' }}>
-                  Lock Shutdown & Save Priority
-                </button>
-              </div>
-            </form>
+                <div>
+                  <label className="modal-field-label" style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, marginBottom: '6px' }}>
+                    2. What caused friction or context-switching?
+                  </label>
+                  <textarea
+                    className="unblock-textarea"
+                    rows={2}
+                    placeholder="e.g., Spent 45m troubleshooting dependency conflict before asking."
+                    value={closeoutFriction}
+                    onChange={e => setCloseoutFriction(e.target.value)}
+                  />
+                </div>
+
+                <div className="closeout-priority-box" style={{ background: '#fffbeb', border: '1.5px solid #f59e0b', borderRadius: '10px', padding: '12px' }}>
+                  <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 800, color: '#92400e', marginBottom: '6px' }}>
+                    ★ 3. Tomorrow's Single Non-Negotiable Morning Priority:
+                  </label>
+                  <input
+                    type="text"
+                    className="unblock-textarea"
+                    style={{ height: '40px', resize: 'none' }}
+                    placeholder="e.g., Refactor Payment Webhook Handler (Must ship before lunch)"
+                    value={closeoutPriority}
+                    onChange={e => setCloseoutPriority(e.target.value)}
+                    required
+                  />
+                  <div style={{ fontSize: '0.75rem', color: '#b45309', marginTop: '4px' }}>
+                    This will be pinned as your hero spotlight at 09:00 AM tomorrow.
+                  </div>
+                </div>
+
+                <div className="modal-footer" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', padding: 0 }}>
+                  <button type="button" className="secondary-button" onClick={() => setCloseoutModalOpen(false)}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="primary-button" style={{ background: '#7c3aed' }}>
+                    Lock Shutdown & Save Priority
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

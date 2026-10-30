@@ -175,21 +175,66 @@ export function loadSubjectCurriculum(subjectName = '') {
   return null;
 }
 
-// Delete curriculum from localStorage
-export function deleteSubjectCurriculum(subjectName = '') {
+// Delete curriculum from localStorage & database
+export function deleteSubjectCurriculum(subjectName = '', token = null) {
   if (!subjectName) return;
   const key = getCurriculumKey(subjectName);
   try {
     localStorage.removeItem(key);
   } catch {}
+
+  if (typeof window !== 'undefined' && typeof fetch !== 'undefined') {
+    const headers = {};
+    const savedToken = token || (typeof localStorage !== 'undefined' && localStorage.getItem('daymark-token'));
+    if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
+    const API = import.meta.env?.VITE_API_URL || '/api';
+    fetch(`${API}/curriculums/${encodeURIComponent(subjectName)}`, {
+      method: 'DELETE',
+      headers
+    }).catch(() => {});
+  }
 }
 
-// Save curriculum to localStorage
-export function saveSubjectCurriculum(subjectName, curriculum) {
+// Save curriculum to localStorage & PostgreSQL database
+export function saveSubjectCurriculum(subjectName, curriculum, token = null) {
   if (!subjectName || !curriculum) return;
   const key = getCurriculumKey(subjectName);
   try {
     localStorage.setItem(key, JSON.stringify(curriculum));
+  } catch {}
+
+  // Sync to PostgreSQL database
+  if (typeof window !== 'undefined' && typeof fetch !== 'undefined') {
+    const headers = { 'Content-Type': 'application/json' };
+    const savedToken = token || (typeof localStorage !== 'undefined' && localStorage.getItem('daymark-token'));
+    if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
+    const API = import.meta.env?.VITE_API_URL || '/api';
+    fetch(`${API}/curriculums/${encodeURIComponent(subjectName)}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(curriculum)
+    }).catch(() => {});
+  }
+}
+
+// Sync all user curriculums from PostgreSQL database into localStorage
+export async function syncCurriculumsFromDb(token = null) {
+  if (typeof window === 'undefined' || typeof fetch === 'undefined') return;
+  try {
+    const headers = {};
+    const savedToken = token || (typeof localStorage !== 'undefined' && localStorage.getItem('daymark-token'));
+    if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
+    const API = import.meta.env?.VITE_API_URL || '/api';
+    const res = await fetch(`${API}/curriculums`, { headers });
+    if (!res.ok) return;
+    const dbCurriculums = await res.json();
+    if (!dbCurriculums || typeof dbCurriculums !== 'object') return;
+    for (const [subj, data] of Object.entries(dbCurriculums)) {
+      if (subj && data && Array.isArray(data.stages) && data.stages.length > 0) {
+        const key = getCurriculumKey(subj);
+        localStorage.setItem(key, JSON.stringify(data));
+      }
+    }
   } catch {}
 }
 
@@ -279,11 +324,46 @@ export function setActiveStageForCurriculum(curriculum, stageId) {
 export function toggleCurriculumCheckpoint(curriculum, stageId, checkpointId) {
   if (!curriculum || !curriculum.stages) return curriculum;
 
+  let isCompletedNow = false;
+  let targetCheckpoint = null;
+
   const updatedStages = curriculum.stages.map(st => {
     if (st.id !== stageId) return st;
     const updatedCps = (st.checkpoints || []).map(cp => {
       if (cp.id === checkpointId) {
-        return { ...cp, completed: !cp.completed };
+        const nextState = !cp.completed;
+        if (nextState) isCompletedNow = true;
+        targetCheckpoint = {
+          ...cp,
+          completed: nextState,
+          completedAt: nextState ? new Date().toISOString() : cp.completedAt
+        };
+        return targetCheckpoint;
+      }
+      return cp;
+    });
+    return { ...st, checkpoints: updatedCps };
+  });
+
+  const updated = { ...curriculum, stages: updatedStages };
+  updated._isCompletedNow = isCompletedNow;
+  updated._checkpoint = targetCheckpoint;
+  return updated;
+}
+
+// Update active recall understanding / mental model for a checkpoint
+export function updateCheckpointUnderstanding(curriculum, stageId, checkpointId, understandingText) {
+  if (!curriculum || !curriculum.stages) return curriculum;
+
+  const updatedStages = curriculum.stages.map(st => {
+    if (st.id !== stageId) return st;
+    const updatedCps = (st.checkpoints || []).map(cp => {
+      if (cp.id === checkpointId) {
+        return {
+          ...cp,
+          understanding: (understandingText || '').trim(),
+          understoodAt: new Date().toISOString()
+        };
       }
       return cp;
     });

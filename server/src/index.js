@@ -281,6 +281,25 @@ async function ensureTable() {
     await pool.query(`ALTER TABLE study_groups ADD COLUMN IF NOT EXISTS notice_updated_at TIMESTAMPTZ DEFAULT NOW()`);
     await pool.query(`ALTER TABLE study_groups ADD COLUMN IF NOT EXISTS notice_updated_by TEXT DEFAULT ''`);
 
+    // 13. Evening Closeout Persistence migration
+    await pool.query(`ALTER TABLE routine_days ADD COLUMN IF NOT EXISTS closeout JSONB NOT NULL DEFAULT '{}'::jsonb;`);
+    await pool.query(`ALTER TABLE user_routine_days ADD COLUMN IF NOT EXISTS closeout JSONB NOT NULL DEFAULT '{}'::jsonb;`);
+
+    // 14. Subject Curriculums & Checkpoints Table
+    await pool.query(`CREATE TABLE IF NOT EXISTS user_curriculums (
+      user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+      subject_name TEXT NOT NULL,
+      data JSONB NOT NULL DEFAULT '{}'::jsonb,
+      updated_at TIMESTAMPTZ DEFAULT NOW(),
+      PRIMARY KEY (user_id, subject_name)
+    );`);
+
+    await pool.query(`CREATE TABLE IF NOT EXISTS guest_curriculums (
+      subject_name TEXT PRIMARY KEY,
+      data JSONB NOT NULL DEFAULT '{}'::jsonb,
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );`);
+
     dbInitialized = true;
     console.log('[Database] Connected and schema verified.');
   } catch (error) {
@@ -1018,6 +1037,74 @@ app.get('/api/groups/:id/leaderboard', authenticateToken, async (req, res) => {
 
 // ================= ROUTINE TRACKING ENDPOINTS =================
 // Supports both authenticated users (isolated) and guests (legacy)
+
+// Fetch all recorded routine days from database (for accurate reports & history without fake data)
+app.get('/api/days', optionalAuth, async (req, res) => {
+  if (!pool) {
+    return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
+  }
+
+  try {
+    await ensureTable();
+    if (req.user) {
+      const result = await pool.query(
+        'SELECT day_date, checks, notes, completed_minutes, alarms, closeout, points, updated_at FROM user_routine_days WHERE user_id = $1 ORDER BY day_date DESC LIMIT 180',
+        [req.user.id]
+      );
+      const daysMap = {};
+      for (const row of result.rows) {
+        let dateStr = '';
+        if (typeof row.day_date === 'string') {
+          dateStr = row.day_date.split('T')[0];
+        } else if (row.day_date instanceof Date) {
+          dateStr = row.day_date.toISOString().split('T')[0];
+        } else {
+          dateStr = String(row.day_date).slice(0, 10);
+        }
+        daysMap[dateStr] = {
+          day_date: dateStr,
+          checks: row.checks || {},
+          notes: row.notes || '',
+          completed_minutes: row.completed_minutes || {},
+          alarms: row.alarms || {},
+          closeout: row.closeout || {},
+          points: row.points || 0,
+          updated_at: row.updated_at
+        };
+      }
+      return res.json(daysMap);
+    } else {
+      const result = await pool.query(
+        'SELECT day_date, checks, notes, completed_minutes, alarms, closeout, updated_at FROM routine_days ORDER BY day_date DESC LIMIT 180'
+      );
+      const daysMap = {};
+      for (const row of result.rows) {
+        let dateStr = '';
+        if (typeof row.day_date === 'string') {
+          dateStr = row.day_date.split('T')[0];
+        } else if (row.day_date instanceof Date) {
+          dateStr = row.day_date.toISOString().split('T')[0];
+        } else {
+          dateStr = String(row.day_date).slice(0, 10);
+        }
+        daysMap[dateStr] = {
+          day_date: dateStr,
+          checks: row.checks || {},
+          notes: row.notes || '',
+          completed_minutes: row.completed_minutes || {},
+          alarms: row.alarms || {},
+          closeout: row.closeout || {},
+          updated_at: row.updated_at
+        };
+      }
+      return res.json(daysMap);
+    }
+  } catch (error) {
+    console.error('Fetch all days failed:', error.message);
+    return res.status(500).json({ error: 'Unable to fetch routine history.' });
+  }
+});
+
 app.get('/api/days/:date', optionalAuth, async (req, res) => {
   if (!pool) {
     return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
@@ -1030,7 +1117,7 @@ app.get('/api/days/:date', optionalAuth, async (req, res) => {
     await ensureTable();
     if (req.user) {
       const result = await pool.query(
-        'SELECT day_date, checks, notes, completed_minutes, alarms, points, updated_at FROM user_routine_days WHERE user_id = $1 AND day_date = $2',
+        'SELECT day_date, checks, notes, completed_minutes, alarms, closeout, points, updated_at FROM user_routine_days WHERE user_id = $1 AND day_date = $2',
         [req.user.id, req.params.date]
       );
       return res.json(result.rows[0] || {
@@ -1039,11 +1126,12 @@ app.get('/api/days/:date', optionalAuth, async (req, res) => {
         notes: '',
         completed_minutes: {},
         alarms: {},
+        closeout: {},
         points: 0
       });
     } else {
       const result = await pool.query(
-        'SELECT day_date, checks, notes, completed_minutes, alarms, updated_at FROM routine_days WHERE day_date = $1',
+        'SELECT day_date, checks, notes, completed_minutes, alarms, closeout, updated_at FROM routine_days WHERE day_date = $1',
         [req.params.date]
       );
       return res.json(result.rows[0] || {
@@ -1051,7 +1139,8 @@ app.get('/api/days/:date', optionalAuth, async (req, res) => {
         checks: {},
         notes: '',
         completed_minutes: {},
-        alarms: {}
+        alarms: {},
+        closeout: {}
       });
     }
   } catch (error) {
@@ -1067,8 +1156,8 @@ app.put('/api/days/:date', optionalAuth, async (req, res) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(req.params.date)) {
     return res.status(400).json({ error: 'Date must use YYYY-MM-DD format.' });
   }
-  const { checks = {}, notes = '', completed_minutes = {}, alarms = {} } = req.body || {};
-  if (typeof checks !== 'object' || typeof completed_minutes !== 'object' || typeof alarms !== 'object' || typeof notes !== 'string') {
+  const { checks = {}, notes = '', completed_minutes = {}, alarms = {}, closeout = {} } = req.body || {};
+  if (typeof checks !== 'object' || typeof completed_minutes !== 'object' || typeof alarms !== 'object' || typeof notes !== 'string' || typeof closeout !== 'object') {
     return res.status(400).json({ error: 'Invalid routine payload.' });
   }
 
@@ -1077,12 +1166,12 @@ app.put('/api/days/:date', optionalAuth, async (req, res) => {
     if (req.user) {
       const { points } = calculateGrindPoints(completed_minutes, checks, notes);
       const result = await pool.query(
-        `INSERT INTO user_routine_days (user_id, day_date, checks, notes, completed_minutes, alarms, points, updated_at)
-         VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6::jsonb, $7, NOW())
+        `INSERT INTO user_routine_days (user_id, day_date, checks, notes, completed_minutes, alarms, closeout, points, updated_at)
+         VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6::jsonb, $7::jsonb, $8, NOW())
          ON CONFLICT (user_id, day_date) DO UPDATE SET checks=EXCLUDED.checks, notes=EXCLUDED.notes,
-           completed_minutes=EXCLUDED.completed_minutes, alarms=EXCLUDED.alarms, points=EXCLUDED.points, updated_at=NOW()
-         RETURNING day_date, checks, notes, completed_minutes, alarms, points, updated_at`,
-        [req.user.id, req.params.date, JSON.stringify(checks), notes.slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms), points]
+           completed_minutes=EXCLUDED.completed_minutes, alarms=EXCLUDED.alarms, closeout=EXCLUDED.closeout, points=EXCLUDED.points, updated_at=NOW()
+         RETURNING day_date, checks, notes, completed_minutes, alarms, closeout, points, updated_at`,
+        [req.user.id, req.params.date, JSON.stringify(checks), notes.slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms), JSON.stringify(closeout), points]
       );
 
       // Invalidate Redis cached leaderboard for all groups this user is in
@@ -1097,18 +1186,130 @@ app.put('/api/days/:date', optionalAuth, async (req, res) => {
       return res.json(result.rows[0]);
     } else {
       const result = await pool.query(
-        `INSERT INTO routine_days (day_date, checks, notes, completed_minutes, alarms, updated_at)
-         VALUES ($1, $2::jsonb, $3, $4::jsonb, $5::jsonb, NOW())
+        `INSERT INTO routine_days (day_date, checks, notes, completed_minutes, alarms, closeout, updated_at)
+         VALUES ($1, $2::jsonb, $3, $4::jsonb, $5::jsonb, $6::jsonb, NOW())
          ON CONFLICT (day_date) DO UPDATE SET checks=EXCLUDED.checks, notes=EXCLUDED.notes,
-           completed_minutes=EXCLUDED.completed_minutes, alarms=EXCLUDED.alarms, updated_at=NOW()
-         RETURNING day_date, checks, notes, completed_minutes, alarms, updated_at`,
-        [req.params.date, JSON.stringify(checks), notes.slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms)]
+           completed_minutes=EXCLUDED.completed_minutes, alarms=EXCLUDED.alarms, closeout=EXCLUDED.closeout, updated_at=NOW()
+         RETURNING day_date, checks, notes, completed_minutes, alarms, closeout, updated_at`,
+        [req.params.date, JSON.stringify(checks), notes.slice(0, 10000), JSON.stringify(completed_minutes), JSON.stringify(alarms), JSON.stringify(closeout)]
       );
       return res.json(result.rows[0]);
     }
   } catch (error) {
     console.error('Save day failed:', error.message);
     return res.status(500).json({ error: 'Unable to save routine data.' });
+  }
+});
+
+// Fetch last recorded evening closeout (for reviewing previous day's checkout & priorities)
+app.get('/api/closeout/last', optionalAuth, async (req, res) => {
+  if (!pool) {
+    return res.status(503).json({ error: 'Database is not configured.' });
+  }
+
+  try {
+    await ensureTable();
+    let query, params;
+    if (req.user) {
+      query = `SELECT day_date, closeout FROM user_routine_days 
+               WHERE user_id = $1 AND closeout IS NOT NULL AND closeout != '{}'::jsonb 
+               ORDER BY day_date DESC LIMIT 5`;
+      params = [req.user.id];
+    } else {
+      query = `SELECT day_date, closeout FROM routine_days 
+               WHERE closeout IS NOT NULL AND closeout != '{}'::jsonb 
+               ORDER BY day_date DESC LIMIT 5`;
+      params = [];
+    }
+    const { rows } = await pool.query(query, params);
+    return res.json({ rows: rows || [] });
+  } catch (error) {
+    console.error('Fetch last closeout failed:', error.message);
+    return res.status(500).json({ error: 'Unable to fetch previous closeout.' });
+  }
+});
+
+// ================= CURRICULUMS & CHECKPOINT UNDERSTANDINGS ENDPOINTS =================
+app.get('/api/curriculums', optionalAuth, async (req, res) => {
+  if (!pool) {
+    return res.status(503).json({ error: 'Database is not configured.' });
+  }
+  try {
+    await ensureTable();
+    let query, params;
+    if (req.user) {
+      query = 'SELECT subject_name, data, updated_at FROM user_curriculums WHERE user_id = $1';
+      params = [req.user.id];
+    } else {
+      query = 'SELECT subject_name, data, updated_at FROM guest_curriculums';
+      params = [];
+    }
+    const { rows } = await pool.query(query, params);
+    const map = {};
+    rows.forEach(r => {
+      map[r.subject_name] = r.data;
+    });
+    return res.json(map);
+  } catch (error) {
+    console.error('Fetch curriculums failed:', error.message);
+    return res.status(500).json({ error: 'Unable to fetch curriculums.' });
+  }
+});
+
+app.put('/api/curriculums/:subject', optionalAuth, async (req, res) => {
+  if (!pool) {
+    return res.status(503).json({ error: 'Database is not configured.' });
+  }
+  const subject = decodeURIComponent(req.params.subject || '').trim();
+  const data = req.body;
+  if (!subject || !data) {
+    return res.status(400).json({ error: 'Subject name and curriculum data are required.' });
+  }
+
+  try {
+    await ensureTable();
+    if (req.user) {
+      await pool.query(
+        `INSERT INTO user_curriculums (user_id, subject_name, data, updated_at)
+         VALUES ($1, $2, $3::jsonb, NOW())
+         ON CONFLICT (user_id, subject_name) DO UPDATE
+         SET data = EXCLUDED.data, updated_at = NOW()`,
+        [req.user.id, subject, JSON.stringify(data)]
+      );
+    } else {
+      await pool.query(
+        `INSERT INTO guest_curriculums (subject_name, data, updated_at)
+         VALUES ($1, $2::jsonb, NOW())
+         ON CONFLICT (subject_name) DO UPDATE
+         SET data = EXCLUDED.data, updated_at = NOW()`,
+        [subject, JSON.stringify(data)]
+      );
+    }
+    return res.json({ ok: true, subject });
+  } catch (error) {
+    console.error('Save curriculum failed:', error.message);
+    return res.status(500).json({ error: 'Unable to save curriculum.' });
+  }
+});
+
+app.delete('/api/curriculums/:subject', optionalAuth, async (req, res) => {
+  if (!pool) {
+    return res.status(503).json({ error: 'Database is not configured.' });
+  }
+  const subject = decodeURIComponent(req.params.subject || '').trim();
+  if (!subject) return res.status(400).json({ error: 'Subject name required.' });
+
+  try {
+    await ensureTable();
+    if (req.user) {
+      await pool.query('DELETE FROM user_curriculums WHERE user_id = $1 AND subject_name = $2', [req.user.id, subject]);
+    } else {
+      await pool.query('DELETE FROM guest_curriculums WHERE subject_name = $1', [subject]);
+    }
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error('Delete curriculum failed:', error.message);
+    return res.status(500).json({ error: 'Unable to delete curriculum.' });
   }
 });
 
