@@ -2122,6 +2122,8 @@ function App() {
   };
 
   const finishSession = (force = false) => {
+    setRunning(false);
+    setBreakRunning(false);
     if (!force && activeId && isToday) {
       const taskObj = schedule.find(s => s.id === activeId);
       if (taskObj) {
@@ -3757,6 +3759,8 @@ const handleNudge = async (toUserId, toUsername) => {
             running={running}
             onToggleRunning={() => setRunning(r => !r)}
             onFinishSession={() => {
+              setRunning(false);
+              setBreakRunning(false);
               setStudyModeActive(false);
               finishSession(false);
             }}
@@ -7409,7 +7413,7 @@ const handleNudge = async (toUserId, toUsername) => {
                 >
                   Force Log Partial Session ({interceptTask.elapsedMins}m)
                 </button>
-                <button className="primary-button" onClick={() => setInterceptorModalOpen(false)}>
+                <button className="primary-button" onClick={() => { setInterceptorModalOpen(false); setRunning(true); }}>
                   Resume Deep Work
                 </button>
               </div>

@@ -417,6 +417,7 @@ export default function StudyModeView({
             type="button"
             className="study-stop-btn"
             onClick={() => {
+              if (typeof onToggleRunning === 'function' && running) onToggleRunning();
               if (typeof onFinishSession === 'function') onFinishSession();
             }}
             title="Log elapsed study time and exit back to routine"
