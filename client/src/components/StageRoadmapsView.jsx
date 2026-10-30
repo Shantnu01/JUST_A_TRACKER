@@ -41,8 +41,7 @@ export default function StageRoadmapsView({
   onPlayChime,
   setToast,
   onJumpToToday,
-  theme = '',
-  columnStyle = 'normal'
+  theme = ''
 }) {
   // 1. Discover subjects strictly from routine focus items (no dummy/arbitrary subjects)
   const routineSubjects = useMemo(() => {
@@ -349,7 +348,7 @@ export default function StageRoadmapsView({
   const currentStage = hasStages ? (curriculum.stages[activeStageIdx] || curriculum.stages[0]) : null;
 
   return (
-    <div className="stage-roadmaps-hub" data-column-style={columnStyle}>
+    <div className="stage-roadmaps-hub">
       {/* 1. Header Bar */}
       <div className="roadmap-hub-header">
         <div className="roadmap-hub-title-group">
