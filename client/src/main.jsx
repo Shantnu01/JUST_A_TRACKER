@@ -90,6 +90,7 @@ import {
 import './styles.css';
 import { playFocusSound, stopFocusSound, setSoundVolume } from './utils/soundEngine';
 import { calculateCircadianScore, getCircadianEnergyLevel, getCognitiveTier, calculateAutoShift, detectScheduleDrift, generateChiefOfStaffPlan, slotScheduleToCircadian } from './utils/circadianEngine';
+import { requestUserLocationAndWeather } from './utils/weatherService';
 
 // Dynamic API endpoint: Uses relative /api for unified production & Vite proxy,
 // or uses VITE_API_URL if configured for separate frontend/backend deployments.
@@ -621,22 +622,47 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isZenMode]);
 
-  // Tokyo Lofi Live JST Clock & Ambient Web Audio Generator
-  const [jstTime, setJstTime] = useState('');
+  // Live Weather & Local Geolocation State (Auto-adjusted to user location)
+  const [userGeoWeather, setUserGeoWeather] = useState(() => {
+    const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+    const city = browserTz.split('/').pop()?.replace(/_/g, ' ') || 'LOCAL';
+    return {
+      city,
+      country: city,
+      temp: null,
+      condition: 'CLEAR',
+      timeZone: browserTz,
+      timeZoneLabel: `${city.toUpperCase()} · LOCAL`
+    };
+  });
+
   useEffect(() => {
-    const updateJST = () => {
+    let mounted = true;
+    requestUserLocationAndWeather().then(data => {
+      if (mounted && data) {
+        setUserGeoWeather(data);
+      }
+    });
+    return () => { mounted = false; };
+  }, []);
+
+  // Live Location Clock (Adjusted strictly to user's real local timezone)
+  const [localLiveTime, setLocalLiveTime] = useState('');
+  useEffect(() => {
+    const updateClock = () => {
       const now = new Date();
       try {
-        const options = { timeZone: 'Asia/Tokyo', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        setJstTime(new Intl.DateTimeFormat([], options).format(now));
+        const tz = userGeoWeather?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const options = { timeZone: tz, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        setLocalLiveTime(new Intl.DateTimeFormat([], options).format(now));
       } catch (e) {
-        setJstTime(now.toLocaleTimeString());
+        setLocalLiveTime(now.toLocaleTimeString());
       }
     };
-    updateJST();
-    const timer = setInterval(updateJST, 1000);
+    updateClock();
+    const timer = setInterval(updateClock, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [userGeoWeather?.timeZone]);
 
   // 7. Subject Curriculum & Stage Roadmap State
   const [curriculumModalOpen, setCurriculumModalOpen] = useState(false);
@@ -2629,11 +2655,19 @@ const handleNudge = async (toUserId, toUsername) => {
   ], []);
 
   const getTokyoGreeting = useCallback(() => {
-    const h = new Date().getHours();
-    if (h < 12) return 'Good Morning.';
-    if (h < 17) return 'Good Afternoon.';
-    return 'Good Evening.';
-  }, []);
+    let h;
+    try {
+      const tz = userGeoWeather?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const hourStr = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', hour12: false }).format(new Date());
+      h = parseInt(hourStr, 10);
+    } catch (e) {
+      h = new Date().getHours();
+    }
+    if (h >= 4 && h < 12) return 'Good Morning.';
+    if (h >= 12 && h < 17) return 'Good Afternoon.';
+    if (h >= 17 && h < 22) return 'Good Evening.';
+    return 'Good Night.';
+  }, [userGeoWeather?.timeZone]);
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [typewriterText, setTypewriterText] = useState(() => getTokyoGreeting());
@@ -3145,7 +3179,10 @@ const handleNudge = async (toUserId, toUsername) => {
             <div className="tokyo-terminal-strip">
               <div className="tokyo-strip-left">
                 <span className="tokyo-strip-dot" />
-                <span>TOKYO TERMINAL <span className="tokyo-subline">// METROPOLITAN LINE</span></span>
+                <span>
+                  {(userGeoWeather?.city || userGeoWeather?.country || 'LOCAL').toUpperCase()} TERMINAL{' '}
+                  <span className="tokyo-subline">// METROPOLITAN LINE</span>
+                </span>
                 <span className="tokyo-strip-sep">/</span>
                 <span className="tokyo-strip-date">{prettyDate(selectedDate).toUpperCase()}</span>
               </div>
@@ -3153,7 +3190,11 @@ const handleNudge = async (toUserId, toUsername) => {
                 <svg className="tokyo-weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
                 </svg>
-                <span>TOKYO WEATHER: 18°C CLOUDY</span>
+                <span>
+                  {(userGeoWeather?.city || userGeoWeather?.country || 'LOCAL').toUpperCase()} WEATHER:{' '}
+                  {userGeoWeather?.temp != null ? `${userGeoWeather.temp}°C` : '24°C'}{' '}
+                  {userGeoWeather?.condition || 'CLEAR'}
+                </span>
               </div>
             </div>
           </>
@@ -3311,10 +3352,10 @@ const handleNudge = async (toUserId, toUsername) => {
                 </div>
                 {theme === 'tokyo-lofi' && (
                   <div className="tokyo-clock-card">
-                    <div className="tokyo-clock-time">{jstTime || '21:42:08'}</div>
+                    <div className="tokyo-clock-time">{localLiveTime || '21:42:08'}</div>
                     <div className="tokyo-clock-label">
                       <span className="tokyo-clock-dot" />
-                      <span>TOKYO · JST (UTC+9)</span>
+                      <span>{userGeoWeather?.timeZoneLabel || 'LOCAL TIME'}</span>
                     </div>
                   </div>
                 )}

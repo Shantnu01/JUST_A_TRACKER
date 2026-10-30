@@ -1,5 +1,5 @@
-// Zero-dependency Weather & Geolocation Service for Tokyo Lofi and World Themes
-// Uses Open-Meteo (free open weather API, no keys required) and BigDataCloud client reverse geocoding
+// Zero-dependency Live Weather & Geolocation Service
+// Uses BigDataCloud IP reverse geocoding + Open-Meteo (open free APIs, no keys required)
 
 const WMO_CODE_MAP = {
   0: 'CLEAR',
@@ -32,18 +32,8 @@ const WMO_CODE_MAP = {
   99: 'THUNDERSTORM WITH HAIL'
 };
 
-export const DEFAULT_TOKYO_WEATHER = {
-  country: 'TOKYO',
-  city: 'Tokyo',
-  temp: 18,
-  condition: 'CLOUDY',
-  timeZone: 'Asia/Tokyo',
-  timeZoneLabel: 'TOKYO · JST (UTC+9)',
-  isCustom: false
-};
-
-const CACHE_KEY = 'daymark_geo_weather_cache_v1';
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour cache
+const CACHE_KEY = 'daymark_geo_weather_cache_v2';
+const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes cache
 
 export function getCachedWeather() {
   try {
@@ -76,92 +66,86 @@ export function parseWeatherCondition(code) {
 }
 
 /**
- * Request user geolocation and fetch current weather + country name
- * If denied or error, falls back safely to Tokyo JST
+ * Request user geolocation and fetch current weather + city/country name
+ * Uses IP geolocation first for instant, zero-prompt detection, falling back to browser timezone
  */
 export async function requestUserLocationAndWeather() {
-  // Check cache first
   const cached = getCachedWeather();
   if (cached) {
     return cached;
   }
 
-  if (typeof window === 'undefined' || !navigator.geolocation) {
-    return DEFAULT_TOKYO_WEATHER;
+  const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata';
+
+  try {
+    // 1. IP-based reverse geocode (zero permission prompt required)
+    const geoRes = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=en')
+      .then(r => r.json())
+      .catch(() => null);
+
+    const lat = geoRes?.latitude;
+    const lon = geoRes?.longitude;
+    const countryName = geoRes?.countryName || geoRes?.countryCode || '';
+    const cityName = geoRes?.city || geoRes?.locality || '';
+
+    if (lat != null && lon != null) {
+      // 2. Fetch live Open-Meteo weather for coordinates
+      const weatherRes = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`
+      ).then(r => r.json()).catch(() => null);
+
+      const temp = weatherRes?.current?.temperature_2m != null 
+        ? Math.round(weatherRes.current.temperature_2m) 
+        : 25;
+      const code = weatherRes?.current?.weather_code;
+      const condition = parseWeatherCondition(code);
+      const timeZone = weatherRes?.timezone || browserTz;
+
+      // Construct friendly offset label (e.g. "INDIA · IST (UTC+5:30)")
+      let offsetStr = '';
+      try {
+        const now = new Date();
+        const formatter = new Intl.DateTimeFormat('en-US', {
+          timeZone,
+          timeZoneName: 'short'
+        });
+        const parts = formatter.formatToParts(now);
+        const tzPart = parts.find(p => p.type === 'timeZoneName');
+        offsetStr = tzPart ? tzPart.value : '';
+      } catch (e) {
+        offsetStr = '';
+      }
+
+      const displayCity = cityName || countryName || 'LOCAL';
+      const label = offsetStr ? `${displayCity.toUpperCase()} · ${offsetStr}` : displayCity.toUpperCase();
+
+      const resolved = {
+        country: (countryName || 'LOCAL').toUpperCase(),
+        city: displayCity,
+        temp,
+        condition,
+        timeZone,
+        timeZoneLabel: label,
+        isCustom: true
+      };
+
+      setCachedWeather(resolved);
+      return resolved;
+    }
+  } catch (err) {
+    console.warn('[WeatherService] IP geocode failed, falling back to browser timezone:', err);
   }
 
-  return new Promise((resolve) => {
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          const lat = pos.coords.latitude;
-          const lon = pos.coords.longitude;
-
-          // 1. Fetch live weather from Open-Meteo
-          const weatherPromise = fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`
-          ).then(r => r.json());
-
-          // 2. Fetch country name from BigDataCloud reverse geocode
-          const geoPromise = fetch(
-            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`
-          ).then(r => r.json()).catch(() => null);
-
-          const [weatherRes, geoRes] = await Promise.all([weatherPromise, geoPromise]);
-
-          const temp = weatherRes?.current?.temperature_2m != null 
-            ? Math.round(weatherRes.current.temperature_2m) 
-            : 22;
-          const code = weatherRes?.current?.weather_code;
-          const condition = parseWeatherCondition(code);
-          const timeZone = weatherRes?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Tokyo';
-
-          const countryName = geoRes?.countryName || geoRes?.countryCode || 'LOCAL';
-          const cityName = geoRes?.city || geoRes?.locality || '';
-
-          // Construct friendly timezone label (e.g. "INDIA · IST (UTC+5:30)")
-          let offsetStr = '';
-          try {
-            const now = new Date();
-            const formatter = new Intl.DateTimeFormat('en-US', {
-              timeZone,
-              timeZoneName: 'short'
-            });
-            const parts = formatter.formatToParts(now);
-            const tzPart = parts.find(p => p.type === 'timeZoneName');
-            if (tzPart) {
-              offsetStr = tzPart.value;
-            }
-          } catch (e) {
-            offsetStr = 'LOCAL';
-          }
-
-          const resolved = {
-            country: countryName.toUpperCase(),
-            city: cityName,
-            temp,
-            condition,
-            timeZone,
-            timeZoneLabel: `${countryName.toUpperCase()} · ${offsetStr}`,
-            isCustom: true
-          };
-
-          setCachedWeather(resolved);
-          resolve(resolved);
-        } catch (err) {
-          console.warn('[WeatherService] Failed to fetch weather/geo data:', err);
-          resolve(DEFAULT_TOKYO_WEATHER);
-        }
-      },
-      (error) => {
-        console.info('[WeatherService] Geolocation permission denied or unavailable, using Tokyo JST fallback:', error.message);
-        resolve(DEFAULT_TOKYO_WEATHER);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 3600000
-      }
-    );
-  });
+  // 3. Fallback to local browser timezone
+  const fallbackLabel = browserTz.split('/').pop()?.replace(/_/g, ' ') || 'LOCAL';
+  const resolvedFallback = {
+    country: fallbackLabel.toUpperCase(),
+    city: fallbackLabel,
+    temp: 24,
+    condition: 'CLEAR',
+    timeZone: browserTz,
+    timeZoneLabel: `${fallbackLabel.toUpperCase()} · ${browserTz}`,
+    isCustom: true
+  };
+  return resolvedFallback;
 }
