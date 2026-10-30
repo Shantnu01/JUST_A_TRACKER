@@ -285,10 +285,7 @@ export default function StudyModeView({
           <button
             type="button"
             className="study-minimize-btn"
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+            onClick={() => {
               if (typeof onMinimize === 'function') {
                 onMinimize();
               }
@@ -400,9 +397,7 @@ export default function StudyModeView({
           <button
             type="button"
             className="study-stop-btn"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+            onClick={() => {
               if (typeof onFinishSession === 'function') onFinishSession();
             }}
             title="Log elapsed study time and exit back to routine"

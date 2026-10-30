@@ -3701,11 +3701,16 @@ const handleNudge = async (toUserId, toUsername) => {
             seconds={seconds}
             running={running}
             onToggleRunning={() => setRunning(r => !r)}
-            onFinishSession={() => finishSession()}
-            onMinimize={() => {
+            onFinishSession={() => {
+              setInterceptorModalOpen(false);
+              finishSession(true);
               setStudyModeActive(false);
-              setToast('Study Mode minimized to dashboard. Focus timer is running in background.');
-              setTimeout(() => setToast(''), 2500);
+            }}
+            onMinimize={() => {
+              setInterceptorModalOpen(false);
+              setStudyModeActive(false);
+              setToast('Focus timer is running in background');
+              setTimeout(() => setToast(''), 2000);
             }}
             theme={theme}
             columnStyle={columnStyle}
