@@ -13782,7 +13782,19 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .roadmap-outline-panel,
 [data-column-style="transparent"] .dsa-potd-card,
 [data-column-style="transparent"] .tokyo-soundscape-card,
-[data-column-style="transparent"] .column-style-setting-card {
+[data-column-style="transparent"] .column-style-setting-card,
+[data-column-style="transparent"] .single-stage-focused-card,
+[data-column-style="transparent"] .stage-tabs-navigation-bar,
+[data-column-style="transparent"] .roadmap-outline-editor-card,
+[data-column-style="transparent"] .roadmap-blank-creator-card,
+[data-column-style="transparent"] .checkpoint-item-row,
+[data-column-style="transparent"] .roadmap-modal-card,
+[data-column-style="transparent"] .roadmap-subjects-tabs,
+[data-column-style="transparent"] .stage-roadmaps-hub,
+[data-column-style="transparent"] .pod-card,
+[data-column-style="transparent"] .pod-chat-panel,
+[data-column-style="transparent"] .morning-priority-card,
+[data-column-style="transparent"] .welcome-row > div:first-child {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -13886,7 +13898,19 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="liquid-glass"] .roadmap-outline-panel,
 [data-column-style="liquid-glass"] .dsa-potd-card,
 [data-column-style="liquid-glass"] .tokyo-soundscape-card,
-[data-column-style="liquid-glass"] .column-style-setting-card {
+[data-column-style="liquid-glass"] .column-style-setting-card,
+[data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-column-style="liquid-glass"] .stage-tabs-navigation-bar,
+[data-column-style="liquid-glass"] .roadmap-outline-editor-card,
+[data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-column-style="liquid-glass"] .checkpoint-item-row,
+[data-column-style="liquid-glass"] .roadmap-modal-card,
+[data-column-style="liquid-glass"] .roadmap-subjects-tabs,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub,
+[data-column-style="liquid-glass"] .pod-card,
+[data-column-style="liquid-glass"] .pod-chat-panel,
+[data-column-style="liquid-glass"] .morning-priority-card,
+[data-column-style="liquid-glass"] .welcome-row > div:first-child {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
   backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
@@ -15991,5 +16015,264 @@ html[data-theme="tokyo-lofi"],
     padding: 13px 16px !important;
     font-size: 14px !important;
     min-height: 44px !important;
+  }
+}
+
+
+/* ==========================================================================
+   UNIVERSAL MATERIAL SYSTEM & STAGE ROADMAPS REACTIVITY
+   Ensures Crystal Transparent, Apple Liquid Glass, and Smoky Obsidian
+   penetrate and style all dashboard columns, panels, and Stage Roadmaps.
+   ========================================================================== */
+
+/* 1. CRYSTAL TRANSPARENT OVERRIDES */
+[data-column-style="transparent"] .stage-roadmaps-hub,
+[data-column-style="transparent"] .single-stage-focused-card,
+[data-column-style="transparent"] .roadmap-command-center,
+[data-column-style="transparent"] .stage-focus-header,
+[data-column-style="transparent"] .stage-focus-add-checkpoint-row,
+[data-column-style="transparent"] .stage-footer-nav,
+[data-column-style="transparent"] .single-checkpoint-row,
+[data-column-style="transparent"] .single-checkpoint-box,
+[data-column-style="transparent"] .empty-checkpoints-prompt,
+[data-column-style="transparent"] .roadmap-blank-creator-card,
+[data-column-style="transparent"] .creator-option-box,
+[data-column-style="transparent"] .roadmap-format-guide-box,
+[data-column-style="transparent"] .roadmap-outline-editor-card,
+[data-column-style="transparent"] .editor-card-header,
+[data-column-style="transparent"] .editor-card-footer,
+[data-column-style="transparent"] .stage-tabs-navigation-bar,
+[data-column-style="transparent"] .single-stage-tab-btn,
+[data-column-style="transparent"] .roadmap-subjects-tabs,
+[data-column-style="transparent"] .roadmap-subject-pill,
+[data-column-style="transparent"] .roadmap-modal-card,
+[data-column-style="transparent"] .curriculum-stages-container,
+[data-column-style="transparent"] .curriculum-stage-card,
+[data-column-style="transparent"] .curriculum-checkpoint-item,
+[data-column-style="transparent"] .routine-stage-box,
+[data-column-style="transparent"] .curriculum-header-stats,
+[data-column-style="transparent"] .smart-commit-panel,
+[data-column-style="transparent"] .notes-quote-card,
+[data-column-style="transparent"] .burnout-warning-card,
+[data-column-style="transparent"] .preflight-timeline-card,
+[data-column-style="transparent"] .pod-notice-card,
+[data-column-style="transparent"] .pod-card,
+[data-column-style="transparent"] .pod-chat-panel,
+[data-column-style="transparent"] .morning-priority-card,
+[data-column-style="transparent"] .schedule-panel,
+[data-column-style="transparent"] .habits-panel,
+[data-column-style="transparent"] .coding-metric-panel,
+[data-column-style="transparent"] .coding-sheet-panel,
+[data-column-style="transparent"] .coding-contests-panel,
+[data-column-style="transparent"] .coding-suggestions-panel,
+[data-column-style="transparent"] .roadmap-tree-panel,
+[data-column-style="transparent"] .roadmap-outline-panel,
+[data-column-style="transparent"] .dsa-potd-card,
+[data-column-style="transparent"] .tokyo-soundscape-card,
+[data-column-style="transparent"] .column-style-setting-card,
+[data-column-style="transparent"] .settings-panel,
+[data-column-style="transparent"] .report-main {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), 0 12px 36px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-column-style="transparent"] .single-stage-focused-card::after {
+  opacity: 0.08 !important;
+}
+
+[data-column-style="transparent"] .single-checkpoint-row,
+[data-column-style="transparent"] .single-checkpoint-box {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-column-style="transparent"] .single-checkpoint-row:hover,
+[data-column-style="transparent"] .single-checkpoint-box:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 2. APPLE LIQUID GLASS OVERRIDES */
+[data-column-style="liquid-glass"] .stage-roadmaps-hub,
+[data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-column-style="liquid-glass"] .roadmap-command-center,
+[data-column-style="liquid-glass"] .stage-focus-header,
+[data-column-style="liquid-glass"] .stage-focus-add-checkpoint-row,
+[data-column-style="liquid-glass"] .stage-footer-nav,
+[data-column-style="liquid-glass"] .single-checkpoint-row,
+[data-column-style="liquid-glass"] .empty-checkpoints-prompt,
+[data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-column-style="liquid-glass"] .creator-option-box,
+[data-column-style="liquid-glass"] .roadmap-format-guide-box,
+[data-column-style="liquid-glass"] .roadmap-outline-editor-card,
+[data-column-style="liquid-glass"] .editor-card-header,
+[data-column-style="liquid-glass"] .editor-card-footer,
+[data-column-style="liquid-glass"] .stage-tabs-navigation-bar,
+[data-column-style="liquid-glass"] .roadmap-subjects-tabs,
+[data-column-style="liquid-glass"] .roadmap-modal-card,
+[data-column-style="liquid-glass"] .curriculum-stages-container,
+[data-column-style="liquid-glass"] .curriculum-stage-card,
+[data-column-style="liquid-glass"] .curriculum-checkpoint-item,
+[data-column-style="liquid-glass"] .routine-stage-box,
+[data-column-style="liquid-glass"] .curriculum-header-stats,
+[data-column-style="liquid-glass"] .smart-commit-panel,
+[data-column-style="liquid-glass"] .notes-quote-card,
+[data-column-style="liquid-glass"] .burnout-warning-card,
+[data-column-style="liquid-glass"] .preflight-timeline-card,
+[data-column-style="liquid-glass"] .pod-notice-card,
+[data-column-style="liquid-glass"] .pod-card,
+[data-column-style="liquid-glass"] .pod-chat-panel,
+[data-column-style="liquid-glass"] .morning-priority-card,
+[data-column-style="liquid-glass"] .schedule-panel,
+[data-column-style="liquid-glass"] .habits-panel,
+[data-column-style="liquid-glass"] .coding-metric-panel,
+[data-column-style="liquid-glass"] .coding-sheet-panel,
+[data-column-style="liquid-glass"] .coding-contests-panel,
+[data-column-style="liquid-glass"] .coding-suggestions-panel,
+[data-column-style="liquid-glass"] .roadmap-tree-panel,
+[data-column-style="liquid-glass"] .roadmap-outline-panel,
+[data-column-style="liquid-glass"] .dsa-potd-card,
+[data-column-style="liquid-glass"] .tokyo-soundscape-card,
+[data-column-style="liquid-glass"] .column-style-setting-card,
+[data-column-style="liquid-glass"] .settings-panel,
+[data-column-style="liquid-glass"] .report-main {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+  backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35), 0 20px 50px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-roadmaps-hub,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-command-center,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-focus-header,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-focus-add-checkpoint-row,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-footer-nav,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .single-checkpoint-row,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .creator-option-box,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-tabs-navigation-bar,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-subjects-tabs,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .curriculum-stages-container,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .smart-commit-panel,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .notes-quote-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .pod-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .pod-chat-panel,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .morning-priority-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(28, 25, 40, 0.45) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.32) !important;
+  box-shadow: inset 0 1.5px 1px 0 rgba(255, 220, 150, 0.45), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2), 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-column-style="liquid-glass"] .single-checkpoint-row,
+[data-column-style="liquid-glass"] .single-checkpoint-box {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-column-style="liquid-glass"] .single-checkpoint-row:hover,
+[data-column-style="liquid-glass"] .single-checkpoint-box:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 3. SMOKY OBSIDIAN OVERRIDES */
+[data-column-style="smoky"] .stage-roadmaps-hub,
+[data-column-style="smoky"] .single-stage-focused-card,
+[data-column-style="smoky"] .roadmap-command-center,
+[data-column-style="smoky"] .stage-focus-header,
+[data-column-style="smoky"] .stage-focus-add-checkpoint-row,
+[data-column-style="smoky"] .stage-footer-nav,
+[data-column-style="smoky"] .single-checkpoint-row,
+[data-column-style="smoky"] .empty-checkpoints-prompt,
+[data-column-style="smoky"] .roadmap-blank-creator-card,
+[data-column-style="smoky"] .creator-option-box,
+[data-column-style="smoky"] .roadmap-format-guide-box,
+[data-column-style="smoky"] .roadmap-outline-editor-card,
+[data-column-style="smoky"] .editor-card-header,
+[data-column-style="smoky"] .editor-card-footer,
+[data-column-style="smoky"] .stage-tabs-navigation-bar,
+[data-column-style="smoky"] .roadmap-subjects-tabs,
+[data-column-style="smoky"] .roadmap-modal-card,
+[data-column-style="smoky"] .curriculum-stages-container,
+[data-column-style="smoky"] .curriculum-stage-card,
+[data-column-style="smoky"] .curriculum-checkpoint-item,
+[data-column-style="smoky"] .routine-stage-box,
+[data-column-style="smoky"] .curriculum-header-stats,
+[data-column-style="smoky"] .smart-commit-panel,
+[data-column-style="smoky"] .notes-quote-card,
+[data-column-style="smoky"] .burnout-warning-card,
+[data-column-style="smoky"] .preflight-timeline-card,
+[data-column-style="smoky"] .pod-notice-card,
+[data-column-style="smoky"] .pod-card,
+[data-column-style="smoky"] .pod-chat-panel,
+[data-column-style="smoky"] .morning-priority-card,
+[data-column-style="smoky"] .schedule-panel,
+[data-column-style="smoky"] .habits-panel,
+[data-column-style="smoky"] .coding-metric-panel,
+[data-column-style="smoky"] .coding-sheet-panel,
+[data-column-style="smoky"] .coding-contests-panel,
+[data-column-style="smoky"] .coding-suggestions-panel,
+[data-column-style="smoky"] .roadmap-tree-panel,
+[data-column-style="smoky"] .roadmap-outline-panel,
+[data-column-style="smoky"] .dsa-potd-card,
+[data-column-style="smoky"] .tokyo-soundscape-card,
+[data-column-style="smoky"] .column-style-setting-card,
+[data-column-style="smoky"] .settings-panel,
+[data-column-style="smoky"] .report-main {
+  background: rgba(8, 9, 15, 0.82) !important;
+  backdrop-filter: blur(28px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(130%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), 0 24px 60px rgba(0, 0, 0, 0.65) !important;
+}
+
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .stage-roadmaps-hub,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-command-center,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .stage-focus-header,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .single-checkpoint-row,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-blank-creator-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .creator-option-box,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .stage-tabs-navigation-bar,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-subjects-tabs,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .curriculum-stages-container,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .smart-commit-panel,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .notes-quote-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .pod-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .pod-chat-panel,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .morning-priority-card {
+  background: rgba(14, 12, 22, 0.88) !important;
+  border-color: rgba(245, 158, 11, 0.22) !important;
+}
+
+/* 4. CLEAN TOKYO LOFI MINIMAL TOPBAR ALIGNMENT */
+.tokyo-minimal-topbar {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  min-height: 44px !important;
+  padding: 4px 0 12px 0 !important;
+  margin-bottom: 8px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background: transparent !important;
+}
+
+.tokyo-minimal-topbar .top-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-left: auto !important;
+}
+
+@media (max-width: 900px) {
+  .tokyo-minimal-topbar .top-actions {
+    flex-wrap: wrap !important;
   }
 }
