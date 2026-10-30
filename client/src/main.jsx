@@ -3668,11 +3668,15 @@ const handleNudge = async (toUserId, toUsername) => {
             running={running}
             onToggleRunning={() => setRunning(r => !r)}
             onFinishSession={() => finishSession()}
-            onMinimize={() => setStudyModeActive(false)}
+            onMinimize={() => {
+              setStudyModeActive(false);
+              setToast('Study Mode minimized to dashboard. Focus timer is running in background.');
+              setTimeout(() => setToast(''), 2500);
+            }}
             theme={theme}
             columnStyle={columnStyle}
-            hasWallpaper={hasWallpaper}
-            activeWallpaperUrl={activeWallpaperUrl}
+            hasWallpaper={Boolean(hasWallpaper || activeWallpaperUrl)}
+            activeWallpaperUrl={activeWallpaperUrl || '/lofi_study_dashboard_bg.jpg'}
             playChime={playChime}
             setToast={setToast}
             isBreak={isBreak}

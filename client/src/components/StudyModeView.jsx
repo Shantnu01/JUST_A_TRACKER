@@ -83,10 +83,10 @@ export default function StudyModeView({
       setActiveSound(type);
       if (typeof setToast === 'function') {
         const labels = {
-          rain: '🌧️ Real Rain soundscape playing (Soothing)',
-          birds: '🐦 Forest Birds chirping playing (Soothing)',
-          river: '🌊 Calm River stream playing (Soothing)',
-          binaural: '🧠 40Hz Concentration Tone active (Low Frequency)'
+          rain: '🌧️ Real Rain soundscape playing (Rooftop Ambience)',
+          birds: '🐦 Forest Birds chirping playing (Nature Sounds)',
+          waves: '🌊 Ocean Waves soundscape playing (Deep Relaxation)',
+          '40hz': '🧠 40Hz Concentration Tone active (Gamma Focus Beats)'
         };
         setToast(labels[type] || 'Soundscape started');
       }
@@ -134,6 +134,10 @@ export default function StudyModeView({
       className={`study-mode-backdrop ${isBreak ? 'on-break' : 'studying'}`}
       data-theme={theme}
       data-column-style={columnStyle}
+      style={{
+        '--app-wallpaper-url': `url("${activeWallpaperUrl || '/lofi_study_dashboard_bg.jpg'}")`,
+        '--tokyo-bg-url': `url("${activeWallpaperUrl || '/lofi_study_dashboard_bg.jpg'}")`
+      }}
     >
       {/* Top Floating Glass Utility Bar */}
       <div className="study-top-bar">
@@ -231,46 +235,46 @@ export default function StudyModeView({
             )}
           </div>
 
-          {/* Soothing Soundscapes Selector Bar (Real Rain, Birds Chirping, Calm River, 40Hz Concentration Tone) */}
+          {/* Soothing Soundscapes Selector Bar: Exact 4 YouTube Focus Streams requested by user */}
           <div className="study-sound-pills-bar">
             <button
               type="button"
               className={`sound-pill ${activeSound === 'rain' ? 'active' : ''}`}
               onClick={() => handleSelectSound('rain')}
-              title="Real soothing rain sound for concentration"
+              title="Real soothing rain sound for concentration (YouTube Stream)"
             >
-              🌧️ Real Rain
+              🌧️ Rain
             </button>
             <button
               type="button"
               className={`sound-pill ${activeSound === 'birds' ? 'active' : ''}`}
               onClick={() => handleSelectSound('birds')}
-              title="Soothing forest birds chirping"
+              title="Relaxing forest bird sounds for studying (YouTube Stream)"
             >
-              🐦 Birds Chirping
+              🐦 Birds
             </button>
             <button
               type="button"
-              className={`sound-pill ${activeSound === 'river' ? 'active' : ''}`}
-              onClick={() => handleSelectSound('river')}
-              title="Soothing calm river water flow"
+              className={`sound-pill ${activeSound === 'waves' || activeSound === 'river' ? 'active' : ''}`}
+              onClick={() => handleSelectSound('waves')}
+              title="Relaxing ocean waves for deep focus (YouTube Stream)"
             >
-              🌊 Calm River
+              🌊 Waves
             </button>
             <button
               type="button"
-              className={`sound-pill ${activeSound === 'binaural' ? 'active' : ''}`}
-              onClick={() => handleSelectSound('binaural')}
-              title="Soothing 40Hz concentration tone (low frequency gamma)"
+              className={`sound-pill ${activeSound === '40hz' || activeSound === 'binaural' ? 'active' : ''}`}
+              onClick={() => handleSelectSound('40hz')}
+              title="40Hz Gamma focus tone binaural beats (YouTube Stream)"
             >
-              🧠 40Hz Tone
+              🧠 40Hz
             </button>
             {activeSound !== 'off' && (
               <button
                 type="button"
                 className="sound-pill mute-btn"
                 onClick={() => handleSelectSound(activeSound)}
-                title="Mute soundscape"
+                title="Mute ambient soundscape"
               >
                 <VolumeX size={13} />
               </button>
@@ -281,7 +285,13 @@ export default function StudyModeView({
           <button
             type="button"
             className="study-minimize-btn"
-            onClick={onMinimize}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (typeof onMinimize === 'function') {
+                onMinimize();
+              }
+            }}
             title="Minimize to dashboard (Timer keeps running in background)"
           >
             <Minimize2 size={14} />

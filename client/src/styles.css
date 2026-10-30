@@ -17306,27 +17306,45 @@ html[data-theme="tokyo-lofi"],
 }
 
 .study-mode-backdrop {
-  min-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 24px 20px 48px;
-  width: 100%;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 84px 24px 36px !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  background-color: #0b0914 !important;
+  background-image: 
+    radial-gradient(ellipse at 50% 35%, rgba(12, 10, 24, 0.48) 0%, rgba(6, 5, 14, 0.88) 100%),
+    var(--app-wallpaper-url, var(--tokyo-bg-url, url('/lofi_study_dashboard_bg.jpg'))) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
 }
 
 /* Floating Top Utility Bar */
 .study-top-bar {
-  position: absolute;
-  top: 18px;
-  left: 24px;
-  right: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  z-index: 10;
+  position: fixed !important;
+  top: 20px !important;
+  left: 24px !important;
+  right: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  z-index: 100000 !important;
+  pointer-events: none !important;
+}
+
+.study-top-bar > * {
+  pointer-events: auto !important;
 }
 
 .study-status-indicator {
@@ -17423,368 +17441,407 @@ html[data-theme="tokyo-lofi"],
 }
 
 .study-minimize-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: 9px;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FAF8FF;
-  font-size: 11.5px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.18s ease;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 8px 16px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.4px !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 100005 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  user-select: none !important;
 }
 
 .study-minimize-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.26) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Central Study Card */
+.study-minimize-btn:active {
+  transform: translateY(0) !important;
+}
+
+/* Central Study Card - Pure Liquid Glass across all themes */
 .study-main-card {
-  position: relative;
-  width: 100%;
-  max-width: 640px;
-  margin: auto;
-  border-radius: 24px;
-  padding: 44px 38px 38px;
-  text-align: center;
-  background: rgba(255, 254, 250, 0.94);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25), 0 0 1px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  position: relative !important;
+  width: 100% !important;
+  max-width: 660px !important;
+  margin: auto !important;
+  border-radius: 28px !important;
+  padding: 44px 40px 38px !important;
+  text-align: center !important;
+  background: rgba(18, 15, 30, 0.6) !important;
+  backdrop-filter: blur(36px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.4),
+    0 24px 70px rgba(0, 0, 0, 0.65) !important;
+  color: #ffffff !important;
+  box-sizing: border-box !important;
+  transition: all 0.3s ease !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
 }
 
 /* Header */
 .study-eyebrow {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.8px;
-  color: #475569;
-  margin-bottom: 8px;
-  text-transform: uppercase;
+  display: inline-block !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 2px !important;
+  color: #f59e0b !important;
+  margin-bottom: 8px !important;
+  text-transform: uppercase !important;
 }
 
 .study-subject-title {
-  font-size: 2.1rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 6px 0;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
+  font-size: 2.2rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 0 6px 0 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.2 !important;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5) !important;
 }
 
 .study-subject-subtitle {
-  font-size: 0.95rem;
-  color: #475569;
-  margin: 0 0 24px 0;
-  line-height: 1.45;
+  font-size: 0.95rem !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  margin: 0 0 24px 0 !important;
+  line-height: 1.45 !important;
 }
 
 /* Timer Display */
 .study-timer-container {
-  padding: 24px 16px;
-  margin-bottom: 28px;
-  border-radius: 18px;
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 26px 20px !important;
+  margin-bottom: 28px !important;
+  border-radius: 20px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 8px 24px rgba(0, 0, 0, 0.25) !important;
 }
 
 .study-timer-display {
-  font-size: clamp(3.8rem, 8vw, 5.2rem);
-  font-weight: 900;
-  font-family: 'Space Grotesk', -apple-system, sans-serif;
-  letter-spacing: -0.04em;
-  color: #0f172a;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
+  font-size: clamp(3.8rem, 8vw, 5.2rem) !important;
+  font-weight: 900 !important;
+  font-family: 'Space Grotesk', -apple-system, sans-serif !important;
+  letter-spacing: -0.04em !important;
+  color: #ffffff !important;
+  line-height: 1 !important;
+  font-variant-numeric: tabular-nums !important;
+  text-shadow: 0 0 35px rgba(255, 255, 255, 0.35) !important;
 }
 
 .study-timer-display.break-timer {
-  color: #0284c7;
+  color: #38bdf8 !important;
+  text-shadow: 0 0 35px rgba(56, 189, 248, 0.45) !important;
 }
 
 .study-timer-subline {
-  font-size: 0.85rem;
-  color: #64748b;
-  font-weight: 600;
-  margin-top: 10px;
+  font-size: 0.85rem !important;
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-weight: 600 !important;
+  margin-top: 10px !important;
 }
 
 .study-progress-track {
-  width: 100%;
-  max-width: 320px;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 999px;
-  margin: 14px auto 0;
-  overflow: hidden;
+  width: 100% !important;
+  max-width: 320px !important;
+  height: 6px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-radius: 999px !important;
+  margin: 14px auto 0 !important;
+  overflow: hidden !important;
 }
 
 .study-progress-bar {
-  height: 100%;
-  background: #10b981;
-  border-radius: 999px;
-  transition: width 0.3s ease;
+  height: 100% !important;
+  background: #10b981 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.6) !important;
+  transition: width 0.3s ease !important;
 }
 
 /* Primary Controls Wrapper */
 .study-controls-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 28px !important;
 }
 
 .study-primary-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 14px 28px;
-  border-radius: 14px;
-  font-size: 1rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  border: none;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  padding: 14px 28px !important;
+  border-radius: 14px !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: none !important;
 }
 
 .study-primary-btn.pause {
-  background: #f1f5f9;
-  color: #334155;
-  border: 1.5px solid #cbd5e1;
+  background: rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
 }
 
 .study-primary-btn.pause:hover {
-  background: #e2e8f0;
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.22) !important;
+  transform: translateY(-2px) !important;
 }
 
 .study-primary-btn.resume {
-  background: #10b981;
-  color: #ffffff;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+  background: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45) !important;
 }
 
 .study-primary-btn.resume:hover {
-  background: #059669;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.45);
+  background: #059669 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.55) !important;
 }
 
 .study-stop-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 14px 22px;
-  border-radius: 14px;
-  background: #fef2f2;
-  border: 1.5px solid #fecaca;
-  color: #dc2626;
-  font-size: 0.95rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 14px 22px !important;
+  border-radius: 14px !important;
+  background: rgba(239, 68, 68, 0.18) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.38) !important;
+  color: #fca5a5 !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
 }
 
 .study-stop-btn:hover {
-  background: #fee2e2;
-  border-color: #f87171;
-  transform: translateY(-2px);
+  background: rgba(239, 68, 68, 0.3) !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
 }
 
 /* Alarm Selector Dropdown Anchor */
 .study-alarm-anchor {
-  position: relative;
+  position: relative !important;
 }
 
 .study-alarm-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 14px 20px;
-  border-radius: 14px;
-  background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
-  color: #475569;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 14px 20px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
 }
 
 .study-alarm-btn:hover {
-  background: #f1f5f9;
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.18) !important;
+  transform: translateY(-2px) !important;
 }
 
 .study-alarm-btn.has-alarm {
-  border-color: #f59e0b;
-  background: #fffbeb;
-  color: #b45309;
+  border-color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fbbf24 !important;
 }
 
 .study-alarm-dropdown {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 220px;
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  z-index: 20;
-  text-align: left;
+  position: absolute !important;
+  bottom: calc(100% + 10px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 220px !important;
+  background: rgba(18, 15, 28, 0.95) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6) !important;
+  padding: 10px !important;
+  z-index: 200 !important;
+  text-align: left !important;
 }
 
 .alarm-dropdown-title {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: #94a3b8;
-  padding: 4px 8px 8px;
-  border-bottom: 1px solid #f1f5f9;
-  margin-bottom: 6px;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.8px !important;
+  color: #94a3b8 !important;
+  padding: 4px 8px 8px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin-bottom: 6px !important;
 }
 
 .alarm-opt-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  color: #334155;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 10px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
 }
 
 .alarm-opt-btn:hover {
-  background: #f1f5f9;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
 }
 
 .alarm-opt-btn.selected {
-  background: #eff6ff;
-  color: #2563eb;
+  background: rgba(59, 130, 246, 0.25) !important;
+  color: #60a5fa !important;
 }
 
 .alarm-opt-btn small {
-  font-size: 10px;
-  color: #94a3b8;
+  font-size: 10px !important;
+  color: #94a3b8 !important;
 }
 
 .alarm-opt-btn.remove {
-  color: #ef4444;
-  margin-top: 4px;
-  border-top: 1px solid #f1f5f9;
-  justify-content: center;
+  color: #ef4444 !important;
+  margin-top: 4px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  justify-content: center !important;
 }
 
 /* Break Section */
 .study-break-section {
-  padding-top: 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 22px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 .break-trigger-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
 }
 
 .break-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #64748b;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .break-pills-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
 }
 
 .break-pill-btn {
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: #f0fdf4;
-  border: 1.5px solid #bbf7d0;
-  color: #166534;
-  font-size: 0.85rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 8px 18px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .break-pill-btn:hover {
-  background: #dcfce7;
-  border-color: #86efac;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+  background: rgba(245, 158, 11, 0.22) !important;
+  border-color: #f59e0b !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.3) !important;
 }
 
 .break-active-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
 }
 
 .resume-study-hero-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: 12px;
-  background: #0284c7;
-  border: none;
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  background: #0284c7 !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  transition: all 0.18s ease !important;
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35) !important;
 }
 
 .resume-study-hero-btn:hover {
-  background: #0369a1;
-  transform: translateY(-2px);
+  background: #0369a1 !important;
+  transform: translateY(-2px) !important;
 }
 
 .extend-break-btn {
-  padding: 12px 18px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1.5px solid rgba(0, 0, 0, 0.1);
-  color: #475569;
-  font-size: 0.9rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  padding: 12px 18px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  font-size: 0.9rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
 }
 
 .extend-break-btn:hover {
-  background: rgba(0, 0, 0, 0.09);
+  background: rgba(255, 255, 255, 0.18) !important;
 }
 
 /* ==========================================================================
@@ -17908,95 +17965,57 @@ html[data-theme="tokyo-lofi"],
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-/* 2. NEO-BRUTALIST STUDY MODE */
-[data-theme="neo-brutalist"] .study-main-card {
-  background: #fffdf5 !important;
-  border: 3px solid #111111 !important;
-  box-shadow: 10px 10px 0px #111111 !important;
-  border-radius: 0px !important;
-}
-
-[data-theme="neo-brutalist"] .study-timer-container {
-  background: #fffae0 !important;
-  border: 2px solid #111111 !important;
-  border-radius: 0px !important;
-}
-
+/* 2. NEO-BRUTALIST STUDY MODE (Glass with crisp accent) */
 [data-theme="neo-brutalist"] .study-timer-display {
   font-family: 'Space Mono', monospace !important;
-  color: #111111 !important;
+  color: #ffffff !important;
 }
 
 [data-theme="neo-brutalist"] .study-primary-btn.resume {
   background: #ffff00 !important;
-  border: 2.5px solid #111111 !important;
-  box-shadow: 4px 4px 0px #111111 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 8px 24px rgba(255, 255, 0, 0.3) !important;
   color: #111111 !important;
-  border-radius: 0px !important;
 }
 
 [data-theme="neo-brutalist"] .study-stop-btn {
-  background: #ff4d4d !important;
-  border: 2.5px solid #111111 !important;
-  box-shadow: 4px 4px 0px #111111 !important;
-  color: #111111 !important;
-  border-radius: 0px !important;
+  background: rgba(255, 77, 77, 0.25) !important;
+  border: 1.5px solid #ff4d4d !important;
+  color: #ff9999 !important;
 }
 
 [data-theme="neo-brutalist"] .break-pill-btn {
-  background: #00ffff !important;
-  border: 2px solid #111111 !important;
-  color: #111111 !important;
-  box-shadow: 2px 2px 0px #111111 !important;
-  border-radius: 0px !important;
+  background: rgba(0, 255, 255, 0.15) !important;
+  border: 1.5px solid #00ffff !important;
+  color: #00ffff !important;
 }
 
-/* 3. ZEN PAPER STUDY MODE */
-[data-theme="zen-paper"] .study-main-card {
-  background: #f9f7f1 !important;
-  border: 1px solid #e7e2d4 !important;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06) !important;
-  color: #2b2b28 !important;
-}
-
+/* 3. ZEN PAPER STUDY MODE (Serene Translucent Washi Glass) */
 [data-theme="zen-paper"] .study-timer-display {
   font-family: 'Playfair Display', Georgia, serif !important;
-  color: #1c1917 !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 35px rgba(255, 255, 255, 0.4) !important;
 }
 
 [data-theme="zen-paper"] .study-primary-btn.resume {
-  background: #b91c1c !important;
+  background: #d9480f !important;
   color: #fff !important;
-  border-radius: 8px !important;
 }
 
-/* 4. GHIBLI MEADOW STUDY MODE */
-[data-theme="ghibli-meadow"] .study-main-card {
-  background: rgba(247, 252, 247, 0.94) !important;
-  border: 1.5px solid #a7d0b0 !important;
-  box-shadow: 0 20px 50px rgba(49, 91, 69, 0.15) !important;
-}
-
+/* 4. GHIBLI MEADOW STUDY MODE (Translucent Meadow Glass) */
 [data-theme="ghibli-meadow"] .study-primary-btn.resume {
-  background: #366a4a !important;
+  background: #10b981 !important;
   color: #fff !important;
 }
 
 /* 5. ACID RUNWAY STUDY MODE */
-[data-theme="acid-runway"] .study-main-card {
-  background: #080808 !important;
-  border: 2px solid #ccff00 !important;
-  box-shadow: 0 0 35px rgba(204, 255, 0, 0.25) !important;
-  color: #ccff00 !important;
-}
-
 [data-theme="acid-runway"] .study-subject-title {
   color: #ccff00 !important;
 }
 
 [data-theme="acid-runway"] .study-timer-display {
   color: #ccff00 !important;
-  text-shadow: 0 0 20px rgba(204, 255, 0, 0.4) !important;
+  text-shadow: 0 0 30px rgba(204, 255, 0, 0.5) !important;
 }
 
 [data-theme="acid-runway"] .study-primary-btn.resume {
@@ -18006,12 +18025,6 @@ html[data-theme="tokyo-lofi"],
 }
 
 /* 6. SPIDER-VERSE STUDY MODE */
-[data-theme="spider-verse"] .study-main-card {
-  background: #15112e !important;
-  border: 2px solid #00f0ff !important;
-  box-shadow: 0 0 40px rgba(0, 240, 255, 0.3), 8px 8px 0px #e11d48 !important;
-}
-
 [data-theme="spider-verse"] .study-timer-display {
   color: #00f0ff !important;
   text-shadow: 3px 3px 0px #e11d48 !important;
@@ -18023,37 +18036,18 @@ html[data-theme="tokyo-lofi"],
 }
 
 /* 7. SUNLIT STUDIO STUDY MODE */
-[data-theme="sunlit-studio"] .study-main-card {
-  background: #fffdf9 !important;
-  border: 1px solid #fed7aa !important;
-  box-shadow: 0 20px 50px rgba(217, 119, 6, 0.12) !important;
-}
-
 [data-theme="sunlit-studio"] .study-primary-btn.resume {
-  background: #d97706 !important;
+  background: #f59e0b !important;
   color: #fff !important;
 }
 
 /* 8. WARM PARCHMENT STUDY MODE */
-[data-theme="warm-parchment"] .study-main-card {
-  background: #faf6ee !important;
-  border: 1px solid #e7ded0 !important;
-  box-shadow: 0 20px 50px rgba(67, 48, 30, 0.12) !important;
-}
-
 [data-theme="warm-parchment"] .study-timer-display {
   font-family: Georgia, serif !important;
-  color: #2b2118 !important;
+  color: #ffffff !important;
 }
 
 /* 9. DYNAMIC VIDEO STUDY MODE */
-[data-theme="dynamic-video"] .study-main-card {
-  background: rgba(15, 23, 42, 0.75) !important;
-  backdrop-filter: blur(28px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  color: #FAF8FF !important;
-}
-
 [data-theme="dynamic-video"] .study-timer-display {
   color: #ffffff !important;
 }
@@ -18400,18 +18394,18 @@ html[data-theme="tokyo-lofi"],
    ========================================================================== */
 
 .study-main-card {
-  position: relative;
-  width: 100%;
-  max-width: 650px;
-  margin: auto;
+  position: relative !important;
+  width: 100% !important;
+  max-width: 660px !important;
+  margin: auto !important;
   border-radius: 28px !important;
   padding: 46px 40px 40px !important;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.16) !important;
-  backdrop-filter: blur(34px) saturate(200%) contrast(108%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(200%) contrast(108%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.28) !important;
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45), inset 0 1.5px 1px rgba(255, 255, 255, 0.5) !important;
+  text-align: center !important;
+  background: rgba(18, 15, 30, 0.6) !important;
+  backdrop-filter: blur(36px) saturate(190%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(190%) contrast(108%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), inset 0 1.5px 1px rgba(255, 255, 255, 0.45) !important;
   color: #FAF8FF !important;
   z-index: 5 !important;
 }
