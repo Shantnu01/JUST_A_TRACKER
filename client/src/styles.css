@@ -13973,7 +13973,14 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .roadmap-blank-creator-card,
 [data-column-style="transparent"] .creator-option-box,
 [data-column-style="transparent"] .roadmap-outline-editor-card,
-[data-column-style="transparent"] .stage-tabs-navigation-bar {
+[data-column-style="transparent"] .stage-tabs-navigation-bar,
+[data-column-style="transparent"] .stage-roadmaps-hub,
+[data-column-style="transparent"] .roadmap-subjects-tabs,
+[data-column-style="transparent"] .stage-focus-add-checkpoint-row,
+[data-column-style="transparent"] .stage-footer-nav,
+[data-column-style="transparent"] .roadmap-format-guide-box,
+[data-column-style="transparent"] .creator-paste-section,
+[data-column-style="transparent"] .checkpoint-hover-tooltip {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -13996,7 +14003,9 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .schedule-edit-card,
 [data-column-style="transparent"] .single-checkpoint-row,
 [data-column-style="transparent"] .single-stage-tab-btn,
-[data-column-style="transparent"] .stage-focus-checkpoints-list {
+[data-column-style="transparent"] .stage-focus-checkpoints-list,
+[data-column-style="transparent"] .roadmap-subject-pill,
+[data-column-style="transparent"] .stage-focus-header {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -14107,7 +14116,14 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="liquid-glass"] .roadmap-blank-creator-card,
 [data-column-style="liquid-glass"] .creator-option-box,
 [data-column-style="liquid-glass"] .roadmap-outline-editor-card,
-[data-column-style="liquid-glass"] .stage-tabs-navigation-bar {
+[data-column-style="liquid-glass"] .stage-tabs-navigation-bar,
+[data-column-style="liquid-glass"] .stage-roadmaps-hub,
+[data-column-style="liquid-glass"] .roadmap-subjects-tabs,
+[data-column-style="liquid-glass"] .stage-focus-add-checkpoint-row,
+[data-column-style="liquid-glass"] .stage-footer-nav,
+[data-column-style="liquid-glass"] .roadmap-format-guide-box,
+[data-column-style="liquid-glass"] .creator-paste-section,
+[data-column-style="liquid-glass"] .checkpoint-hover-tooltip {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
   backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
@@ -14118,7 +14134,9 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="liquid-glass"] .schedule-item,
 [data-column-style="liquid-glass"] .habit-row,
 [data-column-style="liquid-glass"] .single-checkpoint-row,
-[data-column-style="liquid-glass"] .single-stage-tab-btn {
+[data-column-style="liquid-glass"] .single-stage-tab-btn,
+[data-column-style="liquid-glass"] .roadmap-subject-pill,
+[data-column-style="liquid-glass"] .stage-focus-header {
   background: rgba(255, 255, 255, 0.05) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
@@ -14209,7 +14227,14 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="smoky"] .roadmap-blank-creator-card,
 [data-column-style="smoky"] .creator-option-box,
 [data-column-style="smoky"] .roadmap-outline-editor-card,
-[data-column-style="smoky"] .stage-tabs-navigation-bar {
+[data-column-style="smoky"] .stage-tabs-navigation-bar,
+[data-column-style="smoky"] .stage-roadmaps-hub,
+[data-column-style="smoky"] .roadmap-subjects-tabs,
+[data-column-style="smoky"] .stage-focus-add-checkpoint-row,
+[data-column-style="smoky"] .stage-footer-nav,
+[data-column-style="smoky"] .roadmap-format-guide-box,
+[data-column-style="smoky"] .creator-paste-section,
+[data-column-style="smoky"] .checkpoint-hover-tooltip {
   background: rgba(8, 9, 15, 0.82) !important;
   backdrop-filter: blur(28px) saturate(130%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(130%) !important;
@@ -14220,7 +14245,9 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="smoky"] .schedule-item,
 [data-column-style="smoky"] .habit-row,
 [data-column-style="smoky"] .single-checkpoint-row,
-[data-column-style="smoky"] .single-stage-tab-btn {
+[data-column-style="smoky"] .single-stage-tab-btn,
+[data-column-style="smoky"] .roadmap-subject-pill,
+[data-column-style="smoky"] .stage-focus-header {
   background: rgba(14, 12, 22, 0.78) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
@@ -14351,33 +14378,39 @@ html[data-theme="tokyo-lofi"],
     word-break: break-word !important;
   }
 
-  .welcome-tools-row {
+  .top-actions {
     display: flex !important;
-    flex-wrap: wrap !important;
+    flex-wrap: nowrap !important;
     align-items: center !important;
-    gap: 6px !important;
-    width: 100% !important;
-    margin-top: 10px !important;
-  }
-
-  .welcome-tools-row .top-actions {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: 6px !important;
-    width: 100% !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: auto !important;
     margin: 0 !important;
   }
+  .top-actions::-webkit-scrollbar {
+    display: none !important;
+  }
 
+  .top-quick-actions {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .top-action-pill,
   .evening-closeout-pill,
   .pod-pill,
   .sync-chip,
   .theme-switcher-btn,
   .date-chip {
     font-size: 11px !important;
-    padding: 6px 10px !important;
+    padding: 0 10px !important;
     height: 32px !important;
     box-sizing: border-box !important;
+    flex-shrink: 0 !important;
   }
 
   .welcome-right-widgets {
@@ -14687,22 +14720,19 @@ html[data-theme="tokyo-lofi"],
     margin-left: 4px !important;
   }
 
-  [data-theme="tokyo-lofi"] .welcome-tools-row {
+  [data-theme="tokyo-lofi"] .top-actions {
     display: flex !important;
-    flex-wrap: wrap !important;
+    flex-wrap: nowrap !important;
     align-items: center !important;
-    gap: 6px !important;
-    width: 100% !important;
-    margin-top: 8px !important;
-  }
-
-  [data-theme="tokyo-lofi"] .welcome-tools-row .top-actions {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: 6px !important;
-    width: 100% !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: auto !important;
     margin: 0 !important;
+  }
+  [data-theme="tokyo-lofi"] .top-actions::-webkit-scrollbar {
+    display: none !important;
   }
 
   /* Right Widgets in Hero (Completion Donut & Live JST Clock) */
@@ -16350,4 +16380,79 @@ html[data-theme="tokyo-lofi"],
   background: rgba(245, 158, 11, 0.15);
   border-color: #F59E0B;
   color: #F59E0B;
+}
+
+/* Top Quick Actions (Evening Closeout & Synaptic Bridge) */
+.top-quick-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.top-action-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.top-action-pill.closeout-pill {
+  background: rgba(49, 91, 69, 0.08);
+  border: 1px solid rgba(49, 91, 69, 0.25);
+  color: #315b45;
+}
+
+.top-action-pill.closeout-pill:hover {
+  background: rgba(49, 91, 69, 0.16);
+  border-color: #315b45;
+  transform: translateY(-1px);
+}
+
+.top-action-pill.synaptic-pill {
+  background: rgba(217, 119, 6, 0.1);
+  border: 1px solid rgba(217, 119, 6, 0.28);
+  color: #b45309;
+}
+
+.top-action-pill.synaptic-pill:hover {
+  background: rgba(217, 119, 6, 0.18);
+  border-color: #b45309;
+  transform: translateY(-1px);
+}
+
+/* Tokyo Lofi Theme Overrides for Quick Action Pills */
+[data-theme="tokyo-lofi"] .top-action-pill.closeout-pill {
+  background: rgba(245, 158, 11, 0.09) !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+  color: #FBBF24 !important;
+}
+
+[data-theme="tokyo-lofi"] .top-action-pill.closeout-pill:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-theme="tokyo-lofi"] .top-action-pill.synaptic-pill {
+  background: rgba(245, 158, 11, 0.14) !important;
+  border: 1px solid rgba(245, 158, 11, 0.38) !important;
+  color: #F59E0B !important;
+}
+
+[data-theme="tokyo-lofi"] .top-action-pill.synaptic-pill:hover {
+  background: rgba(245, 158, 11, 0.25) !important;
+  border-color: #FBBF24 !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.45) !important;
+  transform: translateY(-1px) !important;
 }

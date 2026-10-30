@@ -30,6 +30,8 @@ import {
   Video,
   Eye,
   ChevronDown,
+  ChevronUp,
+  ArrowUpDown,
   ChevronLeft,
   ChevronRight,
   Clock3,
@@ -2395,6 +2397,70 @@ function App() {
     });
   };
 
+  const handleAddBlock = () => {
+    setEditingSchedule(prev => {
+      const last = prev[prev.length - 1];
+      let newStart = '09:00';
+      let newEnd = '10:00';
+      if (last && last.end) {
+        newStart = last.end;
+        const [h, m] = newStart.split(':').map(Number);
+        const endH = (h + 1) % 24;
+        newEnd = `${String(endH).padStart(2, '0')}:${String(m || 0).padStart(2, '0')}`;
+      }
+      const newBlock = {
+        id: `block_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        start: newStart,
+        end: newEnd,
+        title: 'New Focus Session',
+        subtitle: 'Key focus goals & notes',
+        hours: computeDurationHours(newStart, newEnd),
+        kind: 'focus',
+        icon: 'Code2',
+        tone: 'sage'
+      };
+      return [...prev, newBlock];
+    });
+    setToast('Added new block to routine! Customize details and click Save Routine Changes.');
+    setTimeout(() => setToast(''), 3000);
+  };
+
+  const handleDeleteBlock = (index) => {
+    setEditingSchedule(prev => {
+      if (prev.length <= 1) {
+        setToast('Your routine must keep at least one block!');
+        setTimeout(() => setToast(''), 2500);
+        return prev;
+      }
+      const deleted = prev[index];
+      const next = prev.filter((_, i) => i !== index);
+      setToast(`Deleted "${deleted.title || 'Block'}" from routine.`);
+      setTimeout(() => setToast(''), 2500);
+      return next;
+    });
+  };
+
+  const handleMoveBlock = (index, direction) => {
+    setEditingSchedule(prev => {
+      const target = index + direction;
+      if (target < 0 || target >= prev.length) return prev;
+      const copy = [...prev];
+      const temp = copy[index];
+      copy[index] = copy[target];
+      copy[target] = temp;
+      return copy;
+    });
+  };
+
+  const handleSortBlocksByTime = () => {
+    setEditingSchedule(prev => {
+      const sorted = [...prev].sort((a, b) => (a.start || '00:00').localeCompare(b.start || '00:00'));
+      return sorted;
+    });
+    setToast('Routine sorted chronologically by start time!');
+    setTimeout(() => setToast(''), 2500);
+  };
+
   const saveScheduleChanges = async () => {
     setBaseSchedule(editingSchedule);
     setEditingSchedule(editingSchedule);
@@ -2800,8 +2866,36 @@ const handleNudge = async (toUserId, toUsername) => {
   };
 
   const renderTopActions = () => (
-<div className="top-actions">
-            {/* Active Study Pod Selector Pill */}
+    <div className="top-actions">
+      {/* Quick Action Pills on Today (Evening Closeout & Synaptic Bridge) */}
+      {view === 'Today' && isToday && (
+        <div className="top-quick-actions">
+          <button
+            type="button"
+            className="top-action-pill closeout-pill"
+            onClick={() => setCloseoutModalOpen(true)}
+            title="Complete your 3-minute evening shutdown ritual"
+          >
+            <Moon size={13} />
+            <span>Evening Closeout</span>
+          </button>
+          <button
+            type="button"
+            className="top-action-pill synaptic-pill"
+            onClick={() => {
+              const cur = (activeId ? schedule.find(s => s.id === activeId) : null) || current || schedule[0];
+              setSynapticActiveBlock(cur);
+              setSynapticBridgeOpen(true);
+            }}
+            title="Active Recall & Interleaving Retrieval Practice"
+          >
+            <Brain size={13} />
+            <span>Synaptic Bridge</span>
+          </button>
+        </div>
+      )}
+
+      {/* Active Study Pod Selector Pill */}
             {user && (
               <div className="pod-selector-wrapper" style={{ position: 'relative' }}>
                 <button
@@ -3281,49 +3375,24 @@ const handleNudge = async (toUserId, toUsername) => {
         )}
         <header className="topbar">
           <div>
-            {theme === 'tokyo-lofi' && view === 'Today' && isToday ? (
-              <div className="welcome-tools-row" style={{ margin: 0, padding: 0 }}>
-                <button className="evening-closeout-pill" onClick={() => setCloseoutModalOpen(true)} title="Complete your 3-minute evening shutdown ritual">
-                  <Moon size={13} />
-                  <span>Evening Closeout</span>
-                </button>
-                <button
-                  type="button"
-                  className="evening-closeout-pill synaptic-trigger-pill"
-                  onClick={() => {
-                    const cur = (activeId ? schedule.find(s => s.id === activeId) : null) || current || schedule[0];
-                    setSynapticActiveBlock(cur);
-                    setSynapticBridgeOpen(true);
-                  }}
-                  title="Active Recall & Interleaving Retrieval Practice"
-                  style={{ background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.35)', color: '#F59E0B' }}
-                >
-                  <Brain size={13} />
-                  <span>Synaptic Bridge</span>
-                </button>
-              </div>
-            ) : (
-              <>
-                <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
-                <h1>
-                  {view === 'Today'
-                    ? isToday
-                      ? 'A calmer way to make progress'
-                      : isPast
-                      ? 'Archived Performance Record'
-                      : 'Upcoming Routine Plan'
-                    : view === 'Stage Roadmaps'
-                    ? 'Stage Roadmaps & Checkpoint Hub'
-                    : view === 'Weekly report'
-                    ? 'Your progress, at a glance'
-                    : view === 'Study pods'
-                    ? 'Competitive Study Pod'
-                    : view === 'Coding'
-                    ? 'Developer & DSA Performance Hub'
-                    : 'Customize your routine schedule'}
-                </h1>
-              </>
-            )}
+            <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
+            <h1>
+              {view === 'Today'
+                ? isToday
+                  ? 'A calmer way to make progress'
+                  : isPast
+                  ? 'Archived Performance Record'
+                  : 'Upcoming Routine Plan'
+                : view === 'Stage Roadmaps'
+                ? 'Stage Roadmaps & Checkpoint Hub'
+                : view === 'Weekly report'
+                ? 'Your progress, at a glance'
+                : view === 'Study pods'
+                ? 'Competitive Study Pod'
+                : view === 'Coding'
+                ? 'Developer & DSA Performance Hub'
+                : 'Customize your routine schedule'}
+            </h1>
           </div>
           {renderTopActions()}
         </header>
@@ -3382,28 +3451,6 @@ const handleNudge = async (toUserId, toUsername) => {
                     </>
                   )}
                 </h2>
-                {theme !== 'tokyo-lofi' && (
-                  <div className="welcome-tools-row">
-                    <button className="evening-closeout-pill" onClick={() => setCloseoutModalOpen(true)} title="Complete your 3-minute evening shutdown ritual">
-                      <Moon size={13} />
-                      <span>Evening Closeout</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="evening-closeout-pill synaptic-trigger-pill"
-                      onClick={() => {
-                        const cur = (activeId ? schedule.find(s => s.id === activeId) : null) || current || schedule[0];
-                        setSynapticActiveBlock(cur);
-                        setSynapticBridgeOpen(true);
-                      }}
-                      title="Active Recall & Interleaving Retrieval Practice"
-                      style={{ background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.35)', color: '#F59E0B' }}
-                    >
-                      <Brain size={13} />
-                      <span>Synaptic Bridge</span>
-                    </button>
-                  </div>
-                )}
                 {theme !== 'tokyo-lofi' && (
                   <p className="subhead">
                     {isToday
@@ -5428,8 +5475,14 @@ const handleNudge = async (toUserId, toUsername) => {
               <button className="save-schedule-btn" onClick={saveScheduleChanges}>
                 <Save size={15} /> Save Routine Changes
               </button>
+              <button className="add-block-btn" type="button" onClick={handleAddBlock} style={{ background: '#10b981', color: '#fff', border: 'none', borderRadius: '8px', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '12px', cursor: 'pointer' }}>
+                <Plus size={15} /> Add Block
+              </button>
+              <button className="sort-schedule-btn" type="button" onClick={handleSortBlocksByTime} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--ink)', cursor: 'pointer' }}>
+                <ArrowUpDown size={14} /> Sort by Time
+              </button>
               <button className="reset-schedule-btn" onClick={resetScheduleToDefaults}>
-                <RotateCcw size={15} /> Reset to Default Schedule
+                <RotateCcw size={15} /> Reset to Defaults
               </button>
             </div>
 
@@ -5474,12 +5527,104 @@ const handleNudge = async (toUserId, toUsername) => {
                         placeholder="Focus description or notes"
                       />
                     </div>
-                    <span className="edit-duration-badge">
-                      {hours}h {item.kind === 'break' ? 'Break' : 'Focus'}
-                    </span>
+                    <div className="edit-controls-group" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                      <select
+                        className="edit-kind-select"
+                        value={item.kind || 'focus'}
+                        onChange={e => handleBlockChange(index, 'kind', e.target.value)}
+                        aria-label="Block type"
+                        style={{
+                          background: 'rgba(255,255,255,0.06)',
+                          border: '1px solid rgba(255,255,255,0.14)',
+                          borderRadius: '6px',
+                          padding: '4px 8px',
+                          fontSize: '11px',
+                          color: 'var(--ink)',
+                          fontWeight: 700,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="focus">🎯 Focus Goal</option>
+                        <option value="break">☕ Rest Break</option>
+                      </select>
+
+                      <span className="edit-duration-badge">
+                        {hours}h
+                      </span>
+
+                      <div className="edit-order-btns" style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                        <button
+                          type="button"
+                          className="move-block-btn"
+                          disabled={index === 0}
+                          onClick={() => handleMoveBlock(index, -1)}
+                          title="Move earlier"
+                          style={{ background: 'transparent', border: 0, padding: 0, color: index === 0 ? 'rgba(255,255,255,0.2)' : 'var(--muted)', cursor: index === 0 ? 'default' : 'pointer' }}
+                        >
+                          <ChevronUp size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          className="move-block-btn"
+                          disabled={index === editingSchedule.length - 1}
+                          onClick={() => handleMoveBlock(index, 1)}
+                          title="Move later"
+                          style={{ background: 'transparent', border: 0, padding: 0, color: index === editingSchedule.length - 1 ? 'rgba(255,255,255,0.2)' : 'var(--muted)', cursor: index === editingSchedule.length - 1 ? 'default' : 'pointer' }}
+                        >
+                          <ChevronDown size={13} />
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="delete-routine-block-btn"
+                        onClick={() => handleDeleteBlock(index)}
+                        title={`Delete ${item.title || 'Block'}`}
+                        aria-label={`Delete ${item.title || 'Block'}`}
+                        style={{
+                          background: 'rgba(239, 68, 68, 0.12)',
+                          border: '1px solid rgba(239, 68, 68, 0.25)',
+                          borderRadius: '6px',
+                          padding: '5px 7px',
+                          color: '#ef4444',
+                          cursor: 'pointer',
+                          display: 'grid',
+                          placeItems: 'center'
+                        }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
                   </div>
                 );
               })}
+
+              {/* Add Routine Block Trigger Card */}
+              <button
+                type="button"
+                className="add-block-card-trigger"
+                onClick={handleAddBlock}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '16px',
+                  borderRadius: '10px',
+                  border: '1.5px dashed rgba(255,255,255,0.25)',
+                  background: 'rgba(255,255,255,0.02)',
+                  color: 'var(--muted)',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <Plus size={16} color="#10b981" />
+                <span>+ Add Routine Block</span>
+              </button>
             </div>
 
             <div className="settings-note" style={{ marginTop: '20px' }}>
