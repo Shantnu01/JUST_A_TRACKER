@@ -10,39 +10,39 @@ const SOUNDSCAPES = [
     desc: 'Continuous live 24/7 stream of chill lofi hip hop & downtempo study beats.'
   },
   {
-    id: 'birds',
-    title: 'Kyoto Morning & Birdsong',
-    subtitle: 'FOREST BIRDS & BAMBOO BREEZE',
-    icon: Bird,
-    desc: 'Gentle chirping forest birds with soft morning breeze through bamboo leaves.'
-  },
-  {
     id: 'pure_rain',
-    title: 'Tokyo Window Rainstorm',
-    subtitle: 'SOOTHING RAIN & WATER DROPLETS',
+    title: 'Real Soothing Rain',
+    subtitle: 'NATURAL GENTLE RAIN (CONCENTRATION)',
     icon: CloudRain,
-    desc: 'Immersive natural rain acoustics with soft water droplet taps on window glass.'
+    desc: 'Continuous real soothing rain recorded in nature for deep mental concentration.'
   },
   {
-    id: 'rain',
-    title: 'Shibuya Rain & 2am Tape Hum',
-    subtitle: 'SYNTHESIZED AMBIENT NOISE (432Hz)',
+    id: 'birds',
+    title: 'Forest Birds Chirping',
+    subtitle: 'WOODLAND BIRDS & MORNING BREEZE',
+    icon: Bird,
+    desc: 'Gentle, natural forest bird chirping recorded in calm woodland nature.'
+  },
+  {
+    id: 'river',
+    title: 'Calm River Stream',
+    subtitle: 'FLOWING MOUNTAIN WATER & NATURE',
     icon: CloudRain,
-    desc: 'Cozy Tokyo rainfall through glass with 60Hz analog tape warmth.'
+    desc: 'Soothing mountain river stream flowing smoothly for background focus.'
   },
   {
     id: 'binaural',
-    title: 'Deep Alpha 40Hz Focus',
-    subtitle: 'GAMMA/ALPHA BINAURAL OSCILLATOR',
+    title: '40Hz Concentration Tone',
+    subtitle: 'SOOTHING LOW-FREQUENCY GAMMA TONE',
     icon: Brain,
-    desc: 'Binaural 40Hz frequency synchronization for sustained coding focus.'
+    desc: 'Smooth low-frequency 40Hz focus tone for peak concentration without fatigue.'
   },
   {
-    id: 'coffee',
-    title: 'Late-Night Roppongi Vinyl',
-    subtitle: 'VINYL CRACKLE & ROOM AMBIENCE',
-    icon: Coffee,
-    desc: 'Gentle vinyl surface noise and warm midnight cafe room tone.'
+    id: 'radio',
+    title: '24/7 Tokyo Chill Beats',
+    subtitle: 'LIVE LOFI STUDY BROADCAST',
+    icon: Radio,
+    desc: 'Continuous live 24/7 stream of chill lofi hip hop & downtempo study beats.'
   }
 ];
 
@@ -217,6 +217,32 @@ export default function TokyoSoundscapePlayer() {
       return;
     }
 
+    // Real Nature Sound Audio Streams (Rain, Birds, River)
+    const REAL_SOUND_PATHS = {
+      pure_rain: '/sounds/rain.mp3',
+      rain: '/sounds/rain.mp3',
+      birds: '/sounds/birds.mp3',
+      river: '/sounds/river.mp3'
+    };
+
+    if (REAL_SOUND_PATHS[soundId]) {
+      try {
+        const audio = new Audio(REAL_SOUND_PATHS[soundId]);
+        audio.loop = true;
+        audio.volume = volume;
+        audio.play().then(() => {
+          htmlAudioRef.current = audio;
+          setIsPlaying(true);
+          setIsLoading(false);
+        }).catch(err => {
+          console.warn('Real audio stream failed, falling back:', err);
+        });
+        return;
+      } catch (e) {
+        console.warn('Real audio creation failed:', e);
+      }
+    }
+
     // Web Audio API Synthesis
     try {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -384,18 +410,19 @@ export default function TokyoSoundscapePlayer() {
         // --- 4. DEEP ALPHA / 40Hz FOCUS ---
         const merger = ctx.createChannelMerger(2);
 
+        // Soothing low-frequency 40Hz concentration tone (136.1 Hz root + 176.1 Hz = 40 Hz Gamma)
         const oscL = ctx.createOscillator();
         oscL.type = 'sine';
-        oscL.frequency.setValueAtTime(216, ctx.currentTime);
+        oscL.frequency.setValueAtTime(136.1, ctx.currentTime);
 
         const oscR = ctx.createOscillator();
         oscR.type = 'sine';
-        oscR.frequency.setValueAtTime(256, ctx.currentTime);
+        oscR.frequency.setValueAtTime(176.1, ctx.currentTime);
 
         const gainL = ctx.createGain();
-        gainL.gain.setValueAtTime(0.04, ctx.currentTime);
+        gainL.gain.setValueAtTime(0.06, ctx.currentTime);
         const gainR = ctx.createGain();
-        gainR.gain.setValueAtTime(0.04, ctx.currentTime);
+        gainR.gain.setValueAtTime(0.06, ctx.currentTime);
 
         oscL.connect(gainL);
         gainL.connect(merger, 0, 0);

@@ -2267,7 +2267,13 @@ function App() {
       setToast('Soundscape off');
     } else {
       playFocusSound(type, focusSoundVolume);
-      setToast(`🎧 ${type === 'binaural' ? '40Hz Gamma Beat' : type === 'brown' ? 'Deep Brown Noise' : 'Pink Noise'} active`);
+      const labels = {
+        rain: '🌧️ Real Rain active (Soothing)',
+        birds: '🐦 Forest Birds chirping active (Soothing)',
+        river: '🌊 Calm River stream active (Soothing)',
+        binaural: '🧠 40Hz Concentration Tone active (Low Frequency)'
+      };
+      setToast(labels[type] || 'Soundscape started');
     }
     setTimeout(() => setToast(''), 2200);
   };
@@ -4168,39 +4174,32 @@ const handleNudge = async (toUserId, toUsername) => {
                           Off
                         </button>
                         <button 
-                          className={`sound-btn ${focusSoundType === 'brown' ? 'active' : ''}`}
-                          onClick={() => handleSelectSound('brown')}
-                          title="Brownian Noise: Deep low-frequency rumble for logic & coding"
-                        >
-                          Brown
-                        </button>
-                        <button 
-                          className={`sound-btn ${focusSoundType === 'binaural' ? 'active' : ''}`}
-                          onClick={() => handleSelectSound('binaural')}
-                          title="40Hz Gamma Beat: Binaural frequency synthesis for peak concentration"
-                        >
-                          40Hz Gamma
-                        </button>
-                        <button 
-                          className={`sound-btn ${focusSoundType === 'pink' ? 'active' : ''}`}
-                          onClick={() => handleSelectSound('pink')}
-                          title="Pink Noise: Calming natural acoustic mask"
-                        >
-                          Pink
-                        </button>
-                        <button 
                           className={`sound-btn ${focusSoundType === 'rain' ? 'active' : ''}`}
                           onClick={() => handleSelectSound('rain')}
-                          title="Rain: Soothing steady rainfall and water droplets"
+                          title="Real Rain: Soothing continuous gentle rainfall for concentration"
                         >
-                          Rain
+                          🌧️ Real Rain
                         </button>
                         <button 
                           className={`sound-btn ${focusSoundType === 'birds' ? 'active' : ''}`}
                           onClick={() => handleSelectSound('birds')}
-                          title="Birds: Forest birdsong and morning breeze"
+                          title="Birds Chirping: Peaceful woodland birds chirping in calm nature"
                         >
-                          Birds
+                          🐦 Birds
+                        </button>
+                        <button 
+                          className={`sound-btn ${focusSoundType === 'river' ? 'active' : ''}`}
+                          onClick={() => handleSelectSound('river')}
+                          title="Calm River: Gentle flowing river stream water"
+                        >
+                          🌊 River
+                        </button>
+                        <button 
+                          className={`sound-btn ${focusSoundType === 'binaural' ? 'active' : ''}`}
+                          onClick={() => handleSelectSound('binaural')}
+                          title="40Hz Focus: Soothing low-frequency 40Hz concentration tone (Gamma)"
+                        >
+                          🧠 40Hz Tone
                         </button>
                       </div>
                       {focusSoundType !== 'off' && (

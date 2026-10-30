@@ -356,11 +356,10 @@ export default function MobileApp(props) {
                   <div className="m-sound-grid">
                     {[
                       { id: 'off', label: '⏹️ Off' },
-                      { id: 'rain', label: '🌧️ Soft Rain' },
-                      { id: 'brown', label: '🌊 Brown Noise' },
-                      { id: 'birds', label: '🌲 Forest Birds' },
-                      { id: 'pink', label: '📻 Pink Noise' },
-                      { id: 'binaural', label: '🧠 40Hz Gamma' }
+                      { id: 'rain', label: '🌧️ Real Rain' },
+                      { id: 'birds', label: '🐦 Birds Chirping' },
+                      { id: 'river', label: '🌊 Calm River' },
+                      { id: 'binaural', label: '🧠 40Hz Focus' }
                     ].map((s) => (
                       <button
                         key={s.id}

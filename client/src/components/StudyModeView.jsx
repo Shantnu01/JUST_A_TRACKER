@@ -83,11 +83,10 @@ export default function StudyModeView({
       setActiveSound(type);
       if (typeof setToast === 'function') {
         const labels = {
-          rain: '🌧️ Real Rain soundscape playing',
-          birds: '🐦 Real Forest Birds chirping',
-          river: '🌊 River & Nature stream playing',
-          brown: '📻 Deep Focus Brown Noise active',
-          binaural: '🧠 40Hz Gamma Focus Waves active'
+          rain: '🌧️ Real Rain soundscape playing (Soothing)',
+          birds: '🐦 Forest Birds chirping playing (Soothing)',
+          river: '🌊 Calm River stream playing (Soothing)',
+          binaural: '🧠 40Hz Concentration Tone active (Low Frequency)'
         };
         setToast(labels[type] || 'Soundscape started');
       }
@@ -232,47 +231,39 @@ export default function StudyModeView({
             )}
           </div>
 
-          {/* Soundscapes Selector Button & Bar */}
+          {/* Soothing Soundscapes Selector Bar (Real Rain, Birds Chirping, Calm River, 40Hz Concentration Tone) */}
           <div className="study-sound-pills-bar">
             <button
               type="button"
               className={`sound-pill ${activeSound === 'rain' ? 'active' : ''}`}
               onClick={() => handleSelectSound('rain')}
-              title="Real ambient rain sound"
+              title="Real soothing rain sound for concentration"
             >
-              🌧️ Rain
+              🌧️ Real Rain
             </button>
             <button
               type="button"
               className={`sound-pill ${activeSound === 'birds' ? 'active' : ''}`}
               onClick={() => handleSelectSound('birds')}
-              title="Real forest bird sounds"
+              title="Soothing forest birds chirping"
             >
-              🐦 Birds
+              🐦 Birds Chirping
             </button>
             <button
               type="button"
               className={`sound-pill ${activeSound === 'river' ? 'active' : ''}`}
               onClick={() => handleSelectSound('river')}
-              title="Gentle river stream & nature"
+              title="Soothing calm river water flow"
             >
-              🌊 River
-            </button>
-            <button
-              type="button"
-              className={`sound-pill ${activeSound === 'brown' ? 'active' : ''}`}
-              onClick={() => handleSelectSound('brown')}
-              title="Deep Brown Noise"
-            >
-              📻 Brown
+              🌊 Calm River
             </button>
             <button
               type="button"
               className={`sound-pill ${activeSound === 'binaural' ? 'active' : ''}`}
               onClick={() => handleSelectSound('binaural')}
-              title="40Hz Gamma Focus Waves"
+              title="Soothing 40Hz concentration tone (low frequency gamma)"
             >
-              🧠 Waves
+              🧠 40Hz Tone
             </button>
             {activeSound !== 'off' && (
               <button
