@@ -16825,3 +16825,226 @@ html[data-theme="tokyo-lofi"],
   color: #F59E0B;
   font-weight: bold;
 }
+
+/* ==========================================================================
+   UNIVERSAL ATMOSPHERIC WALLPAPERS (NATURE & SESSION CUSTOM BG) ACROSS ALL THEMES
+   ========================================================================== */
+
+/* Universal Background Overlay */
+[data-has-wallpaper="true"] body,
+[data-has-wallpaper="true"].app-shell,
+[data-has-wallpaper="true"] .app-shell,
+.app-shell[data-has-wallpaper="true"] {
+  background-color: #0c0a14 !important;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(12, 10, 20, 0.42) 0%, rgba(12, 10, 20, 0.85) 100%),
+    var(--app-wallpaper-url, var(--tokyo-bg-url)) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  transition: background-image 0.4s ease !important;
+}
+
+/* Universal Topbar Wallpaper Button */
+.top-wallpaper-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 13px;
+  border-radius: 10px;
+  border: 1px solid #e0e3dc;
+  background: #fffefa;
+  color: #4b5563;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.top-wallpaper-btn:hover {
+  border-color: #a7b8a8;
+  background: #f5f8f2;
+  transform: translateY(-1px);
+}
+
+[data-theme="tokyo-lofi"] .top-wallpaper-btn {
+  background: rgba(28, 25, 40, 0.8) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .top-wallpaper-btn:hover {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: #F59E0B !important;
+}
+
+[data-theme="acid-runway"] .top-wallpaper-btn {
+  background: #000 !important;
+  border-color: #ccff00 !important;
+  color: #ccff00 !important;
+}
+
+[data-theme="spider-verse"] .top-wallpaper-btn {
+  background: #1e1b4b !important;
+  border-color: #e11d48 !important;
+  color: #00f0ff !important;
+}
+
+[data-theme="neo-brutalist"] .top-wallpaper-btn {
+  background: #fdfaf3 !important;
+  border: 2px solid #111111 !important;
+  box-shadow: 2px 2px 0px #111111 !important;
+  color: #111111 !important;
+}
+
+/* Universal Topbar & Headings when Wallpaper is Active */
+[data-has-wallpaper="true"] .topbar h1,
+[data-has-wallpaper="true"] .welcome-row h2 {
+  color: #FAF8FF !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75) !important;
+}
+
+[data-has-wallpaper="true"] .topbar .eyebrow,
+[data-has-wallpaper="true"] .welcome-row .muted,
+[data-has-wallpaper="true"] .welcome-row .subhead {
+  color: #E2E8F0 !important;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-has-wallpaper="true"] .date-chip {
+  background: rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+}
+
+[data-has-wallpaper="true"] .theme-switcher-btn,
+[data-has-wallpaper="true"] .top-wallpaper-btn,
+[data-has-wallpaper="true"] .zen-btn-top,
+[data-has-wallpaper="true"] .synaptic-top-btn,
+[data-has-wallpaper="true"] .chief-staff-top-btn,
+[data-has-wallpaper="true"] .icon-button,
+[data-has-wallpaper="true"] .today-button {
+  background: rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+}
+
+/* 1. Light / Paper Themes with Wallpaper: Frosted Glass Surfaces */
+[data-theme="default"][data-has-wallpaper="true"] .sidebar,
+[data-theme="default"][data-has-wallpaper="true"] .panel,
+[data-theme="default"][data-has-wallpaper="true"] .metric-card,
+[data-theme="default"][data-has-wallpaper="true"] .streak-card,
+[data-theme="default"][data-has-wallpaper="true"] .schedule-item,
+[data-theme="default"][data-has-wallpaper="true"] .note-panel,
+[data-theme="default"][data-has-wallpaper="true"] .report-main,
+[data-theme="default"][data-has-wallpaper="true"] .settings-panel,
+[data-theme="default"][data-has-wallpaper="true"] .roadmap-hub-header,
+[data-theme="default"][data-has-wallpaper="true"] .roadmap-command-center,
+[data-theme="default"][data-has-wallpaper="true"] .single-stage-focused-card,
+[data-theme="default"][data-has-wallpaper="true"] .roadmap-blank-creator-card,
+[data-theme="default"][data-has-wallpaper="true"] .creator-option-box,
+[data-theme="default"][data-has-wallpaper="true"] .column-style-setting-card,
+[data-theme="default"][data-has-wallpaper="true"] .tokyo-wallpaper-setting-card,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .sidebar,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .panel,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .metric-card,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .streak-card,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .schedule-item,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .note-panel,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .report-main,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .settings-panel,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .roadmap-hub-header,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .roadmap-command-center,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .single-stage-focused-card,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .roadmap-blank-creator-card,
+[data-theme="sunlit-studio"][data-has-wallpaper="true"] .creator-option-box,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .sidebar,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .panel,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .metric-card,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .streak-card,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .schedule-item,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .note-panel,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .report-main,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .settings-panel,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .roadmap-hub-header,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .roadmap-command-center,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .single-stage-focused-card,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .roadmap-blank-creator-card,
+[data-theme="warm-parchment"][data-has-wallpaper="true"] .creator-option-box,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .sidebar,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .panel,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .metric-card,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .streak-card,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .schedule-item,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .note-panel,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .report-main,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .settings-panel,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .roadmap-hub-header,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .roadmap-command-center,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .single-stage-focused-card,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .roadmap-blank-creator-card,
+[data-theme="zen-paper"][data-has-wallpaper="true"] .creator-option-box,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .sidebar,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .panel,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .metric-card,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .streak-card,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .schedule-item,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .note-panel,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .report-main,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .settings-panel,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .roadmap-hub-header,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .roadmap-command-center,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .single-stage-focused-card,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .roadmap-blank-creator-card,
+[data-theme="ghibli-meadow"][data-has-wallpaper="true"] .creator-option-box {
+  background: rgba(255, 254, 250, 0.90) !important;
+  backdrop-filter: blur(20px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(170%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22) !important;
+  color: #1e2c26 !important;
+}
+
+/* 2. Neo-Brutalist with Wallpaper */
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .sidebar,
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .panel,
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .metric-card,
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .streak-card,
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .roadmap-hub-header,
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .roadmap-command-center,
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .single-stage-focused-card,
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .column-style-setting-card,
+[data-theme="neo-brutalist"][data-has-wallpaper="true"] .tokyo-wallpaper-setting-card {
+  background: #fdfaf3 !important;
+  border: 2.5px solid #111111 !important;
+  box-shadow: 5px 5px 0px #111111 !important;
+}
+
+/* 3. Dark & Cyber Themes with Wallpaper (Acid Runway, Spider-Verse) */
+[data-theme="acid-runway"][data-has-wallpaper="true"] .sidebar,
+[data-theme="acid-runway"][data-has-wallpaper="true"] .panel,
+[data-theme="acid-runway"][data-has-wallpaper="true"] .metric-card,
+[data-theme="acid-runway"][data-has-wallpaper="true"] .streak-card,
+[data-theme="acid-runway"][data-has-wallpaper="true"] .roadmap-hub-header,
+[data-theme="acid-runway"][data-has-wallpaper="true"] .roadmap-command-center,
+[data-theme="acid-runway"][data-has-wallpaper="true"] .single-stage-focused-card,
+[data-theme="spider-verse"][data-has-wallpaper="true"] .sidebar,
+[data-theme="spider-verse"][data-has-wallpaper="true"] .panel,
+[data-theme="spider-verse"][data-has-wallpaper="true"] .metric-card,
+[data-theme="spider-verse"][data-has-wallpaper="true"] .streak-card,
+[data-theme="spider-verse"][data-has-wallpaper="true"] .roadmap-hub-header,
+[data-theme="spider-verse"][data-has-wallpaper="true"] .roadmap-command-center,
+[data-theme="spider-verse"][data-has-wallpaper="true"] .single-stage-focused-card {
+  background: rgba(14, 12, 24, 0.84) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45) !important;
+}

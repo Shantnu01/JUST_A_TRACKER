@@ -501,7 +501,15 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
-const TOKYO_LOFI_WALLPAPERS = [
+const ATMOSPHERIC_WALLPAPERS = [
+  {
+    id: 'none',
+    name: 'Theme Native',
+    sub: 'Restore native theme background (clean look)',
+    url: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="150" viewBox="0 0 300 150"><rect width="300" height="150" fill="%23222030"/><rect x="25" y="25" width="75" height="100" rx="8" fill="%23302c44"/><rect x="115" y="25" width="160" height="100" rx="8" fill="%23302c44"/><text x="150" y="82" fill="%23a09cb8" font-family="sans-serif" font-size="13" text-anchor="middle" font-weight="700">🎨 Theme Native</text></svg>',
+    tag: 'Native',
+    emoji: '🎨'
+  },
   {
     id: 'default',
     name: 'Tokyo Rain Desk',
@@ -543,6 +551,8 @@ const TOKYO_LOFI_WALLPAPERS = [
     emoji: '🌄'
   }
 ];
+
+const TOKYO_LOFI_WALLPAPERS = ATMOSPHERIC_WALLPAPERS;
 
 function App() {
   // Authentication State
@@ -660,50 +670,65 @@ function App() {
     localStorage.setItem('daymark-column-style', columnStyle);
   }, [columnStyle]);
 
-  // Tokyo Lofi Background Wallpaper State
-  // Presets: 'default' | 'forest' | 'train' | 'lake' | 'sunset' | 'custom'
-  const [tokyoBgId, setTokyoBgId] = useState(() => {
-    const sessionCustom = sessionStorage.getItem('daymark-tokyo-custom-bg');
+  // Universal Atmospheric Nature Wallpaper State (Works across all themes)
+  // Presets: 'none' (native theme) | 'default' (Tokyo rain) | 'forest' | 'train' | 'lake' | 'sunset' | 'custom'
+  const [appWallpaperId, setAppWallpaperId] = useState(() => {
+    const sessionCustom = sessionStorage.getItem('daymark-custom-wallpaper') || sessionStorage.getItem('daymark-tokyo-custom-bg');
     if (sessionCustom) return 'custom';
-    return localStorage.getItem('daymark-tokyo-bg') || 'default';
+    return localStorage.getItem('daymark-wallpaper') || localStorage.getItem('daymark-tokyo-bg') || 'none';
   });
 
-  const [tokyoCustomBgData, setTokyoCustomBgData] = useState(() => {
+  const [customWallpaperData, setCustomWallpaperData] = useState(() => {
     // Kept ONLY in sessionStorage - automatically discarded on session end, never saved to DB!
-    return sessionStorage.getItem('daymark-tokyo-custom-bg') || null;
+    return sessionStorage.getItem('daymark-custom-wallpaper') || sessionStorage.getItem('daymark-tokyo-custom-bg') || null;
   });
 
-  const [tokyoWallpaperModalOpen, setTokyoWallpaperModalOpen] = useState(false);
+  const [wallpaperModalOpen, setWallpaperModalOpen] = useState(false);
 
-  const activeTokyoBgUrl = useMemo(() => {
-    if (tokyoBgId === 'custom' && tokyoCustomBgData) {
-      return tokyoCustomBgData;
+  const { hasWallpaper, activeWallpaperUrl } = useMemo(() => {
+    if (appWallpaperId === 'custom' && customWallpaperData) {
+      return { hasWallpaper: true, activeWallpaperUrl: customWallpaperData };
     }
-    const found = TOKYO_LOFI_WALLPAPERS.find(w => w.id === tokyoBgId);
-    return found ? found.url : '/lofi_study_dashboard_bg.jpg';
-  }, [tokyoBgId, tokyoCustomBgData]);
+    const found = ATMOSPHERIC_WALLPAPERS.find(w => w.id === appWallpaperId);
+    if (found && found.url && found.id !== 'none') {
+      return { hasWallpaper: true, activeWallpaperUrl: found.url };
+    }
+    // If on tokyo-lofi and no other wallpaper explicitly set, default to signature tokyo rain desk
+    if (theme === 'tokyo-lofi') {
+      return { hasWallpaper: true, activeWallpaperUrl: '/lofi_study_dashboard_bg.jpg' };
+    }
+    return { hasWallpaper: false, activeWallpaperUrl: '' };
+  }, [appWallpaperId, customWallpaperData, theme]);
 
   useEffect(() => {
-    if (theme === 'tokyo-lofi') {
-      document.documentElement.style.setProperty('--tokyo-bg-url', `url("${activeTokyoBgUrl}")`);
+    if (hasWallpaper && activeWallpaperUrl) {
+      document.documentElement.setAttribute('data-has-wallpaper', 'true');
+      document.documentElement.style.setProperty('--app-wallpaper-url', `url("${activeWallpaperUrl}")`);
+      document.documentElement.style.setProperty('--tokyo-bg-url', `url("${activeWallpaperUrl}")`);
     } else {
-      document.documentElement.style.removeProperty('--tokyo-bg-url');
+      document.documentElement.removeAttribute('data-has-wallpaper');
+      document.documentElement.style.removeProperty('--app-wallpaper-url');
+      if (theme !== 'tokyo-lofi') {
+        document.documentElement.style.removeProperty('--tokyo-bg-url');
+      }
     }
-  }, [theme, activeTokyoBgUrl]);
+  }, [hasWallpaper, activeWallpaperUrl, theme]);
 
-  const handleSelectTokyoBg = (id) => {
-    setTokyoBgId(id);
+  const handleSelectWallpaper = (id) => {
+    setAppWallpaperId(id);
+    localStorage.setItem('daymark-wallpaper', id);
     localStorage.setItem('daymark-tokyo-bg', id);
     if (id !== 'custom') {
+      sessionStorage.removeItem('daymark-custom-wallpaper');
       sessionStorage.removeItem('daymark-tokyo-custom-bg');
-      setTokyoCustomBgData(null);
+      setCustomWallpaperData(null);
     }
-    const found = TOKYO_LOFI_WALLPAPERS.find(w => w.id === id);
-    setToast(`Applied "${found ? found.name : 'Default'}" wallpaper!`);
+    const found = ATMOSPHERIC_WALLPAPERS.find(w => w.id === id);
+    setToast(id === 'none' ? 'Restored native theme background!' : `Applied "${found ? found.name : 'Default'}" wallpaper!`);
     setTimeout(() => setToast(''), 2500);
   };
 
-  const handleUploadTokyoBg = (e) => {
+  const handleUploadWallpaper = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
@@ -721,9 +746,10 @@ function App() {
       const dataUrl = ev.target?.result;
       if (dataUrl) {
         // STORE ONLY IN SESSION STORAGE: automatically wiped when session ends!
+        sessionStorage.setItem('daymark-custom-wallpaper', dataUrl);
         sessionStorage.setItem('daymark-tokyo-custom-bg', dataUrl);
-        setTokyoCustomBgData(dataUrl);
-        setTokyoBgId('custom');
+        setCustomWallpaperData(dataUrl);
+        setAppWallpaperId('custom');
         setToast('Custom background applied for this session! (Cleared when session ends)');
         setTimeout(() => setToast(''), 4000);
       }
@@ -732,14 +758,27 @@ function App() {
     e.target.value = '';
   };
 
-  const handleResetTokyoBg = () => {
+  const handleResetWallpaper = () => {
+    sessionStorage.removeItem('daymark-custom-wallpaper');
     sessionStorage.removeItem('daymark-tokyo-custom-bg');
-    setTokyoCustomBgData(null);
-    setTokyoBgId('default');
-    localStorage.setItem('daymark-tokyo-bg', 'default');
-    setToast('Reset to default Tokyo Lofi study desk wallpaper.');
+    setCustomWallpaperData(null);
+    const resetId = theme === 'tokyo-lofi' ? 'default' : 'none';
+    setAppWallpaperId(resetId);
+    localStorage.setItem('daymark-wallpaper', resetId);
+    localStorage.setItem('daymark-tokyo-bg', resetId);
+    setToast(theme === 'tokyo-lofi' ? 'Reset to default Tokyo Lofi study desk wallpaper.' : 'Reset to native theme background.');
     setTimeout(() => setToast(''), 2500);
   };
+
+  // Aliases for 100% backward compatibility
+  const tokyoBgId = appWallpaperId;
+  const tokyoCustomBgData = customWallpaperData;
+  const activeTokyoBgUrl = activeWallpaperUrl;
+  const handleSelectTokyoBg = handleSelectWallpaper;
+  const handleUploadTokyoBg = handleUploadWallpaper;
+  const handleResetTokyoBg = handleResetWallpaper;
+  const tokyoWallpaperModalOpen = wallpaperModalOpen;
+  const setTokyoWallpaperModalOpen = setWallpaperModalOpen;
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -3332,6 +3371,17 @@ const handleNudge = async (toUserId, toUsername) => {
               )}
             </div>
 
+            {/* Universal Nature Wallpaper Button */}
+            <button
+              type="button"
+              className="top-wallpaper-btn"
+              onClick={() => setWallpaperModalOpen(true)}
+              title="Atmospheric nature wallpaper & session background upload"
+            >
+              <Image size={13} />
+              <span>Wallpaper</span>
+            </button>
+
             <div className="date-chip">
               <span className={`status-dot ${isToday ? '' : 'inactive'}`} />
               {prettyDate(selectedDate)}
@@ -3350,7 +3400,8 @@ const handleNudge = async (toUserId, toUsername) => {
       className={`app-shell ${isZenMode ? 'zen-active' : ''}`}
       data-theme={theme}
       data-column-style={columnStyle}
-      style={theme === 'tokyo-lofi' ? { '--tokyo-bg-url': `url("${activeTokyoBgUrl}")` } : undefined}
+      data-has-wallpaper={hasWallpaper ? 'true' : 'false'}
+      style={hasWallpaper ? { '--app-wallpaper-url': `url("${activeWallpaperUrl}")`, '--tokyo-bg-url': `url("${activeWallpaperUrl}")` } : undefined}
     >
       <aside className="sidebar">
         <div className="brand">
@@ -5610,77 +5661,75 @@ const handleNudge = async (toUserId, toUsername) => {
               </div>
             </div>
 
-            {/* Tokyo Lofi Atmospheric Wallpaper Setting */}
-            {theme === 'tokyo-lofi' && (
-              <div className="tokyo-wallpaper-setting-card">
-                <div className="tokyo-wallpaper-card-header">
-                  <div>
-                    <span className="eyebrow">TOKYO LOFI WALLPAPER // 背景壁紙</span>
-                    <h4>Atmospheric Nature & Study Wallpaper</h4>
-                    <p className="muted" style={{ margin: '4px 0 0 0', fontSize: '12px' }}>
-                      Select a soothing nature backdrop or upload a temporary custom image (kept in session only):
-                    </p>
-                  </div>
-                  {tokyoBgId === 'custom' && (
-                    <span className="tokyo-session-badge">
-                      SESSION CUSTOM ACTIVE
-                    </span>
-                  )}
+            {/* Atmospheric Nature Wallpaper Setting (Available in all themes) */}
+            <div className="tokyo-wallpaper-setting-card">
+              <div className="tokyo-wallpaper-card-header">
+                <div>
+                  <span className="eyebrow">{theme === 'tokyo-lofi' ? 'ATMOSPHERIC WALLPAPER // 背景壁紙' : 'ATMOSPHERIC WALLPAPER'}</span>
+                  <h4>Atmospheric Nature & Study Wallpaper</h4>
+                  <p className="muted" style={{ margin: '4px 0 0 0', fontSize: '12px' }}>
+                    Select a soothing nature backdrop or upload a temporary custom image (kept in session only):
+                  </p>
                 </div>
-
-                <div className="tokyo-wallpaper-grid">
-                  {TOKYO_LOFI_WALLPAPERS.map(wp => {
-                    const isSelected = tokyoBgId === wp.id;
-                    return (
-                      <button
-                        key={wp.id}
-                        type="button"
-                        className={`tokyo-wallpaper-option-btn ${isSelected ? 'selected' : ''}`}
-                        onClick={() => handleSelectTokyoBg(wp.id)}
-                      >
-                        <div className="wp-thumb-wrapper">
-                          <img src={wp.url} alt={wp.name} className="wp-thumb-img" loading="lazy" />
-                          {isSelected && <span className="wp-selected-check">✓</span>}
-                        </div>
-                        <div className="wp-info">
-                          <div className="wp-name-row">
-                            <span className="wp-emoji">{wp.emoji}</span>
-                            <strong>{wp.name}</strong>
-                          </div>
-                          <p>{wp.sub}</p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Upload Custom Wallpaper Trigger */}
-                <div className="tokyo-wallpaper-upload-row">
-                  <label className="tokyo-upload-btn">
-                    <Upload size={14} />
-                    <span>Upload Custom Wallpaper</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleUploadTokyoBg}
-                      style={{ display: 'none' }}
-                    />
-                  </label>
-                  {tokyoBgId === 'custom' && (
-                    <button
-                      type="button"
-                      className="tokyo-reset-bg-btn"
-                      onClick={handleResetTokyoBg}
-                    >
-                      <RotateCcw size={13} /> Reset to Default
-                    </button>
-                  )}
-                  <span className="tokyo-upload-hint">
-                    🔒 Temporary for this session only · Never saved to database
+                {appWallpaperId === 'custom' && (
+                  <span className="tokyo-session-badge">
+                    SESSION CUSTOM ACTIVE
                   </span>
-                </div>
+                )}
               </div>
-            )}
+
+              <div className="tokyo-wallpaper-grid">
+                {ATMOSPHERIC_WALLPAPERS.map(wp => {
+                  const isSelected = appWallpaperId === wp.id;
+                  return (
+                    <button
+                      key={wp.id}
+                      type="button"
+                      className={`tokyo-wallpaper-option-btn ${isSelected ? 'selected' : ''}`}
+                      onClick={() => handleSelectWallpaper(wp.id)}
+                    >
+                      <div className="wp-thumb-wrapper">
+                        <img src={wp.url} alt={wp.name} className="wp-thumb-img" loading="lazy" />
+                        {isSelected && <span className="wp-selected-check">✓</span>}
+                      </div>
+                      <div className="wp-info">
+                        <div className="wp-name-row">
+                          <span className="wp-emoji">{wp.emoji}</span>
+                          <strong>{wp.name}</strong>
+                        </div>
+                        <p>{wp.sub}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Upload Custom Wallpaper Trigger */}
+              <div className="tokyo-wallpaper-upload-row">
+                <label className="tokyo-upload-btn">
+                  <Upload size={14} />
+                  <span>Upload Custom Wallpaper</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleUploadWallpaper}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+                {appWallpaperId !== 'none' && (
+                  <button
+                    type="button"
+                    className="tokyo-reset-bg-btn"
+                    onClick={handleResetWallpaper}
+                  >
+                    <RotateCcw size={13} /> {theme === 'tokyo-lofi' ? 'Reset to Default Desk' : 'Reset to Theme Native'}
+                  </button>
+                )}
+                <span className="tokyo-upload-hint">
+                  🔒 Temporary for this session only · Never saved to database
+                </span>
+              </div>
+            </div>
 
             {/* Save & Reset Actions Bar */}
             <div className="settings-actions">
@@ -7172,38 +7221,38 @@ const handleNudge = async (toUserId, toUsername) => {
         columnStyle={columnStyle}
       />
 
-      {/* Tokyo Lofi Ambient Wallpaper Modal */}
-      {tokyoWallpaperModalOpen && (
-        <div className="modal-overlay" onClick={() => setTokyoWallpaperModalOpen(false)}>
+      {/* Universal Atmospheric Wallpaper Modal */}
+      {wallpaperModalOpen && (
+        <div className="modal-overlay" onClick={() => setWallpaperModalOpen(false)}>
           <div className="modal-card tokyo-wallpaper-modal" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <span className="eyebrow">AMBIENT WALLPAPER // 背景壁紙</span>
-                <h3>Choose Tokyo Lofi Background</h3>
+                <span className="eyebrow">{theme === 'tokyo-lofi' ? 'AMBIENT WALLPAPER // 背景壁紙' : 'ATMOSPHERIC WALLPAPER'}</span>
+                <h3>Choose Background Wallpaper</h3>
               </div>
               <button
                 type="button"
                 className="modal-close"
-                onClick={() => setTokyoWallpaperModalOpen(false)}
+                onClick={() => setWallpaperModalOpen(false)}
               >
                 <X size={18} />
               </button>
             </div>
 
             <p className="muted" style={{ fontSize: '13px', margin: '4px 0 16px' }}>
-              Select a tranquil nature scene or upload your own temporary background image:
+              Select a tranquil nature scene or upload your own temporary background image (session-only):
             </p>
 
             <div className="tokyo-wallpaper-modal-grid">
-              {TOKYO_LOFI_WALLPAPERS.map(wp => {
-                const isSelected = tokyoBgId === wp.id;
+              {ATMOSPHERIC_WALLPAPERS.map(wp => {
+                const isSelected = appWallpaperId === wp.id;
                 return (
                   <button
                     key={wp.id}
                     type="button"
                     className={`tokyo-wallpaper-card-btn ${isSelected ? 'selected' : ''}`}
                     onClick={() => {
-                      handleSelectTokyoBg(wp.id);
+                      handleSelectWallpaper(wp.id);
                     }}
                   >
                     <div className="modal-wp-thumb-box">
@@ -7230,19 +7279,19 @@ const handleNudge = async (toUserId, toUsername) => {
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    handleUploadTokyoBg(e);
+                    handleUploadWallpaper(e);
                   }}
                   style={{ display: 'none' }}
                 />
               </label>
 
-              {tokyoBgId === 'custom' && (
+              {appWallpaperId !== 'none' && (
                 <button
                   type="button"
                   className="tokyo-reset-bg-btn"
-                  onClick={handleResetTokyoBg}
+                  onClick={handleResetWallpaper}
                 >
-                  <RotateCcw size={13} /> Reset to Default
+                  <RotateCcw size={13} /> {theme === 'tokyo-lofi' ? 'Reset to Default Desk' : 'Reset to Theme Native'}
                 </button>
               )}
             </div>
