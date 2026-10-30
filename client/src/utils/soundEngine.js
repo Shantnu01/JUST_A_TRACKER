@@ -1,10 +1,17 @@
 // Daymark Native Web Audio Focus Engine
-// 100% Client-side synthetic soundscapes: Zero network requests, Zero dependencies
+// Supports both Real Nature Audio Web Streams (Rain, Birds, River) & Synthetic Procedural Fallback
 
 let audioCtx = null;
 let currentSource = null;
 let gainNode = null;
 let activeSoundType = 'off';
+let realAudioEl = null;
+
+const REAL_AUDIO_STREAMS = {
+  rain: 'https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6591201e.mp3?filename=soft-rain-ambient-111154.mp3',
+  birds: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a73467.mp3?filename=birds-in-the-forest-24189.mp3',
+  river: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=birds-singing-calm-river-nature-ambient-sound-12470.mp3'
+};
 
 export function getAudioContext() {
   if (!audioCtx) {
@@ -68,6 +75,14 @@ function createPinkNoiseBuffer(ctx) {
 }
 
 export function stopFocusSound() {
+  if (realAudioEl) {
+    try {
+      realAudioEl.pause();
+      realAudioEl.currentTime = 0;
+      realAudioEl.src = '';
+    } catch {}
+    realAudioEl = null;
+  }
   if (currentSource) {
     try {
       if (currentSource.destroy) {
@@ -88,12 +103,17 @@ export function stopFocusSound() {
 }
 
 export function setSoundVolume(volume) {
-  if (gainNode && audioCtx) {
-    const v = Math.max(0.01, Math.min(1, volume || 0.4));
+  const safeVol = Math.max(0.01, Math.min(1, volume || 0.4));
+  if (realAudioEl) {
     try {
-      gainNode.gain.setValueAtTime(v, audioCtx.currentTime);
+      realAudioEl.volume = safeVol;
+    } catch {}
+  }
+  if (gainNode && audioCtx) {
+    try {
+      gainNode.gain.setValueAtTime(safeVol, audioCtx.currentTime);
     } catch {
-      gainNode.gain.value = v;
+      gainNode.gain.value = safeVol;
     }
   }
 }
@@ -248,17 +268,46 @@ export async function playFocusSound(type, volume = 0.4) {
   stopFocusSound();
   if (type === 'off') return;
 
+  const safeVol = Math.max(0.01, Math.min(1, volume || 0.4));
+
+  // 1. If it's a real web audio soundscape stream (Rain, Birds, River), stream high-fidelity recording
+  if (REAL_AUDIO_STREAMS[type]) {
+    try {
+      const audio = new Audio(REAL_AUDIO_STREAMS[type]);
+      audio.loop = true;
+      audio.volume = safeVol;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            realAudioEl = audio;
+            activeSoundType = type;
+          })
+          .catch(() => {
+            // If autoplay policy or network blocks, fall back to procedural synthesis
+            startProceduralFallback(type, safeVol);
+          });
+      }
+      return;
+    } catch {
+      startProceduralFallback(type, safeVol);
+      return;
+    }
+  }
+
+  // 2. Synthetic procedural focus generators (Brown noise, Pink noise, Binaural waves)
+  startProceduralFallback(type, safeVol);
+}
+
+function startProceduralFallback(type, safeVol) {
   const ctx = getAudioContext();
   if (!ctx) return;
 
   if (ctx.state === 'suspended') {
-    try {
-      await ctx.resume();
-    } catch {}
+    ctx.resume().catch(() => {});
   }
 
   gainNode = ctx.createGain();
-  const safeVol = Math.max(0.01, Math.min(1, volume || 0.4));
   try {
     gainNode.gain.setValueAtTime(safeVol, ctx.currentTime);
   } catch {
@@ -287,9 +336,9 @@ export async function playFocusSound(type, volume = 0.4) {
   } else if (type === 'rain') {
     currentSource = startRainSound(ctx, gainNode);
     activeSoundType = 'rain';
-  } else if (type === 'birds') {
+  } else if (type === 'birds' || type === 'river') {
     currentSource = startBirdSound(ctx, gainNode);
-    activeSoundType = 'birds';
+    activeSoundType = type;
   } else if (type === 'binaural') {
     // 40 Hz Gamma Focus
     const carrier = ctx.createOscillator();

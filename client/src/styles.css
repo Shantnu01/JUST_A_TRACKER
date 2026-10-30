@@ -18068,3 +18068,590 @@ html[data-theme="tokyo-lofi"],
   background: #315b45 !important;
   color: #ffffff !important;
 }
+
+/* ==========================================================================
+   ORGANIC CURVED EDGES FOR ZENMODE, MEADOW, CLASSIC & WARM THEMES
+   (Eliminates all sharp rectangular edges across stages, routine & today schedule)
+   ========================================================================== */
+
+/* 1. Curved Panels & Columns in Zen Paper, Ghibli Meadow, Classic & Warm Parchment */
+[data-theme="zen-paper"] .panel,
+[data-theme="zen-paper"] .schedule-panel,
+[data-theme="zen-paper"] .habits-panel,
+[data-theme="zen-paper"] .right-column > div,
+[data-theme="zen-paper"] .roadmap-hub-header,
+[data-theme="zen-paper"] .roadmap-command-center,
+[data-theme="zen-paper"] .single-stage-focused-card,
+[data-theme="zen-paper"] .roadmap-blank-creator-card,
+[data-theme="zen-paper"] .creator-option-box,
+[data-theme="zen-paper"] .roadmap-outline-editor-card,
+[data-theme="zen-paper"] .column-style-setting-card,
+[data-theme="zen-paper"] .tokyo-wallpaper-setting-card,
+[data-theme="ghibli-meadow"] .panel,
+[data-theme="ghibli-meadow"] .schedule-panel,
+[data-theme="ghibli-meadow"] .habits-panel,
+[data-theme="ghibli-meadow"] .right-column > div,
+[data-theme="ghibli-meadow"] .roadmap-hub-header,
+[data-theme="ghibli-meadow"] .roadmap-command-center,
+[data-theme="ghibli-meadow"] .single-stage-focused-card,
+[data-theme="ghibli-meadow"] .roadmap-blank-creator-card,
+[data-theme="ghibli-meadow"] .creator-option-box,
+[data-theme="ghibli-meadow"] .roadmap-outline-editor-card,
+[data-theme="ghibli-meadow"] .column-style-setting-card,
+[data-theme="ghibli-meadow"] .tokyo-wallpaper-setting-card,
+[data-theme="default"] .panel,
+[data-theme="default"] .schedule-panel,
+[data-theme="default"] .habits-panel,
+[data-theme="default"] .right-column > div,
+[data-theme="default"] .roadmap-hub-header,
+[data-theme="default"] .roadmap-command-center,
+[data-theme="default"] .single-stage-focused-card,
+[data-theme="default"] .roadmap-blank-creator-card,
+[data-theme="default"] .creator-option-box,
+[data-theme="default"] .roadmap-outline-editor-card,
+[data-theme="default"] .column-style-setting-card,
+[data-theme="default"] .tokyo-wallpaper-setting-card,
+[data-theme="warm-parchment"] .panel,
+[data-theme="warm-parchment"] .schedule-panel,
+[data-theme="warm-parchment"] .habits-panel,
+[data-theme="warm-parchment"] .right-column > div,
+[data-theme="warm-parchment"] .roadmap-hub-header,
+[data-theme="warm-parchment"] .roadmap-command-center,
+[data-theme="warm-parchment"] .single-stage-focused-card,
+[data-theme="warm-parchment"] .roadmap-blank-creator-card,
+[data-theme="warm-parchment"] .creator-option-box,
+[data-theme="warm-parchment"] .roadmap-outline-editor-card,
+[data-theme="warm-parchment"] .column-style-setting-card,
+[data-theme="warm-parchment"] .tokyo-wallpaper-setting-card {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+/* 2. Curved Routine Items, Today Schedule & Checkpoint Rows */
+[data-theme="zen-paper"] .schedule-item,
+[data-theme="zen-paper"] .schedule-edit-card,
+[data-theme="zen-paper"] .single-checkpoint-row,
+[data-theme="zen-paper"] .habit-row,
+[data-theme="ghibli-meadow"] .schedule-item,
+[data-theme="ghibli-meadow"] .schedule-edit-card,
+[data-theme="ghibli-meadow"] .single-checkpoint-row,
+[data-theme="ghibli-meadow"] .habit-row,
+[data-theme="default"] .schedule-item,
+[data-theme="default"] .schedule-edit-card,
+[data-theme="default"] .single-checkpoint-row,
+[data-theme="default"] .habit-row,
+[data-theme="warm-parchment"] .schedule-item,
+[data-theme="warm-parchment"] .schedule-edit-card,
+[data-theme="warm-parchment"] .single-checkpoint-row,
+[data-theme="warm-parchment"] .habit-row {
+  border-radius: 16px !important;
+}
+
+/* 3. Stage Selector Tabs & Stage Pills */
+[data-theme="zen-paper"] .single-stage-tab-btn,
+[data-theme="ghibli-meadow"] .single-stage-tab-btn,
+[data-theme="default"] .single-stage-tab-btn,
+[data-theme="warm-parchment"] .single-stage-tab-btn {
+  border-radius: 12px !important;
+}
+
+[data-theme="zen-paper"] .roadmap-subject-pill,
+[data-theme="ghibli-meadow"] .roadmap-subject-pill,
+[data-theme="default"] .roadmap-subject-pill,
+[data-theme="warm-parchment"] .roadmap-subject-pill {
+  border-radius: 999px !important;
+}
+
+/* 4. Active Session Glowing Curved Borders */
+[data-theme="default"] .schedule-item.active-session {
+  border-radius: 16px !important;
+  border: 1.5px solid #315b45 !important;
+  box-shadow: 0 8px 24px rgba(49, 91, 69, 0.16) !important;
+}
+
+[data-theme="zen-paper"] .schedule-item.active-session {
+  border-radius: 16px !important;
+  border: 1.5px solid #b91c1c !important;
+  box-shadow: 0 8px 24px rgba(185, 28, 28, 0.14) !important;
+}
+
+[data-theme="ghibli-meadow"] .schedule-item.active-session {
+  border-radius: 16px !important;
+  border: 1.5px solid #16a34a !important;
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.18) !important;
+}
+
+[data-theme="warm-parchment"] .schedule-item.active-session {
+  border-radius: 16px !important;
+  border: 1.5px solid #b45309 !important;
+  box-shadow: 0 8px 24px rgba(180, 83, 9, 0.16) !important;
+}
+
+/* ==========================================================================
+   COMPREHENSIVE COLUMN MATERIAL ADAPTATIONS ACROSS ALL THEMES
+   (Liquid Glass, Crystal Transparent, Obsidian Smoky)
+   ========================================================================== */
+
+/* --- A. DEFAULT (CLASSIC) COLUMN MATERIALS --- */
+[data-theme="default"][data-column-style="liquid-glass"] .panel,
+[data-theme="default"][data-column-style="liquid-glass"] .schedule-panel,
+[data-theme="default"][data-column-style="liquid-glass"] .habits-panel,
+[data-theme="default"][data-column-style="liquid-glass"] .roadmap-hub-header,
+[data-theme="default"][data-column-style="liquid-glass"] .roadmap-command-center,
+[data-theme="default"][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme="default"][data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-theme="default"][data-column-style="liquid-glass"] .creator-option-box,
+[data-theme="default"][data-column-style="liquid-glass"] .metric-card,
+[data-theme="default"][data-column-style="liquid-glass"] .streak-card,
+[data-theme="default"][data-column-style="liquid-glass"] .column-style-setting-card,
+[data-theme="default"][data-column-style="liquid-glass"] .tokyo-wallpaper-setting-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 248, 243, 0.68) 100%) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  border: 1px solid rgba(49, 91, 69, 0.16) !important;
+  box-shadow: inset 0 1.5px 1px rgba(255, 255, 255, 0.95), 0 16px 38px rgba(49, 91, 69, 0.08) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="default"][data-column-style="transparent"] .panel,
+[data-theme="default"][data-column-style="transparent"] .schedule-panel,
+[data-theme="default"][data-column-style="transparent"] .habits-panel,
+[data-theme="default"][data-column-style="transparent"] .roadmap-hub-header,
+[data-theme="default"][data-column-style="transparent"] .roadmap-command-center,
+[data-theme="default"][data-column-style="transparent"] .single-stage-focused-card,
+[data-theme="default"][data-column-style="transparent"] .metric-card,
+[data-theme="default"][data-column-style="transparent"] .streak-card {
+  background: rgba(255, 255, 255, 0.28) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(49, 91, 69, 0.18) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="default"][data-column-style="smoky"] .panel,
+[data-theme="default"][data-column-style="smoky"] .schedule-panel,
+[data-theme="default"][data-column-style="smoky"] .habits-panel,
+[data-theme="default"][data-column-style="smoky"] .roadmap-hub-header,
+[data-theme="default"][data-column-style="smoky"] .roadmap-command-center,
+[data-theme="default"][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme="default"][data-column-style="smoky"] .metric-card,
+[data-theme="default"][data-column-style="smoky"] .streak-card {
+  background: rgba(18, 30, 23, 0.88) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1px solid rgba(139, 170, 139, 0.25) !important;
+  color: #FAF8FF !important;
+  border-radius: 20px !important;
+}
+
+/* --- B. ZEN PAPER COLUMN MATERIALS --- */
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .panel,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .schedule-panel,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .habits-panel,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .roadmap-hub-header,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .roadmap-command-center,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .creator-option-box,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .metric-card,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .streak-card,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .column-style-setting-card,
+[data-theme="zen-paper"][data-column-style="liquid-glass"] .tokyo-wallpaper-setting-card {
+  background: linear-gradient(135deg, rgba(253, 251, 247, 0.88) 0%, rgba(245, 240, 230, 0.68) 100%) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+  border: 1px solid rgba(220, 38, 38, 0.16) !important;
+  box-shadow: inset 0 1.5px 1px rgba(255, 255, 255, 0.95), 0 14px 34px rgba(40, 35, 25, 0.06) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="zen-paper"][data-column-style="transparent"] .panel,
+[data-theme="zen-paper"][data-column-style="transparent"] .schedule-panel,
+[data-theme="zen-paper"][data-column-style="transparent"] .habits-panel,
+[data-theme="zen-paper"][data-column-style="transparent"] .roadmap-hub-header,
+[data-theme="zen-paper"][data-column-style="transparent"] .roadmap-command-center,
+[data-theme="zen-paper"][data-column-style="transparent"] .single-stage-focused-card,
+[data-theme="zen-paper"][data-column-style="transparent"] .metric-card,
+[data-theme="zen-paper"][data-column-style="transparent"] .streak-card {
+  background: rgba(253, 251, 247, 0.35) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(200, 180, 160, 0.35) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="zen-paper"][data-column-style="smoky"] .panel,
+[data-theme="zen-paper"][data-column-style="smoky"] .schedule-panel,
+[data-theme="zen-paper"][data-column-style="smoky"] .habits-panel,
+[data-theme="zen-paper"][data-column-style="smoky"] .roadmap-hub-header,
+[data-theme="zen-paper"][data-column-style="smoky"] .roadmap-command-center,
+[data-theme="zen-paper"][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme="zen-paper"][data-column-style="smoky"] .metric-card,
+[data-theme="zen-paper"][data-column-style="smoky"] .streak-card {
+  background: rgba(24, 22, 20, 0.88) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1px solid rgba(220, 38, 38, 0.25) !important;
+  color: #FAF8F5 !important;
+  border-radius: 20px !important;
+}
+
+/* --- C. GHIBLI MEADOW COLUMN MATERIALS --- */
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .panel,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .schedule-panel,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .habits-panel,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .roadmap-hub-header,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .roadmap-command-center,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .creator-option-box,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .metric-card,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .streak-card,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .column-style-setting-card,
+[data-theme="ghibli-meadow"][data-column-style="liquid-glass"] .tokyo-wallpaper-setting-card {
+  background: linear-gradient(135deg, rgba(240, 252, 244, 0.88) 0%, rgba(225, 245, 232, 0.68) 100%) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  border: 1px solid rgba(34, 197, 94, 0.22) !important;
+  box-shadow: inset 0 1.5px 1px rgba(255, 255, 255, 0.95), 0 16px 36px rgba(34, 197, 94, 0.1) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="ghibli-meadow"][data-column-style="transparent"] .panel,
+[data-theme="ghibli-meadow"][data-column-style="transparent"] .schedule-panel,
+[data-theme="ghibli-meadow"][data-column-style="transparent"] .habits-panel,
+[data-theme="ghibli-meadow"][data-column-style="transparent"] .roadmap-hub-header,
+[data-theme="ghibli-meadow"][data-column-style="transparent"] .roadmap-command-center,
+[data-theme="ghibli-meadow"][data-column-style="transparent"] .single-stage-focused-card,
+[data-theme="ghibli-meadow"][data-column-style="transparent"] .metric-card,
+[data-theme="ghibli-meadow"][data-column-style="transparent"] .streak-card {
+  background: rgba(240, 252, 244, 0.3) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(34, 197, 94, 0.25) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="ghibli-meadow"][data-column-style="smoky"] .panel,
+[data-theme="ghibli-meadow"][data-column-style="smoky"] .schedule-panel,
+[data-theme="ghibli-meadow"][data-column-style="smoky"] .habits-panel,
+[data-theme="ghibli-meadow"][data-column-style="smoky"] .roadmap-hub-header,
+[data-theme="ghibli-meadow"][data-column-style="smoky"] .roadmap-command-center,
+[data-theme="ghibli-meadow"][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme="ghibli-meadow"][data-column-style="smoky"] .metric-card,
+[data-theme="ghibli-meadow"][data-column-style="smoky"] .streak-card {
+  background: rgba(14, 28, 18, 0.88) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1px solid rgba(74, 222, 128, 0.25) !important;
+  color: #F0FDF4 !important;
+  border-radius: 20px !important;
+}
+
+/* --- D. WARM PARCHMENT COLUMN MATERIALS --- */
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .panel,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .schedule-panel,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .habits-panel,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .roadmap-hub-header,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .roadmap-command-center,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .creator-option-box,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .metric-card,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .streak-card,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .column-style-setting-card,
+[data-theme="warm-parchment"][data-column-style="liquid-glass"] .tokyo-wallpaper-setting-card {
+  background: linear-gradient(135deg, rgba(253, 248, 238, 0.9) 0%, rgba(245, 235, 220, 0.68) 100%) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+  border: 1px solid rgba(180, 83, 9, 0.2) !important;
+  box-shadow: inset 0 1.5px 1px rgba(255, 255, 255, 0.95), 0 16px 36px rgba(120, 53, 15, 0.08) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="warm-parchment"][data-column-style="transparent"] .panel,
+[data-theme="warm-parchment"][data-column-style="transparent"] .schedule-panel,
+[data-theme="warm-parchment"][data-column-style="transparent"] .habits-panel,
+[data-theme="warm-parchment"][data-column-style="transparent"] .roadmap-hub-header,
+[data-theme="warm-parchment"][data-column-style="transparent"] .roadmap-command-center,
+[data-theme="warm-parchment"][data-column-style="transparent"] .single-stage-focused-card,
+[data-theme="warm-parchment"][data-column-style="transparent"] .metric-card,
+[data-theme="warm-parchment"][data-column-style="transparent"] .streak-card {
+  background: rgba(253, 248, 238, 0.32) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1.5px solid rgba(180, 83, 9, 0.25) !important;
+  border-radius: 20px !important;
+}
+
+[data-theme="warm-parchment"][data-column-style="smoky"] .panel,
+[data-theme="warm-parchment"][data-column-style="smoky"] .schedule-panel,
+[data-theme="warm-parchment"][data-column-style="smoky"] .habits-panel,
+[data-theme="warm-parchment"][data-column-style="smoky"] .roadmap-hub-header,
+[data-theme="warm-parchment"][data-column-style="smoky"] .roadmap-command-center,
+[data-theme="warm-parchment"][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme="warm-parchment"][data-column-style="smoky"] .metric-card,
+[data-theme="warm-parchment"][data-column-style="smoky"] .streak-card {
+  background: rgba(28, 20, 14, 0.9) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1px solid rgba(217, 119, 6, 0.25) !important;
+  color: #FFFBEB !important;
+  border-radius: 20px !important;
+}
+
+/* ==========================================================================
+   ENHANCED LIQUID GLASS STUDY MODE INTERFACE (PURE FLOATING GLASS CARD)
+   ========================================================================== */
+
+.study-main-card {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  margin: auto;
+  border-radius: 28px !important;
+  padding: 46px 40px 40px !important;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(34px) saturate(200%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(200%) contrast(108%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45), inset 0 1.5px 1px rgba(255, 255, 255, 0.5) !important;
+  color: #FAF8FF !important;
+  z-index: 5 !important;
+}
+
+.study-main-card * {
+  pointer-events: auto !important;
+}
+
+.study-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FAF8FF;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer !important;
+  transition: all 0.18s ease;
+}
+
+.study-top-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.study-top-btn.active {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  color: #ffffff;
+}
+
+/* In-Study Wallpaper Dropdown */
+.study-pop-anchor {
+  position: relative;
+}
+
+.study-glass-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 320px;
+  border-radius: 16px;
+  background: rgba(18, 15, 28, 0.94);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  padding: 14px;
+  z-index: 150;
+  text-align: left;
+  animation: slideDownFade 0.22s ease;
+}
+
+.study-dropdown-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.close-dropdown-x {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-dropdown-x:hover {
+  color: #FAF8FF;
+}
+
+.study-wp-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.study-wp-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #FAF8FF;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.study-wp-opt:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.study-wp-opt.selected {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.2);
+}
+
+.study-wp-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.study-wp-name {
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.study-wp-check {
+  font-size: 11px;
+  color: #38bdf8;
+  font-weight: bold;
+}
+
+.study-wp-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.study-wp-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FAF8FF;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  flex: 1;
+  justify-content: center;
+}
+
+.study-wp-upload-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.study-wp-reset-btn {
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.study-wp-reset-btn:hover {
+  color: #FAF8FF;
+  border-color: #FAF8FF;
+}
+
+/* Sound Pills Bar */
+.study-sound-pills-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(14px);
+  padding: 4px 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.sound-pill {
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: #CBD5E1;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer !important;
+  transition: all 0.15s ease;
+}
+
+.sound-pill:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #FAF8FF;
+}
+
+.sound-pill.active {
+  background: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.sound-pill.mute-btn {
+  color: #ef4444;
+  padding: 5px 7px;
+}
+
+/* Ensure All Action Buttons in Study Mode React Instantly */
+.study-primary-btn,
+.study-stop-btn,
+.study-alarm-btn,
+.break-pill-btn,
+.resume-study-hero-btn,
+.extend-break-btn {
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.study-primary-btn:active,
+.study-stop-btn:active,
+.break-pill-btn:active {
+  transform: scale(0.97) !important;
+}

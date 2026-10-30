@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Play,
   Pause,
@@ -15,9 +15,13 @@ import {
   Clock,
   RotateCcw,
   Headphones,
-  Check
+  Check,
+  Image,
+  Upload,
+  Sliders,
+  Wind
 } from 'lucide-react';
-import { playFocusSound, stopFocusSound } from '../utils/soundEngine';
+import { playFocusSound, stopFocusSound, setSoundVolume, getActiveSoundType } from '../utils/soundEngine';
 
 export default function StudyModeView({
   activeBlock,
@@ -40,35 +44,60 @@ export default function StudyModeView({
   onExtendBreak,
   breakRunning,
   onToggleBreakRunning,
-  activeCheckpoint
+  activeCheckpoint,
+  appWallpaperId,
+  onSelectWallpaper,
+  onUploadWallpaper,
+  onResetWallpaper,
+  wallpapersList = []
 }) {
   const [alarmMinutes, setAlarmMinutes] = useState(() => {
     return Number(localStorage.getItem('daymark-study-alarm')) || null;
   });
   const [showAlarmPicker, setShowAlarmPicker] = useState(false);
-  const [soundscape, setSoundscape] = useState('off'); // 'off' | 'rain' | 'forest' | 'binaural' | 'brown'
+  const [showWallpaperPicker, setShowWallpaperPicker] = useState(false);
+  const [activeSound, setActiveSound] = useState(() => getActiveSoundType() || 'off');
+  const [soundVolumeLevel, setSoundVolumeLevel] = useState(0.4);
+  const fileInputRef = useRef(null);
 
   // Handle Study Alarm Reached
   useEffect(() => {
     if (!isBreak && running && alarmMinutes && seconds > 0) {
       if (seconds === alarmMinutes * 60) {
-        playChime();
+        if (typeof playChime === 'function') playChime();
         if (typeof setToast === 'function') {
-          setToast(`🔔 Target Reached! You have studied for ${alarmMinutes} minutes!`);
+          setToast(`🎯 Goal reached! You have studied for ${alarmMinutes} minutes!`);
         }
       }
     }
   }, [seconds, alarmMinutes, isBreak, running, playChime, setToast]);
 
-  // Handle Soundscape changes
-  const handleToggleSoundscape = (type) => {
-    if (soundscape === type) {
+  // Handle Soundscape selections
+  const handleSelectSound = (type) => {
+    if (activeSound === type) {
       stopFocusSound();
-      setSoundscape('off');
+      setActiveSound('off');
+      if (typeof setToast === 'function') setToast('Sound muted');
     } else {
-      playFocusSound(type, 0.4);
-      setSoundscape(type);
+      playFocusSound(type, soundVolumeLevel);
+      setActiveSound(type);
+      if (typeof setToast === 'function') {
+        const labels = {
+          rain: '🌧️ Real Rain soundscape playing',
+          birds: '🐦 Real Forest Birds chirping',
+          river: '🌊 River & Nature stream playing',
+          brown: '📻 Deep Focus Brown Noise active',
+          binaural: '🧠 40Hz Gamma Focus Waves active'
+        };
+        setToast(labels[type] || 'Soundscape started');
+      }
     }
+  };
+
+  const handleVolumeChange = (e) => {
+    const val = parseFloat(e.target.value);
+    setSoundVolumeLevel(val);
+    setSoundVolume(val);
   };
 
   const handleSelectAlarm = (mins) => {
@@ -83,9 +112,9 @@ export default function StudyModeView({
     setShowAlarmPicker(false);
   };
 
-  // Time formatters
+  // Format Time Helper
   const formatTime = (totalSecs) => {
-    const s = Math.max(0, totalSecs);
+    const s = Math.max(0, totalSecs || 0);
     const hrs = Math.floor(s / 3600);
     const mins = Math.floor((s % 3600) / 60);
     const secs = s % 60;
@@ -95,8 +124,8 @@ export default function StudyModeView({
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-  const subjectTitle = activeBlock?.title || 'Focused Study Session';
-  const subjectSubtitle = activeCheckpoint?.title || activeBlock?.subtitle || 'Maintain deep flow & deliberate practice';
+  const subjectTitle = activeBlock?.title || 'Deep Focus Session';
+  const subjectSubtitle = activeCheckpoint?.title || activeBlock?.subtitle || 'Maintain deep flow & deliberate focus';
   const scheduledHours = activeBlock?.hours || 1;
   const scheduledSecs = scheduledHours * 3600;
   const progressPercent = Math.min(100, Math.round((seconds / scheduledSecs) * 100));
@@ -107,8 +136,9 @@ export default function StudyModeView({
       data-theme={theme}
       data-column-style={columnStyle}
     >
-      {/* Top Floating Utility Bar */}
+      {/* Top Floating Glass Utility Bar */}
       <div className="study-top-bar">
+        {/* Left Status Capsule */}
         <div className="study-status-indicator">
           <span className={`study-status-dot ${isBreak ? 'break-dot' : running ? 'active-pulse' : 'paused-dot'}`} />
           <span className="study-status-text">
@@ -116,37 +146,140 @@ export default function StudyModeView({
               ? `☕ BREAK TIME (${breakDurationMinutes || 5} MIN)`
               : running
               ? '● DEEP STUDY IN PROGRESS'
-              : '❚❚ STUDY TIMER PAUSED'}
+              : '❚❚ TIMER PAUSED'}
           </span>
         </div>
 
+        {/* Center / Right Control Cluster */}
         <div className="study-top-actions">
-          {/* Audio Soundscape Toggle */}
-          <div className="study-soundscape-group">
+          {/* Wallpaper Switcher Button */}
+          <div className="study-pop-anchor">
             <button
               type="button"
-              className={`study-sound-btn ${soundscape === 'rain' ? 'active' : ''}`}
-              onClick={() => handleToggleSoundscape('rain')}
-              title="Lofi Rain Soundscape"
+              className={`study-top-btn ${hasWallpaper ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowWallpaperPicker(v => !v);
+                setShowAlarmPicker(false);
+              }}
+              title="Change nature wallpaper or session background"
             >
-              <Headphones size={13} />
-              <span>Rain</span>
+              <Image size={14} />
+              <span>Wallpaper</span>
+            </button>
+
+            {/* In-Study Wallpaper Picker Dropdown */}
+            {showWallpaperPicker && (
+              <div className="study-glass-dropdown wallpaper-dropdown" onClick={e => e.stopPropagation()}>
+                <div className="study-dropdown-head">
+                  <span>ATMOSPHERIC WALLPAPER</span>
+                  <button type="button" className="close-dropdown-x" onClick={() => setShowWallpaperPicker(false)}>×</button>
+                </div>
+                <div className="study-wp-grid">
+                  {(wallpapersList || []).map(wp => {
+                    const isSelected = appWallpaperId === wp.id;
+                    return (
+                      <button
+                        key={wp.id}
+                        type="button"
+                        className={`study-wp-opt ${isSelected ? 'selected' : ''}`}
+                        onClick={() => {
+                          if (typeof onSelectWallpaper === 'function') onSelectWallpaper(wp.id);
+                          setShowWallpaperPicker(false);
+                        }}
+                      >
+                        <img src={wp.url} alt={wp.name} className="study-wp-thumb" />
+                        <span className="study-wp-name">{wp.emoji} {wp.name}</span>
+                        {isSelected && <span className="study-wp-check">✓</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="study-wp-upload-row">
+                  <button
+                    type="button"
+                    className="study-wp-upload-btn"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload size={13} />
+                    <span>Upload Custom Image</span>
+                  </button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={(e) => {
+                      if (typeof onUploadWallpaper === 'function') onUploadWallpaper(e);
+                      setShowWallpaperPicker(false);
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                  {appWallpaperId !== 'none' && (
+                    <button
+                      type="button"
+                      className="study-wp-reset-btn"
+                      onClick={() => {
+                        if (typeof onResetWallpaper === 'function') onResetWallpaper();
+                        setShowWallpaperPicker(false);
+                      }}
+                    >
+                      Reset Native
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Soundscapes Selector Button & Bar */}
+          <div className="study-sound-pills-bar">
+            <button
+              type="button"
+              className={`sound-pill ${activeSound === 'rain' ? 'active' : ''}`}
+              onClick={() => handleSelectSound('rain')}
+              title="Real ambient rain sound"
+            >
+              🌧️ Rain
             </button>
             <button
               type="button"
-              className={`study-sound-btn ${soundscape === 'binaural' ? 'active' : ''}`}
-              onClick={() => handleToggleSoundscape('binaural')}
-              title="Binaural Alpha Waves"
+              className={`sound-pill ${activeSound === 'birds' ? 'active' : ''}`}
+              onClick={() => handleSelectSound('birds')}
+              title="Real forest bird sounds"
             >
-              <Headphones size={13} />
-              <span>Waves</span>
+              🐦 Birds
             </button>
-            {soundscape !== 'off' && (
+            <button
+              type="button"
+              className={`sound-pill ${activeSound === 'river' ? 'active' : ''}`}
+              onClick={() => handleSelectSound('river')}
+              title="Gentle river stream & nature"
+            >
+              🌊 River
+            </button>
+            <button
+              type="button"
+              className={`sound-pill ${activeSound === 'brown' ? 'active' : ''}`}
+              onClick={() => handleSelectSound('brown')}
+              title="Deep Brown Noise"
+            >
+              📻 Brown
+            </button>
+            <button
+              type="button"
+              className={`sound-pill ${activeSound === 'binaural' ? 'active' : ''}`}
+              onClick={() => handleSelectSound('binaural')}
+              title="40Hz Gamma Focus Waves"
+            >
+              🧠 Waves
+            </button>
+            {activeSound !== 'off' && (
               <button
                 type="button"
-                className="study-sound-btn mute"
-                onClick={() => handleToggleSoundscape('off')}
-                title="Mute Sound"
+                className="sound-pill mute-btn"
+                onClick={() => handleSelectSound(activeSound)}
+                title="Mute soundscape"
               >
                 <VolumeX size={13} />
               </button>
@@ -166,9 +299,9 @@ export default function StudyModeView({
         </div>
       </div>
 
-      {/* Main Study Card */}
+      {/* Central Floating Liquid Glass Study Card */}
       <div className="study-main-card">
-        {/* Japanese & Classical Watermark Kanji for Tokyo Lofi */}
+        {/* Japanese & Watermark kanji for Tokyo Lofi */}
         {theme === 'tokyo-lofi' && (
           <div className="study-kanji-watermark" aria-hidden="true">
             {isBreak ? '休息' : '集中'}
@@ -189,19 +322,19 @@ export default function StudyModeView({
           <h1 className="study-subject-title">{isBreak ? 'Relax & Recharge' : subjectTitle}</h1>
           <p className="study-subject-subtitle">
             {isBreak
-              ? 'Take a breath, stretch, drink water. Timer is paused.'
+              ? 'Take a breath, stretch, hydrate. Study timer is paused.'
               : subjectSubtitle}
           </p>
         </div>
 
-        {/* Giant Digital Aesthetic Timer */}
+        {/* Large Aesthetic Glass Timer */}
         <div className="study-timer-container">
           <div className={`study-timer-display ${isBreak ? 'break-timer' : ''}`}>
             {isBreak ? formatTime(breakSecondsLeft) : formatTime(seconds)}
           </div>
           <div className="study-timer-subline">
             {isBreak ? (
-              <span>Break remaining before study resumes</span>
+              <span>Break countdown before study resumes</span>
             ) : (
               <span>
                 {Math.floor(seconds / 60)}m focused · Target: {scheduledHours}h ({progressPercent}% of block)
@@ -209,7 +342,7 @@ export default function StudyModeView({
             )}
           </div>
 
-          {/* Visual Progress Line */}
+          {/* Visual Progress Bar */}
           {!isBreak && (
             <div className="study-progress-track">
               <div
@@ -226,7 +359,15 @@ export default function StudyModeView({
           <button
             type="button"
             className={`study-primary-btn ${isBreak ? (breakRunning ? 'pause' : 'resume') : (running ? 'pause' : 'resume')}`}
-            onClick={isBreak ? onToggleBreakRunning : onToggleRunning}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (isBreak) {
+                if (typeof onToggleBreakRunning === 'function') onToggleBreakRunning();
+              } else {
+                if (typeof onToggleRunning === 'function') onToggleRunning();
+              }
+            }}
           >
             {isBreak ? (
               breakRunning ? (
@@ -257,19 +398,27 @@ export default function StudyModeView({
           <button
             type="button"
             className="study-stop-btn"
-            onClick={onFinishSession}
-            title="Log elapsed study time and exit back to timetable"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (typeof onFinishSession === 'function') onFinishSession();
+            }}
+            title="Log elapsed study time and exit back to routine"
           >
             <Square size={16} />
             <span>Stop & Exit</span>
           </button>
 
           {/* Alarm Setting Button */}
-          <div className="study-alarm-anchor">
+          <div className="study-pop-anchor">
             <button
               type="button"
               className={`study-alarm-btn ${alarmMinutes ? 'has-alarm' : ''}`}
-              onClick={() => setShowAlarmPicker(v => !v)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAlarmPicker(v => !v);
+                setShowWallpaperPicker(false);
+              }}
               title="Set study duration alarm"
             >
               <Bell size={16} />
@@ -277,8 +426,11 @@ export default function StudyModeView({
             </button>
 
             {showAlarmPicker && (
-              <div className="study-alarm-dropdown">
-                <div className="alarm-dropdown-title">SET STUDY ALARM</div>
+              <div className="study-glass-dropdown alarm-dropdown" onClick={e => e.stopPropagation()}>
+                <div className="study-dropdown-head">
+                  <span>SET STUDY ALARM</span>
+                  <button type="button" className="close-dropdown-x" onClick={() => setShowAlarmPicker(false)}>×</button>
+                </div>
                 {[25, 45, 60, 90].map(mins => (
                   <button
                     key={mins}
@@ -318,7 +470,11 @@ export default function StudyModeView({
                 <button
                   type="button"
                   className="break-pill-btn"
-                  onClick={() => onStartBreak(5)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (typeof onStartBreak === 'function') onStartBreak(5);
+                  }}
                   title="Pause study & start 5 min break"
                 >
                   5 Min
@@ -326,7 +482,11 @@ export default function StudyModeView({
                 <button
                   type="button"
                   className="break-pill-btn"
-                  onClick={() => onStartBreak(10)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (typeof onStartBreak === 'function') onStartBreak(10);
+                  }}
                   title="Pause study & start 10 min break"
                 >
                   10 Min
@@ -334,7 +494,11 @@ export default function StudyModeView({
                 <button
                   type="button"
                   className="break-pill-btn"
-                  onClick={() => onStartBreak(15)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (typeof onStartBreak === 'function') onStartBreak(15);
+                  }}
                   title="Pause study & start 15 min break"
                 >
                   15 Min
@@ -346,7 +510,11 @@ export default function StudyModeView({
               <button
                 type="button"
                 className="resume-study-hero-btn"
-                onClick={onEndBreakAndResume}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (typeof onEndBreakAndResume === 'function') onEndBreakAndResume();
+                }}
               >
                 <Play size={16} />
                 <span>End Break & Resume Study Now</span>
@@ -354,7 +522,11 @@ export default function StudyModeView({
               <button
                 type="button"
                 className="extend-break-btn"
-                onClick={() => onExtendBreak(5)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (typeof onExtendBreak === 'function') onExtendBreak(5);
+                }}
               >
                 +5 Min
               </button>

@@ -523,9 +523,9 @@ const ATMOSPHERIC_WALLPAPERS = [
   },
   {
     id: 'forest',
-    name: 'Misty Bamboo Forest',
+    name: 'Misty Redwood Forest',
     sub: 'Deep soothing green canopy & soft morning fog',
-    url: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=1920&q=80',
+    url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80',
     tag: 'Forest',
     emoji: '🌲'
   },
@@ -3677,6 +3677,11 @@ const handleNudge = async (toUserId, toUsername) => {
             onExtendBreak={extendBreak}
             breakRunning={breakRunning}
             onToggleBreakRunning={toggleBreakRunning}
+            appWallpaperId={appWallpaperId}
+            onSelectWallpaper={handleSelectWallpaper}
+            onUploadWallpaper={handleUploadWallpaper}
+            onResetWallpaper={handleResetWallpaper}
+            wallpapersList={ATMOSPHERIC_WALLPAPERS}
             activeCheckpoint={(() => {
               const activeBlk = schedule.find(s => s.id === activeId);
               if (!activeBlk?.title) return null;
