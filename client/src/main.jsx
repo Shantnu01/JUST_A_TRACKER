@@ -1005,10 +1005,8 @@ function App() {
           const data = await response.json();
           if (mounted && Array.isArray(data) && data.length > 0) {
             setBaseSchedule(data);
-            setEditingSchedule(data);
             const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
             localStorage.setItem(storageKey, JSON.stringify(data));
-            localStorage.setItem('daymark-schedule', JSON.stringify(data));
           }
         }
       } catch {
@@ -2291,14 +2289,8 @@ function App() {
 
   const saveScheduleChanges = async () => {
     setBaseSchedule(editingSchedule);
-    setEditingSchedule(editingSchedule);
     const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
     localStorage.setItem(storageKey, JSON.stringify(editingSchedule));
-    localStorage.setItem('daymark-schedule', JSON.stringify(editingSchedule));
-    
-    // Clear any day override on current date so the newly saved routine takes effect immediately
-    revertDayScheduleOverride(key);
-
     try {
       const headers = {
         'Content-Type': 'application/json',
@@ -2326,8 +2318,6 @@ function App() {
     setBaseSchedule(defaultSchedule);
     const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
     localStorage.setItem(storageKey, JSON.stringify(defaultSchedule));
-    localStorage.setItem('daymark-schedule', JSON.stringify(defaultSchedule));
-    revertDayScheduleOverride(key);
     try {
       const headers = {
         'Content-Type': 'application/json',
@@ -3161,33 +3151,31 @@ const handleNudge = async (toUserId, toUsername) => {
             </div>
           </>
         )}
-        <header className={`topbar ${theme === 'tokyo-lofi' && view === 'Today' ? 'tokyo-minimal-topbar' : ''}`}>
+        {!(theme === 'tokyo-lofi' && view === 'Today') && (
+        <header className="topbar">
           <div>
-            {!(theme === 'tokyo-lofi' && view === 'Today') && (
-              <>
-                <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
-                <h1>
-                  {view === 'Today'
-                    ? isToday
-                      ? 'A calmer way to make progress'
-                      : isPast
-                      ? 'Archived Performance Record'
-                      : 'Upcoming Routine Plan'
-                    : view === 'Stage Roadmaps'
-                    ? 'Stage Roadmaps & Checkpoint Hub'
-                    : view === 'Weekly report'
-                    ? 'Your progress, at a glance'
-                    : view === 'Study pods'
-                    ? 'Competitive Study Pod'
-                    : view === 'Coding'
-                    ? 'Developer & DSA Performance Hub'
-                    : 'Customize your routine schedule'}
-                </h1>
-              </>
-            )}
+            <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
+            <h1>
+              {view === 'Today'
+                ? isToday
+                  ? 'A calmer way to make progress'
+                  : isPast
+                  ? 'Archived Performance Record'
+                  : 'Upcoming Routine Plan'
+                : view === 'Stage Roadmaps'
+                ? 'Stage Roadmaps & Checkpoint Hub'
+                : view === 'Weekly report'
+                ? 'Your progress, at a glance'
+                : view === 'Study pods'
+                ? 'Competitive Study Pod'
+                : view === 'Coding'
+                ? 'Developer & DSA Performance Hub'
+                : 'Customize your routine schedule'}
+            </h1>
           </div>
           {renderTopActions()}
         </header>
+      )}
 
         {view === 'Today' && (
           <>
@@ -3262,6 +3250,7 @@ const handleNudge = async (toUserId, toUsername) => {
                     <Brain size={13} />
                     <span>Synaptic Bridge</span>
                   </button>
+                  {theme === 'tokyo-lofi' && isToday && renderTopActions()}
                 </div>
                 {theme !== 'tokyo-lofi' && (
                   <p className="subhead">
@@ -3889,7 +3878,6 @@ const handleNudge = async (toUserId, toUsername) => {
             setToast={setToast}
             onJumpToToday={() => setView('Today')}
             theme={theme}
-            columnStyle={columnStyle}
           />
         )}
 
