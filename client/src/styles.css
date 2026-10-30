@@ -19691,20 +19691,29 @@ html[data-theme="tokyo-lofi"],
    Completely replaces washed-out grey and foggy green text with deep legible shades
    ========================================================================== */
 
-/* 1. Habit Row Cards: Solid Bright White Capsule with Pitch-Black Typography */
+/* 1. Habit Row Cards: Keep Transparent / Glass Columns with Darker #222826 Text */
 .habit-row,
 [data-column-style="transparent"] .habit-row,
 [data-column-style="liquid-glass"] .habit-row,
 [data-column-style="smoky"] .habit-row,
 [data-has-wallpaper="true"] .habit-row {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(0, 0, 0, 0.12) !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
   border-radius: 16px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
-  color: #000000 !important;
-  padding: 12px 16px !important;
-  margin-bottom: 9px !important;
+  margin-bottom: 7px !important;
+  padding: 10px 14px !important;
+  color: #222826 !important;
   opacity: 1 !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-column-style="transparent"] .habit-row {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: none !important;
 }
 
 .habit-row:hover,
@@ -19712,89 +19721,89 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="liquid-glass"] .habit-row:hover,
 [data-column-style="smoky"] .habit-row:hover,
 [data-has-wallpaper="true"] .habit-row:hover {
-  background: #f8fafc !important;
-  border-color: #000000 !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-  transform: translateY(-1px) !important;
+  background: rgba(255, 255, 255, 0.26) !important;
+  border-color: rgba(255, 255, 255, 0.52) !important;
+  transform: translateY(-1px) translateX(1px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
+[data-column-style="transparent"] .habit-row:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Habit text color: Crisp Dark #222826 */
 .habit-row span:not(.check-box):not(.habit-logged-pill),
 [data-column-style="transparent"] .habit-row span:not(.check-box):not(.habit-logged-pill),
 [data-has-wallpaper="true"] .habit-row span:not(.check-box):not(.habit-logged-pill) {
-  color: #000000 !important;
-  font-weight: 800 !important;
-  font-size: 13.5px !important;
-  letter-spacing: -0.2px !important;
+  color: #222826 !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  letter-spacing: -0.15px !important;
   text-shadow: none !important;
 }
 
-/* Checked Habits: Crisp, Vibrant Solid Green */
-.habit-row.checked,
-[data-has-wallpaper="true"] .habit-row.checked {
-  background: #f0fdf4 !important;
-  border-color: #16a34a !important;
-}
-
+/* Checked Habits */
 .habit-row.checked span:not(.check-box):not(.habit-logged-pill) {
   color: #15803d !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   text-decoration: line-through;
 }
 
-/* Locked & Inactive Habits: Solid Black Tone (Zero foggy grey) */
-.habit-row.locked-goal,
-[data-has-wallpaper="true"] .habit-row.locked-goal {
-  background: #ffffff !important;
-  border-color: rgba(0, 0, 0, 0.12) !important;
-  opacity: 1 !important;
-}
-
+/* Locked & Inactive Habits: Dark #222826 tone */
 .habit-row.locked-goal span:not(.check-box):not(.habit-logged-pill) {
-  color: #000000 !important;
-  font-weight: 800 !important;
-  opacity: 1 !important;
+  color: #222826 !important;
+  font-weight: 700 !important;
+  opacity: 0.9 !important;
 }
 
-/* Checkbox inside habit row */
+/* Checkbox inside habit row: Clean translucent glass */
 .habit-row .check-box,
-[data-has-wallpaper="true"] .habit-row .check-box {
-  background: #ffffff !important;
-  border: 2px solid #000000 !important;
-  border-radius: 8px !important;
-  box-shadow: none !important;
-  color: #000000 !important;
+[data-has-wallpaper="true"] .habit-row .check-box,
+[data-column-style="transparent"] .habit-row .check-box {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  border-radius: 6px !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  color: #222826 !important;
 }
 
 .habit-row.checked .check-box,
-[data-has-wallpaper="true"] .habit-row.checked .check-box {
-  background: #16a34a !important;
-  border-color: #16a34a !important;
-  color: #ffffff !important;
+[data-has-wallpaper="true"] .habit-row.checked .check-box,
+[data-column-style="transparent"] .habit-row.checked .check-box {
+  background: #10B981 !important;
+  border-color: #10B981 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6) !important;
 }
 
 /* 2. Habit Logged Status Pills */
 .habit-logged-pill,
-[data-has-wallpaper="true"] .habit-logged-pill {
-  color: #000000 !important;
-  font-weight: 800 !important;
-  background: #f1f5f9 !important;
-  border: 1.5px solid #64748b !important;
+[data-has-wallpaper="true"] .habit-logged-pill,
+[data-column-style="transparent"] .habit-logged-pill {
+  color: #222826 !important;
+  font-weight: 700 !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
   text-shadow: none !important;
 }
 
 .habit-logged-pill.eligible,
 .habit-logged-pill.checked,
 [data-has-wallpaper="true"] .habit-logged-pill.eligible,
-[data-has-wallpaper="true"] .habit-logged-pill.checked {
+[data-has-wallpaper="true"] .habit-logged-pill.checked,
+[data-column-style="transparent"] .habit-logged-pill.eligible,
+[data-column-style="transparent"] .habit-logged-pill.checked {
   color: #14532d !important;
-  background: #dcfce7 !important;
-  border: 1.5px solid #16a34a !important;
-  font-weight: 800 !important;
+  background: rgba(34, 197, 94, 0.28) !important;
+  border: 1px solid rgba(22, 101, 52, 0.45) !important;
+  font-weight: 700 !important;
 }
 
 /* 3. Panel Headings on Dark Container */
 .habits-panel .panel-heading h3 {
-  color: #86efac !important; /* Luminous green on dark panel */
+  color: #86efac !important;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
   font-weight: 800 !important;
 }
@@ -19807,10 +19816,12 @@ html[data-theme="tokyo-lofi"],
 }
 
 .habits-panel .count-badge {
-  background: #ffffff !important;
-  color: #000000 !important;
-  border: 2px solid #000000 !important;
-  font-weight: 800 !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.38) !important;
+  backdrop-filter: blur(10px) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
 }
 
 .habit-progress .progress-caption span {
