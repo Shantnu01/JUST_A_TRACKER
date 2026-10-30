@@ -364,20 +364,9 @@ export default function StudyModeView({
           <div className={`study-timer-display ${isBreak ? 'break-timer' : ''}`}>
             {isBreak ? formatTime(breakSecondsLeft) : formatTime(seconds)}
           </div>
-          {/* Break subline only; removed study time spent text as requested */}
           {isBreak && (
             <div className="study-timer-subline">
               <span>Break countdown before study resumes</span>
-            </div>
-          )}
-
-          {/* Visual Progress Bar */}
-          {!isBreak && (
-            <div className="study-progress-track">
-              <div
-                className="study-progress-bar"
-                style={{ width: `${progressPercent}%` }}
-              />
             </div>
           )}
         </div>
