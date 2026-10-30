@@ -21,6 +21,7 @@ import {
   Milestone,
   Layers,
   ArrowUpRight,
+  ArrowRight,
   Award,
   Bell,
   PanelLeftClose,
@@ -2103,16 +2104,16 @@ function App() {
       }
     }
 
-    if (activeId && isToday) {
-      const mins = Math.max(1, Math.round(seconds / 60));
+    const loggedMinsActual = Math.floor(seconds / 60);
+    if (activeId && isToday && loggedMinsActual > 0) {
       const previous = day.completedMinutes?.[activeId] || 0;
-      patchDay({ completedMinutes: { ...(day.completedMinutes || {}), [activeId]: previous + mins } });
+      patchDay({ completedMinutes: { ...(day.completedMinutes || {}), [activeId]: previous + loggedMinsActual } });
       playChime();
 
       // Trigger Micro-Artifact Proof of Work prompt
       const taskObj = schedule.find(s => s.id === activeId);
       if (taskObj) {
-        setClosingTask({ ...taskObj, loggedMins: mins });
+        setClosingTask({ ...taskObj, loggedMins: loggedMinsActual });
         setArtifactNotes('');
         setArtifactUrl('');
         setArtifactModalOpen(true);
@@ -2127,7 +2128,7 @@ function App() {
     setBreakSecondsLeft(0);
     setBreakRunning(false);
     setStudyModeActive(false);
-    setToast('Session logged');
+    setToast(loggedMinsActual > 0 ? `${loggedMinsActual}m session logged` : 'Session ended');
     setTimeout(() => setToast(''), 2200);
   };
 
@@ -3698,6 +3699,7 @@ const handleNudge = async (toUserId, toUsername) => {
         {studyModeActive && activeId ? (
           <StudyModeView
             activeBlock={schedule.find(s => s.id === activeId)}
+            loggedMinutes={day.completedMinutes?.[activeId] || 0}
             seconds={seconds}
             running={running}
             onToggleRunning={() => setRunning(r => !r)}
@@ -4113,6 +4115,20 @@ const handleNudge = async (toUserId, toUsername) => {
                     const Icon = iconMap[item.icon] || Clock3;
                     const isActive = isToday && activeId === item.id;
                     const logged = day.completedMinutes?.[item.id] || 0;
+                    const totalDurationHours = item.hours || computeDurationHours(item.start, item.end);
+                    const totalBlockMins = Math.round(totalDurationHours * 60);
+                    const activeSessionMins = isActive ? Math.floor(seconds / 60) : 0;
+                    const totalDoneMins = logged + activeSessionMins;
+                    const remMins = Math.max(0, totalBlockMins - totalDoneMins);
+                    const remH = Math.floor(remMins / 60);
+                    const remM = remMins % 60;
+                    const durationPillText = totalDoneMins > 0
+                      ? remMins === 0
+                        ? '✓ Done'
+                        : remH > 0
+                          ? (remM > 0 ? `${remH}h ${remM}m left` : `${remH}h left`)
+                          : `${remM}m left`
+                      : `${totalDurationHours}h`;
                     return (
                       <article className={`schedule-item ${item.tone} ${isActive ? 'active-session' : ''}`} key={item.id}>
                         <div className="time-col">
@@ -4125,7 +4141,9 @@ const handleNudge = async (toUserId, toUsername) => {
                         <div className="event-body">
                           <div className="event-title-row">
                             <h4>{item.title}</h4>
-                            <span className="duration-pill">{item.hours || computeDurationHours(item.start, item.end)}h</span>
+                            <span className={`duration-pill ${totalDoneMins > 0 ? (remMins === 0 ? 'done' : 'remaining') : ''}`}>
+                              {durationPillText}
+                            </span>
                           </div>
                           <p>{item.subtitle}</p>
                           {/* Timetable Single-Row Current Checkpoint (Clean, Zero Clutter) */}

@@ -19453,3 +19453,15 @@ html[data-theme="tokyo-lofi"],
   -webkit-backdrop-filter: blur(14px) !important;
   border: 1px solid rgba(255, 255, 255, 0.32) !important;
 }
+
+/* Accurate Remaining Time Status Pill */
+.duration-pill.done {
+  background: rgba(16, 185, 129, 0.16) !important;
+  color: #10b981 !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  font-weight: 600 !important;
+}
+
+.duration-pill.remaining {
+  font-weight: 600 !important;
+}

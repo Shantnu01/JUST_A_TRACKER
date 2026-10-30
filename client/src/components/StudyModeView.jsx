@@ -25,6 +25,7 @@ import { playFocusSound, stopFocusSound, setSoundVolume, getActiveSoundType } fr
 
 export default function StudyModeView({
   activeBlock,
+  loggedMinutes = 0,
   seconds,
   running,
   onToggleRunning,
@@ -126,8 +127,18 @@ export default function StudyModeView({
   const subjectTitle = activeBlock?.title || 'Deep Focus Session';
   const subjectSubtitle = activeCheckpoint?.title || activeBlock?.subtitle || 'Maintain deep flow & deliberate focus';
   const scheduledHours = activeBlock?.hours || 1;
-  const scheduledSecs = scheduledHours * 3600;
-  const progressPercent = Math.min(100, Math.round((seconds / scheduledSecs) * 100));
+  const scheduledTotalMins = Math.round(scheduledHours * 60);
+  const currentSessionMins = Math.floor(seconds / 60);
+  const totalCompletedMins = (loggedMinutes || 0) + currentSessionMins;
+  const remainingMins = Math.max(0, scheduledTotalMins - totalCompletedMins);
+  const remH = Math.floor(remainingMins / 60);
+  const remM = remainingMins % 60;
+  const timeLeftLabel = remainingMins === 0
+    ? 'Target completed'
+    : remH > 0
+      ? (remM > 0 ? `${remH}h ${remM}m left` : `${remH}h left`)
+      : `${remM}m left`;
+  const progressPercent = Math.min(100, Math.round((totalCompletedMins / scheduledTotalMins) * 100));
 
   return (
     <div
@@ -318,7 +329,24 @@ export default function StudyModeView({
               ? 'BREAK & RECOVERY'
               : 'ACTIVE STUDY FOCUS'}
           </span>
-          <h1 className="study-subject-title">{isBreak ? 'Relax & Recharge' : subjectTitle}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <h1 className="study-subject-title">{isBreak ? 'Relax & Recharge' : subjectTitle}</h1>
+            {!isBreak && (
+              <span style={{
+                fontSize: '11px',
+                fontWeight: '700',
+                padding: '3px 10px',
+                borderRadius: '999px',
+                background: remainingMins === 0 ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255, 255, 255, 0.18)',
+                color: remainingMins === 0 ? '#10b981' : 'inherit',
+                border: '1px solid rgba(255, 255, 255, 0.22)',
+                letterSpacing: '0.4px',
+                backdropFilter: 'blur(8px)'
+              }}>
+                {timeLeftLabel}
+              </span>
+            )}
+          </div>
           <p className="study-subject-subtitle">
             {isBreak
               ? 'Take a breath, stretch, hydrate. Study timer is paused.'
@@ -336,7 +364,7 @@ export default function StudyModeView({
               <span>Break countdown before study resumes</span>
             ) : (
               <span>
-                {Math.floor(seconds / 60)}m focused · Target: {scheduledHours}h ({progressPercent}% of block)
+                <strong>{timeLeftLabel}</strong> · {currentSessionMins}m focused now ({totalCompletedMins}m of {scheduledHours}h total target)
               </span>
             )}
           </div>
