@@ -13967,20 +13967,15 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .roadmap-outline-panel,
 [data-column-style="transparent"] .dsa-potd-card,
 [data-column-style="transparent"] .tokyo-soundscape-card,
+[data-column-style="transparent"] .tokyo-wallpaper-setting-card,
 [data-column-style="transparent"] .column-style-setting-card,
 [data-column-style="transparent"] .column-style-setting-compact,
-[data-column-style="transparent"] .single-stage-focused-card,
+[data-column-style="transparent"] .roadmap-hub-header,
 [data-column-style="transparent"] .roadmap-command-center,
+[data-column-style="transparent"] .single-stage-focused-card,
 [data-column-style="transparent"] .roadmap-blank-creator-card,
 [data-column-style="transparent"] .creator-option-box,
 [data-column-style="transparent"] .roadmap-outline-editor-card,
-[data-column-style="transparent"] .stage-tabs-navigation-bar,
-[data-column-style="transparent"] .stage-roadmaps-hub,
-[data-column-style="transparent"] .roadmap-subjects-tabs,
-[data-column-style="transparent"] .stage-focus-add-checkpoint-row,
-[data-column-style="transparent"] .stage-footer-nav,
-[data-column-style="transparent"] .roadmap-format-guide-box,
-[data-column-style="transparent"] .creator-paste-section,
 [data-column-style="transparent"] .checkpoint-hover-tooltip {
   background: transparent !important;
   background-color: transparent !important;
@@ -14044,13 +14039,13 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .tokyo-clock-card,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .column-style-setting-card,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .column-style-setting-compact,
-[data-theme="tokyo-lofi"][data-column-style="transparent"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .tokyo-wallpaper-setting-card,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-hub-header,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-command-center,
-[data-theme="tokyo-lofi"][data-column-style="transparent"] .stage-focus-header,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .single-stage-focused-card,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-blank-creator-card,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .creator-option-box,
-[data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-outline-editor-card,
-[data-theme="tokyo-lofi"][data-column-style="transparent"] .stage-tabs-navigation-bar {
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-outline-editor-card {
   border-color: rgba(245, 158, 11, 0.26) !important;
   box-shadow: inset 0 1px 1px 0 rgba(255, 220, 160, 0.4), 0 16px 40px rgba(0, 0, 0, 0.35) !important;
 }
@@ -14110,20 +14105,15 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="liquid-glass"] .roadmap-outline-panel,
 [data-column-style="liquid-glass"] .dsa-potd-card,
 [data-column-style="liquid-glass"] .tokyo-soundscape-card,
+[data-column-style="liquid-glass"] .tokyo-wallpaper-setting-card,
 [data-column-style="liquid-glass"] .column-style-setting-card,
 [data-column-style="liquid-glass"] .column-style-setting-compact,
-[data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-column-style="liquid-glass"] .roadmap-hub-header,
 [data-column-style="liquid-glass"] .roadmap-command-center,
+[data-column-style="liquid-glass"] .single-stage-focused-card,
 [data-column-style="liquid-glass"] .roadmap-blank-creator-card,
 [data-column-style="liquid-glass"] .creator-option-box,
 [data-column-style="liquid-glass"] .roadmap-outline-editor-card,
-[data-column-style="liquid-glass"] .stage-tabs-navigation-bar,
-[data-column-style="liquid-glass"] .stage-roadmaps-hub,
-[data-column-style="liquid-glass"] .roadmap-subjects-tabs,
-[data-column-style="liquid-glass"] .stage-focus-add-checkpoint-row,
-[data-column-style="liquid-glass"] .stage-footer-nav,
-[data-column-style="liquid-glass"] .roadmap-format-guide-box,
-[data-column-style="liquid-glass"] .creator-paste-section,
 [data-column-style="liquid-glass"] .checkpoint-hover-tooltip {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
   backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
@@ -14159,13 +14149,13 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .tokyo-clock-card,
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .column-style-setting-card,
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .column-style-setting-compact,
-[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .tokyo-wallpaper-setting-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-hub-header,
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-command-center,
-[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-focus-header,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .single-stage-focused-card,
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-blank-creator-card,
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .creator-option-box,
-[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-outline-editor-card,
-[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-tabs-navigation-bar {
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-outline-editor-card {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.11) 0%, rgba(28, 25, 40, 0.32) 100%) !important;
   border-color: rgba(245, 158, 11, 0.3) !important;
   box-shadow: inset 0 1.5px 1px 0 rgba(255, 220, 150, 0.5), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2), 0 20px 50px rgba(0, 0, 0, 0.45) !important;
@@ -14221,20 +14211,15 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="smoky"] .roadmap-outline-panel,
 [data-column-style="smoky"] .dsa-potd-card,
 [data-column-style="smoky"] .tokyo-soundscape-card,
+[data-column-style="smoky"] .tokyo-wallpaper-setting-card,
 [data-column-style="smoky"] .column-style-setting-card,
 [data-column-style="smoky"] .column-style-setting-compact,
-[data-column-style="smoky"] .single-stage-focused-card,
+[data-column-style="smoky"] .roadmap-hub-header,
 [data-column-style="smoky"] .roadmap-command-center,
+[data-column-style="smoky"] .single-stage-focused-card,
 [data-column-style="smoky"] .roadmap-blank-creator-card,
 [data-column-style="smoky"] .creator-option-box,
 [data-column-style="smoky"] .roadmap-outline-editor-card,
-[data-column-style="smoky"] .stage-tabs-navigation-bar,
-[data-column-style="smoky"] .stage-roadmaps-hub,
-[data-column-style="smoky"] .roadmap-subjects-tabs,
-[data-column-style="smoky"] .stage-focus-add-checkpoint-row,
-[data-column-style="smoky"] .stage-footer-nav,
-[data-column-style="smoky"] .roadmap-format-guide-box,
-[data-column-style="smoky"] .creator-paste-section,
 [data-column-style="smoky"] .checkpoint-hover-tooltip {
   background: rgba(8, 9, 15, 0.82) !important;
   backdrop-filter: blur(28px) saturate(130%) !important;
@@ -14281,15 +14266,62 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .metric-card,
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .streak-card,
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .column-style-setting-compact,
-[data-theme="tokyo-lofi"][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .tokyo-wallpaper-setting-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-hub-header,
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-command-center,
-[data-theme="tokyo-lofi"][data-column-style="smoky"] .stage-focus-header,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .single-stage-focused-card,
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-blank-creator-card,
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .creator-option-box,
-[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-outline-editor-card,
-[data-theme="tokyo-lofi"][data-column-style="smoky"] .stage-tabs-navigation-bar {
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-outline-editor-card {
   background: rgba(14, 12, 22, 0.85) !important;
   border-color: rgba(245, 158, 11, 0.18) !important;
+}
+
+/* Stage Roadmaps Layout Containers: Must NEVER be an outer block */
+.stage-roadmaps-hub,
+[data-column-style] .stage-roadmaps-hub,
+[data-theme="tokyo-lofi"] .stage-roadmaps-hub,
+[data-theme="tokyo-lofi"][data-column-style] .stage-roadmaps-hub {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.roadmap-subjects-tabs,
+[data-column-style] .roadmap-subjects-tabs,
+[data-theme="tokyo-lofi"] .roadmap-subjects-tabs,
+[data-theme="tokyo-lofi"][data-column-style] .roadmap-subjects-tabs {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.stage-tabs-navigation-bar,
+[data-column-style] .stage-tabs-navigation-bar,
+.stage-focus-header,
+[data-column-style] .stage-focus-header,
+.stage-focus-checkpoints-list,
+[data-column-style] .stage-focus-checkpoints-list,
+.stage-focus-add-checkpoint-row,
+[data-column-style] .stage-focus-add-checkpoint-row,
+.stage-footer-nav,
+[data-column-style] .stage-footer-nav {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* Backwards compatibility for 'translucent' alias */
