@@ -19465,3 +19465,223 @@ html[data-theme="tokyo-lofi"],
 .duration-pill.remaining {
   font-weight: 600 !important;
 }
+
+/* ==========================================================================
+   HIGH-CONTRAST LEGIBILITY FOR HABITS, ALARMS & RIGHT COLUMN PANELS
+   Fixes dark text on dark glass / wallpaper backgrounds across all themes
+   ========================================================================== */
+
+/* 1. Panel Headings & Eyebrows */
+[data-has-wallpaper="true"] .habits-panel .panel-heading .eyebrow,
+[data-column-style="transparent"] .habits-panel .panel-heading .eyebrow,
+[data-column-style="smoky"] .habits-panel .panel-heading .eyebrow,
+[data-has-wallpaper="true"] .alarm-panel .panel-heading .eyebrow,
+[data-column-style="transparent"] .alarm-panel .panel-heading .eyebrow,
+[data-column-style="smoky"] .alarm-panel .panel-heading .eyebrow {
+  color: #E2E8F0 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75) !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 700 !important;
+}
+
+[data-has-wallpaper="true"] .habits-panel .panel-heading h3,
+[data-column-style="transparent"] .habits-panel .panel-heading h3,
+[data-column-style="smoky"] .habits-panel .panel-heading h3,
+[data-has-wallpaper="true"] .alarm-panel .panel-heading h3,
+[data-column-style="transparent"] .alarm-panel .panel-heading h3,
+[data-column-style="smoky"] .alarm-panel .panel-heading h3 {
+  color: #FAF8FF !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Theme-specific bright heading accents */
+[data-has-wallpaper="true"][data-theme="ghibli-meadow"] .habits-panel .panel-heading h3,
+[data-column-style="transparent"][data-theme="ghibli-meadow"] .habits-panel .panel-heading h3,
+[data-column-style="smoky"][data-theme="ghibli-meadow"] .habits-panel .panel-heading h3 {
+  color: #86efac !important; /* Fresh luminous mint */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-has-wallpaper="true"][data-theme="zen-paper"] .habits-panel .panel-heading h3,
+[data-column-style="transparent"][data-theme="zen-paper"] .habits-panel .panel-heading h3,
+[data-column-style="smoky"][data-theme="zen-paper"] .habits-panel .panel-heading h3 {
+  color: #fca5a5 !important; /* Sakura red coral */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-has-wallpaper="true"][data-theme="warm-parchment"] .habits-panel .panel-heading h3,
+[data-column-style="transparent"][data-theme="warm-parchment"] .habits-panel .panel-heading h3,
+[data-column-style="smoky"][data-theme="warm-parchment"] .habits-panel .panel-heading h3 {
+  color: #fde68a !important; /* Amber gold */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Count Badge (e.g. 0/6) */
+[data-has-wallpaper="true"] .habits-panel .count-badge,
+[data-column-style="transparent"] .habits-panel .count-badge,
+[data-column-style="smoky"] .habits-panel .count-badge {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.38) !important;
+  backdrop-filter: blur(10px) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 2. Habit Rows: Glass Capsules & High-Contrast Typography */
+[data-has-wallpaper="true"] .habit-row,
+[data-column-style="transparent"] .habit-row,
+[data-column-style="smoky"] .habit-row {
+  background: rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.32) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  border-radius: 16px !important;
+  margin-bottom: 7px !important;
+  color: #FAF8FF !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-has-wallpaper="true"] .habit-row:hover,
+[data-column-style="transparent"] .habit-row:hover,
+[data-column-style="smoky"] .habit-row:hover {
+  background: rgba(255, 255, 255, 0.26) !important;
+  border-color: rgba(255, 255, 255, 0.52) !important;
+  transform: translateY(-1px) translateX(1px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-has-wallpaper="true"] .habit-row span,
+[data-column-style="transparent"] .habit-row span,
+[data-column-style="smoky"] .habit-row span {
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Checkbox contrast */
+[data-has-wallpaper="true"] .habit-row .check-box,
+[data-column-style="transparent"] .habit-row .check-box,
+[data-column-style="smoky"] .habit-row .check-box {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  color: #FFFFFF !important;
+}
+
+[data-has-wallpaper="true"] .habit-row.checked .check-box,
+[data-column-style="transparent"] .habit-row.checked .check-box,
+[data-column-style="smoky"] .habit-row.checked .check-box {
+  background: #10B981 !important;
+  border-color: #10B981 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6) !important;
+}
+
+/* Habit Logged Pill (e.g. 0h 11m (6%)) */
+[data-has-wallpaper="true"] .habit-logged-pill,
+[data-column-style="transparent"] .habit-logged-pill,
+[data-column-style="smoky"] .habit-logged-pill {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #FAF8FF !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-has-wallpaper="true"] .habit-logged-pill.eligible,
+[data-column-style="transparent"] .habit-logged-pill.eligible,
+[data-column-style="smoky"] .habit-logged-pill.eligible {
+  background: rgba(34, 197, 94, 0.32) !important;
+  color: #86efac !important;
+  border-color: rgba(74, 222, 128, 0.5) !important;
+}
+
+[data-has-wallpaper="true"] .habit-logged-pill.checked,
+[data-column-style="transparent"] .habit-logged-pill.checked,
+[data-column-style="smoky"] .habit-logged-pill.checked {
+  background: rgba(16, 185, 129, 0.45) !important;
+  color: #d1fae5 !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+}
+
+/* 3. Consistency Footer & Progress Bar */
+[data-has-wallpaper="true"] .habit-progress .progress-caption span,
+[data-column-style="transparent"] .habit-progress .progress-caption span,
+[data-column-style="smoky"] .habit-progress .progress-caption span {
+  color: #E2E8F0 !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75) !important;
+}
+
+[data-has-wallpaper="true"] .habit-progress .progress-caption strong,
+[data-column-style="transparent"] .habit-progress .progress-caption strong,
+[data-column-style="smoky"] .habit-progress .progress-caption strong {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-has-wallpaper="true"][data-theme="ghibli-meadow"] .habit-progress .progress-caption strong,
+[data-column-style="transparent"][data-theme="ghibli-meadow"] .habit-progress .progress-caption strong {
+  color: #86efac !important;
+}
+
+[data-has-wallpaper="true"][data-theme="zen-paper"] .habit-progress .progress-caption strong,
+[data-column-style="transparent"][data-theme="zen-paper"] .habit-progress .progress-caption strong {
+  color: #fca5a5 !important;
+}
+
+[data-has-wallpaper="true"][data-theme="warm-parchment"] .habit-progress .progress-caption strong,
+[data-column-style="transparent"][data-theme="warm-parchment"] .habit-progress .progress-caption strong {
+  color: #fde68a !important;
+}
+
+[data-has-wallpaper="true"] .habit-progress .progress-track,
+[data-column-style="transparent"] .habit-progress .progress-track,
+[data-column-style="smoky"] .habit-progress .progress-track {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-has-wallpaper="true"] .habit-progress .progress-track div,
+[data-column-style="transparent"] .habit-progress .progress-track div,
+[data-column-style="smoky"] .habit-progress .progress-track div {
+  background: #10B981 !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.65) !important;
+}
+
+/* 4. Routine Alarms Panel High-Contrast Styling */
+[data-has-wallpaper="true"] .alarm-row,
+[data-column-style="transparent"] .alarm-row,
+[data-column-style="smoky"] .alarm-row {
+  background: rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 14px !important;
+  color: #FAF8FF !important;
+}
+
+[data-has-wallpaper="true"] .alarm-time,
+[data-column-style="transparent"] .alarm-time,
+[data-has-wallpaper="true"] .alarm-label,
+[data-column-style="transparent"] .alarm-label {
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65) !important;
+}
+
+[data-has-wallpaper="true"] .alarm-foot,
+[data-column-style="transparent"] .alarm-foot {
+  color: #E2E8F0 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-has-wallpaper="true"] .test-sound-btn,
+[data-column-style="transparent"] .test-sound-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
