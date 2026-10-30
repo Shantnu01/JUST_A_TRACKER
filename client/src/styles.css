@@ -19466,6 +19466,9 @@ html[data-theme="tokyo-lofi"],
   font-weight: 600 !important;
 }
 
+
+/* High-contrast overrides for light themes (Tokyo Lofi strictly preserves its original v1 UI) */
+html:not([data-theme="tokyo-lofi"]) {
 /* ==========================================================================
    HIGH-CONTRAST LEGIBILITY FOR HABITS, ALARMS & RIGHT COLUMN PANELS
    Fixes dark text on dark glass / wallpaper backgrounds across all themes
@@ -19950,6 +19953,8 @@ html[data-theme="tokyo-lofi"],
 [data-theme="spider-verse"] .habit-row span,
 [data-theme="spider-verse"] .event-body p {
   color: #FFE600 !important;
+}
+
 }
 
 /* Modal Overlay & Synaptic Bridge z-index elevation: Always on top of fullscreen StudyMode */
