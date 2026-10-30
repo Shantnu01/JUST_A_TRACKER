@@ -285,6 +285,7 @@ export default function StudyModeView({
           <button
             type="button"
             className="study-minimize-btn"
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -292,7 +293,7 @@ export default function StudyModeView({
                 onMinimize();
               }
             }}
-            title="Minimize to dashboard (Timer keeps running in background)"
+            title="Return to dashboard (Timer keeps running in background)"
           >
             <Minimize2 size={14} />
             <span>Dashboard</span>

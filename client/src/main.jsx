@@ -56,6 +56,7 @@ import {
   Medal,
   Menu,
   Moon, Palette,
+  Maximize2,
   Upload,
   Pause,
   Play,
@@ -3145,6 +3146,24 @@ const handleNudge = async (toUserId, toUsername) => {
 
   const renderTopActions = () => (
     <div className="top-actions">
+      {/* Active Focus Session - Quick Study Mode Return Button */}
+      {activeId && !studyModeActive && (
+        <button
+          type="button"
+          className="top-action-pill study-mode-return-pill"
+          onClick={() => {
+            setStudyModeActive(true);
+            setToast('Returned to Study Mode');
+            setTimeout(() => setToast(''), 2000);
+          }}
+          title="Return to fullscreen Study Mode"
+        >
+          <span className={`study-top-pulse-dot ${running ? 'pulse' : ''}`} />
+          <Maximize2 size={13} />
+          <span>Study Mode</span>
+        </button>
+      )}
+
       {/* Quick Action Pills on Today (Evening Closeout & Synaptic Bridge) */}
       {view === 'Today' && isToday && (
         <div className="top-quick-actions">
