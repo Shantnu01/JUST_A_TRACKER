@@ -19691,76 +19691,146 @@ html[data-theme="tokyo-lofi"],
    Completely replaces washed-out grey and foggy green text with deep legible shades
    ========================================================================== */
 
-/* 1. Habit Row Text (DSA · 3 hours, Project · 6 hours, etc.) */
-.habit-row {
-  color: #0a0a0a !important;
+/* 1. Habit Row Cards: Solid Bright White Capsule with Pitch-Black Typography */
+.habit-row,
+[data-column-style="transparent"] .habit-row,
+[data-column-style="liquid-glass"] .habit-row,
+[data-column-style="smoky"] .habit-row,
+[data-has-wallpaper="true"] .habit-row {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+  color: #000000 !important;
+  padding: 12px 16px !important;
+  margin-bottom: 9px !important;
+  opacity: 1 !important;
 }
 
-.habit-row span:not(.check-box):not(.habit-logged-pill) {
-  color: #0a0a0a !important;
-  font-weight: 700 !important;
+.habit-row:hover,
+[data-column-style="transparent"] .habit-row:hover,
+[data-column-style="liquid-glass"] .habit-row:hover,
+[data-column-style="smoky"] .habit-row:hover,
+[data-has-wallpaper="true"] .habit-row:hover {
+  background: #f8fafc !important;
+  border-color: #000000 !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.habit-row span:not(.check-box):not(.habit-logged-pill),
+[data-column-style="transparent"] .habit-row span:not(.check-box):not(.habit-logged-pill),
+[data-has-wallpaper="true"] .habit-row span:not(.check-box):not(.habit-logged-pill) {
+  color: #000000 !important;
+  font-weight: 800 !important;
+  font-size: 13.5px !important;
   letter-spacing: -0.2px !important;
+  text-shadow: none !important;
 }
 
 /* Checked Habits: Crisp, Vibrant Solid Green */
-.habit-row.checked span:not(.check-box):not(.habit-logged-pill) {
-  color: #15803d !important;
-  font-weight: 700 !important;
+.habit-row.checked,
+[data-has-wallpaper="true"] .habit-row.checked {
+  background: #f0fdf4 !important;
+  border-color: #16a34a !important;
 }
 
-/* Locked & Inactive Habits: Solid, Dark Readable Tone (NO foggy grey) */
+.habit-row.checked span:not(.check-box):not(.habit-logged-pill) {
+  color: #15803d !important;
+  font-weight: 800 !important;
+  text-decoration: line-through;
+}
+
+/* Locked & Inactive Habits: Solid Black Tone (Zero foggy grey) */
+.habit-row.locked-goal,
+[data-has-wallpaper="true"] .habit-row.locked-goal {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  opacity: 1 !important;
+}
+
 .habit-row.locked-goal span:not(.check-box):not(.habit-logged-pill) {
-  color: #0a0a0a !important;
-  font-weight: 700 !important;
-  opacity: 0.95 !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+}
+
+/* Checkbox inside habit row */
+.habit-row .check-box,
+[data-has-wallpaper="true"] .habit-row .check-box {
+  background: #ffffff !important;
+  border: 2px solid #000000 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: #000000 !important;
+}
+
+.habit-row.checked .check-box,
+[data-has-wallpaper="true"] .habit-row.checked .check-box {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
 }
 
 /* 2. Habit Logged Status Pills */
-.habit-logged-pill {
-  color: #0f172a !important;
-  font-weight: 700 !important;
-  background: rgba(15, 23, 42, 0.08) !important;
-  border: 1px solid rgba(15, 23, 42, 0.2) !important;
+.habit-logged-pill,
+[data-has-wallpaper="true"] .habit-logged-pill {
+  color: #000000 !important;
+  font-weight: 800 !important;
+  background: #f1f5f9 !important;
+  border: 1.5px solid #64748b !important;
+  text-shadow: none !important;
 }
 
 .habit-logged-pill.eligible,
-.habit-logged-pill.checked {
+.habit-logged-pill.checked,
+[data-has-wallpaper="true"] .habit-logged-pill.eligible,
+[data-has-wallpaper="true"] .habit-logged-pill.checked {
   color: #14532d !important;
-  background: rgba(34, 197, 94, 0.18) !important;
-  border: 1.5px solid rgba(22, 101, 52, 0.35) !important;
-  font-weight: 700 !important;
+  background: #dcfce7 !important;
+  border: 1.5px solid #16a34a !important;
+  font-weight: 800 !important;
 }
 
-/* 3. Panel Headings: Solid Deep Green & Crisp Black */
+/* 3. Panel Headings on Dark Container */
 .habits-panel .panel-heading h3 {
-  color: #14532d !important;
+  color: #86efac !important; /* Luminous green on dark panel */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
   font-weight: 800 !important;
 }
 
 .habits-panel .panel-heading .eyebrow {
-  color: #0a0a0a !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
   font-weight: 800 !important;
   letter-spacing: 1.5px !important;
 }
 
 .habits-panel .count-badge {
-  color: #0a0a0a !important;
-  border: 1.5px solid #0a0a0a !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
   font-weight: 800 !important;
 }
 
 .habit-progress .progress-caption span {
-  color: #0a0a0a !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
   font-weight: 700 !important;
 }
 
 .habit-progress .progress-caption strong {
-  color: #15803d !important;
+  color: #86efac !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
   font-weight: 800 !important;
 }
 
+.habit-progress .progress-track {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
 .habit-progress .progress-track > div {
-  background: #15803d !important;
+  background: #16a34a !important;
 }
 
 /* 4. Schedule Timetable: Grey -> Black, Foggy Green -> Rich Green */
