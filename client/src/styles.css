@@ -8883,7 +8883,7 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 /* 4. Topbar, Welcome Row & Live JST Station Clock (Spacious & Decluttered) */
 [data-theme="tokyo-lofi"] .topbar {
   display: flex !important;
-  justify-content: flex-end !important;
+  justify-content: space-between !important;
   align-items: center !important;
   padding: 0 0 16px 0 !important;
   margin-bottom: 22px !important;
@@ -8893,8 +8893,9 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 [data-theme="tokyo-lofi"] .top-actions {
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
-  flex-wrap: wrap !important;
+  gap: 10px !important;
+  flex-wrap: nowrap !important;
+  margin-left: auto !important;
 }
 
 [data-theme="tokyo-lofi"] .welcome-row {
@@ -13782,7 +13783,14 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="transparent"] .roadmap-outline-panel,
 [data-column-style="transparent"] .dsa-potd-card,
 [data-column-style="transparent"] .tokyo-soundscape-card,
-[data-column-style="transparent"] .column-style-setting-card {
+[data-column-style="transparent"] .column-style-setting-card,
+[data-column-style="transparent"] .column-style-setting-compact,
+[data-column-style="transparent"] .single-stage-focused-card,
+[data-column-style="transparent"] .roadmap-command-center,
+[data-column-style="transparent"] .roadmap-blank-creator-card,
+[data-column-style="transparent"] .creator-option-box,
+[data-column-style="transparent"] .roadmap-outline-editor-card,
+[data-column-style="transparent"] .stage-tabs-navigation-bar {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -13826,7 +13834,15 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .metric-card,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .streak-card,
 [data-theme="tokyo-lofi"][data-column-style="transparent"] .tokyo-clock-card,
-[data-theme="tokyo-lofi"][data-column-style="transparent"] .column-style-setting-card {
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .column-style-setting-card,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .column-style-setting-compact,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-command-center,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .stage-focus-header,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-blank-creator-card,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .creator-option-box,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .roadmap-outline-editor-card,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .stage-tabs-navigation-bar {
   border-color: rgba(245, 158, 11, 0.26) !important;
   box-shadow: inset 0 1px 1px 0 rgba(255, 220, 160, 0.4), 0 16px 40px rgba(0, 0, 0, 0.35) !important;
 }
@@ -13886,7 +13902,14 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="liquid-glass"] .roadmap-outline-panel,
 [data-column-style="liquid-glass"] .dsa-potd-card,
 [data-column-style="liquid-glass"] .tokyo-soundscape-card,
-[data-column-style="liquid-glass"] .column-style-setting-card {
+[data-column-style="liquid-glass"] .column-style-setting-card,
+[data-column-style="liquid-glass"] .column-style-setting-compact,
+[data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-column-style="liquid-glass"] .roadmap-command-center,
+[data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-column-style="liquid-glass"] .creator-option-box,
+[data-column-style="liquid-glass"] .roadmap-outline-editor-card,
+[data-column-style="liquid-glass"] .stage-tabs-navigation-bar {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
   backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%) !important;
@@ -13914,7 +13937,15 @@ html[data-theme="tokyo-lofi"],
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .metric-card,
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .streak-card,
 [data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .tokyo-clock-card,
-[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .column-style-setting-card {
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .column-style-setting-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .column-style-setting-compact,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-command-center,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-focus-header,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-blank-creator-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .creator-option-box,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .roadmap-outline-editor-card,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .stage-tabs-navigation-bar {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.11) 0%, rgba(28, 25, 40, 0.32) 100%) !important;
   border-color: rgba(245, 158, 11, 0.3) !important;
   box-shadow: inset 0 1.5px 1px 0 rgba(255, 220, 150, 0.5), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2), 0 20px 50px rgba(0, 0, 0, 0.45) !important;
@@ -13970,7 +14001,14 @@ html[data-theme="tokyo-lofi"],
 [data-column-style="smoky"] .roadmap-outline-panel,
 [data-column-style="smoky"] .dsa-potd-card,
 [data-column-style="smoky"] .tokyo-soundscape-card,
-[data-column-style="smoky"] .column-style-setting-card {
+[data-column-style="smoky"] .column-style-setting-card,
+[data-column-style="smoky"] .column-style-setting-compact,
+[data-column-style="smoky"] .single-stage-focused-card,
+[data-column-style="smoky"] .roadmap-command-center,
+[data-column-style="smoky"] .roadmap-blank-creator-card,
+[data-column-style="smoky"] .creator-option-box,
+[data-column-style="smoky"] .roadmap-outline-editor-card,
+[data-column-style="smoky"] .stage-tabs-navigation-bar {
   background: rgba(8, 9, 15, 0.82) !important;
   backdrop-filter: blur(28px) saturate(130%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(130%) !important;
@@ -14002,7 +14040,15 @@ html[data-theme="tokyo-lofi"],
 /* Theme Reaction: Tokyo Lofi Smoky */
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .panel,
 [data-theme="tokyo-lofi"][data-column-style="smoky"] .metric-card,
-[data-theme="tokyo-lofi"][data-column-style="smoky"] .streak-card {
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .streak-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .column-style-setting-compact,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .single-stage-focused-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-command-center,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .stage-focus-header,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-blank-creator-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .creator-option-box,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .roadmap-outline-editor-card,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .stage-tabs-navigation-bar {
   background: rgba(14, 12, 22, 0.85) !important;
   border-color: rgba(245, 158, 11, 0.18) !important;
 }
@@ -15992,4 +16038,105 @@ html[data-theme="tokyo-lofi"],
     font-size: 14px !important;
     min-height: 44px !important;
   }
+}
+
+/* Compact Column Material Selector */
+.column-style-setting-compact {
+  background: var(--paper, #fffefa);
+  border: 1px solid var(--line, #e5e5dd);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  transition: all 0.2s ease;
+}
+
+.column-style-compact-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.column-style-compact-header h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink, #1e2c26);
+}
+
+.column-style-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .column-style-compact-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.column-style-compact-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--line, #e5e5dd);
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--muted, #667168);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  position: relative;
+}
+
+.column-style-compact-btn:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: #a7b8a8;
+  color: var(--ink, #1e2c26);
+}
+
+.column-style-compact-btn.selected {
+  border-color: #315b45;
+  background: #e9eee7;
+  color: #294a37;
+  font-weight: 700;
+}
+
+.col-btn-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  margin-left: auto;
+}
+
+/* Tokyo Lofi Theme Overrides for Compact Selector */
+[data-theme="tokyo-lofi"] .column-style-setting-compact {
+  background: #181424;
+  border-color: rgba(245, 158, 11, 0.18);
+}
+
+[data-theme="tokyo-lofi"] .column-style-compact-header h4 {
+  color: #FAF8FF;
+}
+
+[data-theme="tokyo-lofi"] .column-style-compact-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #8E86AB;
+}
+
+[data-theme="tokyo-lofi"] .column-style-compact-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #FAF8FF;
+}
+
+[data-theme="tokyo-lofi"] .column-style-compact-btn.selected {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: #F59E0B;
+  color: #F59E0B;
 }

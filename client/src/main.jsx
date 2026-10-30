@@ -1005,8 +1005,10 @@ function App() {
           const data = await response.json();
           if (mounted && Array.isArray(data) && data.length > 0) {
             setBaseSchedule(data);
+            setEditingSchedule(data);
             const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
             localStorage.setItem(storageKey, JSON.stringify(data));
+            localStorage.setItem('daymark-schedule', JSON.stringify(data));
           }
         }
       } catch {
@@ -2289,8 +2291,11 @@ function App() {
 
   const saveScheduleChanges = async () => {
     setBaseSchedule(editingSchedule);
+    setEditingSchedule(editingSchedule);
     const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
     localStorage.setItem(storageKey, JSON.stringify(editingSchedule));
+    localStorage.setItem('daymark-schedule', JSON.stringify(editingSchedule));
+    revertDayScheduleOverride(key);
     try {
       const headers = {
         'Content-Type': 'application/json',
@@ -2318,6 +2323,8 @@ function App() {
     setBaseSchedule(defaultSchedule);
     const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
     localStorage.setItem(storageKey, JSON.stringify(defaultSchedule));
+    localStorage.setItem('daymark-schedule', JSON.stringify(defaultSchedule));
+    revertDayScheduleOverride(key);
     try {
       const headers = {
         'Content-Type': 'application/json',
@@ -3151,31 +3158,54 @@ const handleNudge = async (toUserId, toUsername) => {
             </div>
           </>
         )}
-        {!(theme === 'tokyo-lofi' && view === 'Today') && (
         <header className="topbar">
           <div>
-            <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
-            <h1>
-              {view === 'Today'
-                ? isToday
-                  ? 'A calmer way to make progress'
-                  : isPast
-                  ? 'Archived Performance Record'
-                  : 'Upcoming Routine Plan'
-                : view === 'Stage Roadmaps'
-                ? 'Stage Roadmaps & Checkpoint Hub'
-                : view === 'Weekly report'
-                ? 'Your progress, at a glance'
-                : view === 'Study pods'
-                ? 'Competitive Study Pod'
-                : view === 'Coding'
-                ? 'Developer & DSA Performance Hub'
-                : 'Customize your routine schedule'}
-            </h1>
+            {theme === 'tokyo-lofi' && view === 'Today' && isToday ? (
+              <div className="welcome-tools-row" style={{ margin: 0, padding: 0 }}>
+                <button className="evening-closeout-pill" onClick={() => setCloseoutModalOpen(true)} title="Complete your 3-minute evening shutdown ritual">
+                  <Moon size={13} />
+                  <span>Evening Closeout</span>
+                </button>
+                <button
+                  type="button"
+                  className="evening-closeout-pill synaptic-trigger-pill"
+                  onClick={() => {
+                    const cur = (activeId ? schedule.find(s => s.id === activeId) : null) || current || schedule[0];
+                    setSynapticActiveBlock(cur);
+                    setSynapticBridgeOpen(true);
+                  }}
+                  title="Active Recall & Interleaving Retrieval Practice"
+                  style={{ background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.35)', color: '#F59E0B' }}
+                >
+                  <Brain size={13} />
+                  <span>Synaptic Bridge</span>
+                </button>
+              </div>
+            ) : (
+              <>
+                <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
+                <h1>
+                  {view === 'Today'
+                    ? isToday
+                      ? 'A calmer way to make progress'
+                      : isPast
+                      ? 'Archived Performance Record'
+                      : 'Upcoming Routine Plan'
+                    : view === 'Stage Roadmaps'
+                    ? 'Stage Roadmaps & Checkpoint Hub'
+                    : view === 'Weekly report'
+                    ? 'Your progress, at a glance'
+                    : view === 'Study pods'
+                    ? 'Competitive Study Pod'
+                    : view === 'Coding'
+                    ? 'Developer & DSA Performance Hub'
+                    : 'Customize your routine schedule'}
+                </h1>
+              </>
+            )}
           </div>
           {renderTopActions()}
         </header>
-      )}
 
         {view === 'Today' && (
           <>
@@ -3231,27 +3261,28 @@ const handleNudge = async (toUserId, toUsername) => {
                     </>
                   )}
                 </h2>
-                <div className="welcome-tools-row">
-                  <button className="evening-closeout-pill" onClick={() => setCloseoutModalOpen(true)} title="Complete your 3-minute evening shutdown ritual">
-                    <Moon size={13} />
-                    <span>Evening Closeout</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="evening-closeout-pill synaptic-trigger-pill"
-                    onClick={() => {
-                      const cur = (activeId ? schedule.find(s => s.id === activeId) : null) || current || schedule[0];
-                      setSynapticActiveBlock(cur);
-                      setSynapticBridgeOpen(true);
-                    }}
-                    title="Active Recall & Interleaving Retrieval Practice"
-                    style={{ background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.35)', color: '#F59E0B' }}
-                  >
-                    <Brain size={13} />
-                    <span>Synaptic Bridge</span>
-                  </button>
-                  {theme === 'tokyo-lofi' && isToday && renderTopActions()}
-                </div>
+                {theme !== 'tokyo-lofi' && (
+                  <div className="welcome-tools-row">
+                    <button className="evening-closeout-pill" onClick={() => setCloseoutModalOpen(true)} title="Complete your 3-minute evening shutdown ritual">
+                      <Moon size={13} />
+                      <span>Evening Closeout</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="evening-closeout-pill synaptic-trigger-pill"
+                      onClick={() => {
+                        const cur = (activeId ? schedule.find(s => s.id === activeId) : null) || current || schedule[0];
+                        setSynapticActiveBlock(cur);
+                        setSynapticBridgeOpen(true);
+                      }}
+                      title="Active Recall & Interleaving Retrieval Practice"
+                      style={{ background: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.35)', color: '#F59E0B' }}
+                    >
+                      <Brain size={13} />
+                      <span>Synaptic Bridge</span>
+                    </button>
+                  </div>
+                )}
                 {theme !== 'tokyo-lofi' && (
                   <p className="subhead">
                     {isToday
@@ -5231,53 +5262,18 @@ const handleNudge = async (toUserId, toUsername) => {
                 : 'Customize the start time, end time, and titles of your daily schedule. Any changes made here update your daily tracker instantly.'}
             </p>
 
-            {/* Column & Panel Glass Material Setting */}
-            <div className="column-style-setting-card">
-              <div className="column-style-header">
-                <div>
-                  <span className="eyebrow">
-                    {theme === 'tokyo-lofi' ? 'SURFACE MATERIAL // 透過度' : 'SURFACE MATERIAL'}
-                  </span>
-                  <h4>Dashboard Column & Panel Material</h4>
-                  <p className="muted" style={{ margin: '4px 0 0 0', fontSize: '13px' }}>
-                    Choose the glassmorphism and transparency level for schedule, habit, and dashboard columns across any theme:
-                  </p>
-                </div>
-                <span className="column-style-current-pill">
-                  ACTIVE: {columnStyle.toUpperCase()}
-                </span>
+            {/* Simple 4-Option Column Material Selector */}
+            <div className="column-style-setting-compact">
+              <div className="column-style-compact-header">
+                <span className="eyebrow">{theme === 'tokyo-lofi' ? 'SURFACE MATERIAL // 透過度' : 'SURFACE MATERIAL'}</span>
+                <h4>Column & Panel Material</h4>
               </div>
-
-              <div className="column-style-options-grid">
+              <div className="column-style-compact-grid">
                 {[
-                  {
-                    id: 'normal',
-                    label: 'Normal',
-                    badge: 'Theme Default',
-                    desc: 'Original solid surfaces and card borders with standard theme opacity.',
-                    icon: Layers
-                  },
-                  {
-                    id: 'liquid-glass',
-                    label: 'Liquid Glass',
-                    badge: 'Apple Glass',
-                    desc: 'Refractive Apple VisionOS frosted glass with specular top highlight and fluid depth.',
-                    icon: Sparkles
-                  },
-                  {
-                    id: 'transparent',
-                    label: 'Transparent',
-                    badge: 'Crystal Hover',
-                    desc: '100% see-through crystal glass. Panels hover statically like clean window glass over the background.',
-                    icon: Eye
-                  },
-                  {
-                    id: 'smoky',
-                    label: 'Smoky',
-                    badge: 'Obsidian Tint',
-                    desc: 'Deep dark smoked glass with rich atmospheric blur and maximum text contrast.',
-                    icon: Moon
-                  }
+                  { id: 'normal', label: 'Normal', icon: Layers },
+                  { id: 'liquid-glass', label: 'Liquid Glass', icon: Sparkles },
+                  { id: 'transparent', label: 'Crystal Glass', icon: Eye },
+                  { id: 'smoky', label: 'Obsidian Smoky', icon: Moon }
                 ].map(opt => {
                   const isSelected = columnStyle === opt.id;
                   const Icon = opt.icon;
@@ -5285,22 +5281,12 @@ const handleNudge = async (toUserId, toUsername) => {
                     <button
                       key={opt.id}
                       type="button"
-                      className={`column-style-option-btn ${isSelected ? 'selected' : ''}`}
+                      className={`column-style-compact-btn ${isSelected ? 'selected' : ''}`}
                       onClick={() => setColumnStyle(opt.id)}
                     >
-                      <div className="col-opt-top">
-                        <div className="col-opt-icon">
-                          <Icon size={18} />
-                        </div>
-                        <span className="col-opt-badge">{opt.badge}</span>
-                        <div className={`col-opt-radio ${isSelected ? 'active' : ''}`}>
-                          {isSelected && <span className="col-opt-radio-dot" />}
-                        </div>
-                      </div>
-                      <div className="col-opt-content">
-                        <strong>{opt.label}</strong>
-                        <p>{opt.desc}</p>
-                      </div>
+                      <Icon size={15} />
+                      <span className="col-btn-label">{opt.label}</span>
+                      {isSelected && <span className="col-btn-dot" />}
                     </button>
                   );
                 })}
