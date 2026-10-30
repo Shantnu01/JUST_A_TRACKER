@@ -19685,3 +19685,188 @@ html[data-theme="tokyo-lofi"],
   color: #FFFFFF !important;
   border: 1px solid rgba(255, 255, 255, 0.35) !important;
 }
+
+/* ==========================================================================
+   HIGH-CONTRAST ACCESSIBILITY: GREY -> BLACK & FOGGY GREEN -> DEEP CRISP GREEN
+   Completely replaces washed-out grey and foggy green text with deep legible shades
+   ========================================================================== */
+
+/* 1. Habit Row Text (DSA · 3 hours, Project · 6 hours, etc.) */
+.habit-row {
+  color: #0a0a0a !important;
+}
+
+.habit-row span:not(.check-box):not(.habit-logged-pill) {
+  color: #0a0a0a !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.2px !important;
+}
+
+/* Checked Habits: Crisp, Vibrant Solid Green */
+.habit-row.checked span:not(.check-box):not(.habit-logged-pill) {
+  color: #15803d !important;
+  font-weight: 700 !important;
+}
+
+/* Locked & Inactive Habits: Solid, Dark Readable Tone (NO foggy grey) */
+.habit-row.locked-goal span:not(.check-box):not(.habit-logged-pill) {
+  color: #0a0a0a !important;
+  font-weight: 700 !important;
+  opacity: 0.95 !important;
+}
+
+/* 2. Habit Logged Status Pills */
+.habit-logged-pill {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  background: rgba(15, 23, 42, 0.08) !important;
+  border: 1px solid rgba(15, 23, 42, 0.2) !important;
+}
+
+.habit-logged-pill.eligible,
+.habit-logged-pill.checked {
+  color: #14532d !important;
+  background: rgba(34, 197, 94, 0.18) !important;
+  border: 1.5px solid rgba(22, 101, 52, 0.35) !important;
+  font-weight: 700 !important;
+}
+
+/* 3. Panel Headings: Solid Deep Green & Crisp Black */
+.habits-panel .panel-heading h3 {
+  color: #14532d !important;
+  font-weight: 800 !important;
+}
+
+.habits-panel .panel-heading .eyebrow {
+  color: #0a0a0a !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+}
+
+.habits-panel .count-badge {
+  color: #0a0a0a !important;
+  border: 1.5px solid #0a0a0a !important;
+  font-weight: 800 !important;
+}
+
+.habit-progress .progress-caption span {
+  color: #0a0a0a !important;
+  font-weight: 700 !important;
+}
+
+.habit-progress .progress-caption strong {
+  color: #15803d !important;
+  font-weight: 800 !important;
+}
+
+.habit-progress .progress-track > div {
+  background: #15803d !important;
+}
+
+/* 4. Schedule Timetable: Grey -> Black, Foggy Green -> Rich Green */
+.event-title-row h4 {
+  color: #0a0a0a !important;
+  font-weight: 800 !important;
+}
+
+.time-col strong {
+  color: #0a0a0a !important;
+  font-weight: 800 !important;
+}
+
+.time-col span {
+  color: #1e293b !important; /* was faded grey -> now crisp dark slate */
+  font-weight: 700 !important;
+}
+
+.event-body p {
+  color: #1e293b !important; /* was faded grey -> now clear dark slate */
+  font-weight: 600 !important;
+}
+
+.logged-label {
+  color: #15803d !important; /* was foggy green -> now solid vibrant green */
+  font-weight: 700 !important;
+}
+
+.duration-pill {
+  color: #0a0a0a !important;
+  font-weight: 700 !important;
+}
+
+.duration-pill.done {
+  color: #15803d !important;
+  background: rgba(34, 197, 94, 0.16) !important;
+  border-color: #15803d !important;
+  font-weight: 700 !important;
+}
+
+/* 5. Metrics Cards & Streaks */
+.metric-copy span,
+.metric-copy small {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.metric-copy strong {
+  color: #0a0a0a !important;
+  font-weight: 800 !important;
+}
+
+.streak-card small {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+}
+
+.streak-card strong {
+  color: #0a0a0a !important;
+  font-weight: 800 !important;
+}
+
+.welcome-row .muted,
+.welcome-row .subhead {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+/* 6. Routine Alarms Panel */
+.alarm-panel .panel-heading .eyebrow {
+  color: #0a0a0a !important;
+  font-weight: 800 !important;
+}
+
+.alarm-panel .panel-heading h3 {
+  color: #0a0a0a !important;
+  font-weight: 800 !important;
+}
+
+.alarm-time,
+.alarm-label {
+  color: #0a0a0a !important;
+  font-weight: 700 !important;
+}
+
+.alarm-foot {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+/* Maintain Pure White / Neon contrast exclusively on dark themes */
+[data-theme="tokyo-lofi"] .habit-row span,
+[data-theme="tokyo-lofi"] .event-body p,
+[data-theme="tokyo-lofi"] .time-col span,
+[data-theme="tokyo-lofi"] .metric-copy span,
+[data-theme="tokyo-lofi"] .alarm-time,
+[data-theme="tokyo-lofi"] .alarm-label {
+  color: #FAF8FF !important;
+}
+
+[data-theme="acid-runway"] .habit-row span,
+[data-theme="acid-runway"] .event-body p {
+  color: #ccff00 !important;
+}
+
+[data-theme="spider-verse"] .habit-row span,
+[data-theme="spider-verse"] .event-body p {
+  color: #FFE600 !important;
+}
