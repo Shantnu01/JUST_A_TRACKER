@@ -2154,7 +2154,7 @@ function App() {
 
       // Trigger Micro-Artifact Proof of Work prompt
       const taskObj = schedule.find(s => s.id === activeId);
-      if (taskObj && totalElapsedMins >= 5) {
+      if (taskObj) {
         setClosingTask({ ...taskObj, loggedMins: totalElapsedMins });
         setArtifactNotes('');
         setArtifactUrl('');
@@ -3747,9 +3747,8 @@ const handleNudge = async (toUserId, toUsername) => {
             running={running}
             onToggleRunning={() => setRunning(r => !r)}
             onFinishSession={() => {
-              setInterceptorModalOpen(false);
-              finishSession(true);
               setStudyModeActive(false);
+              finishSession(false);
             }}
             onMinimize={() => {
               setInterceptorModalOpen(false);

@@ -19951,3 +19951,9 @@ html[data-theme="tokyo-lofi"],
 [data-theme="spider-verse"] .event-body p {
   color: #FFE600 !important;
 }
+
+/* Modal Overlay & Synaptic Bridge z-index elevation: Always on top of fullscreen StudyMode */
+.modal-overlay,
+.synaptic-modal-backdrop {
+  z-index: 100005 !important;
+}
