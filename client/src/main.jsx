@@ -13,7 +13,7 @@ import StudyModeView from './components/StudyModeView';
 import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
 import DynamicVideoModal, { extractYouTubeId } from './components/DynamicVideoModal';
 import SynapticBridgeModal from './components/SynapticBridgeModal';
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   AlarmClock,
@@ -855,6 +855,7 @@ function App() {
   const [activeId, setActiveId] = useState(null);
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
+  const sessionAutoSavedMinsRef = useRef(0);
 
   // Sidebar Collapse / Expand State (Frees up horizontal space)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
@@ -1807,35 +1808,38 @@ function App() {
       return;
     }
 
-    const nextDay = { ...blankDay(), ...(store[key] || {}), ...patch };
     setStore(prev => {
+      const currentDay = prev[key] || blankDay();
+      const resolvedPatch = typeof patch === 'function' ? patch(currentDay) : patch;
+      const nextDay = { ...currentDay, ...resolvedPatch };
       const updated = { ...prev, [key]: nextDay };
       localStorage.setItem('daymark-data', JSON.stringify(updated));
+
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      };
+
+      fetch(`${API}/days/${key}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          checks: nextDay.checks || {},
+          notes: nextDay.notes || '',
+          completed_minutes: nextDay.completedMinutes || {},
+          alarms: nextDay.alarms || {},
+          closeout: nextDay.closeout || {}
+        })
+      })
+        .then(res => {
+          if (res.ok) setDbStatus('connected');
+        })
+        .catch(() => {
+          // Safe offline / browser-storage fallback
+        });
+
       return updated;
     });
-
-    const headers = {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
-    };
-
-    fetch(`${API}/days/${key}`, {
-      method: 'PUT',
-      headers,
-      body: JSON.stringify({
-        checks: nextDay.checks || {},
-        notes: nextDay.notes || '',
-        completed_minutes: nextDay.completedMinutes || {},
-        alarms: nextDay.alarms || {},
-        closeout: nextDay.closeout || {}
-      })
-    })
-      .then(res => {
-        if (res.ok) setDbStatus('connected');
-      })
-      .catch(() => {
-        // Safe offline / browser-storage fallback
-      });
   };
 
   useEffect(() => {
@@ -1851,6 +1855,32 @@ function App() {
     const timer = setInterval(() => setSeconds(s => s + 1), 1000);
     return () => clearInterval(timer);
   }, [running]);
+
+  // Auto-save studied time every 2 minutes (120s) so reload never loses progress
+  useEffect(() => {
+    if (!running || !activeId || !isToday || isBreak) return;
+
+    const elapsedMins = Math.floor(seconds / 60);
+    const uncommittedMins = elapsedMins - sessionAutoSavedMinsRef.current;
+
+    if (uncommittedMins >= 2) {
+      const toCommit = Math.floor(uncommittedMins / 2) * 2;
+      sessionAutoSavedMinsRef.current += toCommit;
+
+      patchDay(prevDay => {
+        const prevCompleted = prevDay.completedMinutes?.[activeId] || 0;
+        return {
+          completedMinutes: {
+            ...(prevDay.completedMinutes || {}),
+            [activeId]: prevCompleted + toCommit
+          }
+        };
+      });
+
+      setToast(`Auto-saved: +${toCommit}m studied time`);
+      setTimeout(() => setToast(''), 2000);
+    }
+  }, [seconds, running, activeId, isToday, isBreak]);
 
   useEffect(() => {
     let cancelled = false;
@@ -2073,6 +2103,7 @@ function App() {
     }
     setActiveId(id);
     setSeconds(0);
+    sessionAutoSavedMinsRef.current = 0;
     setRunning(true);
     setIsBreak(false);
     setBreakSecondsLeft(0);
@@ -2104,16 +2135,27 @@ function App() {
       }
     }
 
-    const loggedMinsActual = Math.floor(seconds / 60);
-    if (activeId && isToday && loggedMinsActual > 0) {
-      const previous = day.completedMinutes?.[activeId] || 0;
-      patchDay({ completedMinutes: { ...(day.completedMinutes || {}), [activeId]: previous + loggedMinsActual } });
+    const totalElapsedMins = Math.floor(seconds / 60);
+    const remainingToCommit = Math.max(0, totalElapsedMins - sessionAutoSavedMinsRef.current);
+
+    if (activeId && isToday && (totalElapsedMins > 0 || remainingToCommit > 0)) {
+      if (remainingToCommit > 0) {
+        patchDay(prevDay => {
+          const previous = prevDay.completedMinutes?.[activeId] || 0;
+          return {
+            completedMinutes: {
+              ...(prevDay.completedMinutes || {}),
+              [activeId]: previous + remainingToCommit
+            }
+          };
+        });
+      }
       playChime();
 
       // Trigger Micro-Artifact Proof of Work prompt
       const taskObj = schedule.find(s => s.id === activeId);
-      if (taskObj) {
-        setClosingTask({ ...taskObj, loggedMins: loggedMinsActual });
+      if (taskObj && totalElapsedMins >= 5) {
+        setClosingTask({ ...taskObj, loggedMins: totalElapsedMins });
         setArtifactNotes('');
         setArtifactUrl('');
         setArtifactModalOpen(true);
@@ -2121,6 +2163,7 @@ function App() {
         setSynapticBridgeOpen(true);
       }
     }
+    sessionAutoSavedMinsRef.current = 0;
     setRunning(false);
     setActiveId(null);
     setSeconds(0);
@@ -2128,7 +2171,7 @@ function App() {
     setBreakSecondsLeft(0);
     setBreakRunning(false);
     setStudyModeActive(false);
-    setToast(loggedMinsActual > 0 ? `${loggedMinsActual}m session logged` : 'Session ended');
+    setToast(totalElapsedMins > 0 ? `${totalElapsedMins}m session logged` : 'Session ended');
     setTimeout(() => setToast(''), 2200);
   };
 
@@ -3699,7 +3742,7 @@ const handleNudge = async (toUserId, toUsername) => {
         {studyModeActive && activeId ? (
           <StudyModeView
             activeBlock={schedule.find(s => s.id === activeId)}
-            loggedMinutes={day.completedMinutes?.[activeId] || 0}
+            loggedMinutes={activeId ? Math.max(0, (day.completedMinutes?.[activeId] || 0) - sessionAutoSavedMinsRef.current) : 0}
             seconds={seconds}
             running={running}
             onToggleRunning={() => setRunning(r => !r)}
@@ -4118,7 +4161,8 @@ const handleNudge = async (toUserId, toUsername) => {
                     const totalDurationHours = item.hours || computeDurationHours(item.start, item.end);
                     const totalBlockMins = Math.round(totalDurationHours * 60);
                     const activeSessionMins = isActive ? Math.floor(seconds / 60) : 0;
-                    const totalDoneMins = logged + activeSessionMins;
+                    const uncommittedSessionMins = isActive ? Math.max(0, activeSessionMins - sessionAutoSavedMinsRef.current) : 0;
+                    const totalDoneMins = logged + uncommittedSessionMins;
                     const remMins = Math.max(0, totalBlockMins - totalDoneMins);
                     const remH = Math.floor(remMins / 60);
                     const remM = remMins % 60;
