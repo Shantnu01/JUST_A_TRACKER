@@ -3245,7 +3245,7 @@ const handleNudge = async (toUserId, toUsername) => {
       )}
 
       {/* Active Study Pod Selector Pill */}
-            {user && (
+            {user && theme !== 'tokyo-lofi' && (
               <div className="pod-selector-wrapper" style={{ position: 'relative' }}>
                 <button
                   type="button"
@@ -3566,10 +3566,12 @@ const handleNudge = async (toUserId, toUsername) => {
               <span>Wallpaper</span>
             </button>
 
+            {theme !== 'tokyo-lofi' && (
             <div className="date-chip">
               <span className={`status-dot ${isToday ? '' : 'inactive'}`} />
               {prettyDate(selectedDate)}
             </div>
+            )}
           </div>
   );
 
@@ -3875,44 +3877,25 @@ const handleNudge = async (toUserId, toUsername) => {
               </div>
             )}
 
-            <section className="welcome-row">
-              <div>
-                {theme !== 'tokyo-lofi' && <p className="muted">{prettyDate(selectedDate)}</p>}
-                <h2
-                  onClick={theme === 'tokyo-lofi' && isToday ? cycleTypewriter : undefined}
-                  style={theme === 'tokyo-lofi' && isToday ? { cursor: 'pointer', userSelect: 'none' } : undefined}
-                  title={theme === 'tokyo-lofi' && isToday ? 'Click to cycle quote / greeting (auto-changes every 3 mins)' : undefined}
-                >
-                  {theme === 'tokyo-lofi' ? (
-                    isToday ? (
+            <section className={`welcome-row ${theme === 'tokyo-lofi' ? 'tokyo-lofi-welcome' : ''}`}>
+              {theme !== 'tokyo-lofi' && (
+                <div>
+                  <p className="muted">{prettyDate(selectedDate)}</p>
+                  <h2>
+                    {isToday ? (
                       <>
-                        <span>{typewriterText}</span>
-                        <span className="typewriter-cursor" />
+                        One day at a time<span>.</span>
                       </>
                     ) : isPast ? (
                       <>
-                        Archive<span>.</span>
+                        Historical record<span>.</span>
                       </>
                     ) : (
                       <>
                         Upcoming routine<span>.</span>
                       </>
-                    )
-                  ) : isToday ? (
-                    <>
-                      One day at a time<span>.</span>
-                    </>
-                  ) : isPast ? (
-                    <>
-                      Historical record<span>.</span>
-                    </>
-                  ) : (
-                    <>
-                      Upcoming routine<span>.</span>
-                    </>
-                  )}
-                </h2>
-                {theme !== 'tokyo-lofi' && (
+                    )}
+                  </h2>
                   <p className="subhead">
                     {isToday
                       ? 'Show up, focus on the next block, and let the progress add up.'
@@ -3920,8 +3903,8 @@ const handleNudge = async (toUserId, toUsername) => {
                       ? 'Review what you accomplished on this date.'
                       : 'Plan ahead and stay prepared for this routine.'}
                   </p>
-                )}
-              </div>
+                </div>
+              )}
               <div className="welcome-right-widgets">
                 <div className="streak-card">
                   <div className="streak-icon">

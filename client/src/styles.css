@@ -19962,3 +19962,287 @@ html:not([data-theme="tokyo-lofi"]) {
 .synaptic-modal-backdrop {
   z-index: 100005 !important;
 }
+
+
+/* ==========================================================================
+   TOKYO LOFI DEDICATED CRISP UI & V1 ENHANCEMENT
+   ========================================================================== */
+
+/* 1. Welcome Row & Widgets: Moved above cleanly with minimal top gap */
+[data-theme="tokyo-lofi"] .welcome-row,
+.app-shell[data-theme="tokyo-lofi"] .welcome-row,
+[data-theme="tokyo-lofi"] .tokyo-lofi-welcome {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  padding: 4px 0 14px 0 !important;
+  margin-top: -6px !important;
+  margin-bottom: 12px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="tokyo-lofi"] .welcome-right-widgets,
+.app-shell[data-theme="tokyo-lofi"] .welcome-right-widgets {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  margin-left: auto !important;
+}
+
+[data-theme="tokyo-lofi"] .streak-card,
+.app-shell[data-theme="tokyo-lofi"] .streak-card {
+  background: rgba(22, 18, 32, 0.65) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  min-width: 210px !important;
+  height: 64px !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="tokyo-lofi"] .tokyo-clock-card,
+.app-shell[data-theme="tokyo-lofi"] .tokyo-clock-card {
+  height: 64px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+
+/* 2. Topbar Actions: Sleek, unified, beautifully spaced pill options */
+[data-theme="tokyo-lofi"] .top-actions,
+.app-shell[data-theme="tokyo-lofi"] .top-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+}
+
+[data-theme="tokyo-lofi"] .top-action-pill,
+[data-theme="tokyo-lofi"] .top-action-pill.closeout-pill,
+[data-theme="tokyo-lofi"] .top-action-pill.synaptic-pill,
+[data-theme="tokyo-lofi"] .sync-chip,
+[data-theme="tokyo-lofi"] .top-wallpaper-btn,
+[data-theme="tokyo-lofi"] .theme-switcher-btn,
+.app-shell[data-theme="tokyo-lofi"] .top-action-pill,
+.app-shell[data-theme="tokyo-lofi"] .sync-chip,
+.app-shell[data-theme="tokyo-lofi"] .top-wallpaper-btn,
+.app-shell[data-theme="tokyo-lofi"] .theme-switcher-btn {
+  height: 36px !important;
+  border-radius: 9999px !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Evening Closeout Pill */
+[data-theme="tokyo-lofi"] .top-action-pill.closeout-pill,
+.app-shell[data-theme="tokyo-lofi"] .top-action-pill.closeout-pill {
+  background: rgba(245, 158, 11, 0.08) !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+  color: #FBBF24 !important;
+}
+[data-theme="tokyo-lofi"] .top-action-pill.closeout-pill:hover,
+.app-shell[data-theme="tokyo-lofi"] .top-action-pill.closeout-pill:hover {
+  background: rgba(245, 158, 11, 0.16) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Synaptic Bridge Pill */
+[data-theme="tokyo-lofi"] .top-action-pill.synaptic-pill,
+.app-shell[data-theme="tokyo-lofi"] .top-action-pill.synaptic-pill {
+  background: rgba(167, 139, 250, 0.08) !important;
+  border: 1px solid rgba(167, 139, 250, 0.25) !important;
+  color: #C4B5FD !important;
+}
+[data-theme="tokyo-lofi"] .top-action-pill.synaptic-pill:hover,
+.app-shell[data-theme="tokyo-lofi"] .top-action-pill.synaptic-pill:hover {
+  background: rgba(167, 139, 250, 0.16) !important;
+  border-color: rgba(167, 139, 250, 0.5) !important;
+  box-shadow: 0 0 12px rgba(167, 139, 250, 0.25) !important;
+}
+
+/* Sync Chip */
+[data-theme="tokyo-lofi"] .sync-chip,
+.app-shell[data-theme="tokyo-lofi"] .sync-chip {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #E2E8F0 !important;
+}
+
+/* Install icon button */
+[data-theme="tokyo-lofi"] .pwa-install-btn,
+.app-shell[data-theme="tokyo-lofi"] .pwa-install-btn {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #FAF8FF !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+/* Theme Switcher Button */
+[data-theme="tokyo-lofi"] .theme-switcher-btn,
+.app-shell[data-theme="tokyo-lofi"] .theme-switcher-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #FAF8FF !important;
+}
+[data-theme="tokyo-lofi"] .theme-switcher-btn:hover,
+.app-shell[data-theme="tokyo-lofi"] .theme-switcher-btn:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+/* Wallpaper Button */
+[data-theme="tokyo-lofi"] .top-wallpaper-btn,
+.app-shell[data-theme="tokyo-lofi"] .top-wallpaper-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #FAF8FF !important;
+}
+[data-theme="tokyo-lofi"] .top-wallpaper-btn:hover,
+.app-shell[data-theme="tokyo-lofi"] .top-wallpaper-btn:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+/* 3. Habit Checklist: Crystal Clear, Crisp, High-Contrast Typography */
+[data-theme="tokyo-lofi"] .habit-list,
+.app-shell[data-theme="tokyo-lofi"] .habit-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .habit-row,
+[data-theme="tokyo-lofi"][data-column-style="liquid-glass"] .habit-row,
+[data-theme="tokyo-lofi"][data-column-style="smoky"] .habit-row,
+[data-theme="tokyo-lofi"][data-has-wallpaper="true"] .habit-row,
+.app-shell[data-theme="tokyo-lofi"] .habit-row,
+.app-shell[data-theme="tokyo-lofi"][data-column-style="transparent"] .habit-row,
+.app-shell[data-theme="tokyo-lofi"][data-has-wallpaper="true"] .habit-row {
+  height: 48px !important;
+  min-height: 48px !important;
+  background: rgba(255, 255, 255, 0.035) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+  padding: 0 14px !important;
+  margin-bottom: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  box-shadow: none !important;
+  transition: all 0.18s ease !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row:hover,
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .habit-row:hover,
+[data-theme="tokyo-lofi"][data-has-wallpaper="true"] .habit-row:hover,
+.app-shell[data-theme="tokyo-lofi"] .habit-row:hover {
+  background: rgba(255, 255, 255, 0.075) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  transform: none !important;
+}
+
+/* Crisp White/Lavender Habit Title Text */
+[data-theme="tokyo-lofi"] .habit-row span:not(.check-box):not(.habit-logged-pill),
+[data-theme="tokyo-lofi"][data-column-style="transparent"] .habit-row span:not(.check-box):not(.habit-logged-pill),
+[data-theme="tokyo-lofi"][data-has-wallpaper="true"] .habit-row span:not(.check-box):not(.habit-logged-pill),
+.app-shell[data-theme="tokyo-lofi"] .habit-row span:not(.check-box):not(.habit-logged-pill),
+.app-shell[data-theme="tokyo-lofi"][data-column-style="transparent"] .habit-row span:not(.check-box):not(.habit-logged-pill),
+.app-shell[data-theme="tokyo-lofi"][data-has-wallpaper="true"] .habit-row span:not(.check-box):not(.habit-logged-pill) {
+  color: #FAF8FF !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.15px !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
+  opacity: 1 !important;
+}
+
+/* Checked Habit Title */
+[data-theme="tokyo-lofi"] .habit-row.checked span:not(.check-box):not(.habit-logged-pill),
+.app-shell[data-theme="tokyo-lofi"] .habit-row.checked span:not(.check-box):not(.habit-logged-pill) {
+  color: #A39BBF !important;
+  font-weight: 500 !important;
+  text-decoration: line-through !important;
+  opacity: 0.7 !important;
+}
+
+/* Locked Habit */
+[data-theme="tokyo-lofi"] .habit-row.locked-goal,
+.app-shell[data-theme="tokyo-lofi"] .habit-row.locked-goal {
+  background: rgba(20, 17, 29, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.locked-goal span:not(.check-box):not(.habit-logged-pill),
+.app-shell[data-theme="tokyo-lofi"] .habit-row.locked-goal span:not(.check-box):not(.habit-logged-pill) {
+  color: #FAF8FF !important;
+  opacity: 0.95 !important;
+}
+
+/* Checkbox */
+[data-theme="tokyo-lofi"] .habit-row .check-box,
+[data-theme="tokyo-lofi"][data-has-wallpaper="true"] .habit-row .check-box,
+.app-shell[data-theme="tokyo-lofi"] .habit-row .check-box {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 4px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-row.checked .check-box,
+[data-theme="tokyo-lofi"][data-has-wallpaper="true"] .habit-row.checked .check-box,
+.app-shell[data-theme="tokyo-lofi"] .habit-row.checked .check-box {
+  background: linear-gradient(135deg, #F59E0B 0%, #F472B6 100%) !important;
+  border-color: transparent !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 1px 6px rgba(244, 114, 182, 0.4) !important;
+}
+
+/* Logged Time Pill (e.g. 0h 11m (6%)) */
+[data-theme="tokyo-lofi"] .habit-logged-pill,
+.app-shell[data-theme="tokyo-lofi"] .habit-logged-pill {
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #FCD34D !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  font-weight: 600 !important;
+}
+
+/* Progress track and consistency caption */
+[data-theme="tokyo-lofi"] .habit-progress .progress-caption span,
+.app-shell[data-theme="tokyo-lofi"] .habit-progress .progress-caption span {
+  color: #D4CEEB !important;
+  font-size: 11.5px !important;
+}
+
+[data-theme="tokyo-lofi"] .habit-progress .progress-caption strong,
+.app-shell[data-theme="tokyo-lofi"] .habit-progress .progress-caption strong {
+  color: #FAF8FF !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
