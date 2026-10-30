@@ -133,11 +133,16 @@ export default function StudyModeView({
   const remainingMins = Math.max(0, scheduledTotalMins - totalCompletedMins);
   const remH = Math.floor(remainingMins / 60);
   const remM = remainingMins % 60;
+  const spentH = Math.floor(totalCompletedMins / 60);
+  const spentM = totalCompletedMins % 60;
+  const timeSpentLabel = spentH > 0
+    ? (spentM > 0 ? `${spentH}h ${spentM}m` : `${spentH}h`)
+    : `${spentM}m`;
   const timeLeftLabel = remainingMins === 0
-    ? 'Target completed'
+    ? '0m'
     : remH > 0
-      ? (remM > 0 ? `${remH}h ${remM}m left` : `${remH}h left`)
-      : `${remM}m left`;
+      ? (remM > 0 ? `${remH}h ${remM}m` : `${remH}h`)
+      : `${remM}m`;
   const progressPercent = Math.min(100, Math.round((totalCompletedMins / scheduledTotalMins) * 100));
 
   return (
@@ -343,7 +348,7 @@ export default function StudyModeView({
                 letterSpacing: '0.4px',
                 backdropFilter: 'blur(8px)'
               }}>
-                {timeLeftLabel}
+                {remainingMins === 0 ? 'Target completed' : `${timeLeftLabel} left`}
               </span>
             )}
           </div>
@@ -364,7 +369,11 @@ export default function StudyModeView({
               <span>Break countdown before study resumes</span>
             ) : (
               <span>
-                <strong>{timeLeftLabel}</strong> · {currentSessionMins}m focused now ({totalCompletedMins}m of {scheduledHours}h total target)
+                {remainingMins === 0 ? (
+                  <strong>{timeSpentLabel} spent · Target completed</strong>
+                ) : (
+                  <strong>{timeSpentLabel} spent · {timeLeftLabel} left to spend</strong>
+                )}
               </span>
             )}
           </div>
