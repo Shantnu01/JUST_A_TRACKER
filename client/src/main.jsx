@@ -9,6 +9,7 @@ import {
 } from './utils/curriculumEngine';
 import TimetableCurrentCheckpoint from './components/TimetableCurrentCheckpoint';
 import StageRoadmapsView from './components/StageRoadmapsView';
+import StudyModeView from './components/StudyModeView';
 import TokyoSoundscapePlayer from './components/TokyoSoundscapePlayer';
 import DynamicVideoModal, { extractYouTubeId } from './components/DynamicVideoModal';
 import SynapticBridgeModal from './components/SynapticBridgeModal';
@@ -22,6 +23,8 @@ import {
   ArrowUpRight,
   Award,
   Bell,
+  PanelLeftClose,
+  PanelLeftOpen,
   BookOpen,
   Calendar,
   Check,
@@ -850,6 +853,87 @@ function App() {
   const [activeId, setActiveId] = useState(null);
   const [seconds, setSeconds] = useState(0);
   const [running, setRunning] = useState(false);
+
+  // Sidebar Collapse / Expand State (Frees up horizontal space)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('daymark-sidebar-collapsed') === 'true';
+  });
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('daymark-sidebar-collapsed', String(next));
+      return next;
+    });
+  };
+
+  // Keyboard shortcut: Ctrl+B or '[' toggles sidebar
+  useEffect(() => {
+    const handleKey = (e) => {
+      if ((e.ctrlKey && e.key.toLowerCase() === 'b') || (e.key === '[' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName))) {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, []);
+
+  // Study Mode & Break State
+  const [studyModeActive, setStudyModeActive] = useState(false);
+  const [isBreak, setIsBreak] = useState(false);
+  const [breakDurationMinutes, setBreakDurationMinutes] = useState(5);
+  const [breakSecondsLeft, setBreakSecondsLeft] = useState(0);
+  const [breakRunning, setBreakRunning] = useState(false);
+
+  const startBreak = (minutes) => {
+    setIsBreak(true);
+    setBreakDurationMinutes(minutes);
+    setBreakSecondsLeft(minutes * 60);
+    setBreakRunning(true);
+    setRunning(false); // Study timer pauses
+    setToast(`☕ ${minutes} min break started. Relax & recharge!`);
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  const endBreakAndResume = () => {
+    setIsBreak(false);
+    setBreakSecondsLeft(0);
+    setBreakRunning(false);
+    setRunning(true); // Study timer resumes
+    setToast('⚡ Break ended. Back in deep focus!');
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  const extendBreak = (minutes) => {
+    setBreakSecondsLeft(prev => prev + minutes * 60);
+    setBreakDurationMinutes(prev => prev + minutes);
+    setToast(`+${minutes} min added to break`);
+    setTimeout(() => setToast(''), 2000);
+  };
+
+  const toggleBreakRunning = () => {
+    setBreakRunning(prev => !prev);
+  };
+
+  // Break Countdown Timer Effect
+  useEffect(() => {
+    let timer = null;
+    if (isBreak && breakRunning && breakSecondsLeft > 0) {
+      timer = setInterval(() => {
+        setBreakSecondsLeft(prev => {
+          if (prev <= 1) {
+            playChime();
+            setToast('☕ Break finished! Ready to resume studying?');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isBreak, breakRunning, breakSecondsLeft]);
+
   const [alarms, setAlarms] = useState(() => readSavedAlarms(user ? user.id : null));
   const [activeAlarmModal, setActiveAlarmModal] = useState(null);
   const [lastTriggeredMinute, setLastTriggeredMinute] = useState('');
@@ -1988,7 +2072,11 @@ function App() {
     setActiveId(id);
     setSeconds(0);
     setRunning(true);
-    setToast('Focus session started');
+    setIsBreak(false);
+    setBreakSecondsLeft(0);
+    setBreakRunning(false);
+    setStudyModeActive(true);
+    setToast('Switched to Study Mode');
     setTimeout(() => setToast(''), 2200);
   };
 
@@ -2034,6 +2122,10 @@ function App() {
     setRunning(false);
     setActiveId(null);
     setSeconds(0);
+    setIsBreak(false);
+    setBreakSecondsLeft(0);
+    setBreakRunning(false);
+    setStudyModeActive(false);
     setToast('Session logged');
     setTimeout(() => setToast(''), 2200);
   };
@@ -3397,7 +3489,7 @@ const handleNudge = async (toUserId, toUsername) => {
 
   return (
     <div
-      className={`app-shell ${isZenMode ? 'zen-active' : ''}`}
+      className={`app-shell ${isZenMode ? 'zen-active' : ''} ${sidebarCollapsed || studyModeActive ? 'sidebar-collapsed' : ''} ${studyModeActive ? 'study-mode-active' : ''}`}
       data-theme={theme}
       data-column-style={columnStyle}
       data-has-wallpaper={hasWallpaper ? 'true' : 'false'}
@@ -3419,6 +3511,14 @@ const handleNudge = async (toUserId, toUsername) => {
               <>daymark<span className="brand-dot">.</span></>
             )}
           </span>
+          <button
+            type="button"
+            className="sidebar-toggle-btn"
+            onClick={toggleSidebar}
+            title="Hide Sidebar to free up space [Ctrl+B or []"
+          >
+            <PanelLeftClose size={15} />
+          </button>
         </div>
         <div className="side-label">WORKSPACE</div>
         <nav>
@@ -3555,29 +3655,102 @@ const handleNudge = async (toUserId, toUsername) => {
             </div>
           </>
         )}
-        <header className="topbar">
-          <div>
-            <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
-            <h1>
-              {view === 'Today'
-                ? isToday
-                  ? 'A calmer way to make progress'
-                  : isPast
-                  ? 'Archived Performance Record'
-                  : 'Upcoming Routine Plan'
-                : view === 'Stage Roadmaps'
-                ? 'Stage Roadmaps & Checkpoint Hub'
-                : view === 'Weekly report'
-                ? 'Your progress, at a glance'
-                : view === 'Study pods'
-                ? 'Competitive Study Pod'
-                : view === 'Coding'
-                ? 'Developer & DSA Performance Hub'
-                : 'Customize your routine schedule'}
-            </h1>
-          </div>
-          {renderTopActions()}
-        </header>
+        {studyModeActive && activeId ? (
+          <StudyModeView
+            activeBlock={schedule.find(s => s.id === activeId)}
+            seconds={seconds}
+            running={running}
+            onToggleRunning={() => setRunning(r => !r)}
+            onFinishSession={() => finishSession()}
+            onMinimize={() => setStudyModeActive(false)}
+            theme={theme}
+            columnStyle={columnStyle}
+            hasWallpaper={hasWallpaper}
+            activeWallpaperUrl={activeWallpaperUrl}
+            playChime={playChime}
+            setToast={setToast}
+            isBreak={isBreak}
+            breakSecondsLeft={breakSecondsLeft}
+            breakDurationMinutes={breakDurationMinutes}
+            onStartBreak={startBreak}
+            onEndBreakAndResume={endBreakAndResume}
+            onExtendBreak={extendBreak}
+            breakRunning={breakRunning}
+            onToggleBreakRunning={toggleBreakRunning}
+            activeCheckpoint={(() => {
+              const activeBlk = schedule.find(s => s.id === activeId);
+              if (!activeBlk?.title) return null;
+              const curr = loadSubjectCurriculum(activeBlk.title);
+              if (!curr || !curr.stages) return null;
+              for (const st of curr.stages) {
+                const pending = (st.checkpoints || []).find(c => !c.completed);
+                if (pending) return pending;
+              }
+              return null;
+            })()}
+          />
+        ) : (
+          <>
+            {/* Background Active Session Quick Island when Study Mode is minimized */}
+            {activeId && (
+              <div className="floating-study-session-banner">
+                <span className={`study-banner-dot ${isBreak ? 'break' : running ? 'active' : 'paused'}`} />
+                <div className="study-banner-text">
+                  <strong>{isBreak ? '☕ On Break' : `● Active Focus: ${schedule.find(s => s.id === activeId)?.title || 'Study Session'}`}</strong>
+                  <span className="study-banner-time">
+                    {isBreak
+                      ? ` (${Math.floor(breakSecondsLeft / 60)}:${(breakSecondsLeft % 60).toString().padStart(2, '0')} remaining)`
+                      : ` (${Math.floor(seconds / 60)}m ${seconds % 60}s)`}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className="return-study-mode-btn"
+                  onClick={() => setStudyModeActive(true)}
+                  title="Return to fullscreen Study Mode"
+                >
+                  <span>Return to Study Mode</span>
+                  <ArrowRight size={13} />
+                </button>
+              </div>
+            )}
+
+            <header className="topbar">
+              <div className="topbar-left-group">
+                {sidebarCollapsed && (
+                  <button
+                    type="button"
+                    className="sidebar-expand-btn"
+                    onClick={toggleSidebar}
+                    title="Show sidebar [Ctrl+B or []"
+                  >
+                    <PanelLeftOpen size={16} />
+                    <span>Menu</span>
+                  </button>
+                )}
+                <div>
+                  <span className="eyebrow">YOUR PERSONAL WORKSPACE</span>
+                  <h1>
+                    {view === 'Today'
+                      ? isToday
+                        ? 'A calmer way to make progress'
+                        : isPast
+                        ? 'Archived Performance Record'
+                        : 'Upcoming Routine Plan'
+                      : view === 'Stage Roadmaps'
+                      ? 'Stage Roadmaps & Checkpoint Hub'
+                      : view === 'Weekly report'
+                      ? 'Your progress, at a glance'
+                      : view === 'Study pods'
+                      ? 'Competitive Study Pod'
+                      : view === 'Coding'
+                      ? 'Developer & DSA Performance Hub'
+                      : 'Customize your routine schedule'}
+                  </h1>
+                </div>
+              </div>
+              {renderTopActions()}
+            </header>
 
         {view === 'Today' && (
           <>
@@ -3924,10 +4097,30 @@ const handleNudge = async (toUserId, toUsername) => {
                         <div className="event-action">
                           {isToday ? (
                             isActive ? (
-                              <button className="action-button running" onClick={() => setRunning(v => !v)}>
-                                {running ? <Pause size={15} /> : <Play size={15} />}
-                                <span>{running ? 'Pause' : 'Resume'}</span>
-                              </button>
+                              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                <button
+                                  className="action-button running"
+                                  onClick={() => {
+                                    if (!running) {
+                                      setRunning(true);
+                                      setStudyModeActive(true);
+                                    } else {
+                                      setRunning(false);
+                                    }
+                                  }}
+                                >
+                                  {running ? <Pause size={15} /> : <Play size={15} />}
+                                  <span>{running ? 'Pause' : 'Resume'}</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  className="action-button study-mode-quick-btn"
+                                  onClick={() => setStudyModeActive(true)}
+                                  title="Enter full study mode"
+                                >
+                                  Study Mode →
+                                </button>
+                              </div>
                             ) : (
                               <button
                                 className="action-button"
@@ -5903,6 +6096,8 @@ const handleNudge = async (toUserId, toUsername) => {
           </span>
           <span>Progress over perfection.</span>
         </footer>
+          </>
+        )}
       </main>
 
       {/* 1:00 AM Daily Recap Modal */}

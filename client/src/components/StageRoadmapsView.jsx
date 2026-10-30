@@ -77,6 +77,18 @@ export default function StageRoadmapsView({
     return combined;
   }, [routineSubjects, customSubjects]);
 
+  const [headerHidden, setHeaderHidden] = useState(() => {
+    return localStorage.getItem('daymark-roadmap-header-hidden') === 'true';
+  });
+
+  const toggleHeaderHidden = () => {
+    setHeaderHidden(prev => {
+      const next = !prev;
+      localStorage.setItem('daymark-roadmap-header-hidden', String(next));
+      return next;
+    });
+  };
+
   const [activeSubject, setActiveSubject] = useState(() => {
     return selectedSubject || allSubjects[0] || (routine[0]?.title || 'Study Session');
   });
@@ -388,46 +400,82 @@ export default function StageRoadmapsView({
 
   return (
     <div className="stage-roadmaps-hub">
-      {/* 1. Header Bar */}
-      <div className="roadmap-hub-header">
-        <div className="roadmap-hub-title-group">
-          <div className="roadmap-hub-icon-wrap">
-            <Milestone size={26} />
+      {/* 1. Header Bar (Collapsible for extra screen space) */}
+      {!headerHidden ? (
+        <div className="roadmap-hub-header">
+          <div className="roadmap-hub-title-group">
+            <div className="roadmap-hub-icon-wrap">
+              <Milestone size={26} />
+            </div>
+            <div>
+              <span className="eyebrow">
+                {theme === 'tokyo-lofi' ? 'STAGE ROADMAPS // 段階別ロードマップ' : 'CURRICULUM ARCHITECTURE'}
+              </span>
+              <h2 className="roadmap-hub-title">Stage Roadmaps & Checkpoint Hub</h2>
+              <p className="roadmap-hub-subtitle">
+                {theme === 'tokyo-lofi'
+                  ? 'Sequential milestone mastery. Select a stage to view its active checkpoints, pin focus blocks to your timetable, and track completion.'
+                  : 'Manage your stage plans for each subject. Provide your stages in the format below to generate interactive checkpoints.'}
+              </p>
+            </div>
           </div>
-          <div>
-            <span className="eyebrow">
-              {theme === 'tokyo-lofi' ? 'STAGE ROADMAPS // 段階別ロードマップ' : 'CURRICULUM ARCHITECTURE'}
-            </span>
-            <h2 className="roadmap-hub-title">Stage Roadmaps & Checkpoint Hub</h2>
-            <p className="roadmap-hub-subtitle">
-              {theme === 'tokyo-lofi'
-                ? 'Sequential milestone mastery. Select a stage to view its active checkpoints, pin focus blocks to your timetable, and track completion.'
-                : 'Manage your stage plans for each subject. Provide your stages in the format below to generate interactive checkpoints.'}
-            </p>
-          </div>
-        </div>
 
-        <div className="roadmap-hub-actions">
-          <button
-            type="button"
-            className="roadmap-header-btn secondary"
-            onClick={handleCopyChatGPT}
-            title="Copy ChatGPT roadmap generation prompt"
-          >
-            <Copy size={13} />
-            <span>Copy AI Prompt</span>
-          </button>
-          <button
-            type="button"
-            className="roadmap-header-btn primary"
-            onClick={onJumpToToday}
-            title="Return to today's timetable"
-          >
-            <span>Back to Timetable</span>
-            <ArrowRight size={13} />
-          </button>
+          <div className="roadmap-hub-actions">
+            <button
+              type="button"
+              className="roadmap-header-btn secondary"
+              onClick={handleCopyChatGPT}
+              title="Copy ChatGPT roadmap generation prompt"
+            >
+              <Copy size={13} />
+              <span>Copy AI Prompt</span>
+            </button>
+            <button
+              type="button"
+              className="roadmap-header-btn secondary"
+              onClick={toggleHeaderHidden}
+              title="Hide this header banner to save screen space"
+            >
+              <span>▲ Hide Header</span>
+            </button>
+            <button
+              type="button"
+              className="roadmap-header-btn primary"
+              onClick={onJumpToToday}
+              title="Return to today's timetable"
+            >
+              <span>Back to Timetable</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="roadmap-header-compact-bar">
+          <div className="roadmap-compact-left">
+            <Milestone size={16} />
+            <strong>Stage Roadmaps & Checkpoints</strong>
+          </div>
+          <div className="roadmap-hub-actions">
+            <button
+              type="button"
+              className="roadmap-header-btn secondary"
+              onClick={toggleHeaderHidden}
+              title="Show header banner"
+            >
+              <span>▼ Show Header</span>
+            </button>
+            <button
+              type="button"
+              className="roadmap-header-btn primary"
+              onClick={onJumpToToday}
+              title="Return to today's timetable"
+            >
+              <span>Back to Timetable</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 2. Subject Tabs Pill Row (Routine subjects + custom subjects) */}
       <div className="roadmap-subjects-tabs">
