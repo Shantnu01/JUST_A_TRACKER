@@ -45,6 +45,7 @@ import {
   GitBranch,
   GitFork,
   Github,
+  Image,
   Leaf,
   Lock,
   LogIn,
@@ -52,6 +53,7 @@ import {
   Medal,
   Menu,
   Moon, Palette,
+  Upload,
   Pause,
   Play,
   Plus,
@@ -499,6 +501,49 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
+const TOKYO_LOFI_WALLPAPERS = [
+  {
+    id: 'default',
+    name: 'Tokyo Rain Desk',
+    sub: 'Original cozy anime desk & rain window',
+    url: '/lofi_study_dashboard_bg.jpg',
+    tag: 'Default',
+    emoji: '🌧️'
+  },
+  {
+    id: 'forest',
+    name: 'Misty Bamboo Forest',
+    sub: 'Deep soothing green canopy & soft morning fog',
+    url: 'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=1920&q=80',
+    tag: 'Forest',
+    emoji: '🌲'
+  },
+  {
+    id: 'train',
+    name: 'Scenic Mountain Train',
+    sub: 'Calm railway winding through lush nature',
+    url: 'https://images.unsplash.com/photo-1509749837427-ac94a2553d0e?auto=format&fit=crop&w=1920&q=80',
+    tag: 'Train',
+    emoji: '🚂'
+  },
+  {
+    id: 'lake',
+    name: 'Still Mountain Lake',
+    sub: 'Glass lake reflection & twilight calm',
+    url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
+    tag: 'Lake',
+    emoji: '🏞️'
+  },
+  {
+    id: 'sunset',
+    name: 'Alpine Pines at Dusk',
+    sub: 'Warm golden twilight over quiet misty ridge',
+    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80',
+    tag: 'Sunset',
+    emoji: '🌄'
+  }
+];
+
 function App() {
   // Authentication State
   const [token, setToken] = useState(() => localStorage.getItem('daymark-token') || '');
@@ -614,6 +659,87 @@ function App() {
     document.documentElement.setAttribute('data-column-style', columnStyle);
     localStorage.setItem('daymark-column-style', columnStyle);
   }, [columnStyle]);
+
+  // Tokyo Lofi Background Wallpaper State
+  // Presets: 'default' | 'forest' | 'train' | 'lake' | 'sunset' | 'custom'
+  const [tokyoBgId, setTokyoBgId] = useState(() => {
+    const sessionCustom = sessionStorage.getItem('daymark-tokyo-custom-bg');
+    if (sessionCustom) return 'custom';
+    return localStorage.getItem('daymark-tokyo-bg') || 'default';
+  });
+
+  const [tokyoCustomBgData, setTokyoCustomBgData] = useState(() => {
+    // Kept ONLY in sessionStorage - automatically discarded on session end, never saved to DB!
+    return sessionStorage.getItem('daymark-tokyo-custom-bg') || null;
+  });
+
+  const [tokyoWallpaperModalOpen, setTokyoWallpaperModalOpen] = useState(false);
+
+  const activeTokyoBgUrl = useMemo(() => {
+    if (tokyoBgId === 'custom' && tokyoCustomBgData) {
+      return tokyoCustomBgData;
+    }
+    const found = TOKYO_LOFI_WALLPAPERS.find(w => w.id === tokyoBgId);
+    return found ? found.url : '/lofi_study_dashboard_bg.jpg';
+  }, [tokyoBgId, tokyoCustomBgData]);
+
+  useEffect(() => {
+    if (theme === 'tokyo-lofi') {
+      document.documentElement.style.setProperty('--tokyo-bg-url', `url("${activeTokyoBgUrl}")`);
+    } else {
+      document.documentElement.style.removeProperty('--tokyo-bg-url');
+    }
+  }, [theme, activeTokyoBgUrl]);
+
+  const handleSelectTokyoBg = (id) => {
+    setTokyoBgId(id);
+    localStorage.setItem('daymark-tokyo-bg', id);
+    if (id !== 'custom') {
+      sessionStorage.removeItem('daymark-tokyo-custom-bg');
+      setTokyoCustomBgData(null);
+    }
+    const found = TOKYO_LOFI_WALLPAPERS.find(w => w.id === id);
+    setToast(`Applied "${found ? found.name : 'Default'}" wallpaper!`);
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  const handleUploadTokyoBg = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setToast('Please select a valid image file (PNG, JPG, WEBP).');
+      setTimeout(() => setToast(''), 3000);
+      return;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      setToast('Image is too large. Please select an image under 15MB.');
+      setTimeout(() => setToast(''), 3000);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target?.result;
+      if (dataUrl) {
+        // STORE ONLY IN SESSION STORAGE: automatically wiped when session ends!
+        sessionStorage.setItem('daymark-tokyo-custom-bg', dataUrl);
+        setTokyoCustomBgData(dataUrl);
+        setTokyoBgId('custom');
+        setToast('Custom background applied for this session! (Cleared when session ends)');
+        setTimeout(() => setToast(''), 4000);
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const handleResetTokyoBg = () => {
+    sessionStorage.removeItem('daymark-tokyo-custom-bg');
+    setTokyoCustomBgData(null);
+    setTokyoBgId('default');
+    localStorage.setItem('daymark-tokyo-bg', 'default');
+    setToast('Reset to default Tokyo Lofi study desk wallpaper.');
+    setTimeout(() => setToast(''), 2500);
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -3220,7 +3346,12 @@ const handleNudge = async (toUserId, toUsername) => {
   };
 
   return (
-    <div className={`app-shell ${isZenMode ? 'zen-active' : ''}`} data-theme={theme} data-column-style={columnStyle}>
+    <div
+      className={`app-shell ${isZenMode ? 'zen-active' : ''}`}
+      data-theme={theme}
+      data-column-style={columnStyle}
+      style={theme === 'tokyo-lofi' ? { '--tokyo-bg-url': `url("${activeTokyoBgUrl}")` } : undefined}
+    >
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">
@@ -3484,6 +3615,15 @@ const handleNudge = async (toUserId, toUsername) => {
                       <span className="tokyo-clock-dot" />
                       <span>{userGeoWeather?.timeZoneLabel || 'LOCAL TIME'}</span>
                     </div>
+                    <button
+                      type="button"
+                      className="tokyo-clock-wallpaper-btn"
+                      onClick={() => setTokyoWallpaperModalOpen(true)}
+                      title="Change Tokyo Lofi wallpaper (Forest, Train, Lake, Custom)"
+                    >
+                      <Image size={11} />
+                      <span>Wallpaper</span>
+                    </button>
                   </div>
                 )}
               </div>
@@ -5470,6 +5610,78 @@ const handleNudge = async (toUserId, toUsername) => {
               </div>
             </div>
 
+            {/* Tokyo Lofi Atmospheric Wallpaper Setting */}
+            {theme === 'tokyo-lofi' && (
+              <div className="tokyo-wallpaper-setting-card">
+                <div className="tokyo-wallpaper-card-header">
+                  <div>
+                    <span className="eyebrow">TOKYO LOFI WALLPAPER // 背景壁紙</span>
+                    <h4>Atmospheric Nature & Study Wallpaper</h4>
+                    <p className="muted" style={{ margin: '4px 0 0 0', fontSize: '12px' }}>
+                      Select a soothing nature backdrop or upload a temporary custom image (kept in session only):
+                    </p>
+                  </div>
+                  {tokyoBgId === 'custom' && (
+                    <span className="tokyo-session-badge">
+                      SESSION CUSTOM ACTIVE
+                    </span>
+                  )}
+                </div>
+
+                <div className="tokyo-wallpaper-grid">
+                  {TOKYO_LOFI_WALLPAPERS.map(wp => {
+                    const isSelected = tokyoBgId === wp.id;
+                    return (
+                      <button
+                        key={wp.id}
+                        type="button"
+                        className={`tokyo-wallpaper-option-btn ${isSelected ? 'selected' : ''}`}
+                        onClick={() => handleSelectTokyoBg(wp.id)}
+                      >
+                        <div className="wp-thumb-wrapper">
+                          <img src={wp.url} alt={wp.name} className="wp-thumb-img" loading="lazy" />
+                          {isSelected && <span className="wp-selected-check">✓</span>}
+                        </div>
+                        <div className="wp-info">
+                          <div className="wp-name-row">
+                            <span className="wp-emoji">{wp.emoji}</span>
+                            <strong>{wp.name}</strong>
+                          </div>
+                          <p>{wp.sub}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Upload Custom Wallpaper Trigger */}
+                <div className="tokyo-wallpaper-upload-row">
+                  <label className="tokyo-upload-btn">
+                    <Upload size={14} />
+                    <span>Upload Custom Wallpaper</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleUploadTokyoBg}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                  {tokyoBgId === 'custom' && (
+                    <button
+                      type="button"
+                      className="tokyo-reset-bg-btn"
+                      onClick={handleResetTokyoBg}
+                    >
+                      <RotateCcw size={13} /> Reset to Default
+                    </button>
+                  )}
+                  <span className="tokyo-upload-hint">
+                    🔒 Temporary for this session only · Never saved to database
+                  </span>
+                </div>
+              </div>
+            )}
+
             {/* Save & Reset Actions Bar */}
             <div className="settings-actions">
               <button className="save-schedule-btn" onClick={saveScheduleChanges}>
@@ -6959,6 +7171,91 @@ const handleNudge = async (toUserId, toUsername) => {
         theme={theme}
         columnStyle={columnStyle}
       />
+
+      {/* Tokyo Lofi Ambient Wallpaper Modal */}
+      {tokyoWallpaperModalOpen && (
+        <div className="modal-overlay" onClick={() => setTokyoWallpaperModalOpen(false)}>
+          <div className="modal-card tokyo-wallpaper-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <span className="eyebrow">AMBIENT WALLPAPER // 背景壁紙</span>
+                <h3>Choose Tokyo Lofi Background</h3>
+              </div>
+              <button
+                type="button"
+                className="modal-close"
+                onClick={() => setTokyoWallpaperModalOpen(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <p className="muted" style={{ fontSize: '13px', margin: '4px 0 16px' }}>
+              Select a tranquil nature scene or upload your own temporary background image:
+            </p>
+
+            <div className="tokyo-wallpaper-modal-grid">
+              {TOKYO_LOFI_WALLPAPERS.map(wp => {
+                const isSelected = tokyoBgId === wp.id;
+                return (
+                  <button
+                    key={wp.id}
+                    type="button"
+                    className={`tokyo-wallpaper-card-btn ${isSelected ? 'selected' : ''}`}
+                    onClick={() => {
+                      handleSelectTokyoBg(wp.id);
+                    }}
+                  >
+                    <div className="modal-wp-thumb-box">
+                      <img src={wp.url} alt={wp.name} className="modal-wp-img" loading="lazy" />
+                      {isSelected && <span className="modal-wp-badge">ACTIVE</span>}
+                    </div>
+                    <div className="modal-wp-info">
+                      <div className="modal-wp-title">
+                        <span>{wp.emoji}</span>
+                        <strong>{wp.name}</strong>
+                      </div>
+                      <small>{wp.sub}</small>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="tokyo-modal-upload-bar">
+              <label className="tokyo-upload-btn primary">
+                <Upload size={14} />
+                <span>Upload Custom Image</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    handleUploadTokyoBg(e);
+                  }}
+                  style={{ display: 'none' }}
+                />
+              </label>
+
+              {tokyoBgId === 'custom' && (
+                <button
+                  type="button"
+                  className="tokyo-reset-bg-btn"
+                  onClick={handleResetTokyoBg}
+                >
+                  <RotateCcw size={13} /> Reset to Default
+                </button>
+              )}
+            </div>
+
+            <div className="tokyo-modal-footer-note">
+              <span className="modal-note-icon">ℹ</span>
+              <span>
+                Uploaded images stay active in memory for this session only and are never uploaded to the database or stored permanently.
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {toast && (
         <div className="toast">
