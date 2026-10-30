@@ -350,6 +350,14 @@ const dsaCuratedList = [
 // 4:00 AM Daily Rollover Logic:
 // A routine tracking day runs until 4:00 AM next morning.
 // If local time is between 00:00 and 03:59:59, the day belongs to previous calendar date.
+const mergeCompletedMinutes = (remote = {}, local = {}) => {
+  const merged = { ...local };
+  for (const [k, v] of Object.entries(remote || {})) {
+    merged[k] = Math.max(Number(merged[k] || 0), Number(v || 0));
+  }
+  return merged;
+};
+
 const getLogicalDate = (date = new Date()) => {
   const d = new Date(date);
   if (d.getHours() < 4) {
@@ -1898,7 +1906,7 @@ function App() {
             ...(prev[key] || {}),
             checks: data.checks || prev[key]?.checks || {},
             notes: data.notes ?? prev[key]?.notes ?? '',
-            completedMinutes: data.completed_minutes || prev[key]?.completedMinutes || {},
+            completedMinutes: mergeCompletedMinutes(data.completed_minutes, prev[key]?.completedMinutes),
             alarms: data.alarms || prev[key]?.alarms || {},
             closeout: data.closeout || prev[key]?.closeout || {}
           };
@@ -1938,7 +1946,7 @@ function App() {
               ...(prev[dKey] || {}),
               checks: dayData.checks || prev[dKey]?.checks || {},
               notes: dayData.notes ?? prev[dKey]?.notes ?? '',
-              completedMinutes: dayData.completed_minutes || prev[dKey]?.completedMinutes || {},
+              completedMinutes: mergeCompletedMinutes(dayData.completed_minutes, prev[dKey]?.completedMinutes),
               alarms: dayData.alarms || prev[dKey]?.alarms || {},
               closeout: dayData.closeout || prev[dKey]?.closeout || {}
             };

@@ -1149,7 +1149,7 @@ app.get('/api/days/:date', optionalAuth, async (req, res) => {
   }
 });
 
-app.put('/api/days/:date', optionalAuth, async (req, res) => {
+const saveDayHandler = async (req, res) => {
   if (!pool) {
     return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
   }
@@ -1199,7 +1199,11 @@ app.put('/api/days/:date', optionalAuth, async (req, res) => {
     console.error('Save day failed:', error.message);
     return res.status(500).json({ error: 'Unable to save routine data.' });
   }
-});
+};
+
+app.put('/api/days/:date', optionalAuth, saveDayHandler);
+app.post('/api/days/:date', optionalAuth, saveDayHandler);
+
 
 // Fetch last recorded evening closeout (for reviewing previous day's checkout & priorities)
 app.get('/api/closeout/last', optionalAuth, async (req, res) => {
