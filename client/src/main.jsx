@@ -3140,7 +3140,7 @@ const handleNudge = async (toUserId, toUsername) => {
     } catch (e) {
       h = new Date().getHours();
     }
-    if (h >= 5 && h < 12) return 'Good Morning';
+    if (h >= 4 && h < 12) return 'Good Morning';
     if (h >= 12 && h < 17) return 'Good Afternoon';
     if (h >= 17 && h < 22) return 'Good Evening';
     return 'Good Night';
