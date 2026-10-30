@@ -1608,12 +1608,98 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 
 [data-theme="zen-paper"] h1,
 [data-theme="zen-paper"] h2,
-[data-theme="zen-paper"] .panel-heading h3,
-[data-theme="zen-paper"] .welcome-row h2 {
+[data-theme="zen-paper"] .panel-heading h3 {
   font-family: 'Newsreader', Georgia, serif !important;
   font-weight: 500 !important;
   letter-spacing: -0.3px !important;
   color: #1a1e21 !important;
+}
+
+[data-theme="zen-paper"] .topbar h1 {
+  font-family: 'Newsreader', Georgia, serif !important;
+  font-size: clamp(20px, 2.1vw, 26px) !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  max-width: 520px !important;
+  white-space: normal !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: #1a1e21 !important;
+  margin: 4px 0 0 !important;
+}
+
+[data-theme="zen-paper"] .welcome-row h2 {
+  font-family: 'Newsreader', Georgia, serif !important;
+  font-size: clamp(24px, 2.8vw, 34px) !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  max-width: 680px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: #1a1e21 !important;
+  margin-bottom: 6px !important;
+}
+
+[data-theme="zen-paper"] .welcome-row .subhead {
+  font-size: 13.5px !important;
+  line-height: 1.4 !important;
+  max-width: 620px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin: 0 !important;
+}
+
+/* Classic Default Theme Topbar & Welcome Quotes Discipline */
+[data-theme="default"] .topbar h1 {
+  font-family: 'Manrope', -apple-system, sans-serif !important;
+  font-size: clamp(19px, 2vw, 25px) !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  max-width: 520px !important;
+  white-space: normal !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: #1e2c26 !important;
+  margin: 4px 0 0 !important;
+}
+
+[data-theme="default"] .welcome-row h2 {
+  font-family: 'Manrope', -apple-system, sans-serif !important;
+  font-size: clamp(24px, 2.8vw, 34px) !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  max-width: 680px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: #1e2c26 !important;
+  margin-bottom: 6px !important;
+}
+
+[data-theme="default"] .welcome-row .subhead {
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  max-width: 620px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin: 0 !important;
 }
 
 [data-theme="zen-paper"] .streak-card {
@@ -1751,11 +1837,50 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 }
 
 [data-theme="ghibli-meadow"] h1,
-[data-theme="ghibli-meadow"] h2,
+[data-theme="ghibli-meadow"] h2 {
+  font-family: 'Caveat', cursive !important;
+  color: #234b32 !important;
+}
+
+[data-theme="ghibli-meadow"] .topbar h1 {
+  font-family: 'Caveat', cursive !important;
+  font-size: clamp(24px, 2.6vw, 32px) !important;
+  line-height: 1.15 !important;
+  max-width: 520px !important;
+  white-space: normal !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: #234b32 !important;
+  margin: 4px 0 0 !important;
+}
+
 [data-theme="ghibli-meadow"] .welcome-row h2 {
   font-family: 'Caveat', cursive !important;
-  font-size: clamp(28px, 3.5vw, 40px) !important;
+  font-size: clamp(26px, 3vw, 36px) !important;
+  line-height: 1.2 !important;
+  max-width: 680px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
   color: #234b32 !important;
+  margin-bottom: 6px !important;
+}
+
+[data-theme="ghibli-meadow"] .welcome-row .subhead {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  max-width: 620px !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin: 0 !important;
 }
 
 [data-theme="ghibli-meadow"] .panel-heading h3 {
@@ -17077,6 +17202,13 @@ html[data-theme="tokyo-lofi"],
   display: flex;
   align-items: center;
   gap: 14px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.topbar-left-group > div {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .sidebar-expand-btn {

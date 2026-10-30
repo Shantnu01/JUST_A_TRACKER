@@ -3078,6 +3078,21 @@ const handleNudge = async (toUserId, toUsername) => {
     return 'Good Night.';
   }, [userGeoWeather?.timeZone]);
 
+  const getTimeGreeting = useCallback(() => {
+    let h;
+    try {
+      const tz = userGeoWeather?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const hourStr = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', hour12: false }).format(new Date());
+      h = parseInt(hourStr, 10);
+    } catch (e) {
+      h = new Date().getHours();
+    }
+    if (h >= 5 && h < 12) return 'Good Morning';
+    if (h >= 12 && h < 17) return 'Good Afternoon';
+    if (h >= 17 && h < 22) return 'Good Evening';
+    return 'Good Night';
+  }, [userGeoWeather?.timeZone]);
+
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [typewriterText, setTypewriterText] = useState(() => getTokyoGreeting());
   const [isDeleting, setIsDeleting] = useState(false);
@@ -3748,7 +3763,7 @@ const handleNudge = async (toUserId, toUsername) => {
                   <h1>
                     {view === 'Today'
                       ? isToday
-                        ? 'A calmer way to make progress'
+                        ? `${getTimeGreeting()}${user?.username ? `, ${user.username}` : ''}`
                         : isPast
                         ? 'Archived Performance Record'
                         : 'Upcoming Routine Plan'
