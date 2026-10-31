@@ -61,10 +61,17 @@ export default function StudyModeView({
   const [soundVolumeLevel, setSoundVolumeLevel] = useState(0.4);
   const fileInputRef = useRef(null);
 
-  // Handle Study Alarm Reached
+  // Handle Study Alarm Reached (immune to skipping exact second on tab switch)
+  const alarmFiredRef = useRef(false);
+
+  useEffect(() => {
+    alarmFiredRef.current = false;
+  }, [alarmMinutes, activeBlock?.id]);
+
   useEffect(() => {
     if (!isBreak && running && alarmMinutes && seconds > 0) {
-      if (seconds === alarmMinutes * 60) {
+      if (seconds >= alarmMinutes * 60 && !alarmFiredRef.current) {
+        alarmFiredRef.current = true;
         if (typeof playChime === 'function') playChime();
         if (typeof setToast === 'function') {
           setToast(`🎯 Goal reached! You have studied for ${alarmMinutes} minutes!`);

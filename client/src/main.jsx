@@ -927,23 +927,55 @@ function App() {
     setBreakRunning(prev => !prev);
   };
 
-  // Break Countdown Timer Effect
+  // Break Countdown Timer Effect with Wall-Clock Delta (Background Tab Immune)
+  const lastBreakTimestampRef = useRef(null);
+
   useEffect(() => {
-    let timer = null;
-    if (isBreak && breakRunning && breakSecondsLeft > 0) {
-      timer = setInterval(() => {
+    if (!isBreak || !breakRunning || breakSecondsLeft <= 0) {
+      lastBreakTimestampRef.current = null;
+      return;
+    }
+
+    lastBreakTimestampRef.current = Date.now();
+
+    const tickBreak = () => {
+      const now = Date.now();
+      if (!lastBreakTimestampRef.current) {
+        lastBreakTimestampRef.current = now;
+        return;
+      }
+      const deltaMs = now - lastBreakTimestampRef.current;
+      if (deltaMs >= 1000) {
+        const elapsedSecs = Math.floor(deltaMs / 1000);
+        lastBreakTimestampRef.current += elapsedSecs * 1000;
         setBreakSecondsLeft(prev => {
-          if (prev <= 1) {
+          if (prev <= elapsedSecs) {
             playChime();
             setToast('☕ Break finished! Ready to resume studying?');
             return 0;
           }
-          return prev - 1;
+          return prev - elapsedSecs;
         });
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isBreak, breakRunning, breakSecondsLeft]);
+      }
+    };
+
+    const timer = setInterval(tickBreak, 500);
+
+    const handleBreakSync = () => {
+      if (document.visibilityState === 'visible' || (typeof document.hasFocus === 'function' && document.hasFocus())) {
+        tickBreak();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleBreakSync);
+    window.addEventListener('focus', handleBreakSync);
+
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleBreakSync);
+      window.removeEventListener('focus', handleBreakSync);
+    };
+  }, [isBreak, breakRunning]);
 
   const [alarms, setAlarms] = useState(() => readSavedAlarms(user ? user.id : null));
   const [activeAlarmModal, setActiveAlarmModal] = useState(null);
@@ -1858,11 +1890,79 @@ function App() {
     setNotes(day.notes || '');
   }, [key]);
 
+  // High-Precision Wall-Clock Study Timer (Immune to Background Tab Throttling)
+  const lastActiveTimestampRef = useRef(null);
+
   useEffect(() => {
-    if (!running) return;
-    const timer = setInterval(() => setSeconds(s => s + 1), 1000);
-    return () => clearInterval(timer);
+    if (!running) {
+      lastActiveTimestampRef.current = null;
+      return;
+    }
+
+    lastActiveTimestampRef.current = Date.now();
+
+    const tick = () => {
+      const now = Date.now();
+      if (!lastActiveTimestampRef.current) {
+        lastActiveTimestampRef.current = now;
+        return;
+      }
+      const deltaMs = now - lastActiveTimestampRef.current;
+      if (deltaMs >= 1000) {
+        const elapsedSecs = Math.floor(deltaMs / 1000);
+        lastActiveTimestampRef.current += elapsedSecs * 1000;
+        setSeconds(s => s + elapsedSecs);
+      }
+    };
+
+    // Run every 500ms to catch second transitions precisely
+    const timer = setInterval(tick, 500);
+
+    // Sync immediately when tab regains visibility or focus (e.g. returning from LeetCode)
+    const handleSync = () => {
+      if (document.visibilityState === 'visible' || (typeof document.hasFocus === 'function' && document.hasFocus())) {
+        tick();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleSync);
+    window.addEventListener('focus', handleSync);
+
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleSync);
+      window.removeEventListener('focus', handleSync);
+    };
   }, [running]);
+
+  // Live Browser Tab Title: allows seeing live timer while in LeetCode or other tabs
+  useEffect(() => {
+    if (!running || !activeId) {
+      if (isBreak && breakRunning && breakSecondsLeft > 0) {
+        const bM = Math.floor(breakSecondsLeft / 60);
+        const bS = breakSecondsLeft % 60;
+        document.title = `☕ ${String(bM).padStart(2, '0')}:${String(bS).padStart(2, '0')} Break • Daymark`;
+        return;
+      }
+      document.title = 'Daymark — Daily Routine';
+      return;
+    }
+
+    const activeTask = schedule.find(s => s.id === activeId);
+    const taskName = activeTask?.title || 'Study';
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    const timeStr = hrs > 0
+      ? `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+      : `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+    document.title = `⏱️ ${timeStr} • ${taskName} | Daymark`;
+
+    return () => {
+      document.title = 'Daymark — Daily Routine';
+    };
+  }, [running, seconds, activeId, isBreak, breakRunning, breakSecondsLeft, schedule]);
 
   // Auto-save studied time every 2 minutes (120s) so reload never loses progress
   useEffect(() => {
