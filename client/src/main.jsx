@@ -175,7 +175,7 @@ function readSavedWeeklySchedule(userId = null) {
         const merged = { ...defaultWeekly };
         ROUTINE_DAYS.forEach(d => {
           if (Array.isArray(daysObj[d.key]) && daysObj[d.key].length > 0) {
-            merged[d.key] = daysObj[d.key];
+            merged[d.key] = [...daysObj[d.key]].sort((a, b) => (a.start || '00:00').localeCompare(b.start || '00:00'));
           }
         });
         return merged;
@@ -2903,6 +2903,12 @@ function App() {
     });
   };
 
+  const handleSortCurrentDayOnBlur = () => {
+    updateCurrentDayBlocks(prev => {
+      return [...prev].sort((a, b) => (a.start || '00:00').localeCompare(b.start || '00:00'));
+    });
+  };
+
   const handleAddBlock = () => {
     updateCurrentDayBlocks(prev => {
       const last = prev[prev.length - 1];
@@ -2925,7 +2931,7 @@ function App() {
         icon: 'Code2',
         tone: 'sage'
       };
-      return [...prev, newBlock];
+      return [...prev, newBlock].sort((a, b) => (a.start || '00:00').localeCompare(b.start || '00:00'));
     });
     setToast(`Added new block to ${currentDayLabel}! Customize and click Save.`);
     setTimeout(() => setToast(''), 3000);
@@ -2971,8 +2977,9 @@ function App() {
     const activeBlocks = editingWeeklySchedule[selectedRoutineDay] || [];
     if (!activeBlocks.length) return;
     const cloned = {};
+    const sortedActive = [...activeBlocks].sort((a, b) => (a.start || '00:00').localeCompare(b.start || '00:00'));
     ROUTINE_DAYS.forEach(d => {
-      cloned[d.key] = JSON.parse(JSON.stringify(activeBlocks));
+      cloned[d.key] = JSON.parse(JSON.stringify(sortedActive));
     });
     setEditingWeeklySchedule(cloned);
     setToast(`✓ ${currentDayLabel}'s routine copied to all 7 days of the week!`);
@@ -2980,10 +2987,17 @@ function App() {
   };
 
   const saveScheduleChanges = async () => {
-    setWeeklySchedule(editingWeeklySchedule);
+    // Always automatically sort each day's blocks chronologically by start time before saving
+    const sortedWeekly = {};
+    ROUTINE_DAYS.forEach(d => {
+      const list = editingWeeklySchedule[d.key] || [];
+      sortedWeekly[d.key] = [...list].sort((a, b) => (a.start || '00:00').localeCompare(b.start || '00:00'));
+    });
+    setEditingWeeklySchedule(sortedWeekly);
+    setWeeklySchedule(sortedWeekly);
     const weeklyStorageKey = user ? `daymark-weekly-schedule-${user.id}` : 'daymark-weekly-schedule-guest';
-    localStorage.setItem(weeklyStorageKey, JSON.stringify(editingWeeklySchedule));
-    localStorage.setItem('daymark-weekly-schedule', JSON.stringify(editingWeeklySchedule));
+    localStorage.setItem(weeklyStorageKey, JSON.stringify(sortedWeekly));
+    localStorage.setItem('daymark-weekly-schedule', JSON.stringify(sortedWeekly));
 
     // Also persist current selected day to legacy schedule key for backwards compatibility
     const currentDaySchedule = editingWeeklySchedule[selectedDayOfWeekKey] || editingWeeklySchedule.monday || [];
@@ -6263,12 +6277,13 @@ const handleNudge = async (toUserId, toUsername) => {
                       type="button"
                       className={`weekly-day-tab-btn ${isSelected ? 'selected' : ''} ${isLiveToday ? 'is-today' : ''}`}
                       onClick={() => setSelectedRoutineDay(d.key)}
+                      title={`${d.label}: ${dayBlocksCount} ${dayBlocksCount === 1 ? 'block' : 'blocks'}${isLiveToday ? ' (Today)' : ''}`}
                     >
-                      <div className="day-tab-name-row">
-                        <span className="day-tab-label">{d.label}</span>
+                      <span className="day-tab-label">{d.label}</span>
+                      <div className="day-tab-sub-row">
                         {isLiveToday && <span className="day-live-badge">TODAY</span>}
+                        <span className="day-tab-count">{dayBlocksCount} {dayBlocksCount === 1 ? 'Block' : 'Blocks'}</span>
                       </div>
-                      <span className="day-tab-count">{dayBlocksCount} {dayBlocksCount === 1 ? 'Block' : 'Blocks'}</span>
                     </button>
                   );
                 })}
@@ -6282,12 +6297,6 @@ const handleNudge = async (toUserId, toUsername) => {
               </button>
               <button className="add-block-btn" type="button" onClick={handleAddBlock} style={{ background: '#10b981', color: '#fff', border: 'none', borderRadius: '8px', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '12px', cursor: 'pointer' }}>
                 <Plus size={15} /> Add Block to {currentDayShort}
-              </button>
-              <button className="sort-schedule-btn" type="button" onClick={handleSortBlocksByTime} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--ink)', cursor: 'pointer' }}>
-                <ArrowUpDown size={14} /> Sort by Time
-              </button>
-              <button className="copy-day-btn" type="button" onClick={handleCopyCurrentDayToAll} style={{ background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '8px', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#F59E0B', fontWeight: 600, cursor: 'pointer' }}>
-                <Copy size={14} /> Copy to All Days
               </button>
               <button className="reset-schedule-btn" onClick={resetScheduleToDefaults}>
                 <RotateCcw size={15} /> Reset to Defaults
@@ -6309,6 +6318,7 @@ const handleNudge = async (toUserId, toUsername) => {
                         type="time"
                         value={item.start}
                         onChange={e => handleBlockChange(index, 'start', e.target.value)}
+                        onBlur={handleSortCurrentDayOnBlur}
                         aria-label={`Start time for ${item.title}`}
                       />
                       <span>to</span>
@@ -6316,6 +6326,7 @@ const handleNudge = async (toUserId, toUsername) => {
                         type="time"
                         value={item.end}
                         onChange={e => handleBlockChange(index, 'end', e.target.value)}
+                        onBlur={handleSortCurrentDayOnBlur}
                         aria-label={`End time for ${item.title}`}
                       />
                     </div>

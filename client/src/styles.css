@@ -20338,14 +20338,17 @@ html:not([data-theme="tokyo-lofi"]) {
   background: rgba(0, 0, 0, 0.03);
   border: 1px solid var(--line, #e5e5dd);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 10px 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  gap: 5px;
   text-align: left;
   cursor: pointer;
   transition: all 0.18s ease;
   position: relative;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .weekly-day-tab-btn:hover {
@@ -20360,34 +20363,49 @@ html:not([data-theme="tokyo-lofi"]) {
   box-shadow: 0 0 0 1.5px #10b981, 0 3px 10px rgba(16, 185, 129, 0.15);
 }
 
-.day-tab-name-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  width: 100%;
+.weekly-day-tab-btn.is-today {
+  border-color: rgba(16, 185, 129, 0.5);
 }
 
 .day-tab-label {
   font-size: 13px;
   font-weight: 700;
   color: var(--ink, #1e2c26);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  line-height: 1.2;
+}
+
+.day-tab-sub-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .day-live-badge {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 1px 5px;
+  letter-spacing: 0.6px;
+  padding: 1.5px 5px;
   border-radius: 4px;
   background: #10b981;
   color: #ffffff;
+  flex-shrink: 0;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .day-tab-count {
   font-size: 11px;
   color: var(--muted, #7b847d);
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Tokyo Lofi & Dark Theme reactions for Weekly Routine bar */
