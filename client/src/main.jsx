@@ -1230,10 +1230,7 @@ function App() {
     return dailyQuotes[dayOfYear % dailyQuotes.length];
   }, []);
 
-  // Sync editingSchedule whenever schedule updates
-  useEffect(() => {
-    setEditingSchedule(schedule);
-  }, [schedule]);
+
 
 
 
