@@ -138,6 +138,53 @@ function computeDurationHours(start, end) {
   return h > 0 ? h : 1;
 }
 
+export const ROUTINE_DAYS = [
+  { key: 'monday', label: 'Monday', short: 'Mon' },
+  { key: 'tuesday', label: 'Tuesday', short: 'Tue' },
+  { key: 'wednesday', label: 'Wednesday', short: 'Wed' },
+  { key: 'thursday', label: 'Thursday', short: 'Thu' },
+  { key: 'friday', label: 'Friday', short: 'Fri' },
+  { key: 'saturday', label: 'Saturday', short: 'Sat' },
+  { key: 'sunday', label: 'Sunday', short: 'Sun' }
+];
+
+export function getDayOfWeekKey(date = new Date()) {
+  const d = (date instanceof Date ? date : new Date(date)).getDay();
+  const map = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  return map[d] || 'monday';
+}
+
+function buildDefaultWeeklySchedule(fallbackSchedule = defaultSchedule) {
+  const weekly = {};
+  ROUTINE_DAYS.forEach(day => {
+    weekly[day.key] = JSON.parse(JSON.stringify(fallbackSchedule));
+  });
+  return weekly;
+}
+
+function readSavedWeeklySchedule(userId = null) {
+  const single = readSavedSchedule(userId);
+  const defaultWeekly = buildDefaultWeeklySchedule(single);
+  try {
+    const key = userId ? `daymark-weekly-schedule-${userId}` : 'daymark-weekly-schedule-guest';
+    const raw = localStorage.getItem(key) || localStorage.getItem('daymark-weekly-schedule');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const daysObj = parsed?.days || parsed;
+      if (daysObj && typeof daysObj === 'object') {
+        const merged = { ...defaultWeekly };
+        ROUTINE_DAYS.forEach(d => {
+          if (Array.isArray(daysObj[d.key]) && daysObj[d.key].length > 0) {
+            merged[d.key] = daysObj[d.key];
+          }
+        });
+        return merged;
+      }
+    }
+  } catch {}
+  return defaultWeekly;
+}
+
 function readSavedSchedule(userId = null) {
   try {
     const key = userId ? `daymark-schedule-${userId}` : 'daymark-schedule-guest';
@@ -1053,9 +1100,15 @@ function App() {
     return dsaCuratedList[dayOfYear % dsaCuratedList.length];
   }, []);
 
-  // Dynamic base daily schedule (Master Blueprint) loaded from DB / LocalStorage
-  const [baseSchedule, setBaseSchedule] = useState(readSavedSchedule);
-  const [editingSchedule, setEditingSchedule] = useState(baseSchedule);
+  // Dynamic 7-Day Weekly Schedule System loaded from DB / LocalStorage
+  const [weeklySchedule, setWeeklySchedule] = useState(() => readSavedWeeklySchedule(user ? user.id : null));
+  const [selectedRoutineDay, setSelectedRoutineDay] = useState(() => getDayOfWeekKey(new Date()));
+  const [editingWeeklySchedule, setEditingWeeklySchedule] = useState(weeklySchedule);
+
+  // Sync editingWeeklySchedule if weeklySchedule changes (e.g. from DB)
+  useEffect(() => {
+    setEditingWeeklySchedule(weeklySchedule);
+  }, [weeklySchedule]);
 
   // Logical date tracking (rolls over at 4:00 AM)
   const [currentLogicalDate, setCurrentLogicalDate] = useState(() => getLogicalDate(new Date()));
@@ -1070,12 +1123,25 @@ function App() {
   // Day record from store
   const day = store[key] || blankDay();
 
+  // Day-of-week resolution:
+  // Today and selected calendar date strictly route to their specific day of the week routine!
+  const todayLiveDayOfWeekKey = getDayOfWeekKey(currentLogicalDate);
+  const selectedDayOfWeekKey = getDayOfWeekKey(selectedDate);
+  const dayBaseSchedule = weeklySchedule[selectedDayOfWeekKey] || weeklySchedule.monday || defaultSchedule;
+
   // Day-Specific Healed Override Resolution:
   // AI Healed Plan or Elastic Shift applies ONLY to today/selected date.
-  // Next day and standard days always use baseSchedule (normal daily timetable).
+  // Next day and standard days always use that day's weekly schedule.
   const dayScheduleOverride = day?.scheduleOverride || getSavedScheduleOverride(key);
-  const schedule = dayScheduleOverride || baseSchedule;
+  const schedule = dayScheduleOverride || dayBaseSchedule;
   const hasDayOverride = Boolean(dayScheduleOverride);
+
+  // Current day editing block list for Routine settings
+  const currentEditingBlocks = editingWeeklySchedule[selectedRoutineDay] || [];
+  const editingSchedule = currentEditingBlocks; // Backwards compatible alias
+  const currentDayMeta = ROUTINE_DAYS.find(d => d.key === selectedRoutineDay) || ROUTINE_DAYS[0];
+  const currentDayLabel = currentDayMeta.label;
+  const currentDayShort = currentDayMeta.short;
 
   const habits = useMemo(() => getRoutineGoals(schedule), [schedule]);
 
@@ -1352,12 +1418,26 @@ function App() {
         const response = await fetch(`${API}/settings/schedule`, { headers });
         if (response.ok) {
           const data = await response.json();
-          if (mounted && Array.isArray(data) && data.length > 0) {
-            setBaseSchedule(data);
-            setEditingSchedule(data);
-            const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
-            localStorage.setItem(storageKey, JSON.stringify(data));
-            localStorage.setItem('daymark-schedule', JSON.stringify(data));
+          if (mounted && data) {
+            if (Array.isArray(data) && data.length > 0) {
+              const weekly = buildDefaultWeeklySchedule(data);
+              setWeeklySchedule(weekly);
+              setEditingWeeklySchedule(weekly);
+              const weeklyKey = user ? `daymark-weekly-schedule-${user.id}` : 'daymark-weekly-schedule-guest';
+              localStorage.setItem(weeklyKey, JSON.stringify(weekly));
+            } else if (typeof data === 'object') {
+              const daysObj = data.days || data;
+              const merged = buildDefaultWeeklySchedule(defaultSchedule);
+              ROUTINE_DAYS.forEach(d => {
+                if (Array.isArray(daysObj[d.key]) && daysObj[d.key].length > 0) {
+                  merged[d.key] = daysObj[d.key];
+                }
+              });
+              setWeeklySchedule(merged);
+              setEditingWeeklySchedule(merged);
+              const weeklyKey = user ? `daymark-weekly-schedule-${user.id}` : 'daymark-weekly-schedule-guest';
+              localStorage.setItem(weeklyKey, JSON.stringify(merged));
+            }
           }
         }
       } catch {
@@ -2802,9 +2882,20 @@ function App() {
     setTimeout(() => setToast(''), 2500);
   };
 
-  // Schedule timing editing handlers
+  // Weekly schedule day-specific timing editing handlers
+  const updateCurrentDayBlocks = (updater) => {
+    setEditingWeeklySchedule(prev => {
+      const currentList = prev[selectedRoutineDay] || [];
+      const updatedList = typeof updater === 'function' ? updater(currentList) : updater;
+      return {
+        ...prev,
+        [selectedRoutineDay]: updatedList
+      };
+    });
+  };
+
   const handleBlockChange = (index, field, value) => {
-    setEditingSchedule(prev => {
+    updateCurrentDayBlocks(prev => {
       const copy = [...prev];
       const item = { ...copy[index], [field]: value };
       if (field === 'start' || field === 'end') {
@@ -2816,7 +2907,7 @@ function App() {
   };
 
   const handleAddBlock = () => {
-    setEditingSchedule(prev => {
+    updateCurrentDayBlocks(prev => {
       const last = prev[prev.length - 1];
       let newStart = '09:00';
       let newEnd = '10:00';
@@ -2839,27 +2930,27 @@ function App() {
       };
       return [...prev, newBlock];
     });
-    setToast('Added new block to routine! Customize details and click Save Routine Changes.');
+    setToast(`Added new block to ${currentDayLabel}! Customize and click Save.`);
     setTimeout(() => setToast(''), 3000);
   };
 
   const handleDeleteBlock = (index) => {
-    setEditingSchedule(prev => {
+    updateCurrentDayBlocks(prev => {
       if (prev.length <= 1) {
-        setToast('Your routine must keep at least one block!');
+        setToast(`${currentDayLabel}'s routine must keep at least one block!`);
         setTimeout(() => setToast(''), 2500);
         return prev;
       }
       const deleted = prev[index];
       const next = prev.filter((_, i) => i !== index);
-      setToast(`Deleted "${deleted.title || 'Block'}" from routine.`);
+      setToast(`Deleted "${deleted.title || 'Block'}" from ${currentDayLabel}.`);
       setTimeout(() => setToast(''), 2500);
       return next;
     });
   };
 
   const handleMoveBlock = (index, direction) => {
-    setEditingSchedule(prev => {
+    updateCurrentDayBlocks(prev => {
       const target = index + direction;
       if (target < 0 || target >= prev.length) return prev;
       const copy = [...prev];
@@ -2871,20 +2962,38 @@ function App() {
   };
 
   const handleSortBlocksByTime = () => {
-    setEditingSchedule(prev => {
+    updateCurrentDayBlocks(prev => {
       const sorted = [...prev].sort((a, b) => (a.start || '00:00').localeCompare(b.start || '00:00'));
       return sorted;
     });
-    setToast('Routine sorted chronologically by start time!');
+    setToast(`${currentDayLabel}'s routine sorted chronologically by start time!`);
     setTimeout(() => setToast(''), 2500);
   };
 
+  const handleCopyCurrentDayToAll = () => {
+    const activeBlocks = editingWeeklySchedule[selectedRoutineDay] || [];
+    if (!activeBlocks.length) return;
+    const cloned = {};
+    ROUTINE_DAYS.forEach(d => {
+      cloned[d.key] = JSON.parse(JSON.stringify(activeBlocks));
+    });
+    setEditingWeeklySchedule(cloned);
+    setToast(`✓ ${currentDayLabel}'s routine copied to all 7 days of the week!`);
+    setTimeout(() => setToast(''), 3000);
+  };
+
   const saveScheduleChanges = async () => {
-    setBaseSchedule(editingSchedule);
-    setEditingSchedule(editingSchedule);
-    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
-    localStorage.setItem(storageKey, JSON.stringify(editingSchedule));
-    localStorage.setItem('daymark-schedule', JSON.stringify(editingSchedule));
+    setWeeklySchedule(editingWeeklySchedule);
+    const weeklyStorageKey = user ? `daymark-weekly-schedule-${user.id}` : 'daymark-weekly-schedule-guest';
+    localStorage.setItem(weeklyStorageKey, JSON.stringify(editingWeeklySchedule));
+    localStorage.setItem('daymark-weekly-schedule', JSON.stringify(editingWeeklySchedule));
+
+    // Also persist current selected day to legacy schedule key for backwards compatibility
+    const currentDaySchedule = editingWeeklySchedule[selectedDayOfWeekKey] || editingWeeklySchedule.monday || [];
+    const legacyKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
+    localStorage.setItem(legacyKey, JSON.stringify(currentDaySchedule));
+    localStorage.setItem('daymark-schedule', JSON.stringify(currentDaySchedule));
+
     revertDayScheduleOverride(key);
     try {
       const headers = {
@@ -2894,26 +3003,27 @@ function App() {
       const res = await fetch(`${API}/settings/schedule`, {
         method: 'PUT',
         headers,
-        body: JSON.stringify(editingSchedule)
+        body: JSON.stringify(editingWeeklySchedule)
       });
       if (res.ok) {
         setDbStatus('connected');
-        setToast('Your routine timings have been saved!');
+        setToast('Weekly routine saved & synced across all 7 days!');
       } else {
-        setToast('Routine changes saved!');
+        setToast('Weekly routine changes saved!');
       }
     } catch {
-      setToast('Routine saved successfully');
+      setToast('Weekly routine saved locally');
     }
     setTimeout(() => setToast(''), 3000);
   };
 
   const resetScheduleToDefaults = async () => {
-    setEditingSchedule(defaultSchedule);
-    setBaseSchedule(defaultSchedule);
-    const storageKey = user ? `daymark-schedule-${user.id}` : 'daymark-schedule-guest';
-    localStorage.setItem(storageKey, JSON.stringify(defaultSchedule));
-    localStorage.setItem('daymark-schedule', JSON.stringify(defaultSchedule));
+    const defaultWeekly = buildDefaultWeeklySchedule(defaultSchedule);
+    setEditingWeeklySchedule(defaultWeekly);
+    setWeeklySchedule(defaultWeekly);
+    const weeklyStorageKey = user ? `daymark-weekly-schedule-${user.id}` : 'daymark-weekly-schedule-guest';
+    localStorage.setItem(weeklyStorageKey, JSON.stringify(defaultWeekly));
+    localStorage.setItem('daymark-weekly-schedule', JSON.stringify(defaultWeekly));
     revertDayScheduleOverride(key);
     try {
       const headers = {
@@ -2923,9 +3033,9 @@ function App() {
       await fetch(`${API}/settings/schedule`, {
         method: 'PUT',
         headers,
-        body: JSON.stringify(defaultSchedule)
+        body: JSON.stringify(defaultWeekly)
       });
-      setToast('Your routine reset to default 7 AM - 9 PM schedule');
+      setToast('Weekly routine reset to default schedule for all days');
     } catch {
       setToast('Routine reset locally');
     }
@@ -6127,16 +6237,60 @@ const handleNudge = async (toUserId, toUsername) => {
               </div>
             </div>
 
+            {/* Weekly Routine Day Selector Bar */}
+            <div className="weekly-routine-header-bar">
+              <div className="weekly-bar-top">
+                <div>
+                  <span className="eyebrow">{theme === 'tokyo-lofi' ? 'WEEKLY SCHEDULE PLANNER // 曜日別時間割' : 'WEEKLY ROUTINE PLANNER'}</span>
+                  <h4>Customize Schedule for Each Day of the Week</h4>
+                </div>
+                <button
+                  type="button"
+                  className="copy-to-all-days-btn"
+                  onClick={handleCopyCurrentDayToAll}
+                  title={`Copy ${currentDayLabel}'s timetable blocks to all other days of the week`}
+                >
+                  <Copy size={13} />
+                  <span>Copy {currentDayLabel} to All 7 Days</span>
+                </button>
+              </div>
+
+              <div className="weekly-days-tabs">
+                {ROUTINE_DAYS.map(d => {
+                  const isSelected = selectedRoutineDay === d.key;
+                  const isLiveToday = todayLiveDayOfWeekKey === d.key;
+                  const dayBlocksCount = (editingWeeklySchedule[d.key] || []).length;
+                  return (
+                    <button
+                      key={d.key}
+                      type="button"
+                      className={`weekly-day-tab-btn ${isSelected ? 'selected' : ''} ${isLiveToday ? 'is-today' : ''}`}
+                      onClick={() => setSelectedRoutineDay(d.key)}
+                    >
+                      <div className="day-tab-name-row">
+                        <span className="day-tab-label">{d.label}</span>
+                        {isLiveToday && <span className="day-live-badge">TODAY</span>}
+                      </div>
+                      <span className="day-tab-count">{dayBlocksCount} {dayBlocksCount === 1 ? 'Block' : 'Blocks'}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Save & Reset Actions Bar */}
             <div className="settings-actions">
               <button className="save-schedule-btn" onClick={saveScheduleChanges}>
-                <Save size={15} /> Save Routine Changes
+                <Save size={15} /> Save Weekly Routine
               </button>
               <button className="add-block-btn" type="button" onClick={handleAddBlock} style={{ background: '#10b981', color: '#fff', border: 'none', borderRadius: '8px', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '12px', cursor: 'pointer' }}>
-                <Plus size={15} /> Add Block
+                <Plus size={15} /> Add Block to {currentDayShort}
               </button>
               <button className="sort-schedule-btn" type="button" onClick={handleSortBlocksByTime} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--ink)', cursor: 'pointer' }}>
                 <ArrowUpDown size={14} /> Sort by Time
+              </button>
+              <button className="copy-day-btn" type="button" onClick={handleCopyCurrentDayToAll} style={{ background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '8px', padding: '9px 14px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#F59E0B', fontWeight: 600, cursor: 'pointer' }}>
+                <Copy size={14} /> Copy to All Days
               </button>
               <button className="reset-schedule-btn" onClick={resetScheduleToDefaults}>
                 <RotateCcw size={15} /> Reset to Defaults

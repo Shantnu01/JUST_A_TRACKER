@@ -20246,3 +20246,206 @@ html:not([data-theme="tokyo-lofi"]) {
   font-size: 14px !important;
   font-weight: 700 !important;
 }
+
+/* ==========================================================================
+   WEEKLY ROUTINE HEADER BAR & DAY SELECTOR TABS
+   ========================================================================== */
+.weekly-routine-header-bar {
+  background: var(--paper, #fffefa);
+  border: 1px solid var(--line, #e5e5dd);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin: 18px 0 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.weekly-bar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.weekly-bar-top h4 {
+  margin: 2px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink, #1e2c26);
+}
+
+.copy-to-all-days-btn {
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  border-radius: 9px;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.copy-to-all-days-btn:hover {
+  background: #d97706;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.weekly-days-tabs {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 860px) {
+  .weekly-days-tabs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .weekly-days-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.weekly-day-tab-btn {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--line, #e5e5dd);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  position: relative;
+}
+
+.weekly-day-tab-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: #a7b8a8;
+  transform: translateY(-1px);
+}
+
+.weekly-day-tab-btn.selected {
+  background: var(--paper, #ffffff);
+  border-color: #10b981;
+  box-shadow: 0 0 0 1.5px #10b981, 0 3px 10px rgba(16, 185, 129, 0.15);
+}
+
+.day-tab-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+}
+
+.day-tab-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink, #1e2c26);
+}
+
+.day-live-badge {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #10b981;
+  color: #ffffff;
+}
+
+.day-tab-count {
+  font-size: 11px;
+  color: var(--muted, #7b847d);
+  font-weight: 500;
+}
+
+/* Tokyo Lofi & Dark Theme reactions for Weekly Routine bar */
+[data-theme="tokyo-lofi"] .weekly-routine-header-bar,
+.app-shell[data-theme="tokyo-lofi"] .weekly-routine-header-bar {
+  background: rgba(22, 18, 32, 0.65) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .weekly-bar-top h4,
+.app-shell[data-theme="tokyo-lofi"] .weekly-bar-top h4 {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .weekly-day-tab-btn,
+.app-shell[data-theme="tokyo-lofi"] .weekly-day-tab-btn {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="tokyo-lofi"] .weekly-day-tab-btn:hover,
+.app-shell[data-theme="tokyo-lofi"] .weekly-day-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="tokyo-lofi"] .weekly-day-tab-btn.selected,
+.app-shell[data-theme="tokyo-lofi"] .weekly-day-tab-btn.selected {
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 1.5px rgba(245, 158, 11, 0.5), 0 4px 12px rgba(245, 158, 11, 0.2) !important;
+}
+
+[data-theme="tokyo-lofi"] .day-tab-label,
+.app-shell[data-theme="tokyo-lofi"] .day-tab-label {
+  color: #FAF8FF !important;
+}
+
+[data-theme="tokyo-lofi"] .day-tab-count,
+.app-shell[data-theme="tokyo-lofi"] .day-tab-count {
+  color: #A39BBF !important;
+}
+
+/* Active on Timetable Pin Button: Reversible Toggle Styling */
+.pin-timetable-btn {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 6px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pin-timetable-btn:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.5);
+  transform: translateY(-1px);
+}
+
+.pin-timetable-btn.active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35) !important;
+}
+
+.pin-timetable-btn.active:hover {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35) !important;
+}

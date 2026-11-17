@@ -252,15 +252,24 @@ export default function StageRoadmapsView({
     }
   };
 
-  // Set Active Stage for Timetable
+  // Set / Toggle Active Stage for Timetable (Reversible)
   const handleSetTimetableActiveStage = (stageId, stageTitle) => {
     if (!curriculum) return;
+    const isCurrentlyPinned = curriculum.manualActiveStageId === stageId;
     const updated = setActiveStageForCurriculum(curriculum, stageId);
     setCurriculum(updated);
     saveSubjectCurriculum(activeSubject, updated);
     if (onPlayChime) onPlayChime(true);
+    
+    // Live cross-component sync event so Timetable updates immediately
+    window.dispatchEvent(new CustomEvent('curriculum-updated', { detail: { subject: activeSubject } }));
+
     if (setToast) {
-      setToast(`🎯 Active stage set to: ${stageTitle || stageId} (Pinned to Timetable)`);
+      if (isCurrentlyPinned) {
+        setToast(`✓ Timetable unpinned: Now auto-tracking first incomplete stage`);
+      } else {
+        setToast(`🎯 Active stage set to: ${stageTitle || stageId} (Pinned to Timetable)`);
+      }
       setTimeout(() => setToast(''), 3000);
     }
   };
@@ -831,8 +840,8 @@ STAGE 3 — [STAGE NAME]
                         : `${stageDone} of ${stageTotal} Checkpoints Done`}
                     </span>
 
-                    {/* Pin to Timetable Button */}
-                    {activeStageIdx !== progress.activeStageIndex ? (
+                    {/* Pin to Timetable Button (Interactive, Reversible Toggle) */}
+                    {curriculum.manualActiveStageId !== currentStage.id ? (
                       <button
                         type="button"
                         className="pin-timetable-btn"
@@ -843,9 +852,15 @@ STAGE 3 — [STAGE NAME]
                         <span>Set as Active on Timetable</span>
                       </button>
                     ) : (
-                      <span className="pinned-badge-active">
-                        ★ Active on Timetable
-                      </span>
+                      <button
+                        type="button"
+                        className="pin-timetable-btn active"
+                        onClick={() => handleSetTimetableActiveStage(currentStage.id, currentStage.title)}
+                        title="Click to unpin and return to automatic progression"
+                      >
+                        <Check size={12} />
+                        <span>★ Active on Timetable (Click to Unpin)</span>
+                      </button>
                     )}
 
                     <button

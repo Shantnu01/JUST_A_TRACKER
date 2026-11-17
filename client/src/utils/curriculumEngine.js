@@ -314,10 +314,18 @@ export function calculateCurriculumProgress(curriculum) {
   };
 }
 
-// Set manual active stage for a subject curriculum
+// Set or toggle manual active stage for a subject curriculum
+// If stageId is already active, clicking it clears manualActiveStageId (reverts to auto progression!)
 export function setActiveStageForCurriculum(curriculum, stageId) {
   if (!curriculum || !curriculum.stages) return curriculum;
-  return { ...curriculum, manualActiveStageId: stageId };
+  const isAlreadyActive = curriculum.manualActiveStageId === stageId;
+  const nextId = isAlreadyActive ? null : stageId;
+  return { ...curriculum, manualActiveStageId: nextId, _wasUnpinned: isAlreadyActive };
+}
+
+export function clearActiveStageForCurriculum(curriculum) {
+  if (!curriculum || !curriculum.stages) return curriculum;
+  return { ...curriculum, manualActiveStageId: null };
 }
 
 // Toggle a checkpoint completed status

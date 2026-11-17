@@ -30,9 +30,24 @@ export default function TimetableCurrentCheckpoint({
   const [understandingModalOpen, setUnderstandingModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Reload when subject changes or on periodic focus
+  // Reload when subject changes, when a stage is pinned/unpinned in Roadmaps, or on focus
   useEffect(() => {
-    setCurriculum(loadSubjectCurriculum(cleanSubject));
+    const reload = () => setCurriculum(loadSubjectCurriculum(cleanSubject));
+    reload();
+
+    const handleCurriculumUpdated = (e) => {
+      if (!e?.detail?.subject || e.detail.subject === cleanSubject) {
+        reload();
+      }
+    };
+
+    window.addEventListener('curriculum-updated', handleCurriculumUpdated);
+    window.addEventListener('focus', reload);
+
+    return () => {
+      window.removeEventListener('curriculum-updated', handleCurriculumUpdated);
+      window.removeEventListener('focus', reload);
+    };
   }, [cleanSubject]);
 
   const progress = calculateCurriculumProgress(curriculum);

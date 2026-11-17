@@ -1347,8 +1347,8 @@ app.put('/api/settings/schedule', optionalAuth, async (req, res) => {
     return res.status(503).json({ error: 'Database is not configured. Set DATABASE_URL in server/.env.' });
   }
   const scheduleData = req.body;
-  if (!Array.isArray(scheduleData)) {
-    return res.status(400).json({ error: 'Schedule must be an array of routine blocks.' });
+  if (!scheduleData || typeof scheduleData !== 'object') {
+    return res.status(400).json({ error: 'Schedule must be an array or a weekly routine object.' });
   }
   const settingKey = req.user ? `schedule:${req.user.id}` : 'schedule:default';
   try {
