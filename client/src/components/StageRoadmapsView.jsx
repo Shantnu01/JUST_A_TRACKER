@@ -881,14 +881,19 @@ STAGE 3 — [STAGE NAME]
                     <span>No checkpoints in this stage yet. Add your first checkpoint below!</span>
                   </div>
                 ) : (
-                  currentStage.checkpoints.map(cp => (
-                    <div
-                      key={cp.id}
-                      className={`single-checkpoint-row ${cp.completed ? 'completed' : ''} ${cp.understanding ? 'has-takeaway' : 'needs-revision'}`}
-                      onMouseEnter={() => setHoveredCpId(cp.id)}
-                      onMouseLeave={() => setHoveredCpId(null)}
-                      style={{ position: 'relative' }}
-                    >
+                  currentStage.checkpoints.map((cp, cpIdx) => {
+                    const isLast = cpIdx === currentStage.checkpoints.length - 1;
+                    const isUpward = currentStage.checkpoints.length > 2 && isLast;
+                    const tooltipPosClass = isUpward ? 'pos-up' : 'pos-down';
+
+                    return (
+                      <div
+                        key={cp.id}
+                        className={`single-checkpoint-row ${cp.completed ? 'completed' : ''} ${cp.understanding ? 'has-takeaway' : 'needs-revision'}`}
+                        onMouseEnter={() => setHoveredCpId(cp.id)}
+                        onMouseLeave={() => setHoveredCpId(null)}
+                        style={{ position: 'relative' }}
+                      >
                       <label className="checkpoint-toggle-label">
                         <input
                           type="checkbox"
@@ -918,6 +923,7 @@ STAGE 3 — [STAGE NAME]
                             className="checkpoint-recall-pill has-understanding"
                             onClick={(e) => {
                               e.stopPropagation();
+                              setHoveredCpId(null);
                               setUnderstandingPromptData({
                                 stageId: currentStage.id,
                                 checkpointId: cp.id,
@@ -936,6 +942,7 @@ STAGE 3 — [STAGE NAME]
                             className="checkpoint-recall-pill revise-it"
                             onClick={(e) => {
                               e.stopPropagation();
+                              setHoveredCpId(null);
                               setUnderstandingPromptData({
                                 stageId: currentStage.id,
                                 checkpointId: cp.id,
@@ -953,6 +960,10 @@ STAGE 3 — [STAGE NAME]
                         <button
                           type="button"
                           className="delete-checkpoint-btn"
+                          onMouseEnter={(e) => {
+                            e.stopPropagation();
+                            setHoveredCpId(null);
+                          }}
                           onClick={() => handleDeleteCheckpoint(currentStage.id, cp.id)}
                           title="Delete checkpoint"
                         >
@@ -962,7 +973,7 @@ STAGE 3 — [STAGE NAME]
 
                       {/* Interactive Hover Tooltip for Understanding & Active Recall */}
                       {hoveredCpId === cp.id && (
-                        <div className="checkpoint-hover-tooltip" onClick={e => e.stopPropagation()}>
+                        <div className={`checkpoint-hover-tooltip ${tooltipPosClass}`} onClick={e => e.stopPropagation()}>
                           <div className="tooltip-top-row">
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                               <Brain size={13} color="#f59e0b" />
@@ -975,6 +986,7 @@ STAGE 3 — [STAGE NAME]
                               className="tooltip-quick-edit-btn"
                               onClick={(e) => {
                                 e.stopPropagation();
+                                setHoveredCpId(null);
                                 setUnderstandingPromptData({
                                   stageId: currentStage.id,
                                   checkpointId: cp.id,
@@ -1008,7 +1020,8 @@ STAGE 3 — [STAGE NAME]
                         </div>
                       )}
                     </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
 

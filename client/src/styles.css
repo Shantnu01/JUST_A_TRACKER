@@ -5248,7 +5248,7 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   background: #ffffff;
   border: 2px solid #cbd5e1;
   border-radius: 14px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
@@ -5535,10 +5535,12 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
 
 .checkpoint-hover-tooltip {
   position: absolute;
-  bottom: calc(100% + 10px);
-  left: 20px;
-  width: 330px;
-  max-width: 90vw;
+  top: calc(100% + 8px);
+  bottom: auto;
+  right: 14px;
+  left: auto;
+  width: 340px;
+  max-width: calc(100% - 28px);
   background: #ffffff;
   border: 1px solid #cbd5e1;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
@@ -5546,10 +5548,27 @@ input, textarea, [contenteditable="true"], .format-guide-code, pre, code {
   padding: 13px 15px;
   z-index: 2500;
   pointer-events: auto;
-  animation: tooltipFade 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: tooltipFadeDown 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes tooltipFade {
+.checkpoint-hover-tooltip.pos-down {
+  top: calc(100% + 8px);
+  bottom: auto;
+  animation: tooltipFadeDown 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.checkpoint-hover-tooltip.pos-up {
+  bottom: calc(100% + 8px);
+  top: auto;
+  animation: tooltipFadeUp 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tooltipFadeDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes tooltipFadeUp {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
