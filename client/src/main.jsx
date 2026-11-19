@@ -4778,6 +4778,7 @@ const handleNudge = async (toUserId, toUsername) => {
 
         {view === 'Stage Roadmaps' && (
           <StageRoadmapsView
+            token={token}
             routine={schedule}
             selectedSubject={selectedRoadmapSubject}
             onSelectSubject={setSelectedRoadmapSubject}

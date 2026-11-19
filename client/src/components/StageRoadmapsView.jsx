@@ -35,11 +35,13 @@ import {
   setActiveStageForCurriculum,
   parseCurriculumText,
   formatCurriculumToText,
+  syncCurriculumsFromDb,
   CHATGPT_ROADMAP_PROMPT_TEMPLATE
 } from '../utils/curriculumEngine';
 import CheckpointUnderstandingModal from './CheckpointUnderstandingModal';
 
 export default function StageRoadmapsView({
+  token = '',
   routine = [],
   selectedSubject = '',
   onSelectSubject,
@@ -90,11 +92,15 @@ export default function StageRoadmapsView({
   };
 
   const [activeSubject, setActiveSubject] = useState(() => {
-    return selectedSubject || allSubjects[0] || (routine[0]?.title || 'Study Session');
+    const lastActive = typeof localStorage !== 'undefined' ? localStorage.getItem('daymark-last-active-roadmap-subject') : '';
+    if (selectedSubject) return selectedSubject;
+    if (lastActive) return lastActive;
+    return allSubjects[0] || (routine[0]?.title || 'Study Session');
   });
 
   // Load subject curriculum (strictly user-created, null if uninitialized)
   const [curriculum, setCurriculum] = useState(() => loadSubjectCurriculum(activeSubject));
+  const [dbSyncStatus, setDbSyncStatus] = useState('idle'); // 'idle' | 'syncing' | 'synced' | 'error'
 
   // Active Stage Index for stage-by-stage focused viewing (Shows only 1 stage at a time)
   const [activeStageIdx, setActiveStageIdx] = useState(0);
@@ -127,6 +133,77 @@ export default function StageRoadmapsView({
     }
   }, [selectedSubject]);
 
+  // Persist active subject selection across page reloads
+  useEffect(() => {
+    if (activeSubject) {
+      try {
+        localStorage.setItem('daymark-last-active-roadmap-subject', activeSubject);
+      } catch {}
+    }
+  }, [activeSubject]);
+
+  // Sync curriculums from Database on mount and listen for real-time updates
+  useEffect(() => {
+    let cancelled = false;
+
+    const performSync = async () => {
+      setDbSyncStatus('syncing');
+      try {
+        const dbData = await syncCurriculumsFromDb(token);
+        if (cancelled) return;
+        setDbSyncStatus('synced');
+        if (dbData && typeof dbData === 'object') {
+          const subjects = Object.keys(dbData);
+          if (subjects.length > 0) {
+            setCustomSubjects(prev => {
+              const merged = [...new Set([...prev, ...subjects])];
+              try {
+                localStorage.setItem('daymark-custom-roadmap-subjects', JSON.stringify(merged));
+              } catch {}
+              return merged;
+            });
+            // If the user previously had a subject selected that was in DB, restore it
+            const lastActive = typeof localStorage !== 'undefined' ? localStorage.getItem('daymark-last-active-roadmap-subject') : '';
+            const targetSubject = (lastActive && subjects.includes(lastActive)) ? lastActive : activeSubject;
+            if (targetSubject && targetSubject !== activeSubject) {
+              setActiveSubject(targetSubject);
+            }
+            const loaded = loadSubjectCurriculum(targetSubject || activeSubject);
+            if (loaded) setCurriculum(loaded);
+          }
+        }
+      } catch (err) {
+        if (!cancelled) setDbSyncStatus('error');
+      }
+    };
+
+    performSync();
+
+    const handleCurriculumsUpdated = () => {
+      if (cancelled) return;
+      try {
+        const rawCustom = localStorage.getItem('daymark-custom-roadmap-subjects');
+        if (rawCustom) {
+          const parsed = JSON.parse(rawCustom);
+          if (Array.isArray(parsed)) {
+            setCustomSubjects(parsed);
+          }
+        }
+      } catch {}
+      const loaded = loadSubjectCurriculum(activeSubject);
+      if (loaded) setCurriculum(loaded);
+    };
+
+    window.addEventListener('curriculums-updated', handleCurriculumsUpdated);
+    window.addEventListener('curriculum-updated', handleCurriculumsUpdated);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener('curriculums-updated', handleCurriculumsUpdated);
+      window.removeEventListener('curriculum-updated', handleCurriculumsUpdated);
+    };
+  }, [token]);
+
   // Load subject curriculum on activeSubject change
   useEffect(() => {
     const loaded = loadSubjectCurriculum(activeSubject);
@@ -148,11 +225,14 @@ export default function StageRoadmapsView({
   // Switch Active Subject
   const handleSelectSubject = (subj) => {
     setActiveSubject(subj);
+    try {
+      localStorage.setItem('daymark-last-active-roadmap-subject', subj);
+    } catch {}
     if (onSelectSubject) onSelectSubject(subj);
   };
 
-  // Create New Subject (Starts completely uninitialized!)
-  const handleCreateNewSubject = (e) => {
+  // Create New Subject (Saved directly to PostgreSQL so reload never loses the subject!)
+  const handleCreateNewSubject = async (e) => {
     if (e) e.preventDefault();
     const cleanName = newSubjectTitle.trim();
     if (!cleanName) return;
@@ -165,12 +245,23 @@ export default function StageRoadmapsView({
       } catch {}
     }
 
-    setCurriculum(null);
-    deleteSubjectCurriculum(cleanName);
+    const blankCurriculum = {
+      subject: cleanName,
+      title: cleanName,
+      stages: [],
+      createdAt: new Date().toISOString()
+    };
+    setCurriculum(blankCurriculum);
     setActiveSubject(cleanName);
+    try {
+      localStorage.setItem('daymark-last-active-roadmap-subject', cleanName);
+    } catch {}
     setNewSubjectTitle('');
     setShowAddSubjectModal(false);
     setActiveStageIdx(0);
+
+    // Persist to database immediately
+    await saveSubjectCurriculum(cleanName, blankCurriculum, token);
 
     if (setToast) {
       setToast(`Created roadmap for "${cleanName}". Paste your stage outline to generate checkpoints!`);
@@ -179,7 +270,7 @@ export default function StageRoadmapsView({
   };
 
   // Delete Current Roadmap
-  const handleDeleteRoadmap = () => {
+  const handleDeleteRoadmap = async () => {
     const isCustom = customSubjects.includes(activeSubject);
     const confirmMsg = isCustom
       ? `Delete roadmap and remove "${activeSubject}" from subjects?`
@@ -187,8 +278,8 @@ export default function StageRoadmapsView({
 
     if (!window.confirm(confirmMsg)) return;
 
-    // Remove from storage
-    deleteSubjectCurriculum(activeSubject);
+    // Remove from storage and DB
+    await deleteSubjectCurriculum(activeSubject, token);
     setCurriculum(null);
 
     // If custom, also remove from custom list
@@ -201,6 +292,9 @@ export default function StageRoadmapsView({
       // Switch to routine subject
       const fallback = routineSubjects[0] || 'Study Session';
       setActiveSubject(fallback);
+      try {
+        localStorage.setItem('daymark-last-active-roadmap-subject', fallback);
+      } catch {}
     }
 
     if (setToast) {
@@ -221,7 +315,7 @@ export default function StageRoadmapsView({
         const parsed = parseCurriculumText(content);
         parsed.subject = activeSubject;
         setCurriculum(parsed);
-        saveSubjectCurriculum(activeSubject, parsed);
+        saveSubjectCurriculum(activeSubject, parsed, token);
         setActiveStageIdx(0);
         if (setToast) {
           setToast(`✓ Generated ${parsed.stages.length} stages from ${file.name}!`);
@@ -243,7 +337,7 @@ export default function StageRoadmapsView({
     }
     parsed.subject = activeSubject;
     setCurriculum(parsed);
-    saveSubjectCurriculum(activeSubject, parsed);
+    saveSubjectCurriculum(activeSubject, parsed, token);
     setImportText('');
     setActiveStageIdx(0);
     if (setToast) {
@@ -258,7 +352,7 @@ export default function StageRoadmapsView({
     const isCurrentlyPinned = curriculum.manualActiveStageId === stageId;
     const updated = setActiveStageForCurriculum(curriculum, stageId);
     setCurriculum(updated);
-    saveSubjectCurriculum(activeSubject, updated);
+    saveSubjectCurriculum(activeSubject, updated, token);
     if (onPlayChime) onPlayChime(true);
     
     // Live cross-component sync event so Timetable updates immediately
@@ -279,7 +373,7 @@ export default function StageRoadmapsView({
     if (!curriculum) return;
     const updated = toggleCurriculumCheckpoint(curriculum, stageId, checkpointId);
     setCurriculum(updated);
-    saveSubjectCurriculum(activeSubject, updated);
+    saveSubjectCurriculum(activeSubject, updated, token);
     if (onPlayChime) onPlayChime(true);
 
     if (updated && updated._isCompletedNow) {
@@ -309,7 +403,7 @@ export default function StageRoadmapsView({
     const { stageId, checkpointId } = understandingPromptData;
     const updated = updateCheckpointUnderstanding(curriculum, stageId, checkpointId, text);
     setCurriculum(updated);
-    saveSubjectCurriculum(activeSubject, updated);
+    saveSubjectCurriculum(activeSubject, updated, token);
     setUnderstandingPromptData(null);
     if (setToast) {
       setToast('🧠 Understanding saved & synced to active recall!');
@@ -322,7 +416,7 @@ export default function StageRoadmapsView({
     if (!newCheckpointText.trim() || !curriculum) return;
     const updated = addCheckpointToStage(curriculum, stageId, newCheckpointText.trim());
     setCurriculum(updated);
-    saveSubjectCurriculum(activeSubject, updated);
+    saveSubjectCurriculum(activeSubject, updated, token);
     setNewCheckpointText('');
     if (setToast) {
       setToast('✓ Added new checkpoint to stage');
@@ -335,7 +429,7 @@ export default function StageRoadmapsView({
     if (!curriculum) return;
     const updated = deleteCheckpointFromStage(curriculum, stageId, checkpointId);
     setCurriculum(updated);
-    saveSubjectCurriculum(activeSubject, updated);
+    saveSubjectCurriculum(activeSubject, updated, token);
     if (setToast) {
       setToast('Checkpoint deleted');
       setTimeout(() => setToast(''), 1800);
@@ -347,7 +441,7 @@ export default function StageRoadmapsView({
     if (!newStageInputTitle.trim() || !curriculum) return;
     const updated = addStageToCurriculum(curriculum, newStageInputTitle.trim());
     setCurriculum(updated);
-    saveSubjectCurriculum(activeSubject, updated);
+    saveSubjectCurriculum(activeSubject, updated, token);
     setNewStageInputTitle('');
     setShowAddStageInput(false);
     setActiveStageIdx(updated.stages.length - 1);
@@ -362,7 +456,7 @@ export default function StageRoadmapsView({
     if (!curriculum || !window.confirm('Delete this stage and all its checkpoints?')) return;
     const updated = deleteStageFromCurriculum(curriculum, stageId);
     setCurriculum(updated);
-    saveSubjectCurriculum(activeSubject, updated);
+    saveSubjectCurriculum(activeSubject, updated, token);
     setActiveStageIdx(prev => Math.max(0, prev - 1));
     if (setToast) {
       setToast('Stage deleted');
@@ -385,7 +479,7 @@ export default function StageRoadmapsView({
     const parsed = parseCurriculumText(rawText);
     parsed.subject = activeSubject;
     setCurriculum(parsed);
-    saveSubjectCurriculum(activeSubject, parsed);
+    saveSubjectCurriculum(activeSubject, parsed, token);
     setIsEditingOutline(false);
     setActiveStageIdx(0);
     if (setToast) {
@@ -430,6 +524,10 @@ export default function StageRoadmapsView({
           </div>
 
           <div className="roadmap-hub-actions">
+            <div className="roadmap-cloud-sync-indicator" title="Curriculums and active recall notes are safely saved to PostgreSQL database">
+              <span className={`sync-status-dot ${dbSyncStatus === 'syncing' ? 'syncing' : 'synced'}`} />
+              <span>{dbSyncStatus === 'syncing' ? 'Syncing...' : 'DB Synced'}</span>
+            </div>
             <button
               type="button"
               className="roadmap-header-btn secondary"
@@ -465,6 +563,10 @@ export default function StageRoadmapsView({
             <strong>Stage Roadmaps & Checkpoints</strong>
           </div>
           <div className="roadmap-hub-actions">
+            <div className="roadmap-cloud-sync-indicator" title="Curriculums are safely saved to PostgreSQL database">
+              <span className={`sync-status-dot ${dbSyncStatus === 'syncing' ? 'syncing' : 'synced'}`} />
+              <span>{dbSyncStatus === 'syncing' ? 'Syncing...' : 'DB Synced'}</span>
+            </div>
             <button
               type="button"
               className="roadmap-header-btn secondary"

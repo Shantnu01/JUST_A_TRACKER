@@ -175,67 +175,155 @@ export function loadSubjectCurriculum(subjectName = '') {
   return null;
 }
 
+export function getApiBase() {
+  if (typeof window !== 'undefined' && window.__DAYMARK_API_URL) return window.__DAYMARK_API_URL;
+  const raw = import.meta.env?.VITE_API_URL;
+  if (raw) {
+    return `${raw.replace(/\/+$/, '')}/api`;
+  }
+  return '/api';
+}
+
 // Delete curriculum from localStorage & database
-export function deleteSubjectCurriculum(subjectName = '', token = null) {
-  if (!subjectName) return;
+export async function deleteSubjectCurriculum(subjectName = '', token = null) {
+  if (!subjectName) return false;
   const key = getCurriculumKey(subjectName);
   try {
     localStorage.removeItem(key);
   } catch {}
 
+  try {
+    const rawCustom = localStorage.getItem('daymark-custom-roadmap-subjects');
+    const existing = rawCustom ? JSON.parse(rawCustom) : [];
+    const next = existing.filter(s => s !== subjectName);
+    localStorage.setItem('daymark-custom-roadmap-subjects', JSON.stringify(next));
+  } catch {}
+
   if (typeof window !== 'undefined' && typeof fetch !== 'undefined') {
-    const headers = {};
-    const savedToken = token || (typeof localStorage !== 'undefined' && localStorage.getItem('daymark-token'));
-    if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
-    const API = import.meta.env?.VITE_API_URL || '/api';
-    fetch(`${API}/curriculums/${encodeURIComponent(subjectName)}`, {
-      method: 'DELETE',
-      headers
-    }).catch(() => {});
+    try {
+      const headers = {};
+      const savedToken = token || (typeof localStorage !== 'undefined' && localStorage.getItem('daymark-token'));
+      if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
+      const API = getApiBase();
+      const res = await fetch(`${API}/curriculums/${encodeURIComponent(subjectName)}`, {
+        method: 'DELETE',
+        headers
+      });
+      window.dispatchEvent(new CustomEvent('curriculums-updated', {
+        detail: { subject: subjectName, deleted: true }
+      }));
+      window.dispatchEvent(new CustomEvent('curriculum-updated', {
+        detail: { subject: subjectName, deleted: true }
+      }));
+      return res.ok;
+    } catch (err) {
+      console.warn(`[CurriculumEngine] Delete "${subjectName}" from DB error:`, err.message);
+      return false;
+    }
   }
+  return true;
 }
 
 // Save curriculum to localStorage & PostgreSQL database
-export function saveSubjectCurriculum(subjectName, curriculum, token = null) {
-  if (!subjectName || !curriculum) return;
+export async function saveSubjectCurriculum(subjectName, curriculum, token = null) {
+  if (!subjectName || !curriculum) return false;
   const key = getCurriculumKey(subjectName);
   try {
     localStorage.setItem(key, JSON.stringify(curriculum));
   } catch {}
 
+  // Ensure subject is in custom subjects list so it's always discoverable
+  try {
+    const rawCustom = localStorage.getItem('daymark-custom-roadmap-subjects');
+    const existing = rawCustom ? JSON.parse(rawCustom) : [];
+    if (!existing.includes(subjectName)) {
+      existing.push(subjectName);
+      localStorage.setItem('daymark-custom-roadmap-subjects', JSON.stringify(existing));
+    }
+  } catch {}
+
   // Sync to PostgreSQL database
   if (typeof window !== 'undefined' && typeof fetch !== 'undefined') {
-    const headers = { 'Content-Type': 'application/json' };
-    const savedToken = token || (typeof localStorage !== 'undefined' && localStorage.getItem('daymark-token'));
-    if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
-    const API = import.meta.env?.VITE_API_URL || '/api';
-    fetch(`${API}/curriculums/${encodeURIComponent(subjectName)}`, {
-      method: 'PUT',
-      headers,
-      body: JSON.stringify(curriculum)
-    }).catch(() => {});
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      const savedToken = token || (typeof localStorage !== 'undefined' && localStorage.getItem('daymark-token'));
+      if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
+      const API = getApiBase();
+      const res = await fetch(`${API}/curriculums/${encodeURIComponent(subjectName)}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(curriculum)
+      });
+      if (res.ok) {
+        window.dispatchEvent(new CustomEvent('curriculums-updated', {
+          detail: { subject: subjectName, curriculum }
+        }));
+        window.dispatchEvent(new CustomEvent('curriculum-updated', {
+          detail: { subject: subjectName, curriculum }
+        }));
+        return true;
+      } else {
+        console.warn(`[CurriculumEngine] Failed to save "${subjectName}" to DB: HTTP ${res.status}`);
+        return false;
+      }
+    } catch (err) {
+      console.warn(`[CurriculumEngine] Save "${subjectName}" to DB error:`, err.message);
+      return false;
+    }
   }
+  return true;
 }
 
-// Sync all user curriculums from PostgreSQL database into localStorage
+// Sync all user curriculums from PostgreSQL database into localStorage & custom subjects list
 export async function syncCurriculumsFromDb(token = null) {
-  if (typeof window === 'undefined' || typeof fetch === 'undefined') return;
+  if (typeof window === 'undefined' || typeof fetch === 'undefined') return {};
   try {
     const headers = {};
     const savedToken = token || (typeof localStorage !== 'undefined' && localStorage.getItem('daymark-token'));
     if (savedToken) headers['Authorization'] = `Bearer ${savedToken}`;
-    const API = import.meta.env?.VITE_API_URL || '/api';
+    const API = getApiBase();
     const res = await fetch(`${API}/curriculums`, { headers });
-    if (!res.ok) return;
+    if (!res.ok) {
+      console.warn('[CurriculumEngine] syncCurriculumsFromDb response not ok:', res.status);
+      return {};
+    }
     const dbCurriculums = await res.json();
-    if (!dbCurriculums || typeof dbCurriculums !== 'object') return;
+    if (!dbCurriculums || typeof dbCurriculums !== 'object') return {};
+
+    const dbSubjects = [];
     for (const [subj, data] of Object.entries(dbCurriculums)) {
-      if (subj && data && Array.isArray(data.stages) && data.stages.length > 0) {
+      if (subj && data && typeof data === 'object') {
+        dbSubjects.push(subj);
         const key = getCurriculumKey(subj);
         localStorage.setItem(key, JSON.stringify(data));
       }
     }
-  } catch {}
+
+    // Merge all subjects found in DB into custom roadmaps list so they are never lost on reload!
+    if (dbSubjects.length > 0) {
+      try {
+        const rawCustom = localStorage.getItem('daymark-custom-roadmap-subjects');
+        const existing = rawCustom ? JSON.parse(rawCustom) : [];
+        const merged = [...new Set([...existing, ...dbSubjects])];
+        localStorage.setItem('daymark-custom-roadmap-subjects', JSON.stringify(merged));
+      } catch {}
+    }
+
+    // Broadcast update so StageRoadmapsView and Timetable update instantly
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('curriculums-updated', {
+        detail: { curriculums: dbCurriculums, subjects: dbSubjects }
+      }));
+      window.dispatchEvent(new CustomEvent('curriculum-updated', {
+        detail: { curriculums: dbCurriculums, subjects: dbSubjects }
+      }));
+    }
+
+    return dbCurriculums;
+  } catch (err) {
+    console.warn('[CurriculumEngine] syncCurriculumsFromDb error:', err.message);
+    return {};
+  }
 }
 
 // Calculate progress, active stage, and next incomplete checkpoints

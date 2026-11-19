@@ -412,6 +412,19 @@ app.post('/api/auth/register', async (req, res) => {
     );
 
     const user = result.rows[0];
+
+    // Migrate any guest curriculums and roadmaps to this newly registered user
+    try {
+      await pool.query(
+        `INSERT INTO user_curriculums (user_id, subject_name, data, updated_at)
+         SELECT $1, subject_name, data, updated_at FROM guest_curriculums
+         ON CONFLICT (user_id, subject_name) DO NOTHING`,
+        [user.id]
+      );
+    } catch (migErr) {
+      console.warn('Guest curriculum migration on register skipped:', migErr.message);
+    }
+
     const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '30d' });
     return res.json({ token, user });
   } catch (error) {
@@ -438,6 +451,18 @@ app.post('/api/auth/login', async (req, res) => {
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
       return res.status(401).json({ error: 'Invalid username or password.' });
+    }
+
+    // Merge any guest roadmaps created while offline/logged out into the user account
+    try {
+      await pool.query(
+        `INSERT INTO user_curriculums (user_id, subject_name, data, updated_at)
+         SELECT $1, subject_name, data, updated_at FROM guest_curriculums
+         ON CONFLICT (user_id, subject_name) DO NOTHING`,
+        [user.id]
+      );
+    } catch (migErr) {
+      console.warn('Guest curriculum migration on login skipped:', migErr.message);
     }
 
     const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '30d' });
